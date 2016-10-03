@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -83,13 +84,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         mMap.setBuiltInZoomControls(true);
         mMap.setMinZoomLevel(15);
+        mMap.setMaxZoomLevel(18);
         mMap.setMultiTouchControls(true);
         mMap.setUseDataConnection(true);
         mMap.getOverlays().add(this.mLocationOverlay);
+        BoundingBoxE6 bbox = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
+//        BoundingBoxE6 bbox = new BoundingBoxE6(-48.459599,-1.478548,-48.440781,-1.458213);
+        mMap.setScrollableAreaLimit(bbox);
+//        mMapController.animateTo(bbox.getCenter());
 
         // Configuração para mostrar o boneco da posição do usuário
         mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
+        mLocationOverlay.disableFollowLocation();
+//        mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
 
 
