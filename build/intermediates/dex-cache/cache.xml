@@ -66,12 +66,30 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-23.1.1_69a6074047d7dd2700f4bd67af7551a4fb5cd940\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
         sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.4.0_62958821e3c9600d31df0298527da8810c77d3f0\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.1.1_c807dcd1605f85c1af5cad1abb3fbd879488b55a\classes.dex" />
     </item>
     <item
         is-multidex="true"

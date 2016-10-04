@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -33,13 +34,18 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
-    MapView mMap;
-    IMapController mMapController;
-    Local defaultLocation;
-    MyLocationNewOverlay mLocationOverlay;
+    private IMapController mMapController;
+    private MyLocationNewOverlay mLocationOverlay;
+
+    private MapView mMap;
+    private FloatingActionButton fab;
 
     private Location myCurrentLocation;
     private LocationManager locationManager;
+
+
+    private Local defaultLocation;
+    private BoundingBoxE6 regiaoMapa;
 
 
 
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // Requisita permissões para Android Marshmallow e devices superiores
         if (Build.VERSION.SDK_INT >= 23) {
@@ -64,10 +71,29 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
          * Um exemplo mostra a utilização de "BuildConfig.APPLICATION_ID"
          */
         org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+
+        // Restrição de coordenadas do mapa
+        regiaoMapa = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
+
+
         // Views
-        final RelativeLayout rl = (RelativeLayout) findViewById(R.id.relative_layout);
-        this.mMap = new MapView(this);
-        rl.addView(mMap, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,RelativeLayout.LayoutParams.FILL_PARENT));
+        mMap =(MapView) findViewById(R.id.map);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(myCurrentLocation == null) {
+                    Toast.makeText(MainActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
+                }else if(!regiaoMapa.contains(
+                        new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude())))
+                    Toast.makeText(MainActivity.this, "Você está fora da região coberta pelo nosso mapa!", Toast.LENGTH_SHORT).show();
+                else
+                    mMapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude()));
+            }
+        });
 
 
         mLocationOverlay = new MyLocationNewOverlay(this,new GpsMyLocationProvider(this),mMap);
@@ -88,19 +114,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mMap.setMultiTouchControls(true);
         mMap.setUseDataConnection(true);
         mMap.getOverlays().add(this.mLocationOverlay);
-        BoundingBoxE6 bbox = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
-//        BoundingBoxE6 bbox = new BoundingBoxE6(-48.459599,-1.478548,-48.440781,-1.458213);
-        mMap.setScrollableAreaLimit(bbox);
-//        mMapController.animateTo(bbox.getCenter());
+        // Restringe a área do mapa à região escolhida
+        mMap.setScrollableAreaLimit(regiaoMapa);
+
+
+
 
         // Configuração para mostrar o boneco da posição do usuário
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.disableFollowLocation();
-//        mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
-
-
-
     }
 
     @Override
@@ -110,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.removeUpdates(this);
         }
-        mLocationOverlay.disableFollowLocation();
+
         mLocationOverlay.disableMyLocation();
     }
     @Override
@@ -122,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0l,0f,this);
         }
 
-        mLocationOverlay.enableFollowLocation();
+
         mLocationOverlay.enableMyLocation();
     }
 
@@ -216,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
-    // END PERMISSION CHEC
+    // FIM DA CHECAGEM DE PERMISSÕES
 
 
 
