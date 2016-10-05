@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,17 +15,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.DefaultOverlayManager;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -38,15 +41,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private MyLocationNewOverlay mLocationOverlay;
 
     private MapView mMap;
-    private FloatingActionButton fab;
+    private FloatingActionButton fabMyLocation;
+    private FloatingActionButton fabBusRoutes;
 
     private Location myCurrentLocation;
     private LocationManager locationManager;
 
-
     private Local defaultLocation;
     private BoundingBoxE6 regiaoMapa;
 
+    private boolean busRouteActive = false;
 
 
     @Override
@@ -75,14 +79,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         // Restrição de coordenadas do mapa
         regiaoMapa = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
 
-
         // Views
         mMap =(MapView) findViewById(R.id.map);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
+        fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
+        fabBusRoutes.setBackgroundTintList(
+                ColorStateList.valueOf(getResources().getColor(R.color.unabledButton)));
 
 
-
-        fab.setOnClickListener(new View.OnClickListener() {
+        // Ações para os butões flutuantes
+        fabMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(myCurrentLocation == null) {
@@ -94,6 +100,39 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     mMapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude()));
             }
         });
+
+       /* Cria-se um provedor de tiles que será setado para ser a camada de transportes
+       e então adiciona-se essa camada sobrepondo a existe no mapa.
+       A variável "busRouteActive" mantém o registro se essa camada está ativa ou não
+       o que muda a cor do botão para indicar ao usuário
+        */
+        fabBusRoutes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+                provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
+                TilesOverlay tilesOverlay = new TilesOverlay(provider,MainActivity.this);
+                if(!busRouteActive){
+                    mMap.getOverlays().add(tilesOverlay);
+                    mMap.postInvalidate();
+                    busRouteActive = true;
+                    fabBusRoutes.setBackgroundTintList(
+                            ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                }else{
+                    // 1 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
+                    mMap.getOverlays().remove(1);
+                    mMap.postInvalidate();
+
+                    busRouteActive = false;
+
+                    fabBusRoutes.setBackgroundTintList(
+                            ColorStateList.valueOf(getResources().getColor(R.color.unabledButton)));
+
+                }
+
+            }
+        });
+
 
 
         mLocationOverlay = new MyLocationNewOverlay(this,new GpsMyLocationProvider(this),mMap);
@@ -220,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                             Toast.LENGTH_SHORT).show();
                 } else if (location) {
                     Toast.makeText(this, "Permissão de armzenamento é necessária para armazenar " +
-                            "porções do mapa para reduzir consumo de dados e para uso offline.",
+                                    "porções do mapa para reduzir consumo de dados e para uso offline.",
                             Toast.LENGTH_LONG).show();
                 } else if (storage) {
                     Toast.makeText(this, "Permissão de localização é necessária para mostrar a sua " +
