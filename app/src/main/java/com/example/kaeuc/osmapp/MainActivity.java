@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
+    public static final String ACTION_PICKLANG = "osmapp.ACTION_MAIN";
+    public static final String CATEGORY_PICKLANG = "osmapp.CATEGORY_MAIN";
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
 

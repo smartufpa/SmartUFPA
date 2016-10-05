@@ -1,6 +1,25 @@
 <resources>
     <string name="app_name">Smart Campus UFPA</string>
-    <string name="title_activity_login">Entrar</string>
+
+    <!--Textos da tela de login-->
+    <string name="logo_title">Smart Campus</string>
+    <string name="username_hint">Nome de Usuário</string>
+    <string name="password_hint">Senha</string>
+    <string name="log_in_button">Entrar</string>
+    <string name="aux_text">Ainda não tem uma conta?</string>
+    <string name="sign_up_button">Criar Conta</string>
+    <string name="login_error_user">Nome de usuário ou senha inválidos</string>
+    <string name="login_error_noprofile">Nenhum perfil foi criado. Crie um antes de entrar.</string>
+    <string name="new_account">Nova Conta</string>
+
+    <!--Textos da tela de criação de login-->
+    <string-array name="profiles">
+        <item>Aluno</item>
+        <item>Professor</item>
+        <item>Visitante</item>
+    </string-array>
+    <string name="prompt">Escolha seu tipo de perfil</string>
+    <string name="create_account">Criar</string>
 
 
 </resources>

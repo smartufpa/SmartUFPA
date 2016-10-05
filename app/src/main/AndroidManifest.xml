@@ -20,19 +20,38 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
 
+        <activity android:name=".MainActivity">
+            <intent-filter>
+
+                <action android:name="osmapp.ACTION_MAIN"/>
+                <category android:name="osmapp.CATEGORY_MAIN"/>
+                <category android:name="android.intent.category.DEFAULT" />
+
+            </intent-filter>
         </activity>
         <activity
             android:name=".LoginScreenActivity"
-            android:label="@string/title_activity_login">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="osmapp.ACTION_LOGIN"/>
+                <category android:name="osmapp.CATEGORY_LOGIN" />
             </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".CreateProfileActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+            <intent-filter>
+
+                <action android:name="osmapp.ACTION_CREATEPROFILE"/>
+                <category android:name="osmapp.CATEGORY_CREATEPROFILE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+
+            </intent-filter>
         </activity>
     </application>
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#e10a0a</color>
+    <color name="colorPrimary">#5774b6</color>
+    <color name="colorPrimaryDark">#004b82</color>
+    <color name="colorAccent">#ffd05e</color>
     <color name="disabledButton">#cccccc</color>
     <color name="enabledButton">#e10a0a</color>
+    <color name="loginBackground">@android:color/darker_gray</color>
 </resources>
