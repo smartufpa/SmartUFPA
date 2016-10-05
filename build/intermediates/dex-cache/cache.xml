@@ -7,7 +7,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="4172adc0a325dd173adb15fff7ac073bdcaa7ee8">
+        sha1="7d21f1d95d65c58d0e65a06ed9fa38c35e363f75">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_29038c6a82384c1e127cb789fc8a69194e0735e9\classes.dex" />
     </item>
     <item
@@ -52,7 +52,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="9df2eb7ab1239eb17c1fc74afc0506723555b503">
+        sha1="e8d508bca69e2de6f444d867f48c82481d5699db">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_f942a3d5b81ec4118ab1dac66ed9c24a003cf3f9\classes.dex" />
     </item>
     <item
@@ -84,21 +84,21 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.4.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-23.4.0_8673ceb3f14b03faca8bf266009087f3e7da0715\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
         sha1="379471b2bd17d9737c050345c08e8c7d16589784">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.1.1_c807dcd1605f85c1af5cad1abb3fbd879488b55a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-23.4.0_8673ceb3f14b03faca8bf266009087f3e7da0715\classes.dex" />
     </item>
     <item
         is-multidex="true"

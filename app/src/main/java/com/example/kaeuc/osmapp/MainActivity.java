@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,8 +24,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.DefaultOverlayManager;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
         fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
         fabBusRoutes.setBackgroundTintList(
-                ColorStateList.valueOf(getResources().getColor(R.color.unabledButton)));
+                ColorStateList.valueOf(getResources().getColor(R.color.disabledButton)));
 
 
         // Ações para os butões flutuantes
@@ -126,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     busRouteActive = false;
 
                     fabBusRoutes.setBackgroundTintList(
-                            ColorStateList.valueOf(getResources().getColor(R.color.unabledButton)));
+                            ColorStateList.valueOf(getResources().getColor(R.color.disabledButton)));
 
                 }
 
