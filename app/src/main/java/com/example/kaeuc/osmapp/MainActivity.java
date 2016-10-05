@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private LocationManager locationManager;
 
     private Local defaultLocation;
-    private BoundingBoxE6 regiaoMapa;
+    private BoundingBoxE6 mapRegion;
 
     private boolean busRouteActive = false;
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         // Restrição de coordenadas do mapa
-        regiaoMapa = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
+        mapRegion = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
 
         // Views
         mMap =(MapView) findViewById(R.id.map);
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             public void onClick(View v) {
                 if(myCurrentLocation == null) {
                     Toast.makeText(MainActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
-                }else if(!regiaoMapa.contains(
+                }else if(!mapRegion.contains(
                         new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude())))
                     Toast.makeText(MainActivity.this, "Você está fora da região coberta pelo nosso mapa!", Toast.LENGTH_SHORT).show();
                 else
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mMap.setUseDataConnection(true);
         mMap.getOverlays().add(this.mLocationOverlay);
         // Restringe a área do mapa à região escolhida
-        mMap.setScrollableAreaLimit(regiaoMapa);
+        mMap.setScrollableAreaLimit(mapRegion);
 
 
 
