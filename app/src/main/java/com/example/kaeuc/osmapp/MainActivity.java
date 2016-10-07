@@ -21,6 +21,7 @@ import android.widget.Toast;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -145,12 +146,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         // Configuração do Mapa
         mMap.setTilesScaledToDpi(true);
-        mMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+        //mMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+        mMap.setTileSource(new XYTileSource("map.mbtiles", 0, 18, 256, ".jpg", new String[] {})); //Atribui o mapa offline em mMap
+        mMap.setUseDataConnection(false); //Desabilita o uso da internet (optional, but a good way to prevent loading from the network and test your zip loading.)
         mMap.setBuiltInZoomControls(true);
         mMap.setMinZoomLevel(15);
         mMap.setMaxZoomLevel(18);
         mMap.setMultiTouchControls(true);
-        mMap.setUseDataConnection(true);
+        //mMap.setUseDataConnection(true);
         mMap.getOverlays().add(this.mLocationOverlay);
         // Restringe a área do mapa à região escolhida
         mMap.setScrollableAreaLimit(mapRegion);
