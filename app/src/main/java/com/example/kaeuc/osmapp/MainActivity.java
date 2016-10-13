@@ -6,6 +6,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,12 +21,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.location.NominatimPOIProvider;
+import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.FolderOverlay;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -33,6 +39,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.kaeuc.osmapp.R.id.map;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
     public static final String ACTION_PICKLANG = "osmapp.ACTION_MAIN";
@@ -80,12 +88,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mapRegion = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
 
         // Views
-        mMap =(MapView) findViewById(R.id.map);
+        mMap =(MapView) findViewById(map);
         fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
         fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
         fabBusRoutes.setBackgroundTintList(
                 ColorStateList.valueOf(getResources().getColor(R.color.disabledButton)));
-
 
         // Ações para os butões flutuantes
         fabMyLocation.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                             ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
                 }else{
                     // 1 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
-                    mMap.getOverlays().remove(1);
+                    mMap.getOverlays().remove(2);
                     mMap.postInvalidate();
 
                     busRouteActive = false;
@@ -135,25 +142,25 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
 
 
-        mLocationOverlay = new MyLocationNewOverlay(this,new GpsMyLocationProvider(this),mMap);
+        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this),mMap);
 
         // Configuração do MapController: Posição inicial e zoom
         defaultLocation = new Local(-1.47485, -48.45651,"UFPA");
-        GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude());
+        final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude());
         mMapController = this.mMap.getController();
         mMapController.setZoom(16);
         mMapController.animateTo(startPoint);
 
         // Configuração do Mapa
         mMap.setTilesScaledToDpi(true);
-        //mMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-        mMap.setTileSource(new XYTileSource("map.mbtiles", 0, 18, 256, ".jpg", new String[] {})); //Atribui o mapa offline em mMap
-        mMap.setUseDataConnection(false); //Desabilita o uso da internet (optional, but a good way to prevent loading from the network and test your zip loading.)
+        mMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+//        mMap.setTileSource(new XYTileSource("map.mbtiles", 0, 18, 256, ".jpg", new String[] {})); //Atribui o mapa offline em mMap
+//        mMap.setUseDataConnection(false); //Desabilita o uso da internet (optional, but a good way to prevent loading from the network and test your zip loading.)
         mMap.setBuiltInZoomControls(true);
         mMap.setMinZoomLevel(15);
         mMap.setMaxZoomLevel(18);
         mMap.setMultiTouchControls(true);
-        //mMap.setUseDataConnection(true);
+        mMap.setUseDataConnection(true);
         mMap.getOverlays().add(this.mLocationOverlay);
         // Restringe a área do mapa à região escolhida
         mMap.setScrollableAreaLimit(mapRegion);
@@ -165,6 +172,34 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.disableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
+
+        new Thread(new Runnable()
+
+        {
+            public void run() {
+
+                NominatimPOIProvider poiProvider = new NominatimPOIProvider("OsmNavigator/1.0");
+                ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, "xerox,belem", 50, 0.1);
+
+                FolderOverlay poiMarkers = new FolderOverlay(MainActivity.this);
+                mMap.getOverlays().add(poiMarkers);
+
+                Drawable poiIcon = getResources().getDrawable(R.drawable.ic_content_copy_black_24dp);
+                for (POI poi:pois){
+                    Marker poiMarker = new Marker(mMap);
+                    poiMarker.setTitle(poi.mType);
+                    poiMarker.setSnippet(poi.mDescription);
+                    poiMarker.setPosition(poi.mLocation);
+                    poiMarker.setIcon(poiIcon);
+                    if (poi.mThumbnail != null){
+//                poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
+                    }
+                    poiMarkers.add(poiMarker);
+                }
+            }
+        }).start();
+
+
     }
 
     @Override
