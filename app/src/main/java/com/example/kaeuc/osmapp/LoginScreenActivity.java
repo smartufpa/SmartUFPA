@@ -77,8 +77,8 @@ public class LoginScreenActivity extends AppCompatActivity {
                     String password = edtPassword.getText().toString();
                     final int checkLogin = loginDAO.checkLogin(username, password);
                     if (checkLogin == 1){
-                        Intent intent = new Intent(MainActivity.ACTION_PICKLANG);
-                        intent.addCategory(MainActivity.CATEGORY_PICKLANG);
+                        Intent intent = new Intent(MapActivity.ACTION_MAP);
+                        intent.addCategory(MapActivity.CATEGORY_MAP);
                         intent.putExtra("username", username);
                         startActivity(intent);
                     }else if(checkLogin == -1){

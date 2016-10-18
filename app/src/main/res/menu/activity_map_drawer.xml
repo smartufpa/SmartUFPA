@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Filtros de Busca">
+        <menu>
+            <item
+                android:id="@+id/nav_xerox"
+                android:icon="@drawable/ic_content_copy_black_24dp"
+                android:title="Xerox"
+                android:checkable="true" />
+            <item
+                android:id="@+id/nav_restaurantes"
+                android:icon="@drawable/ic_food_black_36dp"
+                android:title="Restaurantes"
+                android:checkable="true" />
+            <item
+                android:id="@+id/nav_banheiros"
+                android:icon="@drawable/ic_food_black_36dp"
+                android:title="Banheiros"
+                android:checkable="true" />
+        </menu>
+    </item>
+
+</menu>

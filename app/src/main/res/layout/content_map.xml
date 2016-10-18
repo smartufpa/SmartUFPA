@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/relative_layout">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_map"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.kaeuc.osmapp.MapActivity"
+    tools:showIn="@layout/app_bar_map">
 
     <org.osmdroid.views.MapView
         android:layout_width="match_parent"
@@ -38,12 +41,8 @@
             android:src="@drawable/ic_my_location_white_24dp"
             />
 
-
-
-
     </RelativeLayout>
 
 
 
 </FrameLayout>
-
