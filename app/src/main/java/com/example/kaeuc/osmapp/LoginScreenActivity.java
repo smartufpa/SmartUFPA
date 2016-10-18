@@ -18,6 +18,8 @@ import com.example.kaeuc.osmapp.Database.LoginDAO;
  * Created by kaeuc on 10/5/2016.
  */
 public class LoginScreenActivity extends AppCompatActivity {
+    public static final String CATEGORY_LOGIN = "osmapp.CATEGORY_LOGIN";
+    public static final String ACTION_LOGIN = "osmapp.ACTION_LOGIN";
 
     private EditText edtUsername;
     private EditText edtPassword;
@@ -77,8 +79,8 @@ public class LoginScreenActivity extends AppCompatActivity {
                     String password = edtPassword.getText().toString();
                     final int checkLogin = loginDAO.checkLogin(username, password);
                     if (checkLogin == 1){
-                        Intent intent = new Intent(MainActivity.ACTION_PICKLANG);
-                        intent.addCategory(MainActivity.CATEGORY_PICKLANG);
+                        Intent intent = new Intent(MapActivity.ACTION_MAP);
+                        intent.addCategory(MapActivity.CATEGORY_MAP);
                         intent.putExtra("username", username);
                         startActivity(intent);
                     }else if(checkLogin == -1){
