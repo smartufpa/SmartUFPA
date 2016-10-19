@@ -47,31 +47,6 @@
         android:layout_marginTop="15dp" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:textColor="@android:color/white"
-        android:text="@string/logo_title"
-        android:id="@+id/textView6"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignStart="@+id/textView2"
-        android:layout_marginLeft="44dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="53dp" />
-
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/imageView5"
-        android:src="@drawable/ic_directions_bus_white_24dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginEnd="22dp"
-        android:layout_alignBottom="@+id/textView6"
-        android:layout_toLeftOf="@+id/textView6"
-        android:layout_toStartOf="@+id/textView6" />
-
-    <TextView
         android:text="Universidade Federal do Pará"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,6 +55,56 @@
         tools:text="Universidade Federal do Pará"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/textView2"
-        android:layout_alignEnd="@+id/textView2" />
+        android:layout_alignEnd="@+id/textView2"
+        android:textColor="@android:color/white" />
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="40dp"
+        android:layout_above="@+id/btn_Aluno"
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/img_logo"
+            android:src="@drawable/ic_directions_bus_white_24dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            android:text="@string/logo_title"
+            android:layout_toRightOf="@+id/img_logo"
+            />
+    </RelativeLayout>
+    <!--
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@android:color/white"
+            android:text="@string/logo_title"
+            android:id="@+id/textView6"
+            android:layout_marginTop="53dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_alignStart="@+id/textView2"
+            android:layout_marginLeft="23dp"
+            android:layout_marginStart="23dp" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageView5"
+            android:src="@drawable/ic_directions_bus_white_24dp"
+            android:layout_marginLeft="65dp"
+            android:layout_marginStart="65dp"
+            android:layout_alignBottom="@+id/textView6"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    -->
 </RelativeLayout>

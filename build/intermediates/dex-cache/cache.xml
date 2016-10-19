@@ -48,15 +48,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Program Files\Android\Android Studio\gradle\m2repository\org\apache\commons\commons-lang3\3.3.2\commons-lang3-3.3.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\commons-lang3-3.3.2_4314d5c387d123a62f2e97084dd070725c126438\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support.constraint\constraint-layout\1.0.0-alpha3\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -93,20 +84,11 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\org.osmdroid\osmdroid-android\5.4.1\release\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="9cfaea21fa885f50c6666f7ee64eb26f91f3f71c">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\osmdroid-android-5.4.1-release_1efbc958e2d842c082d6e5ce5d35340e928a69cb\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\temp\SmartCampus\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="5104403d9ab542d5ed2d95f86cafc697f7972e21">
+        sha1="a8ac27c6eefd50467c367d338de1afbcf965198f">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_d5b334ac5ec55b77d94fdb4d8599218b4ed0c579\classes.dex" />
     </item>
     <item
@@ -117,6 +99,24 @@
         revision="24.0.0"
         sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.4.0_a869dd53ac3e97c1e7bca8333bf2f1f2c9bb2a06\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Program Files\Android\Android Studio\gradle\m2repository\org\apache\commons\commons-lang3\3.3.2\commons-lang3-3.3.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\commons-lang3-3.3.2_4314d5c387d123a62f2e97084dd070725c126438\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\org.osmdroid\osmdroid-android\5.4.1\release\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="9cfaea21fa885f50c6666f7ee64eb26f91f3f71c">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\osmdroid-android-5.4.1-release_1efbc958e2d842c082d6e5ce5d35340e928a69cb\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -133,7 +133,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="648327c2e3616234e66626938d99c6d04351c644">
+        sha1="852671615d00bb90a2d27984ee5917c82446dd96">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_f6ea5d273c9dacb25e31262e4d1783cebc183777\classes.dex" />
     </item>
     <item
