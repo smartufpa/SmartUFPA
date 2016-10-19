@@ -28,6 +28,7 @@
                 <action android:name="osmapp.ACTION_LOGIN" />
 
                 <category android:name="osmapp.CATEGORY_LOGIN" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity

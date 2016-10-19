@@ -12,15 +12,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\FRANCISCO\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-alpha3\constraint-layout-solver-1.0.0-alpha3.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="977d57354ef7ef4faa604b802d4907728e0db889">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.0.0-alpha3_c22398e4c12904318997788383caa209680f9475\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -30,12 +21,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\FRANCISCO\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.4.0\support-annotations-23.4.0.jar"
+        jar="C:\Android\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-alpha3\constraint-layout-solver-1.0.0-alpha3.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.4.0_95eb04bc1803493425664f65662e3af1ef69ee05\classes.dex" />
+        sha1="977d57354ef7ef4faa604b802d4907728e0db889">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.0.0-alpha3_07db4572b2ef6458084d1e504ab0660350c34442\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -75,12 +66,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\FRANCISCO\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.9.0\f824591a0016efbaeddb8300bee54832a1398cfa\okio-1.9.0.jar"
+        jar="C:\Android\extras\android\m2repository\com\android\support\support-annotations\23.4.0\support-annotations-23.4.0.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="f824591a0016efbaeddb8300bee54832a1398cfa">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\okio-1.9.0_1e51fe9b767a62a177b59689acd25cd7f159ce7e\classes.dex" />
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.4.0_5aa0a38f65d198e03d02ab4e865cb332b778eb2a\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -90,6 +81,15 @@
         revision="24.0.0"
         sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-23.4.0_e4973708d0d8e9cfeccea3a4036811546c91d3f2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Coordenação-PdNovo\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.9.0\f824591a0016efbaeddb8300bee54832a1398cfa\okio-1.9.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="f824591a0016efbaeddb8300bee54832a1398cfa">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\okio-1.9.0_a5b7f6cbd48245e15efe4a175bf503d931e02f19\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -106,7 +106,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="52348a9b0fa07ef705d77a8452926435a0c2d66b">
+        sha1="5104403d9ab542d5ed2d95f86cafc697f7972e21">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_d5b334ac5ec55b77d94fdb4d8599218b4ed0c579\classes.dex" />
     </item>
     <item
@@ -120,30 +120,30 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\temp\SmartCampus\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="f4a65ba570b73d9b6e229e591b49e08f5b2c9355">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_f6ea5d273c9dacb25e31262e4d1783cebc183777\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\FRANCISCO\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.4.1\c7c4f9e35c2fd5900da24f9872e3971801f08ce0\okhttp-3.4.1.jar"
+        jar="C:\Users\Coordenação-PdNovo\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.4.1\c7c4f9e35c2fd5900da24f9872e3971801f08ce0\okhttp-3.4.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
         sha1="c7c4f9e35c2fd5900da24f9872e3971801f08ce0">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\okhttp-3.4.1_99f3c97ba2f5ddacc2804a6888acc7d6b71e9972\classes.dex" />
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\okhttp-3.4.1_69883950e2cbdd039f1ee9da26f920241459cc40\classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\FRANCISCO\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.7\751f548c85fa49f330cecbb1875893f971b33c4e\gson-2.7.jar"
+        jar="C:\temp\SmartCampus\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="648327c2e3616234e66626938d99c6d04351c644">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_f6ea5d273c9dacb25e31262e4d1783cebc183777\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Coordenação-PdNovo\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.7\751f548c85fa49f330cecbb1875893f971b33c4e\gson-2.7.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
         sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\gson-2.7_03c75ea4aa741c1b6a0d32452211f43543a619c8\classes.dex" />
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\gson-2.7_d9092c3e28401cb926a1f8e690b9a759fc008b53\classes.dex" />
     </item>
     <item
         is-multidex="true"
