@@ -10,15 +10,22 @@
                 android:checkable="true" />
             <item
                 android:id="@+id/nav_restaurantes"
-                android:icon="@drawable/ic_food_black_36dp"
+                android:icon="@drawable/ic_restaurante"
                 android:title="Restaurantes"
                 android:checkable="true" />
             <item
                 android:id="@+id/nav_banheiros"
-                android:icon="@drawable/ic_food_black_36dp"
+                android:icon="@drawable/ic_banheiro"
                 android:title="Banheiros"
                 android:checkable="true" />
         </menu>
     </item>
 
 </menu>
+
+<!--
+    Icone do restaurante:
+        créditos: Domínio público
+    Icone do banheiro:
+        créditos: corpus delicti from noun project
+-->
