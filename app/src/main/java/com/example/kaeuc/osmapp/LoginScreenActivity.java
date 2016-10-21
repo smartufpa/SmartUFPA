@@ -18,6 +18,8 @@ import com.example.kaeuc.osmapp.Database.LoginDAO;
  * Created by kaeuc on 10/5/2016.
  */
 public class LoginScreenActivity extends AppCompatActivity {
+    public static final String CATEGORY_LOGIN = "osmapp.CATEGORY_LOGIN";
+    public static final String ACTION_LOGIN = "osmapp.ACTION_LOGIN";
 
     private EditText edtUsername;
     private EditText edtPassword;

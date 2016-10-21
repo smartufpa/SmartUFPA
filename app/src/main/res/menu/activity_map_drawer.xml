@@ -17,11 +17,12 @@
                 android:id="@+id/nav_banheiros"
                 android:icon="@drawable/ic_banheiro"
                 android:title="Banheiros"
-                android:checkable="true" />
+                 android:checkable="true" />
         </menu>
     </item>
 
 </menu>
+
 
 <!--
     Icone do restaurante:
@@ -29,3 +30,4 @@
     Icone do banheiro:
         créditos: corpus delicti from noun project
 -->
+
