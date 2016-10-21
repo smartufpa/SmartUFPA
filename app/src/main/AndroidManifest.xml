@@ -49,7 +49,6 @@
             <intent-filter>
                 <action android:name="osmapp.ACTION_MAP" />
                 <category android:name="osmapp.CATEGORY_MAP" />
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -62,7 +61,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
     </application>
 
 </manifest>

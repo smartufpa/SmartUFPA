@@ -50,8 +50,8 @@ import static com.example.kaeuc.osmapp.R.id.map;
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
 
-    public static final String ACTION_MAP = "osmapp.ACTION_MAIN";
-    public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAIN";
+    public static final String ACTION_MAP = "osmapp.ACTION_MAP";
+    public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
 
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
