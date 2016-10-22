@@ -12,7 +12,6 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -25,6 +24,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.kaeuc.osmapp.Extras.Constants;
+import com.example.kaeuc.osmapp.Extras.Local;
+import com.example.kaeuc.osmapp.Server.OsmDataRequest;
+import com.example.kaeuc.osmapp.Server.ServerTaskResponse;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
@@ -48,7 +52,7 @@ import java.util.Map;
 import static com.example.kaeuc.osmapp.R.id.map;
 
 public class MapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener,ServerTaskResponse {
 
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
@@ -196,31 +200,31 @@ public class MapActivity extends AppCompatActivity
         mLocationOverlay.disableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
 
-        new Thread(new Runnable()
-
-        {
-            public void run() {
-
-                NominatimPOIProvider poiProvider = new NominatimPOIProvider("OsmNavigator/1.0");
-                ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, "xerox,belem", 50, 0.1);
-
-                FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
-                mMap.getOverlays().add(poiMarkers);
-
-                Drawable poiIcon = getResources().getDrawable(R.drawable.ic_content_copy_black_24dp);
-                for (POI poi:pois){
-                    Marker poiMarker = new Marker(mMap);
-                    poiMarker.setTitle(poi.mType);
-                    poiMarker.setSnippet(poi.mDescription);
-                    poiMarker.setPosition(poi.mLocation);
-                    poiMarker.setIcon(poiIcon);
-                    if (poi.mThumbnail != null){
-//                poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
-                    }
-                    poiMarkers.add(poiMarker);
-                }
-            }
-        }).start();
+//        new Thread(new Runnable()
+//
+//        {
+//            public void run() {
+//
+//                NominatimPOIProvider poiProvider = new NominatimPOIProvider("OsmNavigator/1.0");
+//                ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, "[shop:copyshop]", 50, 0.1);
+//
+//                FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
+//                mMap.getOverlays().add(poiMarkers);
+//
+//                Drawable poiIcon = getResources().getDrawable(R.drawable.ic_content_copy_black_24dp);
+//                for (POI poi:pois){
+//                    Marker poiMarker = new Marker(mMap);
+//                    poiMarker.setTitle(poi.mType);
+//                    poiMarker.setSnippet(poi.mDescription);
+//                    poiMarker.setPosition(poi.mLocation);
+//                    poiMarker.setIcon(poiIcon);
+//                    if (poi.mThumbnail != null){
+////                poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
+//                    }
+//                    poiMarkers.add(poiMarker);
+//                }
+//            }
+//        }).start();
 
 
 
@@ -265,7 +269,7 @@ public class MapActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_xerox) {
-
+            new OsmDataRequest(this).execute(Constants.FILTRO_XEROX);
         } else if (id == R.id.nav_restaurantes) {
 
         }
@@ -390,6 +394,11 @@ public class MapActivity extends AppCompatActivity
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    public void onTaskCompleted() {
+
     }
 
     // FIM DA CHECAGEM DE PERMISSÕES

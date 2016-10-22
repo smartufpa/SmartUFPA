@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp;
+package com.example.kaeuc.osmapp.Extras;
 
 /**
  * Created by kaeuc on 9/29/2016.
@@ -33,5 +33,8 @@ public class Local {
         return nome;
     }
 
-
+    @Override
+    public String toString() {
+        return "Local\nNome: " + this.nome + "\n("+this.latitude+","+this.longitude+")";
+    }
 }
