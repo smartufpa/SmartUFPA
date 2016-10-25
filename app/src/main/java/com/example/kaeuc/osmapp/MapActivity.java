@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,8 +32,6 @@ import com.example.kaeuc.osmapp.Server.OsmDataRequest;
 import com.example.kaeuc.osmapp.Server.ServerTaskResponse;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.location.NominatimPOIProvider;
-import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
@@ -56,6 +55,7 @@ public class MapActivity extends AppCompatActivity
 
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
+    private static final String TAG = "MapActivity";
 
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
@@ -70,8 +70,13 @@ public class MapActivity extends AppCompatActivity
     private Local defaultLocation;
     private BoundingBoxE6 mapRegion;
 
-    private boolean busRouteActive = false;
 
+    //Booleans para camadas informação
+    private boolean xeroxActive = false;
+    private boolean busRouteActive = false;
+    private boolean restaurantActive = false;
+
+    private Map<String,Integer> mapFilters = new HashMap<>();
 
 
     @Override
@@ -80,6 +85,9 @@ public class MapActivity extends AppCompatActivity
         setContentView(R.layout.activity_map);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -147,24 +155,19 @@ public class MapActivity extends AppCompatActivity
                 provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
                 TilesOverlay tilesOverlay = new TilesOverlay(provider,MapActivity.this);
                 if(!busRouteActive){
-                    mMap.getOverlays().add(tilesOverlay);
+                    mMap.getOverlays().add(0,tilesOverlay);
                     mMap.postInvalidate();
                     busRouteActive = true;
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
                 }else{
-                    // 1 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
-                    int ultimoOverlay = mMap.getOverlays().size();
-                    mMap.getOverlays().remove(ultimoOverlay- 1);
+                    // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
+                    mMap.getOverlayManager().remove(0);
                     mMap.postInvalidate();
-
                     busRouteActive = false;
-
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(getResources().getColor(R.color.disabledButton)));
-
                 }
-
             }
         });
 
@@ -195,14 +198,10 @@ public class MapActivity extends AppCompatActivity
 
 
 
-
         // Configuração para mostrar o boneco da posição do usuário
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.disableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
-
-
-
 
 
     }
@@ -244,11 +243,26 @@ public class MapActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_xerox) {
-            new OsmDataRequest(this).execute(Constants.FILTRO_XEROX);
+            if(!xeroxActive) {
+                new OsmDataRequest(this).execute(Constants.XEROX_FILTER);
+                xeroxActive = true;
+            }else {
+                mMap.getOverlays().remove((int)mapFilters.get(Constants.XEROX_FILTER));
+                mapFilters.remove(Constants.XEROX_FILTER);
+                xeroxActive = false;
+                item.setChecked(false);
+            }
         } else if (id == R.id.nav_restaurantes) {
-
+            if(!restaurantActive) {
+                new OsmDataRequest(this).execute(Constants.RESTAURANT_FILTER);
+                restaurantActive = true;
+            }else {
+                mMap.getOverlays().remove(mapFilters.get(Constants.RESTAURANT_FILTER).intValue());
+                mapFilters.remove(Constants.RESTAURANT_FILTER);
+                restaurantActive = false;
+                item.setChecked(false);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -375,16 +389,17 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onTaskCompleted(final List<Local> locais, final String filtro) {
-                new Thread(new Runnable()
+        new Thread(new Runnable()
         {
             public void run() {
                 FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
                 mMap.getOverlays().add(poiMarkers);
                 Drawable poiIcon = null;
 
-                if(filtro.equals(Constants.FILTRO_XEROX))
-                   poiIcon = getResources().getDrawable(R.drawable.ic_xerox_marker_24dp);
-
+                if(filtro.equals(Constants.XEROX_FILTER))
+                    poiIcon = ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_xerox);
+                else if(filtro.equals(Constants.RESTAURANT_FILTER))
+                    poiIcon = ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_restaurant);
                 for (Local local:locais){
                     Marker poiMarker = new Marker(mMap);
                     poiMarker.setTitle(local.getNome());
@@ -394,16 +409,15 @@ public class MapActivity extends AppCompatActivity
                     poiMarker.setIcon(poiIcon);
                     poiMarkers.add(poiMarker);
                 }
+
+                // Mapeia em que posição da arraylist a camada está sendo aplicada
+                mapFilters.put(filtro,mMap.getOverlays().size()-1);
             }
         }).start();
+
     }
 
+
     // FIM DA CHECAGEM DE PERMISSÕES
-
-
-
-
-
-
 
 }

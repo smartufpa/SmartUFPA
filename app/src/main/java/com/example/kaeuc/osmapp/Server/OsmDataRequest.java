@@ -98,6 +98,11 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
     }
 
     @Override
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+    }
+
+    @Override
     protected void onPostExecute(String xmlIncome) {
         super.onPostExecute(xmlIncome);
 

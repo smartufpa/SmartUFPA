@@ -1,6 +1,5 @@
 package com.example.kaeuc.osmapp.Extras;
 
-import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -82,7 +81,7 @@ public class OsmXmlParser {
             parser.nextTag();
         }else{
             if(nomeLocal == null)
-                nomeLocal = Constants.LOCAL_SEM_NOME;
+                nomeLocal = Constants.NAMEPLACE_UNKNOWN;
             parser.nextTag();
         }
         parser.require(XmlPullParser.END_TAG, namespace, "tag");
