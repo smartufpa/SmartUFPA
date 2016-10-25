@@ -154,7 +154,8 @@ public class MapActivity extends AppCompatActivity
                             ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
                 }else{
                     // 1 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
-                    mMap.getOverlays().remove(2);
+                    int ultimoOverlay = mMap.getOverlays().size();
+                    mMap.getOverlays().remove(ultimoOverlay- 1);
                     mMap.postInvalidate();
 
                     busRouteActive = false;
@@ -200,31 +201,7 @@ public class MapActivity extends AppCompatActivity
         mLocationOverlay.disableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
 
-//        new Thread(new Runnable()
-//
-//        {
-//            public void run() {
-//
-//                NominatimPOIProvider poiProvider = new NominatimPOIProvider("OsmNavigator/1.0");
-//                ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, "[shop:copyshop]", 50, 0.1);
-//
-//                FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
-//                mMap.getOverlays().add(poiMarkers);
-//
-//                Drawable poiIcon = getResources().getDrawable(R.drawable.ic_content_copy_black_24dp);
-//                for (POI poi:pois){
-//                    Marker poiMarker = new Marker(mMap);
-//                    poiMarker.setTitle(poi.mType);
-//                    poiMarker.setSnippet(poi.mDescription);
-//                    poiMarker.setPosition(poi.mLocation);
-//                    poiMarker.setIcon(poiIcon);
-//                    if (poi.mThumbnail != null){
-////                poiItem.setImage(new BitmapDrawable(poi.mThumbnail));
-//                    }
-//                    poiMarkers.add(poiMarker);
-//                }
-//            }
-//        }).start();
+
 
 
 
@@ -397,8 +374,28 @@ public class MapActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTaskCompleted() {
+    public void onTaskCompleted(final List<Local> locais, final String filtro) {
+                new Thread(new Runnable()
+        {
+            public void run() {
+                FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
+                mMap.getOverlays().add(poiMarkers);
+                Drawable poiIcon = null;
 
+                if(filtro.equals(Constants.FILTRO_XEROX))
+                   poiIcon = getResources().getDrawable(R.drawable.ic_xerox_marker_24dp);
+
+                for (Local local:locais){
+                    Marker poiMarker = new Marker(mMap);
+                    poiMarker.setTitle(local.getNome());
+                    // Descrição do marcador
+                    // poiMarker.setSnippet(local.getNome());
+                    poiMarker.setPosition(new GeoPoint(local.getLatitude(),local.getLongitude()));
+                    poiMarker.setIcon(poiIcon);
+                    poiMarkers.add(poiMarker);
+                }
+            }
+        }).start();
     }
 
     // FIM DA CHECAGEM DE PERMISSÕES

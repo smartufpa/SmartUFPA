@@ -28,7 +28,7 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
     private ServerTaskResponse callBack = null;
 
     private Context parentContext;
-
+    private String filtro = null;
 
     public OsmDataRequest(Context parentContext) {
         this.parentContext = parentContext;
@@ -37,7 +37,7 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String filtro = params[0];
+        filtro = params[0];
         String xmlResponse = null;
 
 
@@ -104,10 +104,7 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
         OsmXmlParser parser = new OsmXmlParser();
         try {
             final List<Local> locais = parser.parse(xmlIncome);
-            for (Local local :
-                    locais) {
-                Log.e(TAG, local.toString());
-            }
+            callBack.onTaskCompleted(locais,filtro);
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {

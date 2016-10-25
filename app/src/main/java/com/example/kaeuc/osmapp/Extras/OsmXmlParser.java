@@ -67,28 +67,26 @@ public class OsmXmlParser {
             }
             String name = parser.getName();
             if(name.equals("tag")){
-                nomeLocal = readTag(parser);
+                nomeLocal = readTag(parser,nomeLocal);
             }
         }
         parser.require(XmlPullParser.END_TAG,namespace,"node");
         return new Local(lat,lon,nomeLocal);
     }
 
-    private String readTag(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String name = null;
+    private String readTag(XmlPullParser parser, String nomeLocal) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG,namespace,"tag");
         String attr = parser.getAttributeValue(null,"k");
         if (attr.equals("name")) {
-            name = parser.getAttributeValue(null, "v");
-            Log.wtf(TAG,"PASSOU AQUI: "+ name);
+            nomeLocal = parser.getAttributeValue(null, "v");
             parser.nextTag();
-            return name;
         }else{
-            name = Constants.LOCAL_SEM_NOME;
+            if(nomeLocal == null)
+                nomeLocal = Constants.LOCAL_SEM_NOME;
             parser.nextTag();
         }
         parser.require(XmlPullParser.END_TAG, namespace, "tag");
-        return name;
+        return nomeLocal;
     }
 
     private void skip(XmlPullParser parser)  throws XmlPullParserException, IOException {
