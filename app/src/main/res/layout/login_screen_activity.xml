@@ -72,18 +72,8 @@
             android:layout_marginBottom="120dp"
             android:paddingLeft="15dp"
             />
-        <Button
-            android:text="Entrar como visitante"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/btn_Visitante"
-            android:textColor="@android:color/white"
-            android:layout_below="@+id/btn_signup"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="15dp" />
     </LinearLayout>
-
+    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -92,17 +82,19 @@
         android:layout_centerHorizontal="true"
         android:textColor="@android:color/white"
         />
-
+    
     <Button
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:id="@+id/btn_signup"
         android:text="@string/sign_up_button"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="57dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
         android:paddingLeft="15dp"
 
-        android:layout_alignBottom="@+id/inside_layout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        />
 </RelativeLayout>
