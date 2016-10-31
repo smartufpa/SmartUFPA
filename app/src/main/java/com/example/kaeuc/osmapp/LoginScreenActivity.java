@@ -25,6 +25,7 @@ public class LoginScreenActivity extends AppCompatActivity {
     private EditText edtPassword;
     private Button btnLogin;
     private Button btnCreateProfile;
+    private Button btnVisitante;
     private LoginDAO loginDAO;
 
 
@@ -38,6 +39,7 @@ public class LoginScreenActivity extends AppCompatActivity {
         edtPassword = (EditText) findViewById(R.id.edt_password);
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnCreateProfile = (Button) findViewById(R.id.btn_signup);
+        btnVisitante = (Button) findViewById(R.id.btn_Visitante);
 
         // Inicializa o banco de dados dos usuários em um thread para não comprometer a performance
         Runnable r1 = new Runnable() {                 //Thread code
@@ -69,7 +71,7 @@ public class LoginScreenActivity extends AppCompatActivity {
         Thread T = new Thread(r1); //new Thread(<runnable code>);
         T.start();
 
-        // Cria um Listener para os dois botões, e ele identificará qual botão foi clicado pela sua id
+        // Cria um Listener para os tres botões, e ele identificará qual botão foi clicado pela sua id
         final View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,10 +96,16 @@ public class LoginScreenActivity extends AppCompatActivity {
                     intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
                     startActivity(intent);
                 }
+                else if (v.getId() == btnVisitante.getId()) {
+                    Intent intent = new Intent(MapActivity.ACTION_MAP);
+                    intent.addCategory(MapActivity.CATEGORY_MAP);
+                    startActivity(intent);
+                }
             }
         };
         btnCreateProfile.setOnClickListener(clickListener);
         btnLogin.setOnClickListener(clickListener);
+        btnVisitante.setOnClickListener(clickListener);
 
 
 
