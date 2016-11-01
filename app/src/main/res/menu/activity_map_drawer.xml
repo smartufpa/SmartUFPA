@@ -7,29 +7,45 @@
                 android:id="@+id/nav_xerox"
                 android:icon="@drawable/ic_xerox"
                 android:title="Xerox"
-                android:checkable="true" />
+                />
             <item
                 android:id="@+id/nav_restaurantes"
                 android:icon="@drawable/ic_restaurant"
                 android:title="Restaurantes"
-                android:checkable="true" />
+                />
             <item
                 android:id="@+id/nav_banheiros"
                 android:icon="@drawable/ic_restroom"
                 android:title="Banheiros"
-                 android:checkable="true" />
+                />
+        </menu>
+    </item>
+
+    <item android:title="Mais Informações" >
+        <menu>
+            <item
+                android:id="@+id/nav_bolsas"
+                android:title="Bolsas UFPA"
+                />
+            <item
+                android:id="@+id/nav_estagios"
+                android:title="Estágios"
+                />
+            <item
+                android:id="@+id/nav_eventos"
+                android:title="Eventos"
+                />
         </menu>
     </item>
 
 </menu>
 
-
-<!--
-    Icone do restaurante:
-        créditos: Domínio público
-    Icone do banheiro:
-        créditos: corpus delicti from noun project
-    Icone da xerox:
-        créditos: Arthur Shlain from noun project
--->
+    <!--
+        Icone do restaurante:
+            créditos: Domínio público
+        Icone do banheiro:
+            créditos: corpus delicti from noun project
+        Icone da xerox:
+            créditos: Arthur Shlain from noun project
+    -->
 

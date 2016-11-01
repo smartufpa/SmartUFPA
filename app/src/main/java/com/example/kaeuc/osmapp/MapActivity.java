@@ -1,7 +1,6 @@
 package com.example.kaeuc.osmapp;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -9,14 +8,11 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
@@ -44,9 +41,7 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.kaeuc.osmapp.R.id.map;
 
@@ -78,9 +73,9 @@ public class MapActivity extends AppCompatActivity
     private boolean busRouteActive = false;
     private boolean restaurantActive = false;
 
-    private Map<String,Integer> mapFilters = new HashMap<>();
+    private List<String>mapFilters = new ArrayList<>();
 
-
+    /* Inicio dos métodos do ciclo da activity*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,22 +100,12 @@ public class MapActivity extends AppCompatActivity
         });
 
 
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
-
-        // Requisita permissões para Android Marshmallow e devices superiores
-        if (Build.VERSION.SDK_INT >= 23) {
-            checkPermissions();
-        }
-
 
         /* Configura o caminho do armazenamento em cache do mapa, se o device não possui cartão SD,
          * ele deve ser configurado para o caminho de arquivos do device
@@ -181,8 +166,43 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
+        setupMap();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this);
+        }
+
+        mLocationOverlay.disableMyLocation();
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0l,0f,this);
+        }
 
 
+        mLocationOverlay.enableMyLocation();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationManager = null;
+        myCurrentLocation=null;
+        mLocationOverlay=null;
+    }
+
+    /* Fim dos métodos do ciclo da activity*/
+
+    public void setupMap(){
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this),mMap);
 
 
@@ -212,11 +232,9 @@ public class MapActivity extends AppCompatActivity
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.disableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
-
-
-
-
     }
+
+    /* Início dos métodos de utilização do Drawer lateral*/
 
     @Override
     public void onBackPressed() {
@@ -260,18 +278,17 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this).execute(Constants.XEROX_FILTER);
                 xeroxActive = true;
             }else {
-                if(mMap.getOverlays().contains(mMap.getOverlays().get(mapFilters.get(Constants.XEROX_FILTER))))
-                    mMap.getOverlays().remove(mapFilters.get(Constants.XEROX_FILTER).intValue());
+                mMap.getOverlays().remove(mapFilters.indexOf(Constants.XEROX_FILTER)+1);
                 mapFilters.remove(Constants.XEROX_FILTER);
                 xeroxActive = false;
+
             }
         } else if (id == R.id.nav_restaurantes) {
             if(!restaurantActive) {
                 new OsmDataRequest(this).execute(Constants.RESTAURANT_FILTER);
                 restaurantActive = true;
             }else {
-                if(mMap.getOverlays().contains(mMap.getOverlays().get(mapFilters.get(Constants.RESTAURANT_FILTER))))
-                    mMap.getOverlays().remove(mapFilters.get(Constants.RESTAURANT_FILTER).intValue());
+                mMap.getOverlays().remove(mapFilters.indexOf(Constants.RESTAURANT_FILTER)+1);
                 mapFilters.remove(Constants.RESTAURANT_FILTER);
                 restaurantActive = false;
 
@@ -283,40 +300,7 @@ public class MapActivity extends AppCompatActivity
         return true;
     }
 
-    /* Inicio dos métodos do ciclo da activity*/
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.removeUpdates(this);
-        }
-
-        mLocationOverlay.disableMyLocation();
-    }
-    @Override
-    public void onResume(){
-        super.onResume();
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0l,0f,this);
-        }
-
-
-        mLocationOverlay.enableMyLocation();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        locationManager = null;
-        myCurrentLocation=null;
-        mLocationOverlay=null;
-    }
-
-    /* Fim dos métodos do ciclo da activity*/
+    /* Fim dos métodos de utilização do Drawer lateral*/
 
     @Override
     public void onLocationChanged(Location location) {
@@ -336,68 +320,6 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onProviderDisabled(String provider) {
 
-    }
-
-    // Inicio da checagem de permissões - Métodos retirados do exemplo dado no projeto do OSMdroid
-    // OpenStreetMapView > Samples > ExtraSamples > SampleFollowMe
-    final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void checkPermissions() {
-        List<String> permissions = new ArrayList<>();
-        String message = "osmdroid permissions:";
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-            message += "\nLocation to show user location.";
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            message += "\nStorage access to store map tiles.";
-        }
-        if (!permissions.isEmpty()) {
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            String[] params = permissions.toArray(new String[permissions.size()]);
-            requestPermissions(params, REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-        } // else: We already have permissions, so handle as normal
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-                Map<String, Integer> perms = new HashMap<>();
-                // Initial
-                perms.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-                // Fill with results
-                for (int i = 0; i < permissions.length; i++)
-                    perms.put(permissions[i], grantResults[i]);
-                // Check for ACCESS_FINE_LOCATION and WRITE_EXTERNAL_STORAGE
-                Boolean location = perms.get(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-                Boolean storage = perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-                if (location && storage) {
-                    // All Permissions Granted
-                    Toast.makeText(MapActivity.this, "Todas as permissões necessárias foram cedidas.",
-                            Toast.LENGTH_SHORT).show();
-                } else if (location) {
-                    Toast.makeText(this, "Permissão de armzenamento é necessária para armazenar " +
-                                    "porções do mapa para reduzir consumo de dados e para uso offline.",
-                            Toast.LENGTH_LONG).show();
-                } else if (storage) {
-                    Toast.makeText(this, "Permissão de localização é necessária para mostrar a sua " +
-                            "localização no mapa.", Toast.LENGTH_LONG).show();
-                } else { // !location && !storage case
-                    // Permission Denied
-                    Toast.makeText(MapActivity.this, "Permissão de armzenamento é necessária para armazenar " +
-                            "porções do mapa para reduzir consumo de dados e para uso offline." +
-                            "\nPermissão de localização é necessária para mostrar a sua " +
-                            "localização no mapa.", Toast.LENGTH_SHORT).show();
-                }
-            }
-            break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
     }
 
     @Override
@@ -422,15 +344,11 @@ public class MapActivity extends AppCompatActivity
                     poiMarker.setIcon(poiIcon);
                     poiMarkers.add(poiMarker);
                 }
-
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
-                mapFilters.put(filtro,mMap.getOverlays().size()-1);
+                mapFilters.add(filtro);
             }
         }).start();
 
     }
-
-
-    // FIM DA CHECAGEM DE PERMISSÕES
 
 }

@@ -43,6 +43,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:hint="@string/username_hint"
+            android:inputType="textNoSuggestions"
             android:paddingLeft="15dp"
             />
 
