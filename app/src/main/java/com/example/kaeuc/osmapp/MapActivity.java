@@ -61,6 +61,8 @@ public class MapActivity extends AppCompatActivity
     private MyLocationNewOverlay mLocationOverlay;
 
     private MapView mMap;
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
     private FloatingActionButton fabMyLocation;
     private FloatingActionButton fabBusRoutes;
 
@@ -87,16 +89,28 @@ public class MapActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Views
+                drawer =(DrawerLayout) findViewById(R.id.drawer_layout);
+                navigationView = (NavigationView) findViewById(R.id.nav_view);
+                mMap =(MapView) findViewById(map);
+                fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
+                fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
+                fabBusRoutes.setBackgroundTintList(
+                        ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
+
+            }
+        });
 
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -122,18 +136,14 @@ public class MapActivity extends AppCompatActivity
         // Restrição de coordenadas do mapa
         mapRegion = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
 
-        // Views
-        mMap =(MapView) findViewById(map);
-        fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
-        fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
-        fabBusRoutes.setBackgroundTintList(
-                ColorStateList.valueOf(getResources().getColor(R.color.disabledButton)));
 
         // Ações para os butões flutuantes
         fabMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(myCurrentLocation == null) {
+                    // TODO
+                    // 1. Checar se o gps está ligado
                     Toast.makeText(MapActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
                 }else if(!mapRegion.contains(
                         new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude())))
@@ -159,14 +169,14 @@ public class MapActivity extends AppCompatActivity
                     mMap.postInvalidate();
                     busRouteActive = true;
                     fabBusRoutes.setBackgroundTintList(
-                            ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.colorAccent)));
                 }else{
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
                     mMap.getOverlayManager().remove(0);
                     mMap.postInvalidate();
                     busRouteActive = false;
                     fabBusRoutes.setBackgroundTintList(
-                            ColorStateList.valueOf(getResources().getColor(R.color.disabledButton)));
+                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
                 }
             }
         });
@@ -175,10 +185,11 @@ public class MapActivity extends AppCompatActivity
 
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this),mMap);
 
+
         // Configuração do MapController: Posição inicial e zoom
         defaultLocation = new Local(-1.47485, -48.45651,"UFPA");
         final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude());
-        mMapController = this.mMap.getController();
+        mMapController = mMap.getController();
         mMapController.setZoom(16);
         mMapController.animateTo(startPoint);
 
@@ -192,23 +203,24 @@ public class MapActivity extends AppCompatActivity
         mMap.setMaxZoomLevel(18);
         mMap.setMultiTouchControls(true);
         mMap.setUseDataConnection(true);
-        mMap.getOverlays().add(this.mLocationOverlay);
+        mMap.getOverlays().add(mLocationOverlay);
+
+
         // Restringe a área do mapa à região escolhida
         mMap.setScrollableAreaLimit(mapRegion);
-
-
-
         // Configuração para mostrar o boneco da posição do usuário
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.disableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
 
 
+
+
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -248,20 +260,21 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this).execute(Constants.XEROX_FILTER);
                 xeroxActive = true;
             }else {
-                mMap.getOverlays().remove((int)mapFilters.get(Constants.XEROX_FILTER));
+                if(mMap.getOverlays().contains(mMap.getOverlays().get(mapFilters.get(Constants.XEROX_FILTER))))
+                    mMap.getOverlays().remove(mapFilters.get(Constants.XEROX_FILTER).intValue());
                 mapFilters.remove(Constants.XEROX_FILTER);
                 xeroxActive = false;
-                item.setChecked(false);
             }
         } else if (id == R.id.nav_restaurantes) {
             if(!restaurantActive) {
                 new OsmDataRequest(this).execute(Constants.RESTAURANT_FILTER);
                 restaurantActive = true;
             }else {
-                mMap.getOverlays().remove(mapFilters.get(Constants.RESTAURANT_FILTER).intValue());
+                if(mMap.getOverlays().contains(mMap.getOverlays().get(mapFilters.get(Constants.RESTAURANT_FILTER))))
+                    mMap.getOverlays().remove(mapFilters.get(Constants.RESTAURANT_FILTER).intValue());
                 mapFilters.remove(Constants.RESTAURANT_FILTER);
                 restaurantActive = false;
-                item.setChecked(false);
+
             }
         }
 
