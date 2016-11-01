@@ -6,4 +6,9 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="LinearProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@android:color/holo_red_dark</item>
+        <item name="android:progressBackgroundTint">@android:color/white</item>
+    </style>
 </resources>

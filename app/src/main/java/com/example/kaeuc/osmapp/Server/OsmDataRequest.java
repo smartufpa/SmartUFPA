@@ -1,12 +1,16 @@
 package com.example.kaeuc.osmapp.Server;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
 import com.example.kaeuc.osmapp.Extras.Local;
 import com.example.kaeuc.osmapp.Extras.OsmXmlParser;
+import com.example.kaeuc.osmapp.MapActivity;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -30,10 +34,21 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
     private Context parentContext;
     private String filtro = null;
 
-    public OsmDataRequest(Context parentContext) {
+    private ProgressBar progressBar;
+
+    public OsmDataRequest(Context parentContext,ProgressBar progressBar) {
         this.parentContext = parentContext;
         this.callBack = (ServerTaskResponse) parentContext;
+        this.progressBar = progressBar;
     }
+
+    @Override
+    protected void onPreExecute() {
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setIndeterminate(true);
+        super.onPreExecute();
+    }
+
 
     @Override
     protected String doInBackground(String... params) {
@@ -115,6 +130,7 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        progressBar.setVisibility(View.INVISIBLE);
 
 
     }

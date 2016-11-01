@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
@@ -60,6 +61,8 @@ public class MapActivity extends AppCompatActivity
     private NavigationView navigationView;
     private FloatingActionButton fabMyLocation;
     private FloatingActionButton fabBusRoutes;
+    private ProgressBar progressBar;
+
 
     private Location myCurrentLocation;
     private LocationManager locationManager;
@@ -88,6 +91,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void run() {
                 // Views
+                progressBar = (ProgressBar) findViewById(R.id.progressbar);
                 drawer =(DrawerLayout) findViewById(R.id.drawer_layout);
                 navigationView = (NavigationView) findViewById(R.id.nav_view);
                 mMap =(MapView) findViewById(map);
@@ -127,8 +131,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(myCurrentLocation == null) {
-                    // TODO
-                    // 1. Checar se o gps está ligado
+                    // TODO 1. Checar se o gps está ligado
                     Toast.makeText(MapActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
                 }else if(!mapRegion.contains(
                         new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude())))
@@ -151,14 +154,14 @@ public class MapActivity extends AppCompatActivity
                 TilesOverlay tilesOverlay = new TilesOverlay(provider,MapActivity.this);
                 if(!busRouteActive){
                     mMap.getOverlays().add(0,tilesOverlay);
-                    mMap.postInvalidate();
+                    mMap.invalidate();
                     busRouteActive = true;
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.colorAccent)));
                 }else{
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
                     mMap.getOverlayManager().remove(0);
-                    mMap.postInvalidate();
+                    mMap.invalidate();
                     busRouteActive = false;
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
@@ -232,6 +235,7 @@ public class MapActivity extends AppCompatActivity
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.disableFollowLocation();
         mLocationOverlay.setOptionsMenuEnabled(true);
+        mMap.invalidate();
     }
 
     /* Início dos métodos de utilização do Drawer lateral*/
@@ -275,28 +279,27 @@ public class MapActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_xerox) {
             if(!xeroxActive) {
-                new OsmDataRequest(this).execute(Constants.XEROX_FILTER);
+                new OsmDataRequest(this,progressBar).execute(Constants.XEROX_FILTER);
                 xeroxActive = true;
             }else {
                 mMap.getOverlays().remove(mapFilters.indexOf(Constants.XEROX_FILTER)+1);
                 mapFilters.remove(Constants.XEROX_FILTER);
                 xeroxActive = false;
-
             }
         } else if (id == R.id.nav_restaurantes) {
             if(!restaurantActive) {
-                new OsmDataRequest(this).execute(Constants.RESTAURANT_FILTER);
+                new OsmDataRequest(this,progressBar).execute(Constants.RESTAURANT_FILTER);
                 restaurantActive = true;
             }else {
                 mMap.getOverlays().remove(mapFilters.indexOf(Constants.RESTAURANT_FILTER)+1);
                 mapFilters.remove(Constants.RESTAURANT_FILTER);
                 restaurantActive = false;
-
             }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        mMap.invalidate();
         return true;
     }
 
