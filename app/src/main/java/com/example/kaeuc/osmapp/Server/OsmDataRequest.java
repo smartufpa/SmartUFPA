@@ -3,6 +3,8 @@ package com.example.kaeuc.osmapp.Server;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
 import com.example.kaeuc.osmapp.Extras.Local;
@@ -26,13 +28,15 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
 
     private static final String TAG = "OsmDataRequest" ;
     private ServerTaskResponse callBack = null;
+    private ProgressBar progressBar;
 
     private Context parentContext;
     private String filtro = null;
 
-    public OsmDataRequest(Context parentContext) {
+    public OsmDataRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
         this.callBack = (ServerTaskResponse) parentContext;
+        this.progressBar = progressBar;
     }
 
     @Override
@@ -98,8 +102,9 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
     }
 
     @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -115,6 +120,8 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        progressBar.setVisibility(View.GONE);
 
 
     }

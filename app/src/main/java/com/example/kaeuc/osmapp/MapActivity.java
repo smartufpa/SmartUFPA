@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
@@ -57,11 +58,13 @@ public class MapActivity extends AppCompatActivity
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
 
+    //views
     private MapView mMap;
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private FloatingActionButton fabMyLocation;
     private FloatingActionButton fabBusRoutes;
+    private ProgressBar progressBar;
 
     private Location myCurrentLocation;
     private LocationManager locationManager;
@@ -97,7 +100,7 @@ public class MapActivity extends AppCompatActivity
                 fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
                 fabBusRoutes.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
-
+                progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
                 //Aqui
 
@@ -164,14 +167,15 @@ public class MapActivity extends AppCompatActivity
                 TilesOverlay tilesOverlay = new TilesOverlay(provider,MapActivity.this);
                 if(!busRouteActive){
                     mMap.getOverlays().add(0,tilesOverlay);
-                    mMap.postInvalidate();
+                    mMap.invalidate();
                     busRouteActive = true;
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.colorAccent)));
+
                 }else{
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
                     mMap.getOverlayManager().remove(0);
-                    mMap.postInvalidate();
+                    mMap.invalidate();
                     busRouteActive = false;
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
@@ -288,7 +292,7 @@ public class MapActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_xerox) {
             if(!xeroxActive) {
-                new OsmDataRequest(this).execute(Constants.XEROX_FILTER);
+                new OsmDataRequest(this,progressBar).execute(Constants.XEROX_FILTER);
                 xeroxActive = true;
             }else {
                 mMap.getOverlays().remove(mapFilters.indexOf(Constants.XEROX_FILTER)+1);
@@ -298,7 +302,7 @@ public class MapActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_restaurantes) {
             if(!restaurantActive) {
-                new OsmDataRequest(this).execute(Constants.RESTAURANT_FILTER);
+                new OsmDataRequest(this,progressBar).execute(Constants.RESTAURANT_FILTER);
                 restaurantActive = true;
             }else {
                 mMap.getOverlays().remove(mapFilters.indexOf(Constants.RESTAURANT_FILTER)+1);
