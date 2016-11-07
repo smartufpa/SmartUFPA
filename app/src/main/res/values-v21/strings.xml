@@ -2,4 +2,5 @@
 <resources>
     <string name="drawer_subheader">LabVis - UFPA</string>
     <string name="drawer_subtitle">ICEN - Faculdade de Computação</string>
+    <string name="search_hint">Procure na UFPA</string>
 </resources>

@@ -21,7 +21,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/img_logo"
-                android:src="@drawable/ic_person_add_white_24dp"
+                android:src="@drawable/ic_create_profile"
                 android:layout_marginRight="10dp"
                 />
             <TextView

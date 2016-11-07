@@ -1,10 +1,12 @@
 package com.example.kaeuc.osmapp;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -16,15 +18,19 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialogFragment;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
 import com.example.kaeuc.osmapp.Extras.Local;
@@ -32,6 +38,8 @@ import com.example.kaeuc.osmapp.Server.OsmDataRequest;
 import com.example.kaeuc.osmapp.Server.ServerTaskResponse;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.location.NominatimPOIProvider;
+import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
@@ -49,7 +57,8 @@ import java.util.List;
 import static com.example.kaeuc.osmapp.R.id.map;
 
 public class MapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, LocationListener,ServerTaskResponse {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
+        ServerTaskResponse, SearchView.OnQueryTextListener {
 
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
@@ -65,6 +74,9 @@ public class MapActivity extends AppCompatActivity
     private FloatingActionButton fabMyLocation;
     private FloatingActionButton fabBusRoutes;
     private ProgressBar progressBar;
+    private Toolbar toolbar;
+    private BottomSheetBehavior sheetBehavior;
+
 
     private Location myCurrentLocation;
     private LocationManager locationManager;
@@ -85,15 +97,13 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // Views
                 drawer =(DrawerLayout) findViewById(R.id.drawer_layout);
+                toolbar = (Toolbar) findViewById(R.id.toolbar);
                 navigationView = (NavigationView) findViewById(R.id.nav_view);
                 mMap =(MapView) findViewById(map);
                 fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
@@ -102,11 +112,16 @@ public class MapActivity extends AppCompatActivity
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
-                //Aqui
+                final View view = findViewById(R.id.bottom_sheet);
+                sheetBehavior = BottomSheetBehavior.from(view);
+                sheetBehavior.setHideable(true);
+                sheetBehavior.setPeekHeight(300);
+                sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
             }
         });
 
+        setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -135,7 +150,6 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(myCurrentLocation == null) {
-
                     //Ações do GPS, é verificado se o gps está ativo quando o usuário aperta o botão flutuante da localização
                     LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
@@ -143,8 +157,6 @@ public class MapActivity extends AppCompatActivity
                     if(!GPSEnabled){
                         startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
-                    // TODO
-                    // 1. Checar se o gps está ligado
                     Toast.makeText(MapActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
                 }else if(!mapRegion.contains(
                         new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude())))
@@ -182,7 +194,6 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         });
-
         setupMap();
     }
 
@@ -222,29 +233,34 @@ public class MapActivity extends AppCompatActivity
     public void setupMap(){
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this),mMap);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Configuração do MapController: Posição inicial e zoom
+                defaultLocation = new Local(-1.47485, -48.45651,"UFPA");
+                final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude());
+                mMapController = mMap.getController();
+                mMapController.setZoom(16);
+                mMapController.animateTo(startPoint);
 
-        // Configuração do MapController: Posição inicial e zoom
-        defaultLocation = new Local(-1.47485, -48.45651,"UFPA");
-        final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude());
-        mMapController = mMap.getController();
-        mMapController.setZoom(16);
-        mMapController.animateTo(startPoint);
-
-        // Configuração do Mapa
-        mMap.setTilesScaledToDpi(true);
-        mMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-//        mMap.setTileSource(new XYTileSource("map.mbtiles", 0, 18, 256, ".jpg", new String[] {})); //Atribui o mapa offline em mMap
+                // Configuração do Mapa
+                mMap.setTilesScaledToDpi(true);
+                mMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+//        mMap.setTileSource(new XYTileSource("actions_bar_items.xml.mbtiles", 0, 18, 256, ".jpg", new String[] {})); //Atribui o mapa offline em mMap
 //        mMap.setUseDataConnection(false); //Desabilita o uso da internet (optional, but a good way to prevent loading from the network and test your zip loading.)
-        mMap.setBuiltInZoomControls(true);
-        mMap.setMinZoomLevel(15);
-        mMap.setMaxZoomLevel(18);
-        mMap.setMultiTouchControls(true);
-        mMap.setUseDataConnection(true);
-        mMap.getOverlays().add(mLocationOverlay);
+                mMap.setBuiltInZoomControls(true);
+                mMap.setMinZoomLevel(15);
+                mMap.setMaxZoomLevel(18);
+                mMap.setMultiTouchControls(true);
+                mMap.setUseDataConnection(true);
+                mMap.getOverlays().add(mLocationOverlay);
 
 
-        // Restringe a área do mapa à região escolhida
-        mMap.setScrollableAreaLimit(mapRegion);
+                // Restringe a área do mapa à região escolhida
+                mMap.setScrollableAreaLimit(mapRegion);
+            }
+        }).start();
+
         // Configuração para mostrar o boneco da posição do usuário
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.disableFollowLocation();
@@ -266,24 +282,31 @@ public class MapActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.map, menu);
+        getMenuInflater().inflate(R.menu.actions_bar_items, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(this);
+
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -312,7 +335,7 @@ public class MapActivity extends AppCompatActivity
             }
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -368,4 +391,66 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public boolean onQueryTextSubmit(final String query) {
+        final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NominatimPOIProvider poiProvider = new NominatimPOIProvider("OsmNavigator/1.0");
+                ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, query+",Belém", 50, 0.1);
+                if(pois.size() > 1){
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
+                mMap.getOverlays().add(poiMarkers);
+
+                Drawable poiIcon = getResources().getDrawable(R.drawable.ic_marker);
+                for (POI poi:pois){
+                    Marker poiMarker = new Marker(mMap);
+//                    poiMarker.setTitle(poi.mType);
+                    poiMarker.setSnippet(poi.mDescription);
+                    poiMarker.setPosition(poi.mLocation);
+                    poiMarker.setIcon(poiIcon);
+                    poiMarkers.add(poiMarker);
+                }
+
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                    @Override
+                    public void onStateChanged(View bottomSheet, int newState) {
+                        if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+
+                        }
+                        else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+
+                        }
+                        else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onSlide(View bottomSheet, float slideOffset) {
+                    }
+                });
+
+
+
+            }
+        }).start();
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
 }

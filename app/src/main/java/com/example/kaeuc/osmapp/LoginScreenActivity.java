@@ -45,10 +45,10 @@ public class LoginScreenActivity extends AppCompatActivity {
         setContentView(R.layout.login_screen_activity);
 
         // Views
-        edtUsername = (EditText) findViewById(R.id.edt_username);
-        edtPassword = (EditText) findViewById(R.id.edt_password);
+//        edtUsername = (EditText) findViewById(R.id.edt_username);
+//        edtPassword = (EditText) findViewById(R.id.edt_password);
         btnLogin = (Button) findViewById(R.id.btn_login);
-        btnCreateProfile = (Button) findViewById(R.id.btn_signup);
+//        btnCreateProfile = (Button) findViewById(R.id.btn_signup);
         btnVisitante = (Button) findViewById(R.id.btn_Visitante);
 
         // Inicializa o banco de dados dos usuários em um thread para não comprometer a performance
@@ -83,33 +83,35 @@ public class LoginScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(v.getId() == btnLogin.getId()){
-                    String username = edtUsername.getText().toString();
-                    String password = edtPassword.getText().toString();
-                    final int checkLogin = loginDAO.checkLogin(username, password);
-                    if (checkLogin == 1){
-                        Intent intent = new Intent(MapActivity.ACTION_MAP);
-                        intent.addCategory(MapActivity.CATEGORY_MAP);
-                        intent.putExtra("username", username);
-                        startActivity(intent);
-                    }else if(checkLogin == -1){
-                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_user, Toast.LENGTH_LONG).show();
-                    }else {
-                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_noprofile, Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(LoginScreenActivity.this, "Em breve essa função será adicionada.", Toast.LENGTH_SHORT).show();
 
-                }else if(v.getId() == btnCreateProfile.getId()){
-                    Intent intent = new Intent(CreateProfileActivity.ACTION_CREATEPROFILE);
-                    intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
-                    startActivity(intent);
-                }
-                else if (v.getId() == btnVisitante.getId()) {
+
+                    // Código de login
+//                    String username = edtUsername.getText().toString();
+//                    String password = edtPassword.getText().toString();
+//                    final int checkLogin = loginDAO.checkLogin(username, password);
+//                    if (checkLogin == 1){
+//                        Intent intent = new Intent(MapActivity.ACTION_MAP);
+//                        intent.addCategory(MapActivity.CATEGORY_MAP);
+//                        intent.putExtra("username", username);
+//                        startActivity(intent);
+//                    }else if(checkLogin == -1){
+//                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_user, Toast.LENGTH_LONG).show();
+//                    }else {
+//                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_noprofile, Toast.LENGTH_LONG).show();
+//                    }
+//                }else if(v.getId() == btnCreateProfile.getId()){
+//                    Intent intent = new Intent(CreateProfileActivity.ACTION_CREATEPROFILE);
+//                    intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
+//                    startActivity(intent);
+                }else if (v.getId() == btnVisitante.getId()) {
                     Intent intent = new Intent(MapActivity.ACTION_MAP);
                     intent.addCategory(MapActivity.CATEGORY_MAP);
                     startActivity(intent);
                 }
             }
         };
-        btnCreateProfile.setOnClickListener(clickListener);
+//        btnCreateProfile.setOnClickListener(clickListener);
         btnLogin.setOnClickListener(clickListener);
         btnVisitante.setOnClickListener(clickListener);
 

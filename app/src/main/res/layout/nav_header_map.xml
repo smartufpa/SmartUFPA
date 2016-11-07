@@ -17,7 +17,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/ic_directions_bus_white_24dp" />
+        app:srcCompat="@drawable/ic_bus_white" />
 
     <TextView
         android:layout_width="match_parent"

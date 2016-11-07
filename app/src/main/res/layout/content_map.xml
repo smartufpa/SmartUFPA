@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_map"
@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_directions_bus_white_24dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_bus_white"
             />
 
         <android.support.design.widget.FloatingActionButton
@@ -37,12 +38,37 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/fab_bus_route"
-            android:src="@drawable/ic_my_location_white_24dp"
+            android:src="@drawable/ic_my_location"
             />
 
     </RelativeLayout>
 
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:clipToPadding="true"
+        android:background="@android:color/white"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Teste"
+                android:textSize="16sp"
+                android:textAllCaps="true"
+                android:padding="16dp"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 
-</FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>
