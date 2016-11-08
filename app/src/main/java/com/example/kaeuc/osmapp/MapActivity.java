@@ -2,6 +2,7 @@ package com.example.kaeuc.osmapp;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -9,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -56,6 +58,7 @@ public class MapActivity extends AppCompatActivity
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
 
+    //views
     private MapView mMap;
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -99,6 +102,9 @@ public class MapActivity extends AppCompatActivity
                 fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
                 fabBusRoutes.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
+                progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+                //Aqui
 
             }
         });
@@ -131,7 +137,13 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(myCurrentLocation == null) {
-                    // TODO 1. Checar se o gps está ligado
+                    //Ações do GPS, é verificado se o gps está ativo quando o usuário aperta o botão flutuante da localização
+                    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
+                    //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
+                    if(!GPSEnabled){
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
                     Toast.makeText(MapActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
                 }else if(!mapRegion.contains(
                         new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude())))
@@ -158,6 +170,7 @@ public class MapActivity extends AppCompatActivity
                     busRouteActive = true;
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.colorAccent)));
+
                 }else{
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
                     mMap.getOverlayManager().remove(0);

@@ -30,13 +30,18 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
 
     private static final String TAG = "OsmDataRequest" ;
     private ServerTaskResponse callBack = null;
+    private ProgressBar progressBar;
 
     private Context parentContext;
     private String filtro = null;
 
+<<<<<<< HEAD
     private ProgressBar progressBar;
 
     public OsmDataRequest(Context parentContext,ProgressBar progressBar) {
+=======
+    public OsmDataRequest(Context parentContext, ProgressBar progressBar) {
+>>>>>>> 75412aef04510023fabe4e60a18dfee18815e244
         this.parentContext = parentContext;
         this.callBack = (ServerTaskResponse) parentContext;
         this.progressBar = progressBar;
@@ -113,8 +118,9 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
     }
 
     @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -131,6 +137,8 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
             e.printStackTrace();
         }
         progressBar.setVisibility(View.INVISIBLE);
+
+        progressBar.setVisibility(View.GONE);
 
 
     }

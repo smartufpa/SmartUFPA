@@ -19,7 +19,22 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="-7dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:theme="@style/ProgressBarTheme"
+            android:indeterminate="true"
+            android:visibility="gone"
+
+            />
     </android.support.design.widget.AppBarLayout>
+
+
+
 
     <include layout="@layout/content_map" />
 
