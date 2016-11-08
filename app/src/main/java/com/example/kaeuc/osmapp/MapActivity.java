@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -30,15 +29,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
 import com.example.kaeuc.osmapp.Extras.Local;
+import com.example.kaeuc.osmapp.Server.NominatimDataRequest;
+import com.example.kaeuc.osmapp.Server.NominatimDataRequestResponse;
 import com.example.kaeuc.osmapp.Server.OsmDataRequest;
-import com.example.kaeuc.osmapp.Server.ServerTaskResponse;
+import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.location.NominatimPOIProvider;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -58,7 +57,8 @@ import static com.example.kaeuc.osmapp.R.id.map;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
-        ServerTaskResponse, SearchView.OnQueryTextListener {
+        OsmDataRequestResponse, NominatimDataRequestResponse,
+        SearchView.OnQueryTextListener {
 
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
@@ -86,11 +86,12 @@ public class MapActivity extends AppCompatActivity
 
 
     //Booleans para camadas informação
-    private boolean xeroxActive = false;
-    private boolean busRouteActive = false;
-    private boolean restaurantActive = false;
+    private boolean isXeroxEnabled = false;
+    private boolean isBusRouteEnabled = false;
+    private boolean isRestaurantEnabled = false;
+    private boolean isSearchEnabled = false;
 
-    private List<String>mapFilters = new ArrayList<>();
+    private List<String> mapMarkers = new ArrayList<>();
 
     /* Inicio dos métodos do ciclo da activity*/
     @Override
@@ -168,7 +169,7 @@ public class MapActivity extends AppCompatActivity
 
        /* Cria-se um provedor de tiles que será setado para ser a camada de transportes
        e então adiciona-se essa camada sobrepondo a existe no mapa.
-       A variável "busRouteActive" mantém o registro se essa camada está ativa ou não
+       A variável "isBusRouteEnabled" mantém o registro se essa camada está ativa ou não
        o que muda a cor do botão para indicar ao usuário
         */
         fabBusRoutes.setOnClickListener(new View.OnClickListener() {
@@ -177,10 +178,10 @@ public class MapActivity extends AppCompatActivity
                 MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
                 provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
                 TilesOverlay tilesOverlay = new TilesOverlay(provider,MapActivity.this);
-                if(!busRouteActive){
+                if(!isBusRouteEnabled){
                     mMap.getOverlays().add(0,tilesOverlay);
                     mMap.invalidate();
-                    busRouteActive = true;
+                    isBusRouteEnabled = true;
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.colorAccent)));
 
@@ -188,7 +189,7 @@ public class MapActivity extends AppCompatActivity
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
                     mMap.getOverlayManager().remove(0);
                     mMap.invalidate();
-                    busRouteActive = false;
+                    isBusRouteEnabled = false;
                     fabBusRoutes.setBackgroundTintList(
                             ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
                 }
@@ -285,6 +286,21 @@ public class MapActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.actions_bar_items, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                if(isSearchEnabled){
+                    isSearchEnabled = false;
+                    mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER)+1);
+                }
+                return true;
+            }
+        });
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
@@ -314,23 +330,23 @@ public class MapActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_xerox) {
-            if(!xeroxActive) {
+            if(!isXeroxEnabled) {
                 new OsmDataRequest(this,progressBar).execute(Constants.XEROX_FILTER);
-                xeroxActive = true;
+                isXeroxEnabled = true;
             }else {
-                mMap.getOverlays().remove(mapFilters.indexOf(Constants.XEROX_FILTER)+1);
-                mapFilters.remove(Constants.XEROX_FILTER);
-                xeroxActive = false;
+                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.XEROX_FILTER)+1);
+                mapMarkers.remove(Constants.XEROX_FILTER);
+                isXeroxEnabled = false;
 
             }
         } else if (id == R.id.nav_restaurantes) {
-            if(!restaurantActive) {
+            if(!isRestaurantEnabled) {
                 new OsmDataRequest(this,progressBar).execute(Constants.RESTAURANT_FILTER);
-                restaurantActive = true;
+                isRestaurantEnabled = true;
             }else {
-                mMap.getOverlays().remove(mapFilters.indexOf(Constants.RESTAURANT_FILTER)+1);
-                mapFilters.remove(Constants.RESTAURANT_FILTER);
-                restaurantActive = false;
+                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.RESTAURANT_FILTER)+1);
+                mapMarkers.remove(Constants.RESTAURANT_FILTER);
+                isRestaurantEnabled = false;
 
             }
         }
@@ -363,7 +379,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTaskCompleted(final List<Local> locais, final String filtro) {
+    public void osmTaskCompleted(final List<Local> locais, final String filtro) {
         new Thread(new Runnable()
         {
             public void run() {
@@ -385,66 +401,73 @@ public class MapActivity extends AppCompatActivity
                     poiMarkers.add(poiMarker);
                 }
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
-                mapFilters.add(filtro);
+                mapMarkers.add(filtro);
             }
         }).start();
 
     }
 
     @Override
+    public void nominatimTaskResponse(final ArrayList<POI> pois) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (pois != null) {
+                    if (pois.size() > 1) {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
+                    FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
+                    mMap.getOverlays().add(poiMarkers);
+
+                    Drawable poiIcon = getResources().getDrawable(R.drawable.ic_marker);
+                    for (POI poi : pois) {
+                        Marker poiMarker = new Marker(mMap);
+                        String poiName = poi.mDescription.substring(0, poi.mDescription.indexOf(","));
+                        poiMarker.setTitle(poiName);
+                        poiMarker.setSnippet(poi.mDescription);
+                        poiMarker.setPosition(poi.mLocation);
+                        poiMarker.setIcon(poiIcon);
+                        poiMarkers.add(poiMarker);
+                    }
+                    mapMarkers.add(Constants.SEARCH_LAYER);
+                    isSearchEnabled = true;
+                }else{
+                    Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mMap.invalidate();
+    }
+
+    @Override
     public boolean onQueryTextSubmit(final String query) {
-        final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude());
-        new Thread(new Runnable() {
+        final String latitude = String.valueOf(defaultLocation.getLatitude());
+        final String longitude = String.valueOf(defaultLocation.getLongitude());
+        if(isSearchEnabled){
+            mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER)+1);
+            isSearchEnabled = false;
+        }
+        new NominatimDataRequest(this,progressBar).execute(query,latitude,longitude);
+
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void run() {
-                NominatimPOIProvider poiProvider = new NominatimPOIProvider("OsmNavigator/1.0");
-                ArrayList<POI> pois = poiProvider.getPOICloseTo(startPoint, query+",Belém", 50, 0.1);
-                if(pois.size() > 1){
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
-                mMap.getOverlays().add(poiMarkers);
+            public void onStateChanged(View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
-                Drawable poiIcon = getResources().getDrawable(R.drawable.ic_marker);
-                for (POI poi:pois){
-                    Marker poiMarker = new Marker(mMap);
-//                    poiMarker.setTitle(poi.mType);
-                    poiMarker.setSnippet(poi.mDescription);
-                    poiMarker.setPosition(poi.mLocation);
-                    poiMarker.setIcon(poiIcon);
-                    poiMarkers.add(poiMarker);
                 }
+                else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 
+                }
+                else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+
+                }
             }
-        }).start();
 
-        new Thread(new Runnable() {
             @Override
-            public void run() {
-
-                sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                    @Override
-                    public void onStateChanged(View bottomSheet, int newState) {
-                        if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-
-                        }
-                        else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-
-                        }
-                        else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onSlide(View bottomSheet, float slideOffset) {
-                    }
-                });
-
-
-
+            public void onSlide(View bottomSheet, float slideOffset) {
             }
-        }).start();
+        });
 
         return false;
     }
@@ -453,4 +476,6 @@ public class MapActivity extends AppCompatActivity
     public boolean onQueryTextChange(String newText) {
         return false;
     }
+
+
 }

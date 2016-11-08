@@ -27,7 +27,7 @@ import java.util.List;
 public class OsmDataRequest extends AsyncTask<String,String,String> {
 
     private static final String TAG = "OsmDataRequest" ;
-    private ServerTaskResponse callBack = null;
+    private OsmDataRequestResponse callBack = null;
     private ProgressBar progressBar;
 
     private Context parentContext;
@@ -35,7 +35,7 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
 
     public OsmDataRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
-        this.callBack = (ServerTaskResponse) parentContext;
+        this.callBack = (OsmDataRequestResponse) parentContext;
         this.progressBar = progressBar;
     }
 
@@ -114,7 +114,9 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
         OsmXmlParser parser = new OsmXmlParser();
         try {
             final List<Local> locais = parser.parse(xmlIncome);
-            callBack.onTaskCompleted(locais,filtro);
+
+            //Retorna os valores para a activity que chamou a ASyncTask
+            callBack.osmTaskCompleted(locais,filtro);
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {
