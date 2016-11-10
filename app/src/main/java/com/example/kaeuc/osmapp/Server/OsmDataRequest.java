@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
-import com.example.kaeuc.osmapp.Extras.Local;
+import com.example.kaeuc.osmapp.Extras.Place;
 import com.example.kaeuc.osmapp.Extras.OsmXmlParser;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -113,7 +113,7 @@ public class OsmDataRequest extends AsyncTask<String,String,String> {
 
         OsmXmlParser parser = new OsmXmlParser();
         try {
-            final List<Local> locais = parser.parse(xmlIncome);
+            final List<Place> locais = parser.parse(xmlIncome);
 
             //Retorna os valores para a activity que chamou a ASyncTask
             callBack.osmTaskCompleted(locais,filtro);

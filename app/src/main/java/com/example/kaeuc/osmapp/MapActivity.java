@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -23,23 +24,31 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.support.design.widget.BottomSheetBehavior;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
-import com.example.kaeuc.osmapp.Extras.Local;
+import com.example.kaeuc.osmapp.Extras.Place;
 import com.example.kaeuc.osmapp.Server.NominatimDataRequest;
 import com.example.kaeuc.osmapp.Server.NominatimDataRequestResponse;
 import com.example.kaeuc.osmapp.Server.OsmDataRequest;
 import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
+import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
@@ -81,7 +90,7 @@ public class MapActivity extends AppCompatActivity
     private Location myCurrentLocation;
     private LocationManager locationManager;
 
-    private Local defaultLocation;
+    private Place defaultLocation;
     private BoundingBoxE6 mapRegion;
 
 
@@ -92,6 +101,11 @@ public class MapActivity extends AppCompatActivity
     private boolean isSearchEnabled = false;
 
     private List<String> mapMarkers = new ArrayList<>();
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     /* Inicio dos métodos do ciclo da activity*/
     @Override
@@ -103,14 +117,14 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void run() {
                 // Views
-                drawer =(DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 toolbar = (Toolbar) findViewById(R.id.toolbar);
                 navigationView = (NavigationView) findViewById(R.id.nav_view);
-                mMap =(MapView) findViewById(map);
+                mMap = (MapView) findViewById(map);
                 fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
                 fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
                 fabBusRoutes.setBackgroundTintList(
-                        ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
+                        ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
                 final View view = findViewById(R.id.bottom_sheet);
@@ -134,36 +148,36 @@ public class MapActivity extends AppCompatActivity
         /* Configura o caminho do armazenamento em cache do mapa, se o device não possui cartão SD,
          * ele deve ser configurado para o caminho de arquivos do device
          */
-        org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setCachePath(this.getFilesDir().getAbsolutePath());
+        OpenStreetMapTileProviderConstants.setCachePath(this.getFilesDir().getAbsolutePath());
 
         /* Importante! Configure o user agent para previnir ser banido dos servidores do OSM
          * O user agent deve ser uma identificação única do seu aplicativo
          * Um exemplo mostra a utilização de "BuildConfig.APPLICATION_ID"
          */
-        org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         // Restrição de coordenadas do mapa
-        mapRegion = new BoundingBoxE6(-1.457886,-48.437957,-1.479967,-48.459779);
+        mapRegion = new BoundingBoxE6(-1.457886, -48.437957, -1.479967, -48.459779);
 
 
         // Ações para os butões flutuantes
         fabMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(myCurrentLocation == null) {
+                if (myCurrentLocation == null) {
                     //Ações do GPS, é verificado se o gps está ativo quando o usuário aperta o botão flutuante da localização
                     LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
                     //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
-                    if(!GPSEnabled){
+                    if (!GPSEnabled) {
                         startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
                     Toast.makeText(MapActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
-                }else if(!mapRegion.contains(
-                        new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude())))
+                } else if (!mapRegion.contains(
+                        new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude())))
                     Toast.makeText(MapActivity.this, "Você está fora da região coberta pelo nosso mapa!", Toast.LENGTH_SHORT).show();
                 else
-                    mMapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(),myCurrentLocation.getLongitude()));
+                    mMapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude()));
             }
         });
 
@@ -177,25 +191,28 @@ public class MapActivity extends AppCompatActivity
             public void onClick(View v) {
                 MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
                 provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
-                TilesOverlay tilesOverlay = new TilesOverlay(provider,MapActivity.this);
-                if(!isBusRouteEnabled){
-                    mMap.getOverlays().add(0,tilesOverlay);
+                TilesOverlay tilesOverlay = new TilesOverlay(provider, MapActivity.this);
+                if (!isBusRouteEnabled) {
+                    mMap.getOverlays().add(0, tilesOverlay);
                     mMap.invalidate();
                     isBusRouteEnabled = true;
                     fabBusRoutes.setBackgroundTintList(
-                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.colorAccent)));
+                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.colorAccent)));
 
-                }else{
+                } else {
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
                     mMap.getOverlayManager().remove(0);
                     mMap.invalidate();
                     isBusRouteEnabled = false;
                     fabBusRoutes.setBackgroundTintList(
-                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this,R.color.disabledButton)));
+                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 }
             }
         });
         setupMap();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -208,13 +225,14 @@ public class MapActivity extends AppCompatActivity
 
         mLocationOverlay.disableMyLocation();
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0l,0f,this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
         }
 
 
@@ -225,21 +243,21 @@ public class MapActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         locationManager = null;
-        myCurrentLocation=null;
-        mLocationOverlay=null;
+        myCurrentLocation = null;
+        mLocationOverlay = null;
     }
 
     /* Fim dos métodos do ciclo da activity*/
 
-    public void setupMap(){
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this),mMap);
+    public void setupMap() {
+        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mMap);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 // Configuração do MapController: Posição inicial e zoom
-                defaultLocation = new Local(-1.47485, -48.45651,"UFPA");
-                final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude());
+                defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
+                final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(), defaultLocation.getLongitude());
                 mMapController = mMap.getController();
                 mMapController.setZoom(16);
                 mMapController.animateTo(startPoint);
@@ -294,9 +312,11 @@ public class MapActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                if(isSearchEnabled){
+                if (isSearchEnabled) {
                     isSearchEnabled = false;
-                    mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER)+1);
+                    mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
+                    mMap.invalidate();
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }
                 return true;
             }
@@ -330,21 +350,21 @@ public class MapActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_xerox) {
-            if(!isXeroxEnabled) {
-                new OsmDataRequest(this,progressBar).execute(Constants.XEROX_FILTER);
+            if (!isXeroxEnabled) {
+                new OsmDataRequest(this, progressBar).execute(Constants.XEROX_FILTER);
                 isXeroxEnabled = true;
-            }else {
-                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.XEROX_FILTER)+1);
+            } else {
+                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.XEROX_FILTER) + 1);
                 mapMarkers.remove(Constants.XEROX_FILTER);
                 isXeroxEnabled = false;
 
             }
         } else if (id == R.id.nav_restaurantes) {
-            if(!isRestaurantEnabled) {
-                new OsmDataRequest(this,progressBar).execute(Constants.RESTAURANT_FILTER);
+            if (!isRestaurantEnabled) {
+                new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = true;
-            }else {
-                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.RESTAURANT_FILTER)+1);
+            } else {
+                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.RESTAURANT_FILTER) + 1);
                 mapMarkers.remove(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = false;
 
@@ -379,24 +399,23 @@ public class MapActivity extends AppCompatActivity
     }
 
     @Override
-    public void osmTaskCompleted(final List<Local> locais, final String filtro) {
-        new Thread(new Runnable()
-        {
+    public void osmTaskCompleted(final List<Place> locais, final String filtro) {
+        new Thread(new Runnable() {
             public void run() {
                 FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
                 mMap.getOverlays().add(poiMarkers);
                 Drawable poiIcon = null;
 
-                if(filtro.equals(Constants.XEROX_FILTER))
-                    poiIcon = ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_xerox);
-                else if(filtro.equals(Constants.RESTAURANT_FILTER))
-                    poiIcon = ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_restaurant);
-                for (Local local:locais){
+                if (filtro.equals(Constants.XEROX_FILTER))
+                    poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
+                else if (filtro.equals(Constants.RESTAURANT_FILTER))
+                    poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
+                for (Place place : locais) {
                     Marker poiMarker = new Marker(mMap);
-                    poiMarker.setTitle(local.getNome());
+                    poiMarker.setTitle(place.getName());
                     // Descrição do marcador
-                    // poiMarker.setSnippet(local.getNome());
-                    poiMarker.setPosition(new GeoPoint(local.getLatitude(),local.getLongitude()));
+                    // poiMarker.setSnippet(place.getName());
+                    poiMarker.setPosition(new GeoPoint(place.getLatitude(), place.getLongitude()));
                     poiMarker.setIcon(poiIcon);
                     poiMarkers.add(poiMarker);
                 }
@@ -414,7 +433,15 @@ public class MapActivity extends AppCompatActivity
             public void run() {
                 if (pois != null) {
                     if (pois.size() > 1) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        Log.e(TAG,Place.convertPOIsToPlaces(pois).toString());
+                        Log.e(TAG, String.valueOf(Place.convertPOIsToPlaces(pois).size()));
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        ListView listView = (ListView) findViewById(R.id.list_places);
+                        ArrayAdapter<Place> placeArrayAdapter = new ArrayAdapter<>(MapActivity.this,
+                                android.R.layout.simple_list_item_1,Place.convertPOIsToPlaces(pois));
+                        listView.setAdapter(placeArrayAdapter);
+                        listView.setVisibility(View.VISIBLE);
+
                     }
                     FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
                     mMap.getOverlays().add(poiMarkers);
@@ -428,10 +455,18 @@ public class MapActivity extends AppCompatActivity
                         poiMarker.setPosition(poi.mLocation);
                         poiMarker.setIcon(poiIcon);
                         poiMarkers.add(poiMarker);
+                        poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                                findViewById(R.id.layout_about_place).setVisibility(View.VISIBLE);
+
+                                return true;
+                            }
+                        });
                     }
                     mapMarkers.add(Constants.SEARCH_LAYER);
                     isSearchEnabled = true;
-                }else{
+                } else {
                     Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -444,22 +479,20 @@ public class MapActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(final String query) {
         final String latitude = String.valueOf(defaultLocation.getLatitude());
         final String longitude = String.valueOf(defaultLocation.getLongitude());
-        if(isSearchEnabled){
-            mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER)+1);
+        if (isSearchEnabled) {
+            mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
             isSearchEnabled = false;
         }
-        new NominatimDataRequest(this,progressBar).execute(query,latitude,longitude);
+        new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
 
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
-                }
-                else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 
-                }
-                else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
 
                 }
             }
@@ -478,4 +511,39 @@ public class MapActivity extends AppCompatActivity
     }
 
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Map Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
 }

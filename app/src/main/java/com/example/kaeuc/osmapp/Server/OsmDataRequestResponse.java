@@ -1,6 +1,6 @@
 package com.example.kaeuc.osmapp.Server;
 
-import com.example.kaeuc.osmapp.Extras.Local;
+import com.example.kaeuc.osmapp.Extras.Place;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface OsmDataRequestResponse {
-    void osmTaskCompleted(List<Local> locais, String filtro);
+    void osmTaskCompleted(List<Place> locais, String filtro);
 }

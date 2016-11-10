@@ -22,7 +22,7 @@ public class OsmXmlParser {
     private static final String namespace = null;
     private static final String TAG = "OsmXmlParser";
 
-    public List<Local> parse(String xmlString) throws XmlPullParserException, IOException {
+    public List<Place> parse(String xmlString) throws XmlPullParserException, IOException {
         try {
             InputStream in = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
             XmlPullParser parser = Xml.newPullParser();
@@ -36,7 +36,7 @@ public class OsmXmlParser {
     }
 
     private List readOsmTag(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List<Local> locais = new ArrayList<>();
+        List<Place> locais = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, namespace, "osm");
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -57,7 +57,7 @@ public class OsmXmlParser {
     }
 
 
-    private Local readNode(XmlPullParser parser,double lat, double lon) throws IOException, XmlPullParserException {
+    private Place readNode(XmlPullParser parser, double lat, double lon) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG,namespace,"node");
         String nomeLocal = null;
         while(parser.next() != XmlPullParser.END_TAG){
@@ -70,7 +70,7 @@ public class OsmXmlParser {
             }
         }
         parser.require(XmlPullParser.END_TAG,namespace,"node");
-        return new Local(lat,lon,nomeLocal);
+        return new Place(lat,lon,nomeLocal);
     }
 
     private String readTag(XmlPullParser parser, String nomeLocal) throws IOException, XmlPullParserException {
