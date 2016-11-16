@@ -307,9 +307,11 @@ public class MapActivity extends AppCompatActivity
                 if (isSearchEnabled) {
                     isSearchEnabled = false;
                     mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
-                    if(searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-                        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    if(placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                    if((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                        || (searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
+                    searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    if((placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                        || (placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
                         placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     mMap.invalidate();
                 }

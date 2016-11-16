@@ -10,5 +10,6 @@
     <style name="ProgressBarTheme" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:progressBackgroundTint">@color/white</item>
+
     </style>
 </resources>
