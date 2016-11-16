@@ -2,6 +2,8 @@ package com.example.kaeuc.osmapp.Extras;
 
 /**
  * Created by kaeuc on 10/22/2016.
+ * Classe para manter constantes que serão usado diretamente no código, para evitar a utilização
+ * de resources.
  */
 
 public final class Constants {
@@ -11,5 +13,5 @@ public final class Constants {
     public static final String BOUNDING_BOX = "[bbox=-48.46069,-1.47956,-48.45348,-1.47158]";
     public static final String NAMEPLACE_UNKNOWN = "Nome ainda não identificado";
     public static final String SEARCH_LAYER = "Camada de Busca";
-
+    public static final String RESTROOM_FILTER = "" ;
 }

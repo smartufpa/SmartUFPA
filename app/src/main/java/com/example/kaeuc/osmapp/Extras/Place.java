@@ -2,6 +2,7 @@ package com.example.kaeuc.osmapp.Extras;
 
 import org.osmdroid.bonuspack.location.POI;
 
+import java.lang.annotation.Documented;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +15,6 @@ public class Place {
     private double longitude;
     private String name;
     private String description;
-
-    public Place(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
 
     public Place(double latitude, double longitude, String name) {
         this.latitude = latitude;
@@ -54,8 +50,10 @@ public class Place {
         return "Nome: " + this.name + "\nDescrição: " + this.description;
     }
 
-    public static List<Place> convertPOIsToPlaces(final ArrayList<POI> pois){
-        List<Place> places = new ArrayList<>();
+
+    // Converte a ArrayList de POIs retornadas pela busca e transforma para uma da classe Place
+    public static ArrayList<Place> convertPOIsToPlaces(final ArrayList<POI> pois){
+        ArrayList<Place> places = new ArrayList<>();
         for (POI poi : pois) {
             String poiName = poi.mDescription.substring(0, poi.mDescription.indexOf(","));
             places.add(new Place(poi.mLocation.getLatitude(), poi.mLocation.getLongitude(),

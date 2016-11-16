@@ -10,9 +10,10 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -24,26 +25,23 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.support.design.widget.BottomSheetBehavior;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
 import com.example.kaeuc.osmapp.Extras.Place;
+import com.example.kaeuc.osmapp.Extras.SearchListAdapter;
+
 import com.example.kaeuc.osmapp.Server.NominatimDataRequest;
 import com.example.kaeuc.osmapp.Server.NominatimDataRequestResponse;
 import com.example.kaeuc.osmapp.Server.OsmDataRequest;
 import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.POI;
@@ -84,28 +82,28 @@ public class MapActivity extends AppCompatActivity
     private FloatingActionButton fabBusRoutes;
     private ProgressBar progressBar;
     private Toolbar toolbar;
-    private BottomSheetBehavior sheetBehavior;
+    private BottomSheetBehavior searchResultSheetBehavior;
+    private BottomSheetBehavior placeDetailsSheetBehavior;
 
 
     private Location myCurrentLocation;
     private LocationManager locationManager;
 
     private Place defaultLocation;
+    private GeoPoint startPoint;
     private BoundingBoxE6 mapRegion;
 
 
-    //Booleans para camadas informação
+    //Booleans para camadas marcadores
     private boolean isXeroxEnabled = false;
     private boolean isBusRouteEnabled = false;
     private boolean isRestaurantEnabled = false;
     private boolean isSearchEnabled = false;
 
     private List<String> mapMarkers = new ArrayList<>();
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
+
+
 
     /* Inicio dos métodos do ciclo da activity*/
     @Override
@@ -126,13 +124,6 @@ public class MapActivity extends AppCompatActivity
                 fabBusRoutes.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-
-                final View view = findViewById(R.id.bottom_sheet);
-                sheetBehavior = BottomSheetBehavior.from(view);
-                sheetBehavior.setHideable(true);
-                sheetBehavior.setPeekHeight(300);
-                sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-
             }
         });
 
@@ -210,9 +201,7 @@ public class MapActivity extends AppCompatActivity
             }
         });
         setupMap();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     @Override
@@ -249,7 +238,8 @@ public class MapActivity extends AppCompatActivity
 
     /* Fim dos métodos do ciclo da activity*/
 
-    public void setupMap() {
+    // Método responsável por configurar o mapa na sua inicialização
+    private void setupMap() {
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mMap);
 
         new Thread(new Runnable() {
@@ -257,7 +247,7 @@ public class MapActivity extends AppCompatActivity
             public void run() {
                 // Configuração do MapController: Posição inicial e zoom
                 defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
-                final GeoPoint startPoint = new GeoPoint(defaultLocation.getLatitude(), defaultLocation.getLongitude());
+                startPoint = new GeoPoint(defaultLocation.getLatitude(), defaultLocation.getLongitude());
                 mMapController = mMap.getController();
                 mMapController.setZoom(16);
                 mMapController.animateTo(startPoint);
@@ -265,11 +255,18 @@ public class MapActivity extends AppCompatActivity
                 // Configuração do Mapa
                 mMap.setTilesScaledToDpi(true);
                 mMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-//        mMap.setTileSource(new XYTileSource("actions_bar_items.xml.mbtiles", 0, 18, 256, ".jpg", new String[] {})); //Atribui o mapa offline em mMap
-//        mMap.setUseDataConnection(false); //Desabilita o uso da internet (optional, but a good way to prevent loading from the network and test your zip loading.)
-                mMap.setBuiltInZoomControls(true);
+
+                //  Atribui o mapa offline em mMap
+                //mMap.setTileSource(new XYTileSource("actions_bar_items.xml.mbtiles", 0, 18, 256, ".jpg", new String[] {}));
+
+                /* Desabilita o uso da internet (opcional, mas uma boa forma de previnir que o mapa
+                 * seja carregado via rede e de testar se o zip está carregando
+                 */
+                //mMap.setUseDataConnection(false);
+
+                mMap.setBuiltInZoomControls(false);
                 mMap.setMinZoomLevel(15);
-                mMap.setMaxZoomLevel(18);
+                mMap.setMaxZoomLevel(19);
                 mMap.setMultiTouchControls(true);
                 mMap.setUseDataConnection(true);
                 mMap.getOverlays().add(mLocationOverlay);
@@ -286,7 +283,50 @@ public class MapActivity extends AppCompatActivity
         mLocationOverlay.setOptionsMenuEnabled(true);
     }
 
-    /* Início dos métodos de utilização do Drawer lateral*/
+
+    // Método responsável por criar as opções de menu na barra superior do aplicativo
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //  Infla o menu; Isso adiciona os itens à barra de ações se existir
+        getMenuInflater().inflate(R.menu.actions_bar_items, menu);
+
+        // Acha o item de busca e seta as ações que serão executadas ao clicar no ícone
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            // Quando o botão de voltar for pressionado
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                /* Somente se a busca já foi realizada, remover a camada com os marcadores.
+                 * Somente uma camada de busca é permitida por vez
+                 */
+                if (isSearchEnabled) {
+                    isSearchEnabled = false;
+                    mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
+                    if(searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    if(placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                        placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    mMap.invalidate();
+                }
+                return true;
+            }
+        });
+
+        // Configura a barra de busca (SearchWidget)
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
+    /* Início dos métodos de utilização da lista lateral (Drawer)*/
 
     @Override
     public void onBackPressed() {
@@ -298,63 +338,27 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.actions_bar_items, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                if (isSearchEnabled) {
-                    isSearchEnabled = false;
-                    mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
-                    mMap.invalidate();
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
-                return true;
-            }
-        });
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
-        searchView.setOnQueryTextListener(this);
-
-        return true;
-    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
+    // Configuração dos items da lista lateral
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_xerox) {
+            // Caso a camada de filtro não esteja ativa, executar a busca e adicionar marcadores
             if (!isXeroxEnabled) {
                 new OsmDataRequest(this, progressBar).execute(Constants.XEROX_FILTER);
                 isXeroxEnabled = true;
             } else {
-                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.XEROX_FILTER) + 1);
+                /* Senão, remover a camada do mapa. Utiliza-se a arraylist mapMarkers para resgatar
+                * o indice em que a camada foi inserida no mapa, dado que o método remove apresenta
+                * problemas para remover diretamente a camada.
+                * Ex.: mMap.getOverlays.remove(tilesOverlay)
+                * Então é necessário remover a camada pelo indice que será sempre adicionado de um
+                * por conta da camada base adicionada para a localização do usuário
+                */
+                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.XEROX_FILTER)+1);
                 mapMarkers.remove(Constants.XEROX_FILTER);
                 isXeroxEnabled = false;
 
@@ -364,7 +368,7 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = true;
             } else {
-                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.RESTAURANT_FILTER) + 1);
+                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.RESTAURANT_FILTER)+1);
                 mapMarkers.remove(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = false;
 
@@ -398,19 +402,30 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+
+    /* Início dos métodos que executam em uma AsyncTask.
+    *  Esses são responsáveis por receber o resultado dessas tarefas
+    */
+
+    // Esse método retorna dados do servidor do OSM (Referência http://wiki.openstreetmap.org/wiki/Xapi )
     @Override
-    public void osmTaskCompleted(final List<Place> locais, final String filtro) {
+    public void osmTaskCompleted(final List<Place> places, final String filter) {
         new Thread(new Runnable() {
             public void run() {
+                // Cria e adiciona a camada de marcadores ao mapa
                 FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
                 mMap.getOverlays().add(poiMarkers);
                 Drawable poiIcon = null;
-
-                if (filtro.equals(Constants.XEROX_FILTER))
+                // Configura o ícone de acordo com o filtro que será adicionado
+                if (filter.equals(Constants.XEROX_FILTER))
                     poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
-                else if (filtro.equals(Constants.RESTAURANT_FILTER))
+                else if (filter.equals(Constants.RESTAURANT_FILTER))
                     poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
-                for (Place place : locais) {
+                else if(filter.equals(Constants.RESTROOM_FILTER)) // Definir essa string
+                    poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
+
+                // Cria um marcador para cada local encontrado
+                for (Place place : places) {
                     Marker poiMarker = new Marker(mMap);
                     poiMarker.setTitle(place.getName());
                     // Descrição do marcador
@@ -420,32 +435,29 @@ public class MapActivity extends AppCompatActivity
                     poiMarkers.add(poiMarker);
                 }
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
-                mapMarkers.add(filtro);
+                mapMarkers.add(filter);
             }
         }).start();
 
     }
 
+    // Esse método retorna dados do servidor do Nominatim (Referência http://wiki.openstreetmap.org/wiki/Nominatim )
     @Override
     public void nominatimTaskResponse(final ArrayList<POI> pois) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (pois != null) {
+                    // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
                     if (pois.size() > 1) {
-                        Log.e(TAG,Place.convertPOIsToPlaces(pois).toString());
-                        Log.e(TAG, String.valueOf(Place.convertPOIsToPlaces(pois).size()));
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                        ListView listView = (ListView) findViewById(R.id.list_places);
-                        ArrayAdapter<Place> placeArrayAdapter = new ArrayAdapter<>(MapActivity.this,
-                                android.R.layout.simple_list_item_1,Place.convertPOIsToPlaces(pois));
-                        listView.setAdapter(placeArrayAdapter);
-                        listView.setVisibility(View.VISIBLE);
-
+                        setupSearchResultBottomSheet(Place.convertPOIsToPlaces(pois));
                     }
+
+                    // Cria e adiciona a camada de marcadores ao mapa
                     FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
                     mMap.getOverlays().add(poiMarkers);
 
+                    // Configura o ícone de marcador para cada local encontrado
                     Drawable poiIcon = getResources().getDrawable(R.drawable.ic_marker);
                     for (POI poi : pois) {
                         Marker poiMarker = new Marker(mMap);
@@ -458,11 +470,11 @@ public class MapActivity extends AppCompatActivity
                         poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(Marker marker, MapView mapView) {
-                                findViewById(R.id.layout_about_place).setVisibility(View.VISIBLE);
-
+                                marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
                                 return true;
                             }
                         });
+
                     }
                     mapMarkers.add(Constants.SEARCH_LAYER);
                     isSearchEnabled = true;
@@ -475,6 +487,63 @@ public class MapActivity extends AppCompatActivity
         mMap.invalidate();
     }
 
+
+
+    // Configura a bottomsheet de múltiplos resultados da busca
+    private void setupSearchResultBottomSheet(final ArrayList<Place> pois){
+        // Configurando a listview
+        SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,pois);
+        ListView listView = (ListView) findViewById(R.id.listview);
+        listView.setAdapter(searchListAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Configura a bottomsheet de detalhes sobre o local
+                searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                View bottomSheet = findViewById(R.id.bottom_sheet_place_details);
+                bottomSheet.setVisibility(View.VISIBLE);
+                placeDetailsSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                placeDetailsSheetBehavior.setPeekHeight(300);
+                placeDetailsSheetBehavior.setHideable(true);
+                ((TextView)findViewById(R.id.txt_place_description)).setText(pois.get(position).getDescription());
+                ((TextView)findViewById(R.id.txt_place_name)).setText(pois.get(position).getName());
+                mMapController.animateTo(new GeoPoint(pois.get(position).getLatitude(),pois.get(position).getLongitude()));
+                mMapController.setZoom(18);
+
+            }
+        });
+
+        View bottomSheet = findViewById(R.id.bottom_sheet_results);
+        bottomSheet.setVisibility(View.VISIBLE);
+        searchResultSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        searchResultSheetBehavior.setHideable(true);
+        searchResultSheetBehavior.setPeekHeight(800);
+        searchResultSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    mMapController.animateTo(new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude()));
+                }
+                else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+
+                }
+                else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                }
+            }
+
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+    }
+
+
+
     @Override
     public boolean onQueryTextSubmit(final String query) {
         final String latitude = String.valueOf(defaultLocation.getLatitude());
@@ -485,22 +554,6 @@ public class MapActivity extends AppCompatActivity
         }
         new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
 
-        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-
-                } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-
-                }
-            }
-
-            @Override
-            public void onSlide(View bottomSheet, float slideOffset) {
-            }
-        });
 
         return false;
     }
@@ -510,40 +563,4 @@ public class MapActivity extends AppCompatActivity
         return false;
     }
 
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Map Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
-    }
 }
