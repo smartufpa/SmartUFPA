@@ -1,7 +1,9 @@
 package com.example.kaeuc.osmapp.Extras;
 
 import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.GeoPoint;
 
+import java.io.Serializable;
 import java.lang.annotation.Documented;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +12,12 @@ import java.util.List;
  * Created by kaeuc on 9/29/2016.
  */
 
-public class Place {
+public class Place implements Serializable {
     private double latitude;
     private double longitude;
     private String name;
     private String description;
+    private GeoPoint position;
 
     public Place(double latitude, double longitude, String name) {
         this.latitude = latitude;
@@ -26,6 +29,7 @@ public class Place {
         this.longitude = longitude;
         this.name = name;
         this.description = description;
+        this.position = new GeoPoint(latitude,longitude);
     }
 
     public double getLatitude() {
@@ -44,6 +48,8 @@ public class Place {
     public String getDescription() {
         return description;
     }
+
+    public GeoPoint getPosition(){return position;}
 
     @Override
     public String toString() {

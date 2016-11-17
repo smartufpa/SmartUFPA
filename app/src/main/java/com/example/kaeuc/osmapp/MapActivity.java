@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
 import com.example.kaeuc.osmapp.Extras.Place;
+import com.example.kaeuc.osmapp.Extras.PlaceDetailsBottomSheet;
 import com.example.kaeuc.osmapp.Extras.SearchListAdapter;
 
 import com.example.kaeuc.osmapp.Server.NominatimDataRequest;
@@ -45,6 +46,9 @@ import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -53,6 +57,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -307,12 +312,16 @@ public class MapActivity extends AppCompatActivity
                 if (isSearchEnabled) {
                     isSearchEnabled = false;
                     mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
-                    if((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-                        || (searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
-                    searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    if((placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-                        || (placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
-                        placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    if(searchResultSheetBehavior != null) {
+                        if ((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                                || (searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
+                            searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
+                    if(placeDetailsSheetBehavior!=null) {
+                        if ((placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                                || (placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
+                            placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
                     mMap.invalidate();
                 }
                 return true;
@@ -384,6 +393,30 @@ public class MapActivity extends AppCompatActivity
 
     /* Fim dos métodos de utilização do Drawer lateral*/
 
+
+    /* Início de  métodos envolvendo localização*/
+
+    public void traceRoute(final Place place){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RoadManager roadManager = new OSRMRoadManager(MapActivity.this);
+                ArrayList<GeoPoint> wayPoints = new ArrayList<>();
+                if(myCurrentLocation != null) {
+                    final GeoPoint startPoint = new GeoPoint(myCurrentLocation);
+                    final GeoPoint endPoint = new GeoPoint(place.getLatitude(),place.getLongitude());
+                    wayPoints.add(startPoint);
+                    wayPoints.add(endPoint);
+                    Road road = roadManager.getRoad(wayPoints);
+                    Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+                    mMap.getOverlays().add(roadOverlay);
+                    mapMarkers.add(Constants.ROUTE_LAYER);
+                }
+            }
+        }).start();
+
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         myCurrentLocation = location;
@@ -403,6 +436,8 @@ public class MapActivity extends AppCompatActivity
     public void onProviderDisabled(String provider) {
 
     }
+
+    /* Fim dos  métodos envolvendo localização*/
 
 
     /* Início dos métodos que executam em uma AsyncTask.
@@ -445,14 +480,14 @@ public class MapActivity extends AppCompatActivity
 
     // Esse método retorna dados do servidor do Nominatim (Referência http://wiki.openstreetmap.org/wiki/Nominatim )
     @Override
-    public void nominatimTaskResponse(final ArrayList<POI> pois) {
+    public void nominatimTaskResponse(final ArrayList<Place> places) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (pois != null) {
+                if (places != null) {
                     // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
-                    if (pois.size() > 1) {
-                        setupSearchResultBottomSheet(Place.convertPOIsToPlaces(pois));
+                    if (places.size() > 1) {
+                        setupSearchResultBottomSheet(places);
                     }
 
                     // Cria e adiciona a camada de marcadores ao mapa
@@ -461,18 +496,21 @@ public class MapActivity extends AppCompatActivity
 
                     // Configura o ícone de marcador para cada local encontrado
                     Drawable poiIcon = getResources().getDrawable(R.drawable.ic_marker);
-                    for (POI poi : pois) {
+                    for (final Place place : places) {
                         Marker poiMarker = new Marker(mMap);
-                        String poiName = poi.mDescription.substring(0, poi.mDescription.indexOf(","));
-                        poiMarker.setTitle(poiName);
-                        poiMarker.setSnippet(poi.mDescription);
-                        poiMarker.setPosition(poi.mLocation);
+                        poiMarker.setTitle(place.getName());
+                        poiMarker.setSnippet(place.getDescription());
+                        poiMarker.setPosition(place.getPosition());
                         poiMarker.setIcon(poiIcon);
                         poiMarkers.add(poiMarker);
                         poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(Marker marker, MapView mapView) {
                                 marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
+                                mMap.invalidate();
+                                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+                                sheet.show(getSupportFragmentManager(),"bottom sheet");
+                                traceRoute(place);
                                 return true;
                             }
                         });
@@ -565,4 +603,10 @@ public class MapActivity extends AppCompatActivity
         return false;
     }
 
+    // // TODO: Salvar informações relevantes para restaurar o estado da aplicação
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 }
+

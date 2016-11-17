@@ -14,4 +14,5 @@ public final class Constants {
     public static final String NAMEPLACE_UNKNOWN = "Nome ainda não identificado";
     public static final String SEARCH_LAYER = "Camada de Busca";
     public static final String RESTROOM_FILTER = "" ;
+    public static final String ROUTE_LAYER = "Camada de rota";
 }
