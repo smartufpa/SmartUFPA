@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
@@ -409,8 +411,9 @@ public class MapActivity extends AppCompatActivity
         new Thread(new Runnable() {
             @Override
             public void run() {
-                RoadManager roadManager = new MapQuestRoadManager(Constants.MAPQUEST_KEY);
+                RoadManager roadManager = new OSRMRoadManager(MapActivity.this);
                 roadManager.addRequestOption("routeType=pedestrian");
+                roadManager.addRequestOption("outFormat=json");
                 ArrayList<GeoPoint> wayPoints = new ArrayList<>();
                 if(myCurrentLocation != null) {
                     final GeoPoint startPoint = new GeoPoint(myCurrentLocation);
@@ -418,6 +421,9 @@ public class MapActivity extends AppCompatActivity
                     wayPoints.add(startPoint);
                     wayPoints.add(endPoint);
                     Road road = roadManager.getRoad(wayPoints);
+                    if (road.mStatus != Road.STATUS_OK){
+                        Log.wtf(TAG,"Road error");
+                    }
                     Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
                     mMap.getOverlays().add(roadOverlay);
                     mapMarkers.add(Constants.ROUTE_LAYER);
@@ -471,8 +477,8 @@ public class MapActivity extends AppCompatActivity
                 else if(filter.equals(Constants.RESTROOM_FILTER)) // Definir essa string
                     poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
 
-                // Cria um marcador para cada local encontrado
-                for (Place place : places) {
+               // Cria um marcador para cada local encontrado
+                for (final Place place : places) {
                     Marker poiMarker = new Marker(mMap);
                     poiMarker.setTitle(place.getName());
                     // Descrição do marcador
@@ -480,15 +486,27 @@ public class MapActivity extends AppCompatActivity
                     poiMarker.setPosition(new GeoPoint(place.getLatitude(), place.getLongitude()));
                     poiMarker.setIcon(poiIcon);
                     poiMarkers.add(poiMarker);
+                    poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker, MapView mapView) {
+                            mMap.invalidate();
+                            PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+                            sheet.show(getSupportFragmentManager(),"bottom sheet");
+                            return true;
+                        }
+                    });
                 }
+
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
                 mMap.getOverlays().add(poiMarkers);
                 mapMarkers.add(filter);
+
                 Log.e(TAG,"Map Overlays: " + mMap.getOverlays().size());
                 Log.e(TAG,"Map Markers: " + mapMarkers.size());
                 Log.e(TAG,"Map Overlays: " + mMap.getOverlays().toString());
             }
         }).start();
+        Toast.makeText(MapActivity.this, "Clique em um marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
 
     }
 
@@ -502,7 +520,8 @@ public class MapActivity extends AppCompatActivity
                     // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
                     if (places.size() > 1) {
                         setupSearchResultBottomSheet(places);
-                    }
+                    }else
+                        mMapController.animateTo(places.get(0).getPosition());
 
                     // Cria e adiciona a camada de marcadores ao mapa
                     FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
@@ -522,6 +541,9 @@ public class MapActivity extends AppCompatActivity
                             public boolean onMarkerClick(Marker marker, MapView mapView) {
                                 marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
                                 marker.setAnchor(0.5f,1);
+                                if(marker.isEnabled()){
+                                    Log.wtf(TAG,"teste");
+                                }
                                 mMap.invalidate();
                                 PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
                                 sheet.show(getSupportFragmentManager(),"bottom sheet");
@@ -532,6 +554,7 @@ public class MapActivity extends AppCompatActivity
                     }
                     mapMarkers.add(Constants.SEARCH_LAYER);
                     mMap.getOverlays().add(poiMarkers);
+                    Toast.makeText(MapActivity.this, "Clique no marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
 
                     Log.e(TAG,"Map Overlays: " + mMap.getOverlays().size());
                     Log.e(TAG,"Map Markers: " + mapMarkers.size());
@@ -550,9 +573,10 @@ public class MapActivity extends AppCompatActivity
 
 
     // Configura a bottomsheet de múltiplos resultados da busca
-    private void setupSearchResultBottomSheet(final ArrayList<Place> pois){
+    private void setupSearchResultBottomSheet(final ArrayList<Place> places){
         // Configurando a listview
-        SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,pois);
+
+        final SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,places);
         ListView listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(searchListAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -560,16 +584,9 @@ public class MapActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Configura a bottomsheet de detalhes sobre o local
                 searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                View bottomSheet = findViewById(R.id.bottom_sheet_place_details);
-                bottomSheet.setVisibility(View.VISIBLE);
-                placeDetailsSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                placeDetailsSheetBehavior.setPeekHeight(300);
-                placeDetailsSheetBehavior.setHideable(true);
-                ((TextView)findViewById(R.id.txt_place_description)).setText(pois.get(position).getDescription());
-                ((TextView)findViewById(R.id.txt_place_name)).setText(pois.get(position).getName());
-                mMapController.animateTo(new GeoPoint(pois.get(position).getLatitude(),pois.get(position).getLongitude()));
-                mMapController.setZoom(18);
+                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(places.get(position));
+                sheet.show(getSupportFragmentManager(),"bottom sheet");
+
 
             }
         });
@@ -577,9 +594,9 @@ public class MapActivity extends AppCompatActivity
         View bottomSheet = findViewById(R.id.bottom_sheet_results);
         bottomSheet.setVisibility(View.VISIBLE);
         searchResultSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         searchResultSheetBehavior.setHideable(true);
-        searchResultSheetBehavior.setPeekHeight(800);
+        searchResultSheetBehavior.setPeekHeight(120);
         searchResultSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -590,6 +607,7 @@ public class MapActivity extends AppCompatActivity
 
                 }
                 else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+
                 }
             }
 

@@ -9,6 +9,13 @@
         android:layout_marginTop="@dimen/nav_header_height"
         android:layout_gravity="center_horizontal">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_compass"
+            android:layout_gravity="center_horizontal"
+            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
