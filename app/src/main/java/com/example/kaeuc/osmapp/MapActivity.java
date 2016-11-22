@@ -112,14 +112,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(((LocationManager) getSystemService(Context.LOCATION_SERVICE))
-                .isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            setContentView(R.layout.no_gps_activity);
-        }else{
-            setContentView(R.layout.activity_map);
-        }
-
+        setContentView(R.layout.activity_map);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
