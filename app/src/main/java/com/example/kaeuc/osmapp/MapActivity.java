@@ -25,6 +25,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,15 +39,13 @@ import com.example.kaeuc.osmapp.Extras.Constants;
 import com.example.kaeuc.osmapp.Extras.Place;
 import com.example.kaeuc.osmapp.Extras.PlaceDetailsBottomSheet;
 import com.example.kaeuc.osmapp.Extras.SearchListAdapter;
-
 import com.example.kaeuc.osmapp.Server.NominatimDataRequest;
 import com.example.kaeuc.osmapp.Server.NominatimDataRequestResponse;
 import com.example.kaeuc.osmapp.Server.OsmDataRequest;
 import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.location.POI;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
@@ -104,17 +103,22 @@ public class MapActivity extends AppCompatActivity
     private boolean isBusRouteEnabled = false;
     private boolean isRestaurantEnabled = false;
     private boolean isSearchEnabled = false;
+    private boolean isGoToRouteEnabled = false;
 
     private List<String> mapMarkers = new ArrayList<>();
-
-
 
 
     /* Inicio dos métodos do ciclo da activity*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+
+        if(((LocationManager) getSystemService(Context.LOCATION_SERVICE))
+                .isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            setContentView(R.layout.no_gps_activity);
+        }else{
+            setContentView(R.layout.activity_map);
+        }
 
         runOnUiThread(new Runnable() {
             @Override
@@ -166,7 +170,7 @@ public class MapActivity extends AppCompatActivity
                     boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
                     //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
                     if (!GPSEnabled) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        Toast.makeText(MapActivity.this, "Por favor, ligar o GPS novamente.", Toast.LENGTH_SHORT).show();
                     }
                     Toast.makeText(MapActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
                 } else if (!mapRegion.contains(
@@ -311,7 +315,14 @@ public class MapActivity extends AppCompatActivity
                  */
                 if (isSearchEnabled) {
                     isSearchEnabled = false;
+
+
                     mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
+                    mapMarkers.remove(Constants.SEARCH_LAYER);
+
+                    Log.i(TAG,"Map Overlays: " + mMap.getOverlays().size());
+                    Log.i(TAG,"Map Markers: " + mapMarkers.size());
+                    Log.i(TAG,"Map Overlays: " + mMap.getOverlays().toString());
                     if(searchResultSheetBehavior != null) {
                         if ((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                                 || (searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
@@ -321,6 +332,10 @@ public class MapActivity extends AppCompatActivity
                         if ((placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                                 || (placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
                             placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
+                    if(isGoToRouteEnabled){
+                        mMap.getOverlays().remove(mapMarkers.indexOf(Constants.ROUTE_LAYER) + 1);
+                        mapMarkers.remove(Constants.ROUTE_LAYER);
                     }
                     mMap.invalidate();
                 }
@@ -333,6 +348,7 @@ public class MapActivity extends AppCompatActivity
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(this);
+
 
         return true;
     }
@@ -400,7 +416,8 @@ public class MapActivity extends AppCompatActivity
         new Thread(new Runnable() {
             @Override
             public void run() {
-                RoadManager roadManager = new OSRMRoadManager(MapActivity.this);
+                RoadManager roadManager = new MapQuestRoadManager(Constants.MAPQUEST_KEY);
+                roadManager.addRequestOption("routeType=pedestrian");
                 ArrayList<GeoPoint> wayPoints = new ArrayList<>();
                 if(myCurrentLocation != null) {
                     final GeoPoint startPoint = new GeoPoint(myCurrentLocation);
@@ -411,6 +428,7 @@ public class MapActivity extends AppCompatActivity
                     Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
                     mMap.getOverlays().add(roadOverlay);
                     mapMarkers.add(Constants.ROUTE_LAYER);
+                    isGoToRouteEnabled = true;
                 }
             }
         }).start();
@@ -451,7 +469,6 @@ public class MapActivity extends AppCompatActivity
             public void run() {
                 // Cria e adiciona a camada de marcadores ao mapa
                 FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
-                mMap.getOverlays().add(poiMarkers);
                 Drawable poiIcon = null;
                 // Configura o ícone de acordo com o filtro que será adicionado
                 if (filter.equals(Constants.XEROX_FILTER))
@@ -472,7 +489,11 @@ public class MapActivity extends AppCompatActivity
                     poiMarkers.add(poiMarker);
                 }
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
+                mMap.getOverlays().add(poiMarkers);
                 mapMarkers.add(filter);
+                Log.e(TAG,"Map Overlays: " + mMap.getOverlays().size());
+                Log.e(TAG,"Map Markers: " + mapMarkers.size());
+                Log.e(TAG,"Map Overlays: " + mMap.getOverlays().toString());
             }
         }).start();
 
@@ -492,12 +513,12 @@ public class MapActivity extends AppCompatActivity
 
                     // Cria e adiciona a camada de marcadores ao mapa
                     FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
-                    mMap.getOverlays().add(poiMarkers);
 
                     // Configura o ícone de marcador para cada local encontrado
                     Drawable poiIcon = getResources().getDrawable(R.drawable.ic_marker);
                     for (final Place place : places) {
                         Marker poiMarker = new Marker(mMap);
+                        poiMarker.setAnchor(0.5f,1);
                         poiMarker.setTitle(place.getName());
                         poiMarker.setSnippet(place.getDescription());
                         poiMarker.setPosition(place.getPosition());
@@ -507,16 +528,22 @@ public class MapActivity extends AppCompatActivity
                             @Override
                             public boolean onMarkerClick(Marker marker, MapView mapView) {
                                 marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
+                                marker.setAnchor(0.5f,1);
                                 mMap.invalidate();
                                 PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
                                 sheet.show(getSupportFragmentManager(),"bottom sheet");
-                                traceRoute(place);
                                 return true;
                             }
                         });
 
                     }
                     mapMarkers.add(Constants.SEARCH_LAYER);
+                    mMap.getOverlays().add(poiMarkers);
+
+                    Log.e(TAG,"Map Overlays: " + mMap.getOverlays().size());
+                    Log.e(TAG,"Map Markers: " + mapMarkers.size());
+                    Log.e(TAG,"Map Overlays: " + mMap.getOverlays().toString());
+
                     isSearchEnabled = true;
                 } else {
                     Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
@@ -588,14 +615,16 @@ public class MapActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(final String query) {
         final String latitude = String.valueOf(defaultLocation.getLatitude());
         final String longitude = String.valueOf(defaultLocation.getLongitude());
+        findViewById(R.id.action_search).clearFocus();
         if (isSearchEnabled) {
             mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
+            mapMarkers.remove(Constants.SEARCH_LAYER);
             isSearchEnabled = false;
         }
         new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
 
 
-        return false;
+        return true;
     }
 
     @Override
@@ -608,5 +637,11 @@ public class MapActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
+
+
+
+
+
 }
 

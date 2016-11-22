@@ -34,6 +34,8 @@
     <string name="about_title">Sobre o aplicativo</string>
     <string name="search_hint">Procure na UFPA</string>
     <string name="lorem_ipsum">Descrição: \nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dui tellus, lacinia non ipsum vel, interdum varius nulla. Curabitur ultrices ipsum at porta placerat.</string>
+    <string name="no_gps_error">O GPS deve estar ligado para iniciar o aplicativo.</string>
+    <string name="turn_on_gps_button">Ligar GPS</string>
 
 
 </resources>
