@@ -105,8 +105,7 @@ public class LoginScreenActivity extends AppCompatActivity {
 //                    intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
 //                    startActivity(intent);
                 }else if (v.getId() == btnVisitante.getId()) {
-                    Intent intent = new Intent(MapActivity.ACTION_MAP);
-                    intent.addCategory(MapActivity.CATEGORY_MAP);
+                    Intent intent = new Intent(LoginScreenActivity.this,TelaIntermediaria.class);
                     startActivity(intent);
                 }
             }
