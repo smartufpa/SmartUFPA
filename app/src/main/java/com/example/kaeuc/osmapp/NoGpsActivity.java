@@ -35,6 +35,7 @@ public class NoGpsActivity extends AppCompatActivity {
             Intent intent = new Intent(MapActivity.ACTION_MAP);
             intent.addCategory(MapActivity.CATEGORY_MAP);
             startActivity(intent);
+            finish();
         }
     }
 }

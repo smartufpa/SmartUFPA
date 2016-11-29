@@ -3,7 +3,6 @@ package com.example.kaeuc.osmapp;
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -11,7 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
@@ -30,10 +28,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
@@ -46,8 +42,7 @@ import com.example.kaeuc.osmapp.Server.OsmDataRequest;
 import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
@@ -107,7 +102,7 @@ public class MapActivity extends AppCompatActivity
     private boolean isSearchEnabled = false;
     private boolean isGoToRouteEnabled = false;
 
-    private List<String> mapMarkers = new ArrayList<>();
+    private List<String> mapLayers = new ArrayList<>();
 
 
     /* Inicio dos métodos do ciclo da activity*/
@@ -312,11 +307,11 @@ public class MapActivity extends AppCompatActivity
                     isSearchEnabled = false;
 
 
-                    mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
-                    mapMarkers.remove(Constants.SEARCH_LAYER);
+                    mMap.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER) + 1);
+                    mapLayers.remove(Constants.SEARCH_LAYER);
 
                     Log.i(TAG,"Map Overlays: " + mMap.getOverlays().size());
-                    Log.i(TAG,"Map Markers: " + mapMarkers.size());
+                    Log.i(TAG,"Map Markers: " + mapLayers.size());
                     Log.i(TAG,"Map Overlays: " + mMap.getOverlays().toString());
                     if(searchResultSheetBehavior != null) {
                         if ((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
@@ -329,8 +324,8 @@ public class MapActivity extends AppCompatActivity
                             placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     }
                     if(isGoToRouteEnabled){
-                        mMap.getOverlays().remove(mapMarkers.indexOf(Constants.ROUTE_LAYER) + 1);
-                        mapMarkers.remove(Constants.ROUTE_LAYER);
+                        mMap.getOverlays().remove(mapLayers.indexOf(Constants.ROUTE_LAYER) + 1);
+                        mapLayers.remove(Constants.ROUTE_LAYER);
                     }
                     mMap.invalidate();
                 }
@@ -341,6 +336,14 @@ public class MapActivity extends AppCompatActivity
         // Configura a barra de busca (SearchWidget)
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Toast.makeText(MapActivity.this, "asdasdasd", Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+        });
 
         searchView.setOnQueryTextListener(this);
 
@@ -373,15 +376,15 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this, progressBar).execute(Constants.XEROX_FILTER);
                 isXeroxEnabled = true;
             } else {
-                /* Senão, remover a camada do mapa. Utiliza-se a arraylist mapMarkers para resgatar
+                /* Senão, remover a camada do mapa. Utiliza-se a arraylist mapLayers para resgatar
                 * o indice em que a camada foi inserida no mapa, dado que o método remove apresenta
                 * problemas para remover diretamente a camada.
                 * Ex.: mMap.getOverlays.remove(tilesOverlay)
                 * Então é necessário remover a camada pelo indice que será sempre adicionado de um
                 * por conta da camada base adicionada para a localização do usuário
                 */
-                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.XEROX_FILTER)+1);
-                mapMarkers.remove(Constants.XEROX_FILTER);
+                mMap.getOverlays().remove(mapLayers.indexOf(Constants.XEROX_FILTER)+1);
+                mapLayers.remove(Constants.XEROX_FILTER);
                 isXeroxEnabled = false;
 
             }
@@ -390,8 +393,8 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = true;
             } else {
-                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.RESTAURANT_FILTER)+1);
-                mapMarkers.remove(Constants.RESTAURANT_FILTER);
+                mMap.getOverlays().remove(mapLayers.indexOf(Constants.RESTAURANT_FILTER)+1);
+                mapLayers.remove(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = false;
 
             }
@@ -411,26 +414,31 @@ public class MapActivity extends AppCompatActivity
         new Thread(new Runnable() {
             @Override
             public void run() {
-                RoadManager roadManager = new OSRMRoadManager(MapActivity.this);
-                roadManager.addRequestOption("routeType=pedestrian");
-                roadManager.addRequestOption("outFormat=json");
+                RoadManager roadManager = new GraphHopperRoadManager(Constants.GRAPHHOPPER_KEY,true);
+//                RoadManager roadManager = new GoogleRoadManager(); // bom para carros
+                roadManager.addRequestOption("vehicle=foot");
+
                 ArrayList<GeoPoint> wayPoints = new ArrayList<>();
                 if(myCurrentLocation != null) {
-                    final GeoPoint startPoint = new GeoPoint(myCurrentLocation);
+//                    final GeoPoint startPoint = new GeoPoint(myCurrentLocation);
+                    final GeoPoint startPoint = new GeoPoint(-1.47465, -48.45605); // Local teste: icen
                     final GeoPoint endPoint = new GeoPoint(place.getLatitude(),place.getLongitude());
                     wayPoints.add(startPoint);
                     wayPoints.add(endPoint);
                     Road road = roadManager.getRoad(wayPoints);
-                    if (road.mStatus != Road.STATUS_OK){
-                        Log.wtf(TAG,"Road error");
-                    }
+
                     Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+                    roadOverlay.setWidth(15);
                     mMap.getOverlays().add(roadOverlay);
-                    mapMarkers.add(Constants.ROUTE_LAYER);
+                    mapLayers.add(Constants.ROUTE_LAYER);
+
+                    Log.e(TAG, String.valueOf(roadOverlay.getWidth()));
                     isGoToRouteEnabled = true;
+
                 }
             }
         }).start();
+        mMap.invalidate();
 
     }
 
@@ -499,10 +507,10 @@ public class MapActivity extends AppCompatActivity
 
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
                 mMap.getOverlays().add(poiMarkers);
-                mapMarkers.add(filter);
+                mapLayers.add(filter);
 
                 Log.e(TAG,"Map Overlays: " + mMap.getOverlays().size());
-                Log.e(TAG,"Map Markers: " + mapMarkers.size());
+                Log.e(TAG,"Map Markers: " + mapLayers.size());
                 Log.e(TAG,"Map Overlays: " + mMap.getOverlays().toString());
             }
         }).start();
@@ -552,12 +560,12 @@ public class MapActivity extends AppCompatActivity
                         });
 
                     }
-                    mapMarkers.add(Constants.SEARCH_LAYER);
+                    mapLayers.add(Constants.SEARCH_LAYER);
                     mMap.getOverlays().add(poiMarkers);
                     Toast.makeText(MapActivity.this, "Clique no marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
 
                     Log.e(TAG,"Map Overlays: " + mMap.getOverlays().size());
-                    Log.e(TAG,"Map Markers: " + mapMarkers.size());
+                    Log.e(TAG,"Map Markers: " + mapLayers.size());
                     Log.e(TAG,"Map Overlays: " + mMap.getOverlays().toString());
 
                     isSearchEnabled = true;
@@ -628,8 +636,8 @@ public class MapActivity extends AppCompatActivity
         final String longitude = String.valueOf(defaultLocation.getLongitude());
         findViewById(R.id.action_search).clearFocus();
         if (isSearchEnabled) {
-            mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
-            mapMarkers.remove(Constants.SEARCH_LAYER);
+            mMap.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER) + 1);
+            mapLayers.remove(Constants.SEARCH_LAYER);
             isSearchEnabled = false;
         }
         new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
