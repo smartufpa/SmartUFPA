@@ -47,7 +47,7 @@ public class PlaceDetailsBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
-        final View contentView = View.inflate(getContext(), R.layout.test_bottom_sheet, null);
+        final View contentView = View.inflate(getContext(), R.layout.details_bottom_sheet, null);
         dialog.setContentView(contentView);
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();

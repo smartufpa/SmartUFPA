@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Smart Campus UFPA</string>
+    <string name="app_name">Smart UFPA</string>
 
     <!--Textos da tela de login-->
-    <string name="logo_title">Smart Campus</string>
+    <string name="logo_title">Smart UFPA</string>
     <string name="username_hint">Nome de Usuário</string>
     <string name="password_hint">Senha</string>
     <string name="log_in_button">Entrar</string>
