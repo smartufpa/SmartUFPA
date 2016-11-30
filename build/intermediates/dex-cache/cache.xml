@@ -3,15 +3,6 @@
 
     <item
         is-multidex="false"
-        jar="C:\Users\Francisco Junior\AppData\Local\Android\Sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-alpha3\constraint-layout-solver-1.0.0-alpha3.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.0"
-        sha1="977d57354ef7ef4faa604b802d4907728e0db889">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.0-alpha3_cd6c6cce8b03dfd217d2dc1e452d231fa7c76215.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -66,15 +57,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Francisco Junior\AppData\Local\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\24.2.1\support-annotations-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\support-annotations-24.2.1_8b4f02809bdfa2cc09547061687ff5754a240acf.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
@@ -84,21 +66,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Francisco Junior\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.9.0\f824591a0016efbaeddb8300bee54832a1398cfa\okio-1.9.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.0"
-        sha1="f824591a0016efbaeddb8300bee54832a1398cfa">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\okio-1.9.0_9d881cd29d26a1578d565db2397e6de7cfd38f84.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
         sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_2311235de8d3d4f159f8474a3758d87d9219b5c0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Coordenação-PdNovo\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.9.0\f824591a0016efbaeddb8300bee54832a1398cfa\okio-1.9.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="f824591a0016efbaeddb8300bee54832a1398cfa">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\okio-1.9.0_a5b7f6cbd48245e15efe4a175bf503d931e02f19.jar" />
     </item>
     <item
         is-multidex="false"
@@ -124,7 +106,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="18c070a8544c5f013696c3c01348076ae68943cc">
+        sha1="bd6f4261c4b19ff781c968266c4d5138dcde22c9">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\instant-run_d5b334ac5ec55b77d94fdb4d8599218b4ed0c579.jar" />
     </item>
     <item
@@ -183,15 +165,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Francisco Junior\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.4.1\c7c4f9e35c2fd5900da24f9872e3971801f08ce0\okhttp-3.4.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="c7c4f9e35c2fd5900da24f9872e3971801f08ce0">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\okhttp-3.4.1_0cb50690c3c86f449c22ef647a89bcc5785badff.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.2.1\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -225,15 +198,6 @@
         revision="24.0.0"
         sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_7ae632f87d30f31d388c3364a3f17c1a6316c26b.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Francisco Junior\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.7\751f548c85fa49f330cecbb1875893f971b33c4e\gson-2.7.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\gson-2.7_708c9d2463d623289e80319b69240097922cae12.jar" />
     </item>
     <item
         is-multidex="false"
@@ -273,15 +237,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Francisco Junior\AppData\Local\Android\Sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-alpha3\constraint-layout-solver-1.0.0-alpha3.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="977d57354ef7ef4faa604b802d4907728e0db889">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.0-alpha3_cd6c6cce8b03dfd217d2dc1e452d231fa7c76215.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
@@ -297,15 +252,6 @@
         revision="24.0.0"
         sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-24.2.1_27688e6a110d328f133ea848606ecfbbc49d8a9f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Francisco Junior\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.9.0\f824591a0016efbaeddb8300bee54832a1398cfa\okio-1.9.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="f824591a0016efbaeddb8300bee54832a1398cfa">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\okio-1.9.0_9d881cd29d26a1578d565db2397e6de7cfd38f84.jar" />
     </item>
     <item
         is-multidex="false"
@@ -345,6 +291,15 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Android\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-alpha3\constraint-layout-solver-1.0.0-alpha3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="977d57354ef7ef4faa604b802d4907728e0db889">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.0-alpha3_07db4572b2ef6458084d1e504ab0660350c34442.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="false"
         optimize="true"
@@ -363,21 +318,21 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Android\extras\android\m2repository\com\android\support\support-annotations\24.2.1\support-annotations-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\support-annotations-24.2.1_565bdac902bac0319f252498e8ec23bdf19b09a3.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.0"
         sha1="867dad63c33388ff8c7644b236579355036d075f">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_9f87fd56f45a9cfdd4438cff46df0d994ff7999f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Francisco Junior\AppData\Local\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\24.2.1\support-annotations-24.2.1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.0"
-        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\support-annotations-24.2.1_8b4f02809bdfa2cc09547061687ff5754a240acf.jar" />
     </item>
     <item
         is-multidex="false"
@@ -405,15 +360,6 @@
         revision="24.0.0"
         sha1="d5c731fc64c03dfe04d51134955b483551c35849">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-24.2.1_9220eb6b429a7a561e1a502af9e14ead6756c064.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Francisco Junior\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.4.1\c7c4f9e35c2fd5900da24f9872e3971801f08ce0\okhttp-3.4.1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.0"
-        sha1="c7c4f9e35c2fd5900da24f9872e3971801f08ce0">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\okhttp-3.4.1_0cb50690c3c86f449c22ef647a89bcc5785badff.jar" />
     </item>
     <item
         is-multidex="false"
@@ -462,21 +408,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Francisco Junior\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.7\751f548c85fa49f330cecbb1875893f971b33c4e\gson-2.7.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.0"
-        sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
-        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\gson-2.7_708c9d2463d623289e80319b69240097922cae12.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\temp\SmartCampus\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.0"
         sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_7ae632f87d30f31d388c3364a3f17c1a6316c26b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Coordenação-PdNovo\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.4.1\c7c4f9e35c2fd5900da24f9872e3971801f08ce0\okhttp-3.4.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="c7c4f9e35c2fd5900da24f9872e3971801f08ce0">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\okhttp-3.4.1_69883950e2cbdd039f1ee9da26f920241459cc40.jar" />
     </item>
     <item
         is-multidex="false"
@@ -493,7 +439,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="8c98285272bac55b1efa026ba3ed6d03660fc5d0">
+        sha1="3faa68891025664093f05056c6e5a355f67da14f">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_f6ea5d273c9dacb25e31262e4d1783cebc183777.jar" />
     </item>
     <item
@@ -504,6 +450,15 @@
         revision="24.0.0"
         sha1="9cfaea21fa885f50c6666f7ee64eb26f91f3f71c">
         <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\osmdroid-android-5.4.1-release_1efbc958e2d842c082d6e5ce5d35340e928a69cb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Coordenação-PdNovo\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.7\751f548c85fa49f330cecbb1875893f971b33c4e\gson-2.7.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
+        <dex dex="C:\temp\SmartCampus\app\build\intermediates\pre-dexed\debug\gson-2.7_d9092c3e28401cb926a1f8e690b9a759fc008b53.jar" />
     </item>
     <item
         is-multidex="false"
