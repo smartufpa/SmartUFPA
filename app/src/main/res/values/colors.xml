@@ -2,9 +2,9 @@
 <resources>
     <color name="colorPrimary">#5774b6</color>
     <color name="colorPrimaryDark">#004b82</color>
-    <color name="colorAccent">#ffd05e</color>
+    <color name="colorAccent">#fdd835</color>
     <color name="disabledButton">#cccccc</color>
     <color name="enabledButton">#e10a0a</color>
-    <color name="loginBackground">@android:color/darker_gray</color>
+    <color name="loginBackground">#959da6</color>
     <color name="white">#ffff</color>
 </resources>

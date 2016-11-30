@@ -21,7 +21,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/img_logo"
-                android:src="@drawable/ic_bus_white"
+
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -58,6 +58,7 @@
                 android:id="@+id/btn_login"
                 android:text="Realizar Login"
                 android:textColor="@android:color/white"
+
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"

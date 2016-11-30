@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.kaeuc.osmapp.Extras.Place;
+
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
@@ -39,7 +41,7 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
     protected ArrayList<POI> doInBackground(String... params) {
         String query = params[0] + ",Belém";
         GeoPoint viewBox = new GeoPoint(Double.valueOf(params[1]),Double.valueOf(params[2]));
-        
+
         NominatimPOIProvider poiProvider = new NominatimPOIProvider("OsmNavigator/1.0");
         return poiProvider.getPOICloseTo(viewBox, query, 50, 0.1);
 
@@ -48,7 +50,7 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
     @Override
     protected void onPostExecute(ArrayList<POI> pois) {
         super.onPostExecute(pois);
-        callBack.nominatimTaskResponse(pois);
+        callBack.nominatimTaskResponse(Place.convertPOIsToPlaces(pois));
         progressBar.setVisibility(View.GONE);
 
 

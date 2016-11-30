@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Smart Campus UFPA</string>
+    <string name="app_name">Smart UFPA</string>
 
     <!--Textos da tela de login-->
-    <string name="logo_title">Smart Campus</string>
+    <string name="logo_title">Smart UFPA</string>
     <string name="username_hint">Nome de Usuário</string>
     <string name="password_hint">Senha</string>
     <string name="log_in_button">Entrar</string>
@@ -29,11 +29,12 @@
     <string name="drawer_subtitle">ICEN - Faculdade de Computação</string>
 
 
-
     <string name="action_search">Search</string>
     <string name="about_title">Sobre o aplicativo</string>
     <string name="search_hint">Procure na UFPA</string>
     <string name="lorem_ipsum">Descrição: \nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dui tellus, lacinia non ipsum vel, interdum varius nulla. Curabitur ultrices ipsum at porta placerat.</string>
+    <string name="no_gps_error">O GPS deve estar ligado para iniciar o aplicativo.</string>
+    <string name="turn_on_gps_button">Ligar GPS</string>
 
 
 </resources>

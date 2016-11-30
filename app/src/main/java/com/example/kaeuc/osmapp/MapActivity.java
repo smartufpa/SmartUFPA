@@ -3,7 +3,6 @@ package com.example.kaeuc.osmapp;
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -11,7 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
@@ -25,26 +23,28 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
 import com.example.kaeuc.osmapp.Extras.Place;
+import com.example.kaeuc.osmapp.Extras.PlaceDetailsBottomSheet;
 import com.example.kaeuc.osmapp.Extras.SearchListAdapter;
-
 import com.example.kaeuc.osmapp.Server.NominatimDataRequest;
 import com.example.kaeuc.osmapp.Server.NominatimDataRequestResponse;
 import com.example.kaeuc.osmapp.Server.OsmDataRequest;
 import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -53,6 +53,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -99,10 +100,9 @@ public class MapActivity extends AppCompatActivity
     private boolean isBusRouteEnabled = false;
     private boolean isRestaurantEnabled = false;
     private boolean isSearchEnabled = false;
+    private boolean isGoToRouteEnabled = false;
 
-    private List<String> mapMarkers = new ArrayList<>();
-
-
+    private List<String> mapLayers = new ArrayList<>();
 
 
     /* Inicio dos métodos do ciclo da activity*/
@@ -110,7 +110,6 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -161,7 +160,7 @@ public class MapActivity extends AppCompatActivity
                     boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
                     //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
                     if (!GPSEnabled) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        Toast.makeText(MapActivity.this, "Por favor, ligar o GPS novamente.", Toast.LENGTH_SHORT).show();
                     }
                     Toast.makeText(MapActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
                 } else if (!mapRegion.contains(
@@ -306,13 +305,28 @@ public class MapActivity extends AppCompatActivity
                  */
                 if (isSearchEnabled) {
                     isSearchEnabled = false;
-                    mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
-                    if((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-                        || (searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
-                    searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    if((placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-                        || (placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
-                        placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+
+                    mMap.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER) + 1);
+                    mapLayers.remove(Constants.SEARCH_LAYER);
+
+                    Log.i(TAG,"Map Overlays: " + mMap.getOverlays().size());
+                    Log.i(TAG,"Map Markers: " + mapLayers.size());
+                    Log.i(TAG,"Map Overlays: " + mMap.getOverlays().toString());
+                    if(searchResultSheetBehavior != null) {
+                        if ((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                                || (searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
+                            searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
+                    if(placeDetailsSheetBehavior!=null) {
+                        if ((placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                                || (placeDetailsSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
+                            placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
+                    if(isGoToRouteEnabled){
+                        mMap.getOverlays().remove(mapLayers.indexOf(Constants.ROUTE_LAYER) + 1);
+                        mapLayers.remove(Constants.ROUTE_LAYER);
+                    }
                     mMap.invalidate();
                 }
                 return true;
@@ -322,8 +336,17 @@ public class MapActivity extends AppCompatActivity
         // Configura a barra de busca (SearchWidget)
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Toast.makeText(MapActivity.this, "asdasdasd", Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+        });
 
         searchView.setOnQueryTextListener(this);
+
 
         return true;
     }
@@ -353,15 +376,15 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this, progressBar).execute(Constants.XEROX_FILTER);
                 isXeroxEnabled = true;
             } else {
-                /* Senão, remover a camada do mapa. Utiliza-se a arraylist mapMarkers para resgatar
+                /* Senão, remover a camada do mapa. Utiliza-se a arraylist mapLayers para resgatar
                 * o indice em que a camada foi inserida no mapa, dado que o método remove apresenta
                 * problemas para remover diretamente a camada.
                 * Ex.: mMap.getOverlays.remove(tilesOverlay)
                 * Então é necessário remover a camada pelo indice que será sempre adicionado de um
                 * por conta da camada base adicionada para a localização do usuário
                 */
-                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.XEROX_FILTER)+1);
-                mapMarkers.remove(Constants.XEROX_FILTER);
+                mMap.getOverlays().remove(mapLayers.indexOf(Constants.XEROX_FILTER)+1);
+                mapLayers.remove(Constants.XEROX_FILTER);
                 isXeroxEnabled = false;
 
             }
@@ -370,8 +393,8 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = true;
             } else {
-                mMap.getOverlays().remove(mapMarkers.indexOf(Constants.RESTAURANT_FILTER)+1);
-                mapMarkers.remove(Constants.RESTAURANT_FILTER);
+                mMap.getOverlays().remove(mapLayers.indexOf(Constants.RESTAURANT_FILTER)+1);
+                mapLayers.remove(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = false;
 
             }
@@ -383,6 +406,41 @@ public class MapActivity extends AppCompatActivity
     }
 
     /* Fim dos métodos de utilização do Drawer lateral*/
+
+
+    /* Início de  métodos envolvendo localização*/
+
+    public void traceRoute(final Place place){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RoadManager roadManager = new GraphHopperRoadManager(Constants.GRAPHHOPPER_KEY,true);
+//                RoadManager roadManager = new GoogleRoadManager(); // bom para carros
+                roadManager.addRequestOption("vehicle=foot");
+
+                ArrayList<GeoPoint> wayPoints = new ArrayList<>();
+                if(myCurrentLocation != null) {
+//                    final GeoPoint startPoint = new GeoPoint(myCurrentLocation);
+                    final GeoPoint startPoint = new GeoPoint(-1.47465, -48.45605); // Local teste: icen
+                    final GeoPoint endPoint = new GeoPoint(place.getLatitude(),place.getLongitude());
+                    wayPoints.add(startPoint);
+                    wayPoints.add(endPoint);
+                    Road road = roadManager.getRoad(wayPoints);
+
+                    Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+                    roadOverlay.setWidth(15);
+                    mMap.getOverlays().add(roadOverlay);
+                    mapLayers.add(Constants.ROUTE_LAYER);
+
+                    Log.e(TAG, String.valueOf(roadOverlay.getWidth()));
+                    isGoToRouteEnabled = true;
+
+                }
+            }
+        }).start();
+        mMap.invalidate();
+
+    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -404,6 +462,8 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+    /* Fim dos  métodos envolvendo localização*/
+
 
     /* Início dos métodos que executam em uma AsyncTask.
     *  Esses são responsáveis por receber o resultado dessas tarefas
@@ -416,7 +476,6 @@ public class MapActivity extends AppCompatActivity
             public void run() {
                 // Cria e adiciona a camada de marcadores ao mapa
                 FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
-                mMap.getOverlays().add(poiMarkers);
                 Drawable poiIcon = null;
                 // Configura o ícone de acordo com o filtro que será adicionado
                 if (filter.equals(Constants.XEROX_FILTER))
@@ -426,8 +485,8 @@ public class MapActivity extends AppCompatActivity
                 else if(filter.equals(Constants.RESTROOM_FILTER)) // Definir essa string
                     poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
 
-                // Cria um marcador para cada local encontrado
-                for (Place place : places) {
+               // Cria um marcador para cada local encontrado
+                for (final Place place : places) {
                     Marker poiMarker = new Marker(mMap);
                     poiMarker.setTitle(place.getName());
                     // Descrição do marcador
@@ -435,50 +494,80 @@ public class MapActivity extends AppCompatActivity
                     poiMarker.setPosition(new GeoPoint(place.getLatitude(), place.getLongitude()));
                     poiMarker.setIcon(poiIcon);
                     poiMarkers.add(poiMarker);
+                    poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker, MapView mapView) {
+                            mMap.invalidate();
+                            PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+                            sheet.show(getSupportFragmentManager(),"bottom sheet");
+                            return true;
+                        }
+                    });
                 }
+
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
-                mapMarkers.add(filter);
+                mMap.getOverlays().add(poiMarkers);
+                mapLayers.add(filter);
+
+                Log.e(TAG,"Map Overlays: " + mMap.getOverlays().size());
+                Log.e(TAG,"Map Markers: " + mapLayers.size());
+                Log.e(TAG,"Map Overlays: " + mMap.getOverlays().toString());
             }
         }).start();
+        Toast.makeText(MapActivity.this, "Clique em um marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
 
     }
 
     // Esse método retorna dados do servidor do Nominatim (Referência http://wiki.openstreetmap.org/wiki/Nominatim )
     @Override
-    public void nominatimTaskResponse(final ArrayList<POI> pois) {
+    public void nominatimTaskResponse(final ArrayList<Place> places) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (pois != null) {
+                if (places != null) {
                     // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
-                    if (pois.size() > 1) {
-                        setupSearchResultBottomSheet(Place.convertPOIsToPlaces(pois));
-                    }
+                    if (places.size() > 1) {
+                        setupSearchResultBottomSheet(places);
+                    }else
+                        mMapController.animateTo(places.get(0).getPosition());
 
                     // Cria e adiciona a camada de marcadores ao mapa
                     FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
-                    mMap.getOverlays().add(poiMarkers);
 
                     // Configura o ícone de marcador para cada local encontrado
                     Drawable poiIcon = getResources().getDrawable(R.drawable.ic_marker);
-                    for (POI poi : pois) {
+                    for (final Place place : places) {
                         Marker poiMarker = new Marker(mMap);
-                        String poiName = poi.mDescription.substring(0, poi.mDescription.indexOf(","));
-                        poiMarker.setTitle(poiName);
-                        poiMarker.setSnippet(poi.mDescription);
-                        poiMarker.setPosition(poi.mLocation);
+                        poiMarker.setAnchor(0.5f,1);
+                        poiMarker.setTitle(place.getName());
+                        poiMarker.setSnippet(place.getDescription());
+                        poiMarker.setPosition(place.getPosition());
                         poiMarker.setIcon(poiIcon);
                         poiMarkers.add(poiMarker);
                         poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(Marker marker, MapView mapView) {
                                 marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
+                                marker.setAnchor(0.5f,1);
+                                if(marker.isEnabled()){
+                                    Log.wtf(TAG,"teste");
+                                }
+                                mMap.invalidate();
+                                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+                                sheet.show(getSupportFragmentManager(),"bottom sheet");
                                 return true;
                             }
                         });
 
                     }
-                    mapMarkers.add(Constants.SEARCH_LAYER);
+                    mapLayers.add(Constants.SEARCH_LAYER);
+                    mMap.getOverlays().add(poiMarkers);
+                    Toast.makeText(MapActivity.this, "Clique no marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
+
+                    Log.e(TAG,"Map Overlays: " + mMap.getOverlays().size());
+                    Log.e(TAG,"Map Markers: " + mapLayers.size());
+                    Log.e(TAG,"Map Overlays: " + mMap.getOverlays().toString());
+
                     isSearchEnabled = true;
                 } else {
                     Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
@@ -492,9 +581,10 @@ public class MapActivity extends AppCompatActivity
 
 
     // Configura a bottomsheet de múltiplos resultados da busca
-    private void setupSearchResultBottomSheet(final ArrayList<Place> pois){
+    private void setupSearchResultBottomSheet(final ArrayList<Place> places){
         // Configurando a listview
-        SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,pois);
+
+        final SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,places);
         ListView listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(searchListAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -502,16 +592,9 @@ public class MapActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Configura a bottomsheet de detalhes sobre o local
                 searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                View bottomSheet = findViewById(R.id.bottom_sheet_place_details);
-                bottomSheet.setVisibility(View.VISIBLE);
-                placeDetailsSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                placeDetailsSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                placeDetailsSheetBehavior.setPeekHeight(300);
-                placeDetailsSheetBehavior.setHideable(true);
-                ((TextView)findViewById(R.id.txt_place_description)).setText(pois.get(position).getDescription());
-                ((TextView)findViewById(R.id.txt_place_name)).setText(pois.get(position).getName());
-                mMapController.animateTo(new GeoPoint(pois.get(position).getLatitude(),pois.get(position).getLongitude()));
-                mMapController.setZoom(18);
+                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(places.get(position));
+                sheet.show(getSupportFragmentManager(),"bottom sheet");
+
 
             }
         });
@@ -519,9 +602,9 @@ public class MapActivity extends AppCompatActivity
         View bottomSheet = findViewById(R.id.bottom_sheet_results);
         bottomSheet.setVisibility(View.VISIBLE);
         searchResultSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         searchResultSheetBehavior.setHideable(true);
-        searchResultSheetBehavior.setPeekHeight(800);
+        searchResultSheetBehavior.setPeekHeight(120);
         searchResultSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -532,6 +615,7 @@ public class MapActivity extends AppCompatActivity
 
                 }
                 else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+
                 }
             }
 
@@ -550,14 +634,16 @@ public class MapActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(final String query) {
         final String latitude = String.valueOf(defaultLocation.getLatitude());
         final String longitude = String.valueOf(defaultLocation.getLongitude());
+        findViewById(R.id.action_search).clearFocus();
         if (isSearchEnabled) {
-            mMap.getOverlays().remove(mapMarkers.indexOf(Constants.SEARCH_LAYER) + 1);
+            mMap.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER) + 1);
+            mapLayers.remove(Constants.SEARCH_LAYER);
             isSearchEnabled = false;
         }
         new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
 
 
-        return false;
+        return true;
     }
 
     @Override
@@ -565,4 +651,16 @@ public class MapActivity extends AppCompatActivity
         return false;
     }
 
+    // // TODO: Salvar informações relevantes para restaurar o estado da aplicação
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+
+
+
+
+
 }
+
