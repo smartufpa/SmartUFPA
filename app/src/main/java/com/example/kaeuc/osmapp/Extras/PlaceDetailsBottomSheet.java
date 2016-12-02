@@ -15,6 +15,7 @@ import com.example.kaeuc.osmapp.R;
 
 /**
  * Created by kaeuc on 17/11/2016.
+ * Fragment para mostrar o detalhes sobre o local selecionado
  */
 
 public class PlaceDetailsBottomSheet extends BottomSheetDialogFragment {
@@ -35,7 +36,7 @@ public class PlaceDetailsBottomSheet extends BottomSheetDialogFragment {
         }
     };
 
-
+    // Método que permite que o fragment receba parâmetros
     public static PlaceDetailsBottomSheet newInstance(Place place) {
         Bundle args = new Bundle();
         PlaceDetailsBottomSheet fragment = new PlaceDetailsBottomSheet();
@@ -55,8 +56,10 @@ public class PlaceDetailsBottomSheet extends BottomSheetDialogFragment {
         bottomSheetBehavior = (BottomSheetBehavior) behavior;
 
         final Place targetPlace = (Place) getArguments().getSerializable("place");
+        // Views
         TextView placeName = (TextView) contentView.findViewById(R.id.place_name);
         placeName.setText(targetPlace.getName());
+
         TextView placeDescription = (TextView) contentView.findViewById(R.id.place_description);
         placeDescription.setText(targetPlace.getDescription());
 

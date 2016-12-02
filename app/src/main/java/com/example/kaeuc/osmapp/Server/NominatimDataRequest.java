@@ -15,13 +15,17 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 
 /**
- * Created by MESTRADO on 08/11/2016.
+ * Created by kaeuc on 08/11/2016.
+ * Classe responsável por executar busca de Pontos de Interesse múltiplos no servidor do Nominatim
+ * de maneira assíncrona.
+ * Recebe uma String contendo o termo da busca e retorna uma ArrayList de POIs
  */
 
 public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> {
 
     private Context parentContext;
     private ProgressBar progressBar;
+    // interface resposável por devolver o resultado da task pra atividade principal
     private NominatimDataRequestResponse callBack = null;
     private static final String TAG = "NominatatimDataRequest";
 
@@ -30,13 +34,15 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
         this.callBack = (NominatimDataRequestResponse) parentContext;
         this.progressBar = progressBar;
     }
-
+    // Mostra a barra de progresso durante a execução da task
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         progressBar.setVisibility(View.VISIBLE);
     }
-
+    /* Faz a consulta ao servidor do nominatim
+     * Referência: https://github.com/MKergall/osmbonuspack/wiki/Tutorial_2
+     */
     @Override
     protected ArrayList<POI> doInBackground(String... params) {
         String query = params[0] + ",Belém";
@@ -47,6 +53,7 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
 
     }
 
+    // recebe a lista dos pontos de interesse (POIs) e devolve para a atividade principal
     @Override
     protected void onPostExecute(ArrayList<POI> pois) {
         super.onPostExecute(pois);
