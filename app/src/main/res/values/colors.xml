@@ -5,6 +5,6 @@
     <color name="colorAccent">#fdd835</color>
     <color name="disabledButton">#cccccc</color>
     <color name="enabledButton">#e10a0a</color>
-    <color name="loginBackground">#959da6</color>
+    <color name="loginBackground">#ffffff</color>
     <color name="white">#ffff</color>
 </resources>
