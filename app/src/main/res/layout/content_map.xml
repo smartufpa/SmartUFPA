@@ -48,7 +48,7 @@
 
     <include layout="@layout/bottom_sheet_search_results"/>
 
-    <include layout="@layout/bottom_sheet_place_details"/>
+
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -2,12 +2,14 @@ package com.example.kaeuc.osmapp;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQuery;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -105,8 +107,17 @@ public class LoginScreenActivity extends AppCompatActivity {
 //                    intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
 //                    startActivity(intent);
                 }else if (v.getId() == btnVisitante.getId()) {
-                    Intent intent = new Intent(LoginScreenActivity.this,TelaIntermediaria.class);
-                    startActivity(intent);
+                    if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                        Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
+                        intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
+                        startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(AppMenuActivity.ACTION_APP_MENU);
+                        intent.addCategory(AppMenuActivity.CATEGORY_APP_MENU);
+                        startActivity(intent);
+                    }
+
+
                 }
             }
         };

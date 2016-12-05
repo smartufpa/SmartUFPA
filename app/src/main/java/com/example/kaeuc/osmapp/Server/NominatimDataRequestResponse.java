@@ -1,5 +1,7 @@
 package com.example.kaeuc.osmapp.Server;
 
+import com.example.kaeuc.osmapp.Extras.Place;
+
 import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
@@ -9,5 +11,5 @@ import java.util.ArrayList;
  */
 
 public interface NominatimDataRequestResponse {
-    void nominatimTaskResponse(ArrayList<POI> pois);
+    void nominatimTaskResponse(ArrayList<Place> places);
 }
