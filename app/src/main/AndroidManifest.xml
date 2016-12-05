@@ -30,7 +30,6 @@
 
                 <category android:name="osmapp.CATEGORY_LOGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -60,6 +59,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".NoGpsActivity"
             android:launchMode="singleTop"
@@ -71,6 +71,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".AppMenuActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter>
+                <action android:name="osmapp.ACTION_APP_MENU"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="osmapp.CATEGORY_APP_MENU"/>
+            </intent-filter>
+
+        </activity>
+
 
     </application>
 

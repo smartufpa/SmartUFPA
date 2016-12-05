@@ -112,10 +112,11 @@ public class LoginScreenActivity extends AppCompatActivity {
                         intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
                         startActivity(intent);
                     }else{
-                        Intent intent = new Intent(MapActivity.ACTION_MAP);
-                        intent.addCategory(MapActivity.CATEGORY_MAP);
+                        Intent intent = new Intent(AppMenuActivity.ACTION_APP_MENU);
+                        intent.addCategory(AppMenuActivity.CATEGORY_APP_MENU);
                         startActivity(intent);
                     }
+
 
                 }
             }
