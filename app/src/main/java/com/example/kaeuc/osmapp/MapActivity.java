@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -79,11 +80,12 @@ public class MapActivity extends AppCompatActivity
     private MapView mapView;
     private DrawerLayout drawer;
     private NavigationView navigationView;
-    private FloatingActionButton fabMyLocation;
-    private FloatingActionButton fabBusRoutes;
     private ProgressBar progressBar;
     private Toolbar toolbar;
     private BottomSheetBehavior searchResultSheetBehavior;
+    private FloatingActionButton fabBusRoutes;
+    private FloatingActionButton fabMyLocation;
+    private Button btnClearMap;
 
 
 
@@ -125,6 +127,8 @@ public class MapActivity extends AppCompatActivity
                 fabBusRoutes.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+                btnClearMap = (Button) findViewById(R.id.btn_clear_map);
+                mapLayers.add(Constants.MY_LOCATION_LAYER);
             }
         });
         // Configuração da action bar e do drawer lateral
@@ -184,9 +188,12 @@ public class MapActivity extends AppCompatActivity
                 provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
                 TilesOverlay tilesOverlay = new TilesOverlay(provider, MapActivity.this);
                 if (!isBusRouteEnabled) {
-                    // adiciona sempre a camada da rota de onibus na primeira posição da arraylist
-                    // de overlays para fácil remoção
-                    mapView.getOverlays().add(0, tilesOverlay);
+                    /* adiciona sempre a camada da rota de onibus na primeira posição da arraylist
+                    * de overlays para fácil remoção
+                    */
+                    mapView.getOverlays().add(tilesOverlay);
+                    Log.i(TAG,"Add bus route: "+ mapView.getOverlayManager().toString());
+                    mapLayers.add(Constants.BUS_ROUTE_LAYER);
                     mapView.invalidate();
                     isBusRouteEnabled = true;
                     fabBusRoutes.setBackgroundTintList(
@@ -194,7 +201,9 @@ public class MapActivity extends AppCompatActivity
 
                 } else {
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
-                    mapView.getOverlayManager().remove(0);
+                    mapView.getOverlayManager().remove(mapLayers.indexOf(Constants.BUS_ROUTE_LAYER));
+                    mapLayers.remove(Constants.BUS_ROUTE_LAYER);
+                    Log.i(TAG,"Remove Bus Route: "+ mapView.getOverlayManager().toString());
                     mapView.invalidate();
                     isBusRouteEnabled = false;
                     fabBusRoutes.setBackgroundTintList(
@@ -202,6 +211,15 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         });
+
+
+        btnClearMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearMapView();
+            }
+        });
+
         setupMap();
 
     }
@@ -313,7 +331,7 @@ public class MapActivity extends AppCompatActivity
                 if (isSearchEnabled) {
                     isSearchEnabled = false;
 
-                    mapView.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER) + 1);
+                    mapView.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER));
                     mapLayers.remove(Constants.SEARCH_LAYER);
                     // Contrai a bottomsheet de resultados
                     if(searchResultSheetBehavior != null) {
@@ -321,10 +339,12 @@ public class MapActivity extends AppCompatActivity
                                 || (searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
                             searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     }
-
                     if(isGoToRouteEnabled){
-                        mapView.getOverlays().remove(mapLayers.indexOf(Constants.ROUTE_LAYER) + 1);
+                        mapView.getOverlays().remove(mapLayers.indexOf(Constants.ROUTE_LAYER));
                         mapLayers.remove(Constants.ROUTE_LAYER);
+                    }
+                    if(btnClearMap.getVisibility() == View.VISIBLE){
+                        btnClearMap.setVisibility(View.GONE);
                     }
                     mapView.invalidate();
                 }
@@ -365,39 +385,17 @@ public class MapActivity extends AppCompatActivity
             if (!isXeroxEnabled) {
                 new OsmDataRequest(this, progressBar).execute(Constants.XEROX_URL_FILTER);
                 isXeroxEnabled = true;
-            } else {
-                /* Senão, remover a camada do mapa. Utiliza-se a arraylist mapLayers para resgatar
-                * o indice em que a camada foi inserida no mapa, dado que o método "remove()" apresenta
-                * problemas para remover diretamente a camada.
-                * Ex.: mapView.getOverlays.remove(tilesOverlay)
-                * Então é necessário remover a camada pelo indice que será sempre adicionado de um
-                * por conta da camada base adicionada para a localização do usuário
-                */
-                mapView.getOverlays().remove(mapLayers.indexOf(Constants.XEROX_URL_FILTER)+1);
-                mapLayers.remove(Constants.XEROX_URL_FILTER);
-                isXeroxEnabled = false;
-
             }
-            // Para cada filtro é criado um caso com a mesma lógica
+
         } else if (id == R.id.nav_restaurantes) {
             if (!isRestaurantEnabled) {
                 new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_URL_FILTER);
                 isRestaurantEnabled = true;
-            } else {
-                mapView.getOverlays().remove(mapLayers.indexOf(Constants.RESTAURANT_URL_FILTER)+1);
-                mapLayers.remove(Constants.RESTAURANT_URL_FILTER);
-                isRestaurantEnabled = false;
-
             }
         } else if (id == R.id.nav_banheiros) {
             if (!isRestroomEnabled) {
                 new OsmDataRequest(this, progressBar).execute(Constants.RESTROOM_URL_FILTER);
                 isRestroomEnabled = true;
-            } else {
-                mapView.getOverlays().remove(mapLayers.indexOf(Constants.RESTROOM_URL_FILTER)+1);
-                mapLayers.remove(Constants.RESTROOM_URL_FILTER);
-                isRestroomEnabled = false;
-
             }
         }
 
@@ -439,7 +437,7 @@ public class MapActivity extends AppCompatActivity
                     roadOverlay.setWidth(15);
                     mapView.getOverlays().add(roadOverlay);
                     mapLayers.add(Constants.ROUTE_LAYER);
-
+                    btnClearMap.setVisibility(View.VISIBLE);
                     Log.e(TAG, String.valueOf(roadOverlay.getWidth()));
                     isGoToRouteEnabled = true;
 
@@ -513,9 +511,9 @@ public class MapActivity extends AppCompatActivity
 
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
                 mapView.getOverlays().add(poiMarkers);
-                mapLayers.add(filter);
             }
         }).start();
+        btnClearMap.setVisibility(View.VISIBLE);
         Toast.makeText(MapActivity.this, "Clique em um marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
 
     }
@@ -560,8 +558,9 @@ public class MapActivity extends AppCompatActivity
 
                     }
                     mapLayers.add(Constants.SEARCH_LAYER);
+
                     mapView.getOverlays().add(poiMarkers);
-                    Toast.makeText(MapActivity.this, "Clique no marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MapActivity.this, "Clique no marcador para mais ações e direções.", Toast.LENGTH_SHORT).show();
                     isSearchEnabled = true;
                 } else {
                     Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
@@ -569,6 +568,7 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         });
+        btnClearMap.setVisibility(View.VISIBLE);
         mapView.invalidate();
     }
 
@@ -629,7 +629,7 @@ public class MapActivity extends AppCompatActivity
         findViewById(R.id.action_search).clearFocus();
         // Se uma busca ainda está ativa, limpar o mapa antes de fazer uma nova
         if (isSearchEnabled) {
-            mapView.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER) + 1);
+            mapView.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER));
             mapLayers.remove(Constants.SEARCH_LAYER);
             isSearchEnabled = false;
         }
@@ -651,7 +651,25 @@ public class MapActivity extends AppCompatActivity
     }
 
 
+    protected void clearMapView(){
+        Log.i(TAG+"-clearMap","Current map overlays: "+ mapView.getOverlayManager().toString());
+        int size = mapView.getOverlays().size() -1;
+        for (int i= size ; i> 0 ;i--){
+            if(mapView.getOverlays().get(i) instanceof FolderOverlay
+                    || mapView.getOverlays().get(i) instanceof Polyline ){
+                mapView.getOverlays().remove(i);
+            }
+        }
+        isXeroxEnabled = false;
+        isRestaurantEnabled = false;
+        isSearchEnabled = false;
+        isGoToRouteEnabled = false;
+        isRestroomEnabled= false;
+        btnClearMap.setVisibility(View.GONE);
 
+        mapView.invalidate();
+        Log.i(TAG+"-clearMap","Cleared map: "+ mapView.getOverlayManager().toString());
+    }
 
 
 

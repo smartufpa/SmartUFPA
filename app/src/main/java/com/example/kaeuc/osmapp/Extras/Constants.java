@@ -18,6 +18,9 @@ public final class Constants {
     // Usados no controle de camadas plotadas no mapa
     public static final String ROUTE_LAYER = "Camada de rota";
     public static final String SEARCH_LAYER = "Camada de busca";
+    public static final String BUS_ROUTE_LAYER = "Camada de onibus";
+    public static final String MY_LOCATION_LAYER = "Camada de localização atual";
+
 
     // Usado no parser do xml retornado na requisição ao XAPI, apresentado nos detalhes sobre o local
     // caso um nome não tenha sido definido
