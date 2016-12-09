@@ -23,9 +23,9 @@
     <Button
         android:text=""
         android:background="@android:color/transparent"
-        android:layout_marginLeft="-2dp"
-        android:layout_marginStart="-2dp"
-        android:layout_marginBottom="200dp"
+        android:layout_marginLeft="113dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginBottom="100dp"
         android:id="@+id/mobilidade"
         android:layout_width="70dp"
         android:layout_height="75dp"
