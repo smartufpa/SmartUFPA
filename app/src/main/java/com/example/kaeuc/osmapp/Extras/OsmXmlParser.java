@@ -27,7 +27,7 @@ public class OsmXmlParser {
     private static final String namespace = null;
     private static final String TAG = "OsmXmlParser";
 
-    // Recebe o bjeto XML em forma de String e irá fazer a chamada dos métodos de leituras das tags
+    // Recebe o objeto XML em forma de String e irá fazer a chamada dos métodos de leituras das tags
     public List<Place> parse(String xmlString) throws XmlPullParserException, IOException {
         try {
             // É necessário ajustar a codificação do input que vai ler a String para UTF-8
