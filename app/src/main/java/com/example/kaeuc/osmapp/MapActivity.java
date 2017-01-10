@@ -383,18 +383,18 @@ public class MapActivity extends AppCompatActivity
         if (id == R.id.nav_xerox) {
             // Caso a camada de filtro não esteja ativa, executar a busca e adicionar marcadores
             if (!isXeroxEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.XEROX_URL_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.XEROX_FILTER);
                 isXeroxEnabled = true;
             }
 
         } else if (id == R.id.nav_restaurantes) {
             if (!isRestaurantEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_URL_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = true;
             }
         } else if (id == R.id.nav_banheiros) {
             if (!isRestroomEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.RESTROOM_URL_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.TOILETS_FILTER);
                 isRestroomEnabled = true;
             }
         }
@@ -484,11 +484,11 @@ public class MapActivity extends AppCompatActivity
                 FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
                 Drawable poiIcon = null;
                 // Configura o ícone de acordo com o filtro que será adicionado
-                if (filter.equals(Constants.XEROX_URL_FILTER))
+                if (filter.equals(Constants.XEROX_FILTER))
                     poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
-                else if (filter.equals(Constants.RESTAURANT_URL_FILTER))
+                else if (filter.equals(Constants.RESTAURANT_FILTER))
                     poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
-                else if(filter.equals(Constants.RESTROOM_URL_FILTER)) // Definir essa string
+                else if(filter.equals(Constants.TOILETS_FILTER)) // Definir essa string
                     poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
 
                // Cria um marcador para cada local encontrado
