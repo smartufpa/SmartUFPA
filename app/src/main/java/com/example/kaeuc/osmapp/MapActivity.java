@@ -254,19 +254,20 @@ public class MapActivity extends AppCompatActivity
         locationManager = null;
         myCurrentLocation = null;
         myLocationOverlay = null;
+        this.mapView = null;
+        this.mapController = null;
     }
+
+
 
     /* Fim dos métodos do ciclo da activity*/
 
     // Método responsável por configurar o mapa na sua inicialização
     private void setupMap() {
-
-        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
-
+            myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
         // Restrição da região mostrada do mapa usando coordenadas
         mapRegion = new BoundingBoxE6(-1.457886, -48.437957, -1.479967, -48.459779);
-
-        new Thread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // Configuração do MapController: Posição inicial e zoom
@@ -293,14 +294,15 @@ public class MapActivity extends AppCompatActivity
                 mapView.setMaxZoomLevel(19);
                 mapView.setMultiTouchControls(true);
                 mapView.setUseDataConnection(true);
-                mapView.getOverlays().add(myLocationOverlay);
 
 
                 // Restringe a área do mapa à região escolhida
                 mapView.setScrollableAreaLimit(mapRegion);
             }
-        }).start();
+        });
 
+
+        mapView.getOverlays().add(myLocationOverlay);
         // Configuração para mostrar o boneco da posição do usuário
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
