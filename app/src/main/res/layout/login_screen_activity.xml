@@ -18,11 +18,11 @@
             android:layout_marginTop="50dp"
             >
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
                 android:id="@+id/img_logo"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_logo_final"
+                android:src="@drawable/logo_final"
                 />
         </RelativeLayout>
 

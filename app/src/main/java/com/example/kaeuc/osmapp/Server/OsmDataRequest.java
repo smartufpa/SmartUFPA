@@ -7,10 +7,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.kaeuc.osmapp.Extras.Constants;
+import com.example.kaeuc.osmapp.Extras.OsmJsonParser;
 import com.example.kaeuc.osmapp.Extras.Place;
-import com.example.kaeuc.osmapp.Extras.OsmXmlParser;
-
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -48,27 +47,46 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... params) {
         filtro = params[0];
-        String xmlResponse = null;
-
+        String jsonResponse = null;
+        String query = null;
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         /*Server URL*/
         URL url = null;
         try{
             // Essa url deve se parecer algo como http://www.overpass-api.de/api/xapi?*[key=value][bbox=-48.46069,-1.47956,-48.45348,-1.47158]
-            url = new URL(Constants.XAPI_SERVER_URL +filtro + Constants.BOUNDING_BOX);
+
+            if(filtro.equalsIgnoreCase(Constants.RESTAURANT_FILTER))
+                query = URLEncoder.encode(Constants.OVERPASS_RESTAURANT_QUERY,"UTF-8");
+            else if(filtro.equalsIgnoreCase(Constants.TOILETS_FILTER))
+                query = URLEncoder.encode(Constants.OVERPASS_TOILETS_QUERY,"UTF-8");
+            else if(filtro.equalsIgnoreCase(Constants.XEROX_FILTER))
+                query = URLEncoder.encode(Constants.OVERPASS_XEROX_QUERY,"UTF-8");
+
+            url = new URL(Constants.OVERPASS_SERVER_URL + query);
+
             Log.i(TAG,"Request sent to: "+ url.toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout( 10000 /*milliseconds*/ );
             connection.setConnectTimeout( 10000 /* milliseconds */ );
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/xml");
-            connection.setRequestProperty("Accept", "application/xml");
+            // false para GET requests
+            connection.setDoOutput(false);
+            connection.setRequestProperty("Content-Encoding", "gzip");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
             connection.connect();
 
 
             // recebe a resposta da requisição
-            InputStream inputStream = connection.getInputStream();
+            InputStream inputStream;
+
+            int status = connection.getResponseCode();
+            Log.i(TAG,"Connection status: " + status);
+
+            if (status != HttpURLConnection.HTTP_OK)
+                inputStream = connection.getErrorStream();
+            else
+                inputStream = connection.getInputStream();
 
             StringBuffer buffer = new StringBuffer();
             // se a resposta for vazia
@@ -83,10 +101,9 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
                 return null;
             }
 
-            xmlResponse = buffer.toString();
+            jsonResponse = buffer.toString();
 
-            return xmlResponse;
-
+            return jsonResponse;
         }catch (IOException e){
             e.printStackTrace();
         }finally {
@@ -113,20 +130,12 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
     // executa após a operação ser finalizada
     @Override
-    protected void onPostExecute(String xmlIncome) {
-        super.onPostExecute(xmlIncome);
+    protected void onPostExecute(String jsonResponse) {
+        super.onPostExecute(jsonResponse);
         // Recebe o xml em forma de uma String e e analisa as informções relevantes
-        OsmXmlParser parser = new OsmXmlParser();
-        try {
-            final List<Place> locais = parser.parse(xmlIncome);
-
-            // Retorna os valores para a activity que chamou a ASyncTask
-            callBack.osmTaskCompleted(locais,filtro);
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final List<Place> locais = OsmJsonParser.parseResponse(jsonResponse);
+        // Retorna os valores para a activity que chamou a ASyncTask
+        callBack.osmTaskCompleted(locais,filtro);
         // esconde a barra de progresso
         progressBar.setVisibility(View.GONE);
 
