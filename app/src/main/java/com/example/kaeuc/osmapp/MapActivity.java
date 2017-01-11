@@ -163,13 +163,13 @@ public class MapActivity extends AppCompatActivity
                     boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
                     //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
                     if (!GPSEnabled) {
-                        Toast.makeText(MapActivity.this, "Por favor, ligar o GPS novamente.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapActivity.this, R.string.turn_on_gps_msg, Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(MapActivity.this, "Carregando sua posição atual.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapActivity.this, R.string.loading_current_position, Toast.LENGTH_SHORT).show();
                 // se o usuário se encontra fora da região do mapa
                 } else if (!mapRegion.contains(
                         new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude())))
-                    Toast.makeText(MapActivity.this, "Você está fora da região coberta pelo nosso mapa!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapActivity.this, R.string.out_of_covered_region, Toast.LENGTH_SHORT).show();
                 // senão move a camera para a localização atual do usuário
                 else
                     mapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude()));
@@ -191,9 +191,9 @@ public class MapActivity extends AppCompatActivity
                     /* adiciona sempre a camada da rota de onibus na primeira posição da arraylist
                     * de overlays para fácil remoção
                     */
-                    mapView.getOverlays().add(tilesOverlay);
-                    Log.i(TAG,"Add bus route: "+ mapView.getOverlayManager().toString());
-                    mapLayers.add(Constants.BUS_ROUTE_LAYER);
+                    mapView.getOverlays().add(1,tilesOverlay);
+                    Log.i(TAG,"Layer added: Bus route -"+ mapView.getOverlayManager().toString());
+                    mapLayers.add(1,Constants.BUS_ROUTE_LAYER);
                     mapView.invalidate();
                     isBusRouteEnabled = true;
                     fabBusRoutes.setBackgroundTintList(
@@ -203,7 +203,7 @@ public class MapActivity extends AppCompatActivity
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
                     mapView.getOverlayManager().remove(mapLayers.indexOf(Constants.BUS_ROUTE_LAYER));
                     mapLayers.remove(Constants.BUS_ROUTE_LAYER);
-                    Log.i(TAG,"Remove Bus Route: "+ mapView.getOverlayManager().toString());
+                    Log.i(TAG,"RLayer Removed: Bus Route - "+ mapView.getOverlayManager().toString());
                     mapView.invalidate();
                     isBusRouteEnabled = false;
                     fabBusRoutes.setBackgroundTintList(
@@ -302,7 +302,8 @@ public class MapActivity extends AppCompatActivity
         });
 
 
-        mapView.getOverlays().add(myLocationOverlay);
+        mapView.getOverlays().add(0,myLocationOverlay);
+        Log.i(TAG,"Layer added: My Location - " + mapView.getOverlayManager().toString());
         // Configuração para mostrar o boneco da posição do usuário
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
@@ -438,9 +439,9 @@ public class MapActivity extends AppCompatActivity
                     Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
                     roadOverlay.setWidth(15);
                     mapView.getOverlays().add(roadOverlay);
+                    Log.e(TAG,"Layer added: foot path - " + mapView.getOverlayManager().toString());
                     mapLayers.add(Constants.ROUTE_LAYER);
                     btnClearMap.setVisibility(View.VISIBLE);
-                    Log.e(TAG, String.valueOf(roadOverlay.getWidth()));
                     isGoToRouteEnabled = true;
 
                 }
@@ -513,6 +514,7 @@ public class MapActivity extends AppCompatActivity
 
                 // Mapeia em que posição da arraylist a camada está sendo aplicada
                 mapView.getOverlays().add(poiMarkers);
+                Log.println(Log.INFO,TAG, "Layer added: filter - " + mapView.getOverlayManager().toString());
             }
         }).start();
         btnClearMap.setVisibility(View.VISIBLE);
@@ -562,6 +564,7 @@ public class MapActivity extends AppCompatActivity
                     mapLayers.add(Constants.SEARCH_LAYER);
 
                     mapView.getOverlays().add(poiMarkers);
+                    Log.println(Log.INFO, TAG, "Layer added: search result - " + mapView.getOverlayManager().toString());
                     Toast.makeText(MapActivity.this, "Clique no marcador para mais ações e direções.", Toast.LENGTH_SHORT).show();
                     isSearchEnabled = true;
                 } else {
