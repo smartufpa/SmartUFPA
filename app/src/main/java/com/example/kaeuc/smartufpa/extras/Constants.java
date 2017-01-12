@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp.Extras;
+package com.example.kaeuc.smartufpa.extras;
 
 /**
  * Created by kaeuc on 10/22/2016.

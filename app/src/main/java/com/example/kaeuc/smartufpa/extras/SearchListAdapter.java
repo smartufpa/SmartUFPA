@@ -1,17 +1,16 @@
-package com.example.kaeuc.osmapp.Extras;
+package com.example.kaeuc.smartufpa.extras;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.example.kaeuc.osmapp.R;
+import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.classes.Place;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp.Server;
+package com.example.kaeuc.smartufpa.server;
 
 /**
  * Created by kaeuc on 1/11/2017.

@@ -1,11 +1,11 @@
-package com.example.kaeuc.osmapp;
+package com.example.kaeuc.smartufpa;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 
-import com.example.kaeuc.osmapp.Server.LocalHostRequest;
-import com.example.kaeuc.osmapp.Server.LocalHostRequestResponse;
+import com.example.kaeuc.smartufpa.server.LocalHostRequest;
+import com.example.kaeuc.smartufpa.server.LocalHostRequestResponse;
 
 public class SQLTestActivity extends AppCompatActivity implements LocalHostRequestResponse {
 
@@ -17,7 +17,7 @@ public class SQLTestActivity extends AppCompatActivity implements LocalHostReque
         setContentView(R.layout.activity_sqltest);
 
 
-        new LocalHostRequest(this).execute();
+        new LocalHostRequest(this).execute("GET");
 
 
     }

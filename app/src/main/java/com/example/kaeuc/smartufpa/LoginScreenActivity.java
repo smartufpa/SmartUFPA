@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp;
+package com.example.kaeuc.smartufpa;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -19,7 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.kaeuc.osmapp.Database.LoginDAO;
+import com.example.kaeuc.smartufpa.database.LoginDAO;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp;
+package com.example.kaeuc.smartufpa;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

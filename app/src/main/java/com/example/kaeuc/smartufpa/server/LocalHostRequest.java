@@ -1,10 +1,8 @@
-package com.example.kaeuc.osmapp.Server;
+package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.example.kaeuc.osmapp.Extras.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 
 /**
  * Created by kaeuc on 1/11/2017.
@@ -27,12 +24,12 @@ public class LocalHostRequest extends AsyncTask<String, Void, String> {
         this.callback = (LocalHostRequestResponse) parent;
     }
 
-    @Override
-    protected String doInBackground(String... params) {
-//        String query = params[0];
+
+    private String makeRequest(final String requestType){
+
         HttpURLConnection connection = null;
         BufferedReader reader = null;
-        String response = null;
+        String response = "Resposta em branco";
         /*Server URL*/
         URL url = null;
         try{
@@ -40,10 +37,15 @@ public class LocalHostRequest extends AsyncTask<String, Void, String> {
 
             Log.i(TAG,"Request sent to: "+ url.toString());
             connection = (HttpURLConnection) url.openConnection();
-            connection.setReadTimeout( 10000 /*milliseconds*/ );
-            connection.setConnectTimeout( 10000 /* milliseconds */ );
-            // false para GET requests
-            connection.setDoOutput(false);
+            connection.setReadTimeout( 25000 /*milliseconds*/ );
+            connection.setConnectTimeout( 25000 /* milliseconds */ );
+
+            if(requestType.equals("GET")) {
+                // false para GET requests
+                connection.setDoOutput(false);
+            }else{
+                connection.setDoOutput(true);
+            }
             connection.setRequestProperty("Content-Encoding", "gzip");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
@@ -93,12 +95,25 @@ public class LocalHostRequest extends AsyncTask<String, Void, String> {
 
         }
         return null;
+
+    }
+
+
+    @Override
+    protected String doInBackground(String... params) {
+        String requestType = params[0];
+        final String response = makeRequest(requestType);
+        return response;
     }
 
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        Log.println(Log.INFO,TAG,s);
+        try{
+            Log.println(Log.INFO,TAG,s);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
         callback.LocalHostTaskResponse(s);
 
 

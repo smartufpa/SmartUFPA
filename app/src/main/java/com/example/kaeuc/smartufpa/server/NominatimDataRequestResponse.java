@@ -1,8 +1,6 @@
-package com.example.kaeuc.osmapp.Server;
+package com.example.kaeuc.smartufpa.server;
 
-import com.example.kaeuc.osmapp.Extras.Place;
-
-import org.osmdroid.bonuspack.location.POI;
+import com.example.kaeuc.smartufpa.classes.Place;
 
 import java.util.ArrayList;
 

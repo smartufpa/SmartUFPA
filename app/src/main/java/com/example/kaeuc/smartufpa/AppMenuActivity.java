@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp;
+package com.example.kaeuc.smartufpa;
 
 import android.annotation.TargetApi;
 import android.content.Intent;

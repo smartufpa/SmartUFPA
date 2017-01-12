@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp;
+package com.example.kaeuc.smartufpa;
 
 import android.Manifest;
 import android.app.SearchManager;
@@ -33,14 +33,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.kaeuc.osmapp.Extras.Constants;
-import com.example.kaeuc.osmapp.Extras.Place;
-import com.example.kaeuc.osmapp.Extras.PlaceDetailsBottomSheet;
-import com.example.kaeuc.osmapp.Extras.SearchListAdapter;
-import com.example.kaeuc.osmapp.Server.NominatimDataRequest;
-import com.example.kaeuc.osmapp.Server.NominatimDataRequestResponse;
-import com.example.kaeuc.osmapp.Server.OsmDataRequest;
-import com.example.kaeuc.osmapp.Server.OsmDataRequestResponse;
+import com.example.kaeuc.smartufpa.extras.Constants;
+import com.example.kaeuc.smartufpa.classes.Place;
+import com.example.kaeuc.smartufpa.extras.PlaceDetailsBottomSheet;
+import com.example.kaeuc.smartufpa.extras.SearchListAdapter;
+import com.example.kaeuc.smartufpa.server.NominatimDataRequest;
+import com.example.kaeuc.smartufpa.server.NominatimDataRequestResponse;
+import com.example.kaeuc.smartufpa.server.OsmDataRequest;
+import com.example.kaeuc.smartufpa.server.OsmDataRequestResponse;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
@@ -62,7 +62,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.kaeuc.osmapp.R.id.map;
+import static com.example.kaeuc.smartufpa.R.id.map;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener,

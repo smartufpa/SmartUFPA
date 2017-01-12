@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp.Server;
+package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -6,9 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.kaeuc.osmapp.Extras.Constants;
-import com.example.kaeuc.osmapp.Extras.OsmJsonParser;
-import com.example.kaeuc.osmapp.Extras.Place;
+import com.example.kaeuc.smartufpa.extras.Constants;
+import com.example.kaeuc.smartufpa.extras.JsonParser;
+import com.example.kaeuc.smartufpa.classes.Place;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -133,7 +133,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
     protected void onPostExecute(String jsonResponse) {
         super.onPostExecute(jsonResponse);
         // Recebe o xml em forma de uma String e e analisa as informções relevantes
-        final List<Place> locais = OsmJsonParser.parseResponse(jsonResponse);
+        final List<Place> locais = JsonParser.parseOsmResponse(jsonResponse);
         // Retorna os valores para a activity que chamou a ASyncTask
         callBack.osmTaskCompleted(locais,filtro);
         // esconde a barra de progresso
