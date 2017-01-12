@@ -36,6 +36,7 @@ public class LoginScreenActivity extends AppCompatActivity {
     private EditText edtUsername;
     private EditText edtPassword;
     private Button btnLogin;
+
     private Button btnCreateProfile;
     private Button btnVisitante;
     private LoginDAO loginDAO;
@@ -49,10 +50,16 @@ public class LoginScreenActivity extends AppCompatActivity {
         // Views
 //        edtUsername = (EditText) findViewById(R.id.edt_username);
 //        edtPassword = (EditText) findViewById(R.id.edt_password);
-        btnLogin = (Button) findViewById(R.id.btn_login);
 //        btnCreateProfile = (Button) findViewById(R.id.btn_signup);
+        btnLogin = (Button) findViewById(R.id.btn_login);
         btnVisitante = (Button) findViewById(R.id.btn_Visitante);
-
+        findViewById(R.id.btn_sqltest).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SQLTestActivity.SQL_ACTION);
+                startActivity(intent);
+            }
+        });
         // Inicializa o banco de dados dos usuários em um thread para não comprometer a performance
         new Thread(new Runnable() {
             @Override
