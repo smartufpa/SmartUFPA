@@ -12,6 +12,10 @@ public final class Constants {
     public static final String RESTAURANT_FILTER = "[filter=restaurant]";
     public static final String TOILETS_FILTER = "[filter=toilets]" ;
 
+    //Local host URL
+    public static final String LOCAL_HOST_URL = "http://192.168.0.25:80/smart-ufpa/testmysql.php?";
+
+
     // Overpass API url
     public static final String OVERPASS_SERVER_URL = "http://overpass-api.de/api/interpreter?data=";
     // Queries compactadas para url
