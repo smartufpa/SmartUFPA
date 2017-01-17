@@ -20,24 +20,6 @@
                 />
         </menu>
     </item>
-
-    <item android:title="Mais Informações" >
-        <menu>
-            <item
-                android:id="@+id/nav_bolsas"
-                android:title="Bolsas UFPA"
-                />
-            <item
-                android:id="@+id/nav_estagios"
-                android:title="Estágios"
-                />
-            <item
-                android:id="@+id/nav_eventos"
-                android:title="Eventos"
-                />
-        </menu>
-    </item>
-
    <group>
        <item android:title="@string/about_title"
            android:id="@+id/nav_sobre"

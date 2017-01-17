@@ -5,10 +5,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteCursorDriver;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQuery;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,10 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
-
-import com.example.kaeuc.osmapp.Database.LoginDAO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,12 +26,12 @@ public class LoginScreenActivity extends AppCompatActivity {
     public static final String CATEGORY_LOGIN = "osmapp.CATEGORY_LOGIN";
     public static final String ACTION_LOGIN = "osmapp.ACTION_LOGIN";
 
-    private EditText edtUsername;
+    /*private EditText edtUsername;
     private EditText edtPassword;
+    private Button btnCreateProfile;*/
     private Button btnLogin;
-    private Button btnCreateProfile;
     private Button btnVisitante;
-    private LoginDAO loginDAO;
+    //private LoginDAO loginDAO;
 
 
     @Override
@@ -47,14 +40,14 @@ public class LoginScreenActivity extends AppCompatActivity {
         setContentView(R.layout.login_screen_activity);
 
         // Views
-//        edtUsername = (EditText) findViewById(R.id.edt_username);
-//        edtPassword = (EditText) findViewById(R.id.edt_password);
+        /*edtUsername = (EditText) findViewById(R.id.edt_username);
+        edtPassword = (EditText) findViewById(R.id.edt_password);
+        btnCreateProfile = (Button) findViewById(R.id.btn_signup);*/
         btnLogin = (Button) findViewById(R.id.btn_login);
-//        btnCreateProfile = (Button) findViewById(R.id.btn_signup);
         btnVisitante = (Button) findViewById(R.id.btn_Visitante);
 
         // Inicializa o banco de dados dos usuários em um thread para não comprometer a performance
-        new Thread(new Runnable() {
+        /*new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -76,7 +69,7 @@ public class LoginScreenActivity extends AppCompatActivity {
                 }
 
             }
-        }).start();
+        }).start();*/
 
 
         // Cria um Listener para os tres botões, e ele identificará qual botão foi clicado pela sua id
@@ -89,23 +82,23 @@ public class LoginScreenActivity extends AppCompatActivity {
 
 
                     // Código de login
-//                    String username = edtUsername.getText().toString();
-//                    String password = edtPassword.getText().toString();
-//                    final int checkLogin = loginDAO.checkLogin(username, password);
-//                    if (checkLogin == 1){
-//                        Intent intent = new Intent(MapActivity.ACTION_MAP);
-//                        intent.addCategory(MapActivity.CATEGORY_MAP);
-//                        intent.putExtra("username", username);
-//                        startActivity(intent);
-//                    }else if(checkLogin == -1){
-//                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_user, Toast.LENGTH_LONG).show();
-//                    }else {
-//                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_noprofile, Toast.LENGTH_LONG).show();
-//                    }
-//                }else if(v.getId() == btnCreateProfile.getId()){
-//                    Intent intent = new Intent(CreateProfileActivity.ACTION_CREATEPROFILE);
-//                    intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
-//                    startActivity(intent);
+                   /* String username = edtUsername.getText().toString();
+                    String password = edtPassword.getText().toString();
+                    final int checkLogin = loginDAO.checkLogin(username, password);
+                    if (checkLogin == 1){
+                        Intent intent = new Intent(MapActivity.ACTION_MAP);
+                        intent.addCategory(MapActivity.CATEGORY_MAP);
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                    }else if(checkLogin == -1){
+                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_user, Toast.LENGTH_LONG).show();
+                    }else {
+                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_noprofile, Toast.LENGTH_LONG).show();
+                    }
+                }else if(v.getId() == btnCreateProfile.getId()){
+                    Intent intent = new Intent(CreateProfileActivity.ACTION_CREATEPROFILE);
+                    intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
+                    startActivity(intent);*/
                 }else if (v.getId() == btnVisitante.getId()) {
                     if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
                         Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
@@ -121,7 +114,7 @@ public class LoginScreenActivity extends AppCompatActivity {
                 }
             }
         };
-//        btnCreateProfile.setOnClickListener(clickListener);
+        //btnCreateProfile.setOnClickListener(clickListener);
         btnLogin.setOnClickListener(clickListener);
         btnVisitante.setOnClickListener(clickListener);
 

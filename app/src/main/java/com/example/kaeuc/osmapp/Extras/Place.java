@@ -4,9 +4,7 @@ import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.Serializable;
-import java.lang.annotation.Documented;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by kaeuc on 9/29/2016.
