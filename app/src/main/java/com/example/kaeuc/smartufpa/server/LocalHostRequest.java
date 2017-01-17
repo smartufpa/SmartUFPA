@@ -4,13 +4,14 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.kaeuc.smartufpa.classes.Place;
 import com.example.kaeuc.smartufpa.extras.Constants;
 
 /**
  * Created by kaeuc on 1/11/2017.
  */
 
-public class LocalHostRequest extends AsyncTask<String, Void, String> {
+public class LocalHostRequest extends AsyncTask<Place, Void, String> {
     private static final String TAG = "LocalHostRequest";
 
     private LocalHostRequestResponse callback = null;
@@ -23,14 +24,12 @@ public class LocalHostRequest extends AsyncTask<String, Void, String> {
 
 
     @Override
-    protected String doInBackground(String... params) {
-        String method = params[0];
+    protected String doInBackground(Place... params) {
+
         String response = "";
-        try {
-            response = HttpRequest.makeRequest(method, Constants.LOCAL_HOST_URL,null);
-        } catch (HttpRequest.EmptyMethodException e) {
-            e.printStackTrace();
-        }
+        Place place = params[0];
+        response = HttpRequest.makePostRequest(Constants.LOCAL_HOST_URL,null,place.toJsonObject());
+
         return response;
     }
 

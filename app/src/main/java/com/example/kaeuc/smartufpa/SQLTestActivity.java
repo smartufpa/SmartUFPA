@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 
+import com.example.kaeuc.smartufpa.classes.Place;
 import com.example.kaeuc.smartufpa.server.LocalHostRequest;
 import com.example.kaeuc.smartufpa.server.LocalHostRequestResponse;
 
@@ -15,9 +16,7 @@ public class SQLTestActivity extends AppCompatActivity implements LocalHostReque
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sqltest);
-
-
-        new LocalHostRequest(this).execute("GET");
+        new LocalHostRequest(this).execute(new Place(123456,48.23,7.48,"nome qualquer","nome","descrição qualquer"));
 
 
     }

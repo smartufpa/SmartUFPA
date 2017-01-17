@@ -389,18 +389,18 @@ public class MapActivity extends AppCompatActivity
         if (id == R.id.nav_xerox) {
             // Caso a camada de filtro não esteja ativa, executar a busca e adicionar marcadores
             if (!isXeroxEnabled) {
-                new OsmDataRequest(this, progressBar).execute(HttpRequest.GET_REQUEST,Constants.XEROX_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.XEROX_FILTER);
                 isXeroxEnabled = true;
             }
 
         } else if (id == R.id.nav_restaurantes) {
             if (!isRestaurantEnabled) {
-                new OsmDataRequest(this, progressBar).execute(HttpRequest.GET_REQUEST,Constants.RESTAURANT_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_FILTER);
                 isRestaurantEnabled = true;
             }
         } else if (id == R.id.nav_banheiros) {
             if (!isRestroomEnabled) {
-                new OsmDataRequest(this, progressBar).execute(HttpRequest.GET_REQUEST,Constants.TOILETS_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.TOILETS_FILTER);
                 isRestroomEnabled = true;
             }
         }

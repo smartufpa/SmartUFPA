@@ -46,8 +46,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
     @Override
     protected String doInBackground(String... params) {
-        final String method = params[0];
-        filtro = params[1];
+        filtro = params[0];
         String query = null;
         String jsonResponse = null;
 
@@ -58,11 +57,8 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
         else if(filtro.equalsIgnoreCase(Constants.XEROX_FILTER))
             query = Constants.OVERPASS_XEROX_QUERY;
 
-        try {
-            jsonResponse = HttpRequest.makeRequest(method,Constants.OVERPASS_SERVER_URL,query);
-        } catch (HttpRequest.EmptyMethodException e) {
-            e.printStackTrace();
-        }
+        jsonResponse = HttpRequest.makeGetRequest(Constants.OVERPASS_SERVER_URL,query);
+
 
         return jsonResponse;
     }

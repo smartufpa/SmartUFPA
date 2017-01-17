@@ -61,9 +61,10 @@ public class JsonParser {
                                 }
                             }
                             if(locName == null)
-                                places.add(new Place(id,lat,lon,name));
+                                // TODO grab short name e description
+                                places.add(new Place(id,lat,lon,name,"",""));
                             else
-                                places.add(new Place(id,lat,lon,locName));
+                                places.add(new Place(id,lat,lon,locName,"",""));
 
                         // CASO WAY
                         }else if(type.equalsIgnoreCase("way")){
@@ -90,9 +91,9 @@ public class JsonParser {
                                 }
                             }
                             if(locName == null)
-                                places.add(new Place(id,lat,lon,name));
+                                places.add(new Place(id,lat,lon,name,"",""));
                             else
-                                places.add(new Place(id,lat,lon,locName));
+                                places.add(new Place(id,lat,lon,locName,"",""));
                         }
 
                     }
