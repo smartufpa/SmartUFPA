@@ -1,62 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-
     android:id="@+id/activity_tela_intermediaria"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/teste_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/layout_top">
+
+        <Button
+            android:id="@+id/btn_mobilidade"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="Mobilidade e Localização"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            />
+
+        <Button
+            android:id="@+id/btn_oportunidades"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:text="Oportunidades"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/btn_mobilidade"
+            />
+
+        <Button
+            android:id="@+id/btn_seguranca"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:text="Segurança"
+
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/btn_oportunidades"
+            />
+
+
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/layout_bottom">
+
+        <Button
+            android:id="@+id/btn_alimentacao"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:text="Alimentação"
+            android:layout_centerHorizontal="true"
+            />
+
+        <Button
+            android:id="@+id/btn_eventos"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:text="Eventos e informações"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/btn_alimentacao"
+            />
+
+        <Button
+            android:id="@+id/btn_acessibilidade"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:text="Acessibilidade"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/btn_eventos"
+            />
+
+
+
+    </RelativeLayout>
+
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_logo_final_circulos_desativados"
+        android:layout_below="@+id/layout_top"
+        android:layout_above="@id/layout_bottom"
+        android:src="@drawable/ic_logo_final_circulos"
         android:id="@+id/imageView2"
         android:layout_centerVertical="true"
         />
 
-    <Button
-        android:text=""
-        android:background="@android:color/transparent"
-        android:layout_marginLeft="-2dp"
-        android:layout_marginStart="-2dp"
-        android:layout_marginBottom="200dp"
-        android:id="@+id/mobilidade"
-        android:layout_width="70dp"
-        android:layout_height="75dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:layout_marginBottom="10dp"
-        android:textAlignment="center"
-        android:text="Mantenha o botão pressionado para detalhes."
-        android:layout_centerHorizontal="true"
-
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textAlignment="center"
-        android:text="Selecione abaixo o serviço desejado para iniciar!"
-        android:layout_centerHorizontal="true"
-
-        />
 
 
 </RelativeLayout>

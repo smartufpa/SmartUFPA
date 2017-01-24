@@ -79,7 +79,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="93ec6bed8da159f43809258bc73a6b85c8794ec2">
+        sha1="8daf7f8107bb45ff5e6a72c6269720a34f1f8909">
         <dex dex="C:\Users\MESTRADO\StudioProjects\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_4540450db169ec0f6105dd8fd7c1d28220c88690\classes.dex" />
     </item>
     <item
@@ -97,7 +97,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="3e904eeba9c0aa05f9d97f7b71793bd53249920e">
+        sha1="9c1b6d6cd45a3c44527bde3c284535ff5dfbb99c">
         <dex dex="C:\Users\MESTRADO\StudioProjects\SmartCampus\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_40e9811200c58e874d5ee22dce1ce34351645601\classes.dex" />
     </item>
     <item

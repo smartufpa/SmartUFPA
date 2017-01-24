@@ -65,12 +65,13 @@ public class Place implements Serializable {
     // Converte a ArrayList de POIs retornadas pela busca e transforma para uma da classe Place
     public static ArrayList<Place> convertPOIsToPlaces(final ArrayList<POI> pois){
         ArrayList<Place> places = new ArrayList<>();
-        for (POI poi : pois) {
-            String poiName = poi.mDescription.substring(0, poi.mDescription.indexOf(","));
-            places.add(new Place(poi.mLocation.getLatitude(), poi.mLocation.getLongitude(),
-                    poiName, poi.mDescription));
+        if(places != null) {
+            for (POI poi : pois) {
+                String poiName = poi.mDescription.substring(0, poi.mDescription.indexOf(","));
+                places.add(new Place(poi.mLocation.getLatitude(), poi.mLocation.getLongitude(),
+                        poiName, poi.mDescription));
+            }
         }
-
         return places;
     }
 
