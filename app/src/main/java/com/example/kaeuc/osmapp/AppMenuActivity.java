@@ -24,15 +24,6 @@ public class AppMenuActivity extends AppCompatActivity {
 
         Button mobilidade = (Button) findViewById(R.id.btn_mobilidade);
 
-        Drawable drawable = ContextCompat.getDrawable(this,R.drawable.ic_compass);
-        final int scaledWidth = (int)(drawable.getIntrinsicWidth()*0.5);
-        final int scaledHeight = (int)(drawable.getIntrinsicHeight()*0.5);
-        Log.i("asd", String.valueOf(scaledWidth));
-        Log.i("asd", String.valueOf(scaledHeight));
-
-        drawable.setBounds(0,0,scaledWidth,scaledHeight);
-        ScaleDrawable sd = new ScaleDrawable(drawable,0,scaledWidth,scaledHeight);
-        mobilidade.setCompoundDrawables(sd.getDrawable(),null,null,null);
 
         mobilidade.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
