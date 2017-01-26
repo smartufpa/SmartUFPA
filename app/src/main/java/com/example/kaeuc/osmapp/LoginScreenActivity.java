@@ -44,7 +44,7 @@ public class LoginScreenActivity extends AppCompatActivity {
         edtPassword = (EditText) findViewById(R.id.edt_password);
         btnCreateProfile = (Button) findViewById(R.id.btn_signup);*/
         btnLogin = (Button) findViewById(R.id.btn_login);
-        btnVisitante = (Button) findViewById(R.id.btn_Visitante);
+        btnVisitante = (Button) findViewById(R.id.btn_visitante);
 
         // Inicializa o banco de dados dos usuários em um thread para não comprometer a performance
         /*new Thread(new Runnable() {

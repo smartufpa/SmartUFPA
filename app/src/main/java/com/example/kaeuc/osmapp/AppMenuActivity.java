@@ -2,9 +2,13 @@ package com.example.kaeuc.osmapp;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,8 +22,8 @@ public class AppMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_menu);
 
-        Button mobilidade = (Button) findViewById(R.id.mobilidade);
-        mobilidade.setTransitionName("Mobilidade");
+        Button mobilidade = (Button) findViewById(R.id.btn_mobilidade);
+
 
         mobilidade.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -28,13 +32,5 @@ public class AppMenuActivity extends AppCompatActivity {
             }
         });
 
-        mobilidade.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(AppMenuActivity.this, v.getTransitionName(), Toast.LENGTH_SHORT).show();
-                return false;
-
-            }
-        });
-    }
+       }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="80dp"
+        >
+        <ImageView
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_logo"
+            android:src="@drawable/logo_final"
+            />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_toRightOf="@+id/img_logo"
+            android:layout_toEndOf="@+id/img_logo"
+            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
+            android:layout_centerVertical="true">
+            <Button
+                android:text="Visitante"
+                android:layout_width="450dp"
+                android:layout_height="60dp"
+                android:id="@+id/btn_visitante"
+                android:textColor="@android:color/white"
+                android:background="@color/colorPrimaryDark"
+                />
+
+            <Button
+                android:layout_width="450dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:id="@+id/btn_login"
+                android:text="Realizar Login"
+                android:textColor="@android:color/white"
+                android:layout_below="@+id/btn_visitante"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>
+
