@@ -20,6 +20,7 @@ android {
     sourceSets {
         main { java.srcDirs = ['src/main/java', 'src/main/java/com.example.kaeuc.osmapp.db'] }
     }
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
@@ -35,5 +36,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.github.MKergall:osmbonuspack:5.9'
     compile 'org.osmdroid:osmdroid-android:5.4.1:release@aar'
+
+
 
 }
