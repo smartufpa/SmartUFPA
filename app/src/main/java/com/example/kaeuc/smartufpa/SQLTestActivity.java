@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 
-import com.example.kaeuc.smartufpa.classes.Place;
+import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.LocalHostRequest;
 import com.example.kaeuc.smartufpa.server.LocalHostRequestResponse;
 

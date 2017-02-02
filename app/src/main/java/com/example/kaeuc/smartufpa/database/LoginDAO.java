@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import com.example.kaeuc.smartufpa.extras.MD5Hashing;
+import com.example.kaeuc.smartufpa.utils.MD5Hashing;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.classes;
+package com.example.kaeuc.smartufpa.models;
 
 /**
  * Created by kaeuc on 1/12/2017.

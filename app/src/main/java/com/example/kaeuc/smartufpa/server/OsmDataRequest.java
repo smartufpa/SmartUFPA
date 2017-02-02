@@ -2,21 +2,13 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.kaeuc.smartufpa.extras.Constants;
-import com.example.kaeuc.smartufpa.extras.JsonParser;
-import com.example.kaeuc.smartufpa.classes.Place;
+import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.JsonParser;
+import com.example.kaeuc.smartufpa.models.Place;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.List;
 
 /**

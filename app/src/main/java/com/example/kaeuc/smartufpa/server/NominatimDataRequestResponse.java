@@ -1,6 +1,6 @@
 package com.example.kaeuc.smartufpa.server;
 
-import com.example.kaeuc.smartufpa.classes.Place;
+import com.example.kaeuc.smartufpa.models.Place;
 
 import java.util.ArrayList;
 

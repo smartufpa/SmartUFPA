@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.classes;
+package com.example.kaeuc.smartufpa.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;

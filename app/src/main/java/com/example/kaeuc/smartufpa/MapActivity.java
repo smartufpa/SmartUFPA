@@ -33,11 +33,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.kaeuc.smartufpa.extras.Constants;
-import com.example.kaeuc.smartufpa.classes.Place;
-import com.example.kaeuc.smartufpa.extras.PlaceDetailsBottomSheet;
-import com.example.kaeuc.smartufpa.extras.SearchListAdapter;
-import com.example.kaeuc.smartufpa.server.HttpRequest;
+import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.PlaceDetailsBottomSheet;
+import com.example.kaeuc.smartufpa.utils.SearchListAdapter;
 import com.example.kaeuc.smartufpa.server.NominatimDataRequest;
 import com.example.kaeuc.smartufpa.server.NominatimDataRequestResponse;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
@@ -47,7 +46,6 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.bonuspack.utils.HttpConnection;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -61,7 +59,6 @@ import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 

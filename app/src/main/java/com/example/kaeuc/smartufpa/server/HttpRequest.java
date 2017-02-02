@@ -2,14 +2,10 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.util.Log;
 
-import com.example.kaeuc.smartufpa.classes.Place;
-
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;

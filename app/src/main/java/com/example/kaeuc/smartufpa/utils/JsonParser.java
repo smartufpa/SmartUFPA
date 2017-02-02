@@ -1,8 +1,8 @@
-package com.example.kaeuc.smartufpa.extras;
+package com.example.kaeuc.smartufpa.utils;
 
 import android.util.Log;
 
-import com.example.kaeuc.smartufpa.classes.Place;
+import com.example.kaeuc.smartufpa.models.Place;
 
 import org.json.JSONArray;
 import org.json.JSONException;

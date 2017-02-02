@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.extras;
+package com.example.kaeuc.smartufpa.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.kaeuc.smartufpa.R;
-import com.example.kaeuc.smartufpa.classes.Place;
+import com.example.kaeuc.smartufpa.models.Place;
 
 import java.util.ArrayList;
 

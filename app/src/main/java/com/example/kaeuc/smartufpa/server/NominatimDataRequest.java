@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.kaeuc.smartufpa.classes.Place;
+import com.example.kaeuc.smartufpa.models.Place;
 
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
 import org.osmdroid.bonuspack.location.POI;

@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.extras;
+package com.example.kaeuc.smartufpa.utils;
 
 /**
  * Created by kaeuc on 10/22/2016.

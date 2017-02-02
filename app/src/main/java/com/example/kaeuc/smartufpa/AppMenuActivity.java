@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.kaeuc.smartufpa.extras.NetworkManager;
+import com.example.kaeuc.smartufpa.utils.NetworkManager;
 
 public class AppMenuActivity extends AppCompatActivity {
     public static final String ACTION_APP_MENU = "osmapp.ACTION_APP_MENU";

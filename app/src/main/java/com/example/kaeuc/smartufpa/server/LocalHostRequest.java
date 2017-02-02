@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.kaeuc.smartufpa.classes.Place;
-import com.example.kaeuc.smartufpa.extras.Constants;
+import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.Constants;
 
 /**
  * Created by kaeuc on 1/11/2017.

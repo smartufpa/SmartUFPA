@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.extras;
+package com.example.kaeuc.smartufpa.utils;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.kaeuc.smartufpa.MapActivity;
 import com.example.kaeuc.smartufpa.R;
-import com.example.kaeuc.smartufpa.classes.Place;
+import com.example.kaeuc.smartufpa.models.Place;
 
 /**
  * Created by kaeuc on 17/11/2016.
