@@ -16,8 +16,13 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
+<<<<<<< HEAD
+        sha1="9200590b30bf3d14f9124bcd43957201654dc921">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_29038c6a82384c1e127cb789fc8a69194e0735e9\classes.dex" />
+=======
         sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-utils-24.2.1_4b4f6c5b10f74efeb6fe5e1ee1e2cc792d49e91e\classes.dex" />
+>>>>>>> master
     </item>
     <item
         is-multidex="true"
@@ -178,8 +183,13 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
+<<<<<<< HEAD
+        sha1="4fb37d088623f5d18c3395819d12ed51f1dd1bb7">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_f942a3d5b81ec4118ab1dac66ed9c24a003cf3f9\classes.dex" />
+=======
         sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\OSMApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_7e0a94adf68037bca3a675ba6066f6aa5067e10c\classes.dex" />
+>>>>>>> master
     </item>
     <item
         is-multidex="true"

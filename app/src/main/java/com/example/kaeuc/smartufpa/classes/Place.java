@@ -92,7 +92,6 @@ public class Place implements Serializable {
             places.add(new Place(poi.mLocation.getLatitude(), poi.mLocation.getLongitude(),
                     poiName,"sem nome curto", poi.mDescription));
         }
-
         return places;
     }
 

@@ -15,8 +15,9 @@
 
         <Button
             android:id="@+id/btn_mobilidade"
-            android:layout_width="280dp"
-            android:layout_height="48dp"
+            android:layout_width="380dp"
+            android:layout_height="68dp"
+            android:layout_margin="10dp"
             android:background="@color/colorPrimaryDark"
             android:text="Mobilidade e Localização"
             android:textColor="@color/white"
@@ -25,8 +26,9 @@
 
         <Button
             android:id="@+id/btn_oportunidades"
-            android:layout_width="280dp"
-            android:layout_height="48dp"
+            android:layout_width="380dp"
+            android:layout_height="68dp"
+            android:layout_margin="10dp"
             android:text="Oportunidades"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/btn_mobilidade"
@@ -34,8 +36,9 @@
 
         <Button
             android:id="@+id/btn_seguranca"
-            android:layout_width="280dp"
-            android:layout_height="48dp"
+            android:layout_width="380dp"
+            android:layout_height="68dp"
+            android:layout_margin="10dp"
             android:text="Segurança"
 
             android:layout_centerHorizontal="true"
@@ -53,16 +56,18 @@
 
         <Button
             android:id="@+id/btn_alimentacao"
-            android:layout_width="280dp"
-            android:layout_height="48dp"
+            android:layout_width="380dp"
+            android:layout_height="68dp"
+            android:layout_margin="10dp"
             android:text="Alimentação"
             android:layout_centerHorizontal="true"
             />
 
         <Button
             android:id="@+id/btn_eventos"
-            android:layout_width="280dp"
-            android:layout_height="48dp"
+            android:layout_width="380dp"
+            android:layout_height="68dp"
+            android:layout_margin="10dp"
             android:text="Eventos e informações"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/btn_alimentacao"
@@ -70,8 +75,9 @@
 
         <Button
             android:id="@+id/btn_acessibilidade"
-            android:layout_width="280dp"
-            android:layout_height="48dp"
+            android:layout_width="380dp"
+            android:layout_height="68dp"
+            android:layout_margin="10dp"
             android:text="Acessibilidade"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/btn_eventos"

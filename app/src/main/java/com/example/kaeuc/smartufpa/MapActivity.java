@@ -442,7 +442,7 @@ public class MapActivity extends AppCompatActivity
                     Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
                     roadOverlay.setWidth(15);
                     mapView.getOverlays().add(roadOverlay);
-                    Log.e(TAG,"Layer added: foot path - " + mapView.getOverlayManager().toString());
+                    Log.i(TAG,"Layer added: foot path - " + mapView.getOverlayManager().toString());
                     mapLayers.add(Constants.ROUTE_LAYER);
                     btnClearMap.setVisibility(View.VISIBLE);
                     isGoToRouteEnabled = true;
@@ -535,8 +535,16 @@ public class MapActivity extends AppCompatActivity
                     // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
                     if (places.size() > 1) {
                         setupSearchResultBottomSheet(places);
-                    }else
-                        mapController.animateTo(places.get(0).getPosition());
+                    }else{
+                        try {
+                            mapController.animateTo(places.get(0).getPosition());
+                        } catch (IndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                            Toast.makeText(MapActivity.this, "Desculpa, não foi possível localizar este local.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                    }
 
                     // Cria e adiciona a camada de marcadores ao mapa
                     FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
@@ -569,6 +577,7 @@ public class MapActivity extends AppCompatActivity
                     mapView.getOverlays().add(poiMarkers);
                     Log.println(Log.INFO, TAG, "Layer added: search result - " + mapView.getOverlayManager().toString());
                     Toast.makeText(MapActivity.this, "Clique no marcador para mais ações e direções.", Toast.LENGTH_SHORT).show();
+                    btnClearMap.setVisibility(View.VISIBLE);
                     isSearchEnabled = true;
                 } else {
                     Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
@@ -576,7 +585,7 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         });
-        btnClearMap.setVisibility(View.VISIBLE);
+
         mapView.invalidate();
     }
 
