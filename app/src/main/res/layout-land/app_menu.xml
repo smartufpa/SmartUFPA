@@ -19,7 +19,7 @@
             android:id="@+id/btn_mobilidade"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_blue_dark"
+            android:background="@color/colorPrimaryDark"
             android:text="Mobilidade e Localização"
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"

@@ -52,6 +52,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:paddingLeft="15dp"
+                android:visibility="invisible"
                 />
 
 

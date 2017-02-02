@@ -497,7 +497,7 @@ public class MapActivity extends AppCompatActivity
                 else if(filter.equals(Constants.TOILETS_FILTER)) // Definir essa string
                     poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
 
-               // Cria um marcador para cada local encontrado
+                // Cria um marcador para cada local encontrado
                 for (final Place place : places) {
                     Marker poiMarker = new Marker(mapView);
                     poiMarker.setTitle(place.getName());
@@ -687,6 +687,8 @@ public class MapActivity extends AppCompatActivity
         mapView.invalidate();
         Log.i(TAG+"-clearMap","Cleared map: "+ mapView.getOverlayManager().toString());
     }
+
+
 
 
 

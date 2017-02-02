@@ -2,16 +2,15 @@ package com.example.kaeuc.smartufpa;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.kaeuc.smartufpa.extras.NetworkManager;
 
 public class AppMenuActivity extends AppCompatActivity {
     public static final String ACTION_APP_MENU = "osmapp.ACTION_APP_MENU";
@@ -27,10 +26,14 @@ public class AppMenuActivity extends AppCompatActivity {
 
         mobilidade.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(AppMenuActivity.this, MapActivity.class);
-                startActivity(intent);
+                if (NetworkManager.checkNetworkConnection(AppMenuActivity.this)){
+                    Intent intent = new Intent(AppMenuActivity.this, MapActivity.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(AppMenuActivity.this, "Cheque sua conexão com a internet e tente novamente.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-       }
+    }
 }

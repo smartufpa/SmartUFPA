@@ -7,10 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-<<<<<<< HEAD:app/src/main/java/com/example/kaeuc/osmapp/Extras/SearchListAdapter.java
-=======
-
->>>>>>> master:app/src/main/java/com/example/kaeuc/smartufpa/extras/SearchListAdapter.java
 
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.classes.Place;
