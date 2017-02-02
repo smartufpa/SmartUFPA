@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp.Extras;
+package com.example.kaeuc.smartufpa.extras;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -10,8 +10,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.kaeuc.osmapp.MapActivity;
-import com.example.kaeuc.osmapp.R;
+import com.example.kaeuc.smartufpa.MapActivity;
+import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.classes.Place;
 
 /**
  * Created by kaeuc on 17/11/2016.

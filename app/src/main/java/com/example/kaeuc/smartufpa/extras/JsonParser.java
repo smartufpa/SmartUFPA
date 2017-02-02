@@ -1,6 +1,8 @@
-package com.example.kaeuc.osmapp.Extras;
+package com.example.kaeuc.smartufpa.extras;
 
 import android.util.Log;
+
+import com.example.kaeuc.smartufpa.classes.Place;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,10 +17,10 @@ import java.util.List;
  * á atividade principal em forma de ArrayList<Place>
  */
 
-public class OsmJsonParser {
+public class JsonParser {
     // TAG para logs
-    private static final String TAG = "OsmJsonParser";
-    public static List<Place> parseResponse(String jsonResponse){
+    private static final String TAG = "JsonParser";
+    public static List<Place> parseOsmResponse(String jsonResponse){
         // Lista de locais que será retornado ao fim da execução
         List<Place> places = new ArrayList<>();
 
@@ -59,9 +61,10 @@ public class OsmJsonParser {
                                 }
                             }
                             if(locName == null)
-                                places.add(new Place(id,lat,lon,name));
+                                // TODO grab short name e description
+                                places.add(new Place(id,lat,lon,name,"",""));
                             else
-                                places.add(new Place(id,lat,lon,locName));
+                                places.add(new Place(id,lat,lon,locName,"",""));
 
                         // CASO WAY
                         }else if(type.equalsIgnoreCase("way")){
@@ -88,9 +91,9 @@ public class OsmJsonParser {
                                 }
                             }
                             if(locName == null)
-                                places.add(new Place(id,lat,lon,name));
+                                places.add(new Place(id,lat,lon,name,"",""));
                             else
-                                places.add(new Place(id,lat,lon,locName));
+                                places.add(new Place(id,lat,lon,locName,"",""));
                         }
 
                     }
@@ -101,5 +104,12 @@ public class OsmJsonParser {
         }
         Log.i(TAG,places.toString());
         return places;
+    }
+
+    public static List<Place> parseLocalResponse(String jsonResponse){
+
+
+
+        return null;
     }
 }

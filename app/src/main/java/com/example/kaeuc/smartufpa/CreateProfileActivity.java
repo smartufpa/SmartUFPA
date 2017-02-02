@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp;
+package com.example.kaeuc.smartufpa;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.example.kaeuc.osmapp.Database.LoginDAO;
+import com.example.kaeuc.smartufpa.database.LoginDAO;
 
 /**
  * Created by kaeuc on 10/5/2016.

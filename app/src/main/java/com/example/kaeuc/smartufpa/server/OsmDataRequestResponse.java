@@ -1,6 +1,6 @@
-package com.example.kaeuc.osmapp.Server;
+package com.example.kaeuc.smartufpa.server;
 
-import com.example.kaeuc.osmapp.Extras.Place;
+import com.example.kaeuc.smartufpa.classes.Place;
 
 import java.util.List;
 

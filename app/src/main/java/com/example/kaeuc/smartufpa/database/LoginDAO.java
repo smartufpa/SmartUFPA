@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp.Database;
+package com.example.kaeuc.smartufpa.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import com.example.kaeuc.osmapp.Extras.MD5Hashing;
+import com.example.kaeuc.smartufpa.extras.MD5Hashing;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;

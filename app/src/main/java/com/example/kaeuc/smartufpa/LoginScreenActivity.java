@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp;
+package com.example.kaeuc.smartufpa;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ public class LoginScreenActivity extends AppCompatActivity {
         btnCreateProfile = (Button) findViewById(R.id.btn_signup);*/
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnVisitante = (Button) findViewById(R.id.btn_visitante);
+
 
         // Inicializa o banco de dados dos usuários em um thread para não comprometer a performance
         /*new Thread(new Runnable() {

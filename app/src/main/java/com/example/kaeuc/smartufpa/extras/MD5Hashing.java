@@ -1,4 +1,4 @@
-package com.example.kaeuc.osmapp.Extras;
+package com.example.kaeuc.smartufpa.extras;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
