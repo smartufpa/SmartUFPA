@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kaeuc.osmapp">
+    package="com.example.kaeuc.smartufpa">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -27,7 +27,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".LoginScreenActivity"
+            android:name="com.example.kaeuc.smartufpa.LoginScreenActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="osmapp.ACTION_LOGIN" />
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateProfileActivity"
+            android:name="com.example.kaeuc.smartufpa.CreateProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="osmapp.ACTION_CREATEPROFILE" />
@@ -49,7 +49,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapActivity"
+            android:name="com.example.kaeuc.smartufpa.MapActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -64,9 +64,8 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-
         <activity
-            android:name=".NoGpsActivity"
+            android:name="com.example.kaeuc.smartufpa.NoGpsActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -76,21 +75,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".AppMenuActivity"
+        <activity
+            android:name="com.example.kaeuc.smartufpa.AppMenuActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
-                <action android:name="osmapp.ACTION_APP_MENU"/>
+                <action android:name="osmapp.ACTION_APP_MENU" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="osmapp.CATEGORY_APP_MENU" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.example.kaeuc.smartufpa.SQLTestActivity">
+            <intent-filter>
+                <action android:name="osmapp.SQL_ACTION"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="osmapp.CATEGORY_APP_MENU"/>
             </intent-filter>
-
         </activity>
-
-
     </application>
 
 </manifest>

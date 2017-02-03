@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.kaeuc.osmapp.MapActivity"
+    tools:context="com.example.kaeuc.smartufpa.MapActivity"
     tools:showIn="@layout/app_bar_map">
 
     <org.osmdroid.views.MapView
@@ -45,7 +45,7 @@
 
         <Button
             android:id="@+id/btn_clear_map"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="78dp"
             android:background="@color/colorPrimaryDark"
             android:textColor="@color/white"
@@ -54,6 +54,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@id/fab_bus_route"
             android:text="Limpar o mapa"
+            android:padding="30dp"
             android:visibility="gone"
 
 
