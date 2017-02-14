@@ -36,7 +36,6 @@ import android.widget.Toast;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.BusLocationRequest;
 import com.example.kaeuc.smartufpa.server.BusLocationRequestResponse;
-import com.example.kaeuc.smartufpa.server.HttpRequest;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.utils.SearchListAdapter;
@@ -86,7 +85,7 @@ public class MapActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private Toolbar toolbar;
     private BottomSheetBehavior searchResultSheetBehavior;
-    private FloatingActionButton fabBusRoutes;
+    private FloatingActionButton fabBusRoute;
     private FloatingActionButton fabMyLocation;
     private Button btnClearMap;
 
@@ -107,6 +106,7 @@ public class MapActivity extends AppCompatActivity
     private boolean isSearchEnabled = false;
     private boolean isGoToRouteEnabled = false;
     private boolean isRestroomEnabled= false;
+    private boolean isBusLocationEnabled = false;
 
     private List<String> mapLayers = new ArrayList<>();
 
@@ -126,8 +126,8 @@ public class MapActivity extends AppCompatActivity
                 navigationView = (NavigationView) findViewById(R.id.nav_view);
                 mapView = (MapView) findViewById(map);
                 fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
-                fabBusRoutes = (FloatingActionButton) findViewById(R.id.fab_bus_route);
-                fabBusRoutes.setBackgroundTintList(
+                fabBusRoute = (FloatingActionButton) findViewById(R.id.fab_bus_route);
+                fabBusRoute.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                 btnClearMap = (Button) findViewById(R.id.btn_clear_map);
@@ -153,76 +153,6 @@ public class MapActivity extends AppCompatActivity
          */
         OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
-
-
-
-        // Ações para os butões flutuantes
-        fabMyLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (myCurrentLocation == null) {
-                    //Ações do GPS, é verificado se o gps está ativo quando o usuário aperta o botão flutuante da localização
-                    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
-                    //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
-                    if (!GPSEnabled) {
-                        Toast.makeText(MapActivity.this, R.string.turn_on_gps_msg, Toast.LENGTH_SHORT).show();
-                    }
-                    Toast.makeText(MapActivity.this, R.string.loading_current_position, Toast.LENGTH_SHORT).show();
-                // se o usuário se encontra fora da região do mapa
-                } else if (!mapRegion.contains(
-                        new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude())))
-                    Toast.makeText(MapActivity.this, R.string.out_of_covered_region, Toast.LENGTH_SHORT).show();
-                // senão move a camera para a localização atual do usuário
-                else
-                    mapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude()));
-            }
-        });
-
-       /* Cria um provedor de tiles que será setado para ser a camada de transportes
-       e então adiciona essa camada sobrepondo a existente no mapa.
-       A variável "isBusRouteEnabled" mantém o registro se essa camada está ativa ou não
-       e muda a cor do botão para indicar ao usuário o status do botão
-        */
-        fabBusRoutes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-                provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
-                TilesOverlay tilesOverlay = new TilesOverlay(provider, MapActivity.this);
-                if (!isBusRouteEnabled) {
-                    /* adiciona sempre a camada da rota de onibus na primeira posição da arraylist
-                    * de overlays para fácil remoção
-                    */
-                    mapView.getOverlays().add(1,tilesOverlay);
-                    Log.i(TAG,"Layer added: Bus route -"+ mapView.getOverlayManager().toString());
-                    mapLayers.add(1,Constants.BUS_ROUTE_LAYER);
-                    mapView.invalidate();
-                    isBusRouteEnabled = true;
-                    fabBusRoutes.setBackgroundTintList(
-                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.colorAccent)));
-
-                } else {
-                    // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
-                    mapView.getOverlayManager().remove(mapLayers.indexOf(Constants.BUS_ROUTE_LAYER));
-                    mapLayers.remove(Constants.BUS_ROUTE_LAYER);
-                    Log.i(TAG,"RLayer Removed: Bus Route - "+ mapView.getOverlayManager().toString());
-                    mapView.invalidate();
-                    isBusRouteEnabled = false;
-                    fabBusRoutes.setBackgroundTintList(
-                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
-                }
-            }
-        });
-
-
-        btnClearMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearMapView();
-            }
-        });
-
         setupMap();
 
     }
@@ -246,9 +176,80 @@ public class MapActivity extends AppCompatActivity
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
         }
-
-
         myLocationOverlay.enableMyLocation();
+
+
+        /* Cria um provedor de tiles que será setado para ser a camada de transportes
+       e então adiciona essa camada sobrepondo a existente no mapa.
+       A variável "isBusRouteEnabled" mantém o registro se essa camada está ativa ou não
+       e muda a cor do botão para indicar ao usuário o status do botão
+        */
+        fabBusRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+                provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
+                TilesOverlay tilesOverlay = new TilesOverlay(provider, MapActivity.this);
+                if (!isBusRouteEnabled) {
+                    /* adiciona sempre a camada da rota de onibus na primeira posição da arraylist
+                    * de overlays para fácil remoção
+                    */
+                    mapView.getOverlays().add(1,tilesOverlay);
+                    Log.i(TAG,"Layer added: Bus route -"+ mapView.getOverlayManager().toString());
+                    mapLayers.add(1,Constants.BUS_ROUTE_LAYER);
+                    mapView.invalidate();
+                    isBusRouteEnabled = true;
+                    fabBusRoute.setBackgroundTintList(
+                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.colorAccent)));
+
+                } else {
+                    // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
+                    mapView.getOverlayManager().remove(mapLayers.indexOf(Constants.BUS_ROUTE_LAYER));
+                    mapLayers.remove(Constants.BUS_ROUTE_LAYER);
+                    Log.i(TAG,"RLayer Removed: Bus Route - "+ mapView.getOverlayManager().toString());
+                    mapView.invalidate();
+                    isBusRouteEnabled = false;
+                    fabBusRoute.setBackgroundTintList(
+                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
+                }
+            }
+        });
+
+
+        // Ações para os butões flutuantes
+        fabMyLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myCurrentLocation == null) {
+                    //Ações do GPS, é verificado se o gps está ativo quando o usuário aperta o botão flutuante da localização
+                    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
+                    //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
+                    if (!GPSEnabled) {
+                        Toast.makeText(MapActivity.this, R.string.turn_on_gps_msg, Toast.LENGTH_SHORT).show();
+                    }
+                    Toast.makeText(MapActivity.this, R.string.loading_current_position, Toast.LENGTH_SHORT).show();
+                    // se o usuário se encontra fora da região do mapa
+                } else if (!mapRegion.contains(
+                        new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude())))
+                    Toast.makeText(MapActivity.this, R.string.out_of_covered_region, Toast.LENGTH_SHORT).show();
+                    // senão move a camera para a localização atual do usuário
+                else
+                    mapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude()));
+            }
+        });
+
+
+
+        btnClearMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearMapView();
+            }
+        });
+
+
+
     }
 
     @Override
@@ -260,8 +261,6 @@ public class MapActivity extends AppCompatActivity
         this.mapView = null;
         this.mapController = null;
     }
-
-
 
     /* Fim dos métodos do ciclo da activity*/
 
@@ -357,14 +356,12 @@ public class MapActivity extends AppCompatActivity
                 return true;
             }
         });
-
         // Configura a barra de busca (SearchWidget)
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
-
 
         return true;
     }
@@ -373,9 +370,8 @@ public class MapActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
            case R.id.action_bus_location:
-               new BusLocationRequest(this).execute(Constants.BUS_LOCATION_URL);
+               new BusLocationRequest(this, progressBar).execute(Constants.BUS_LOCATION_URL);
                return true;
-
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -704,7 +700,7 @@ public class MapActivity extends AppCompatActivity
 
 
     @Override
-    public void onBusLocationTaskResponse(GeoPoint busLocation) {
+    public void onBusLocationTaskResponse(GeoPoint busLocation, int status) {
 
         Marker poiMarker = new Marker(mapView);
         Drawable poiIcon = getResources().getDrawable(R.drawable.ic_bus_location_marker);
@@ -713,11 +709,19 @@ public class MapActivity extends AppCompatActivity
         poiMarker.setIcon(poiIcon);
         FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
         poiMarkers.add(poiMarker);
-        mapLayers.add(Constants.SEARCH_LAYER);
+        mapLayers.add(Constants.BUS_LOCATION_MARKER);
         mapView.getOverlays().add(poiMarkers);
         Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
         btnClearMap.setVisibility(View.VISIBLE);
+        if(status == 503){
+            Toast.makeText(this, "Última localização conhecida. Pode não estar atualizada.", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this, "Localização atualizada.", Toast.LENGTH_SHORT).show();
+        }
+        mapView.invalidate();
 
     }
 }
+
+// TODO organizar o código e criar função para adicionar um marcador ao mapa
 

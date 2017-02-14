@@ -10,24 +10,24 @@ function Gps(id,currentLocation,lastLocation) {
   this.lastLocation = {
     latitude: 0.0,
     longitude: 0.0
-  }
-};
+  };
+}
 
 
-Gps.prototype.getCurrentLocation(){
+Gps.prototype.getCurrentLocation = function(){
   return this.currentLocation;
 };
 
-Gps.prototype.getLastLocation(){
+Gps.prototype.getLastLocation = function(){
   return this.lastLocation;
 };
 
-Gps.prototype.setCurrentLocation (latitude, longitude) {
+Gps.prototype.setCurrentLocation = function(latitude, longitude) {
   this.currentLocation.latitude = latitude;
   this.currentLocation.longitude = longitude;
 };
 
-Gps.prototype.setLastLocation (latitude,longitude) {
+Gps.prototype.setLastLocation = function(latitude,longitude) {
   this.lastLocation.latitude = latitude;
   this.lastLocation.longitude = longitude;
 
@@ -47,8 +47,8 @@ Gps.prototype.getId = function(){
 
 Gps.prototype.updateGpsInfo = function(id,latitude,longitude){
   this.id = id;
-  setLastLocation(this.currentLocation.latitude,this.currentLocation.longitude);
-  setCurrentLocation(latitude,longitude);
+  this.setLastLocation(this.currentLocation.latitude,this.currentLocation.longitude);
+  this.setCurrentLocation(latitude,longitude);
   console.log("GPS/updateGpsInfo: Info updated successfully." + "\n");
 };
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * de maneira assíncrona.
  * Recebe uma String contendo o termo da busca e retorna uma ArrayList de POIs
  */
-
+ // TODO Mudar motor de busca para overpass
 public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> {
 
     private Context parentContext;

@@ -14,7 +14,7 @@ public final class Constants {
 
     //Local host URL
     public static final String LOCAL_HOST_URL = "http://192.168.0.25:80/smart-ufpa/testmysql.php?";
-    public static final String BUS_LOCATION_URL = "http://104.41.62.111:8080/busLocation";
+    public static final String BUS_LOCATION_URL = "http://104.41.62.111:8080/bus-location";
 
 
     // Overpass API url
@@ -42,6 +42,7 @@ public final class Constants {
     public static final String SEARCH_LAYER = "Camada de busca";
     public static final String BUS_ROUTE_LAYER = "Camada de onibus";
     public static final String MY_LOCATION_LAYER = "Camada de localização atual";
+    public static final String BUS_LOCATION_MARKER = "Marcador do Circular";
 
 
     // Usado no parser do xml retornado na requisição ao XAPI, apresentado nos detalhes sobre o local

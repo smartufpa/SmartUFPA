@@ -9,5 +9,5 @@ import org.osmdroid.util.GeoPoint;
  */
 
 public interface BusLocationRequestResponse {
-    void onBusLocationTaskResponse(GeoPoint busLocation);
+    void onBusLocationTaskResponse(GeoPoint busLocation, int status);
 }

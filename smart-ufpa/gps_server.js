@@ -56,7 +56,7 @@ udp_socket.bind(udp_port, '10.0.0.4');
 /* UDP SERVER CODE END*/
 
 /* HTTP SERVER CODE START */
-http_socket.get('/busLocation',function(req,res){
+http_socket.get('/bus-location',function(req,res){
   updateConsole();
   console.log('HTTP-SERVER/get: Received a get request from ' + req.ip + "\n");
   res.send(currentGPS);
