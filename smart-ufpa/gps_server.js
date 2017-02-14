@@ -34,7 +34,7 @@ udp_socket.on("message", function(msg, rinfo) {
   var msgToParse = msg.toString('utf-8');
   parsedMsg = parseObj.parseMsg(msgToParse);
   if(parsedMsg != null){
-    currentGPS.updateCurrentGpsInfo(parsedMsg.id,parsedMsg.latitude,parsedMsg.longitude);
+    currentGPS.updateGpsInfo(parsedMsg.id,parsedMsg.latitude,parsedMsg.longitude);
   }else{
     console.log("UDP-SERVER/message: Empty msg." + "\n");
   }
