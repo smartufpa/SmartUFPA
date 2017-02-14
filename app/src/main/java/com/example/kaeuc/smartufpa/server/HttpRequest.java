@@ -1,6 +1,9 @@
 package com.example.kaeuc.smartufpa.server;
 
+import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.kaeuc.smartufpa.utils.Constants;
 
 import org.json.JSONObject;
 
@@ -12,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -23,7 +27,7 @@ import java.net.URLEncoder;
 public class HttpRequest {
     private static final String TAG = "HttpRequest";
 
-    protected static String makePostRequest(final String url,final String query, JSONObject jsonBody) {
+    public static String makePostRequest(final String url,final String query, JSONObject jsonBody) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         OutputStream os = null;
@@ -106,7 +110,7 @@ public class HttpRequest {
 
 
 
-    protected static String makeGetRequest(final String url, final String query){
+    public static String makeGetRequest(final String url, final String query){
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String response = "Resposta em branco";
@@ -157,9 +161,10 @@ public class HttpRequest {
             response = buffer.toString();
 
             return response;
-        }catch (IOException e){
+        } catch (SocketTimeoutException timeout){
+        } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if(connection != null){
                 connection.disconnect();
             }
@@ -175,10 +180,6 @@ public class HttpRequest {
 
         return null;
     }
-
-
-
-
 
 
 }

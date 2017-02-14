@@ -21,75 +21,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-24.2.1_340f76d02c4e065a58d0cdc3c2fb3bc9eb2db182\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-24.2.1_2528728ac3b7278032f5c0b09bc0f0e940c253b6\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-compat-24.2.1_59896e42dc257afc942587dc4a40eeaf526d5d66\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
         sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_ca7cf07af9b4032e599b6f3ffe8b2be0530df8f6\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-24.2.1_2a938281c72afdba2b9ccf94f8ebd740596610b9\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\kaeuc\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-alpha3\constraint-layout-solver-1.0.0-alpha3.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="977d57354ef7ef4faa604b802d4907728e0db889">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.0.0-alpha3_e6abafd66dd2c174967dd0eb2adf1423e4791f4b\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_ae25a63e60867fd736d6821133969dd6c3d4dde4\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\org.osmdroid\osmdroid-android\5.4.1\release\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="9cfaea21fa885f50c6666f7ee64eb26f91f3f71c">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\osmdroid-android-5.4.1-release_fbff8289a30d0f0e53820e4355861687a98560e7\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -151,8 +88,89 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.0"
-        sha1="f7c7fdde9b75f64b36a0a2a8a5eba04c2c28a53a">
+        sha1="18e65f7b0071913dff64130ad9aff95ae7dc122c">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_b6418d7851430d4110b5c6b28651556bfe222c13\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="743ee58cdb5fa4f0b1fbf1575ce4bcd2b021b6a4">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_2e705c82a2f6690897fdcdedb108cffafe400a51\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_bac4f9f9ff6d7ce5c1d80ebc90b1b8e8661f13c6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-24.2.1_340f76d02c4e065a58d0cdc3c2fb3bc9eb2db182\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-24.2.1_2528728ac3b7278032f5c0b09bc0f0e940c253b6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-compat-24.2.1_59896e42dc257afc942587dc4a40eeaf526d5d66\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-24.2.1_2a938281c72afdba2b9ccf94f8ebd740596610b9\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-alpha3\constraint-layout-solver-1.0.0-alpha3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="977d57354ef7ef4faa604b802d4907728e0db889">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.0.0-alpha3_e6abafd66dd2c174967dd0eb2adf1423e4791f4b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_ae25a63e60867fd736d6821133969dd6c3d4dde4\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\org.osmdroid\osmdroid-android\5.4.1\release\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.0"
+        sha1="9cfaea21fa885f50c6666f7ee64eb26f91f3f71c">
+        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\osmdroid-android-5.4.1-release_fbff8289a30d0f0e53820e4355861687a98560e7\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -162,15 +180,6 @@
         revision="24.0.0"
         sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-fragment-24.2.1_f56d11202afcd8a8b8d5e3354ed3b675cd1f083c\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="f6dea454fef304f1ffd334eb02d7362530692410">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_2e705c82a2f6690897fdcdedb108cffafe400a51\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -225,15 +234,6 @@
         revision="24.0.0"
         sha1="2f8b1d5bf1ef60cbe3b9142321be60011f76fac7">
         <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.github.MKergall-osmbonuspack-5.9_1b28cc11cb523901f16f2a71b386bb010a28ccfa\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\libs\internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.0"
-        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
-        <dex dex="C:\Users\kaeuc\AndroidStudioProjects\SmartUfpa\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_bac4f9f9ff6d7ce5c1d80ebc90b1b8e8661f13c6\classes.dex" />
     </item>
     <item
         is-multidex="true"

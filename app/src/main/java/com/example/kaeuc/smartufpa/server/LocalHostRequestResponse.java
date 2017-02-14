@@ -5,5 +5,5 @@ package com.example.kaeuc.smartufpa.server;
  */
 
 public interface LocalHostRequestResponse {
-    void LocalHostTaskResponse(String response);
+    void onLocalHostTaskResponse(String response);
 }

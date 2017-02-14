@@ -29,7 +29,7 @@
     <string name="drawer_subtitle">ICEN - Faculdade de Computação</string>
 
 
-    <string name="action_search">Search</string>
+    <string name="action_search">Busca</string>
     <string name="about_title">Sobre o aplicativo</string>
     <string name="search_hint">Procure na UFPA</string>
     <string name="lorem_ipsum">Descrição: \nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dui tellus, lacinia non ipsum vel, interdum varius nulla. Curabitur ultrices ipsum at porta placerat.</string>
@@ -38,6 +38,7 @@
     <string name="turn_on_gps_msg">Por favor, ligar o GPS novamente.</string>
     <string name="loading_current_position">Carregando sua posição atual.</string>
     <string name="out_of_covered_region">Você está fora da região coberta pelo nosso mapa!</string>
+    <string name="action_bus_location">Localizar Circular</string>
 
 
 </resources>

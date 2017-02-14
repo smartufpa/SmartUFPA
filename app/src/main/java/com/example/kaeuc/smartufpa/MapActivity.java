@@ -34,6 +34,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.server.BusLocationRequest;
+import com.example.kaeuc.smartufpa.server.BusLocationRequestResponse;
+import com.example.kaeuc.smartufpa.server.HttpRequest;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.utils.SearchListAdapter;
@@ -66,7 +69,7 @@ import static com.example.kaeuc.smartufpa.R.id.map;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
-        OsmDataRequestResponse, NominatimDataRequestResponse,
+        OsmDataRequestResponse, NominatimDataRequestResponse, BusLocationRequestResponse,
         SearchView.OnQueryTextListener {
 
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
@@ -297,7 +300,7 @@ public class MapActivity extends AppCompatActivity
 
 
                 // Restringe a área do mapa à região escolhida
-                mapView.setScrollableAreaLimit(mapRegion);
+//                mapView.setScrollableAreaLimit(mapRegion);
             }
         });
 
@@ -359,9 +362,24 @@ public class MapActivity extends AppCompatActivity
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
 
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+           case R.id.action_bus_location:
+               new BusLocationRequest(this).execute(Constants.BUS_LOCATION_URL);
+               return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     /* Início dos métodos de utilização da lista lateral (Drawer)*/
@@ -375,7 +393,6 @@ public class MapActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
     // Configuração dos items da lista lateral
     @SuppressWarnings("StatementWithEmptyBody")
@@ -480,7 +497,7 @@ public class MapActivity extends AppCompatActivity
 
     // Recebe dados da execução de OsmDataRequest
     @Override
-    public void osmTaskCompleted(final List<Place> places, final String filter) {
+    public void onOsmTaskResponse(final List<Place> places, final String filter) {
         new Thread(new Runnable() {
             public void run() {
                 // Cria e adiciona a camada de marcadores ao mapa
@@ -524,7 +541,7 @@ public class MapActivity extends AppCompatActivity
 
     // Recebe dados da execução de NominatimDataRequest
     @Override
-    public void nominatimTaskResponse(final ArrayList<Place> places) {
+    public void onNominatimTaskResponse(final ArrayList<Place> places) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -686,8 +703,21 @@ public class MapActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onBusLocationTaskResponse(GeoPoint busLocation) {
 
+        Marker poiMarker = new Marker(mapView);
+        Drawable poiIcon = getResources().getDrawable(R.drawable.ic_bus_location_marker);
+        poiMarker.setAnchor(0.5f,1);
+        poiMarker.setPosition(busLocation);
+        poiMarker.setIcon(poiIcon);
+        FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
+        poiMarkers.add(poiMarker);
+        mapLayers.add(Constants.SEARCH_LAYER);
+        mapView.getOverlays().add(poiMarkers);
+        Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
+        btnClearMap.setVisibility(View.VISIBLE);
 
-
+    }
 }
 

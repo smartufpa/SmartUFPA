@@ -56,7 +56,7 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
     @Override
     protected void onPostExecute(ArrayList<POI> pois) {
         super.onPostExecute(pois);
-        callBack.nominatimTaskResponse(Place.convertPOIsToPlaces(pois));
+        callBack.onNominatimTaskResponse(Place.convertPOIsToPlaces(pois));
         progressBar.setVisibility(View.GONE);
 
 

@@ -22,7 +22,7 @@ public class SQLTestActivity extends AppCompatActivity implements LocalHostReque
     }
 
     @Override
-    public void LocalHostTaskResponse(String response) {
+    public void onLocalHostTaskResponse(String response) {
         ((AppCompatTextView)findViewById(R.id.txt_localhost)).setText(response);
     }
 }

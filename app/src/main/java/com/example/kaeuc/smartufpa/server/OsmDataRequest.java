@@ -68,7 +68,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
         // Recebe o xml em forma de uma String e e analisa as informções relevantes
         final List<Place> locais = JsonParser.parseOsmResponse(jsonResponse);
         // Retorna os valores para a activity que chamou a ASyncTask
-        callBack.osmTaskCompleted(locais,filtro);
+        callBack.onOsmTaskResponse(locais,filtro);
         // esconde a barra de progresso
         progressBar.setVisibility(View.GONE);
 

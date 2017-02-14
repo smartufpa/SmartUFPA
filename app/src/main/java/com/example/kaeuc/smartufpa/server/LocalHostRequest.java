@@ -41,7 +41,7 @@ public class LocalHostRequest extends AsyncTask<Place, Void, String> {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
-        callback.LocalHostTaskResponse(s);
+        callback.onLocalHostTaskResponse(s);
 
 
     }

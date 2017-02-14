@@ -14,6 +14,7 @@ public final class Constants {
 
     //Local host URL
     public static final String LOCAL_HOST_URL = "http://192.168.0.25:80/smart-ufpa/testmysql.php?";
+    public static final String BUS_LOCATION_URL = "http://104.41.62.111:8080/busLocation";
 
 
     // Overpass API url
