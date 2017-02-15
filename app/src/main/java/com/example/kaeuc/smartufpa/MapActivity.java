@@ -37,6 +37,7 @@ import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.BusLocationRequest;
 import com.example.kaeuc.smartufpa.server.BusLocationRequestResponse;
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.NetworkManager;
 import com.example.kaeuc.smartufpa.utils.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.utils.SearchListAdapter;
 import com.example.kaeuc.smartufpa.server.NominatimDataRequest;
@@ -299,7 +300,7 @@ public class MapActivity extends AppCompatActivity
 
 
                 // Restringe a área do mapa à região escolhida
-//                mapView.setScrollableAreaLimit(mapRegion);
+                mapView.setScrollableAreaLimit(mapRegion);
             }
         });
 
@@ -370,8 +371,12 @@ public class MapActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
            case R.id.action_bus_location:
-               new BusLocationRequest(this, progressBar).execute(Constants.BUS_LOCATION_URL);
-               return true;
+               if(NetworkManager.checkNetworkConnection(this)) {
+                   new BusLocationRequest(this, progressBar).execute(Constants.BUS_LOCATION_URL);
+                   return true;
+               }else{
+                   Toast.makeText(this, "Cheque sua conexão com a internet.", Toast.LENGTH_SHORT).show();
+               }
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -439,7 +444,6 @@ public class MapActivity extends AppCompatActivity
                 RoadManager roadManager = new GraphHopperRoadManager(Constants.GRAPHHOPPER_KEY,true);
                 // RoadManager roadManager = new GoogleRoadManager(); // bom para carros
                 roadManager.addRequestOption("vehicle=foot");
-
                 ArrayList<GeoPoint> wayPoints = new ArrayList<>();
                 if(myCurrentLocation != null) {
                     final GeoPoint startPoint = new GeoPoint(myCurrentLocation);
@@ -494,10 +498,10 @@ public class MapActivity extends AppCompatActivity
     // Recebe dados da execução de OsmDataRequest
     @Override
     public void onOsmTaskResponse(final List<Place> places, final String filter) {
-        new Thread(new Runnable() {
+        runOnUiThread(new Runnable() {
             public void run() {
                 // Cria e adiciona a camada de marcadores ao mapa
-                FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
+                final FolderOverlay poiMarkers = new FolderOverlay();
                 Drawable poiIcon = null;
                 // Configura o ícone de acordo com o filtro que será adicionado
                 if (filter.equals(Constants.XEROX_FILTER))
@@ -509,29 +513,23 @@ public class MapActivity extends AppCompatActivity
 
                 // Cria um marcador para cada local encontrado
                 for (final Place place : places) {
-                    Marker poiMarker = new Marker(mapView);
-                    poiMarker.setTitle(place.getName());
-                    poiMarker.setPosition(new GeoPoint(place.getLatitude(), place.getLongitude()));
-                    poiMarker.setIcon(poiIcon);
-                    poiMarkers.add(poiMarker);
-                    poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                    Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker, MapView mapView) {
                             MapActivity.this.mapView.invalidate();
                             PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
-                            sheet.show(getSupportFragmentManager(),"bottom sheet");
+                            sheet.show(getSupportFragmentManager(), "bottom sheet");
                             return true;
                         }
-                    });
+                    };
+                    Marker marker = createCustomMarker(poiIcon, place.getPosition(), markerClick);
+                    addMarkerToMap(marker,poiMarkers);
                 }
 
-                // Mapeia em que posição da arraylist a camada está sendo aplicada
-                mapView.getOverlays().add(poiMarkers);
-                Log.println(Log.INFO,TAG, "Layer added: filter - " + mapView.getOverlayManager().toString());
             }
-        }).start();
-        btnClearMap.setVisibility(View.VISIBLE);
+        });
         Toast.makeText(MapActivity.this, "Clique em um marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
+        Log.println(Log.INFO, TAG, "Layer added: Filter - " + mapView.getOverlayManager().toString());
 
     }
 
@@ -556,20 +554,10 @@ public class MapActivity extends AppCompatActivity
 
                     }
 
-                    // Cria e adiciona a camada de marcadores ao mapa
-                    FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
+                    final FolderOverlay poiMarkers = new FolderOverlay();
 
-                    // Configura o ícone de marcador para cada local encontrado
-                    Drawable poiIcon = getResources().getDrawable(R.drawable.ic_marker);
                     for (final Place place : places) {
-                        Marker poiMarker = new Marker(mapView);
-                        poiMarker.setAnchor(0.5f,1);
-                        poiMarker.setTitle(place.getName());
-                        poiMarker.setSnippet(place.getDescription());
-                        poiMarker.setPosition(place.getPosition());
-                        poiMarker.setIcon(poiIcon);
-                        poiMarkers.add(poiMarker);
-                        poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                        Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(Marker marker, MapView mapView) {
                                 marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
@@ -579,16 +567,17 @@ public class MapActivity extends AppCompatActivity
                                 sheet.show(getSupportFragmentManager(),"bottom sheet");
                                 return true;
                             }
-                        });
+                        };
+
+                        Marker marker = createCustomMarker(ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker),
+                                place.getPosition(), place.getName(),
+                                place.getDescription(), markerClick);
+                        addMarkerToMap(marker,poiMarkers);
+
 
                     }
-                    mapLayers.add(Constants.SEARCH_LAYER);
-
-                    mapView.getOverlays().add(poiMarkers);
-                    Log.println(Log.INFO, TAG, "Layer added: search result - " + mapView.getOverlayManager().toString());
-                    Toast.makeText(MapActivity.this, "Clique no marcador para mais ações e direções.", Toast.LENGTH_SHORT).show();
-                    btnClearMap.setVisibility(View.VISIBLE);
                     isSearchEnabled = true;
+                    Log.println(Log.INFO, TAG, "Layer added: Search - " + mapView.getOverlayManager().toString());
                 } else {
                     Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
                             Toast.LENGTH_SHORT).show();
@@ -678,7 +667,25 @@ public class MapActivity extends AppCompatActivity
     }
 
 
-    protected void clearMapView(){
+    @Override
+    public void onBusLocationTaskResponse(GeoPoint busLocation, int status) {
+
+        Marker marker = createCustomMarker(
+                ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_bus_location_marker),
+                busLocation, null);
+        addMarkerToMap(marker,new FolderOverlay());
+        if(status == 503){
+            Toast.makeText(this, "Última localização conhecida. Pode não estar atualizada.", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this, "Localização atualizada.", Toast.LENGTH_SHORT).show();
+        }
+        Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
+
+
+    }
+
+
+    private void clearMapView(){
         Log.i(TAG+"-clearMap","Current map overlays: "+ mapView.getOverlayManager().toString());
         int size = mapView.getOverlays().size() -1;
         for (int i= size ; i> 0 ;i--){
@@ -698,30 +705,43 @@ public class MapActivity extends AppCompatActivity
         Log.i(TAG+"-clearMap","Cleared map: "+ mapView.getOverlayManager().toString());
     }
 
-
-    @Override
-    public void onBusLocationTaskResponse(GeoPoint busLocation, int status) {
-
+    private Marker createCustomMarker(Drawable poiIcon, GeoPoint location, Marker.OnMarkerClickListener clickListener){
         Marker poiMarker = new Marker(mapView);
-        Drawable poiIcon = getResources().getDrawable(R.drawable.ic_bus_location_marker);
         poiMarker.setAnchor(0.5f,1);
-        poiMarker.setPosition(busLocation);
+        poiMarker.setPosition(location);
         poiMarker.setIcon(poiIcon);
-        FolderOverlay poiMarkers = new FolderOverlay(MapActivity.this);
-        poiMarkers.add(poiMarker);
-        mapLayers.add(Constants.BUS_LOCATION_MARKER);
-        mapView.getOverlays().add(poiMarkers);
-        Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
-        btnClearMap.setVisibility(View.VISIBLE);
-        if(status == 503){
-            Toast.makeText(this, "Última localização conhecida. Pode não estar atualizada.", Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(this, "Localização atualizada.", Toast.LENGTH_SHORT).show();
+        if(clickListener != null){
+            poiMarker.setOnMarkerClickListener(clickListener);
         }
-        mapView.invalidate();
+        return poiMarker;
 
     }
+
+    private Marker createCustomMarker(Drawable poiIcon, GeoPoint location, String markerTitle,
+                                      String markerDescription, Marker.OnMarkerClickListener clickListener){
+        Marker poiMarker = new Marker(mapView);
+        poiMarker.setAnchor(0.5f,1);
+        poiMarker.setPosition(location);
+        poiMarker.setIcon(poiIcon);
+        poiMarker.setSnippet(markerDescription);
+        if(clickListener != null){
+            poiMarker.setOnMarkerClickListener(clickListener);
+        }
+
+        return poiMarker;
+
+    }
+
+    private void addMarkerToMap(Marker marker, FolderOverlay poiMarkers){
+        poiMarkers.add(marker);
+        mapView.getOverlays().add(poiMarkers);
+        btnClearMap.setVisibility(View.VISIBLE);
+        mapView.invalidate();
+    }
+
+
+
 }
 
-// TODO organizar o código e criar função para adicionar um marcador ao mapa
+// TODO organizar o código e adicionar checagem de internet para todos as chamadas que necessitam.
 
