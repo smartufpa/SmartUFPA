@@ -27,7 +27,7 @@ import java.net.URLEncoder;
 public class HttpRequest {
     private static final String TAG = "HttpRequest";
 
-    public static String makePostRequest(final String url,final String query, JSONObject jsonBody) {
+    public static String makePostRequest(final String url,final String query, JSONObject jsonBody) throws SocketTimeoutException {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         OutputStream os = null;
@@ -43,8 +43,8 @@ public class HttpRequest {
             }
             Log.i(TAG,"Request sent to: "+ finalUrl.toString());
             connection = (HttpURLConnection) finalUrl.openConnection();
-            connection.setReadTimeout( 25000 /*milliseconds*/ );
-            connection.setConnectTimeout( 25000 /* milliseconds */ );
+            connection.setReadTimeout( 15000 /*milliseconds*/ );
+            connection.setConnectTimeout( 15000 /* milliseconds */ );
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
@@ -110,7 +110,7 @@ public class HttpRequest {
 
 
 
-    public static String makeGetRequest(final String url, final String query){
+    public static String makeGetRequest(final String url, final String query) throws SocketTimeoutException{
         //TODO Tratamento de timeout throws SocketTimeoutException
         HttpURLConnection connection = null;
         BufferedReader reader = null;
@@ -126,8 +126,8 @@ public class HttpRequest {
             }
             Log.i(TAG,"Request sent to: "+ finalUrl.toString());
             connection = (HttpURLConnection) finalUrl.openConnection();
-            connection.setReadTimeout( 25000 /*milliseconds*/ );
-            connection.setConnectTimeout( 25000 /* milliseconds */ );
+            connection.setReadTimeout( 15000 /*milliseconds*/ );
+            connection.setConnectTimeout( 15000 /* milliseconds */ );
             connection.setDoOutput(false);
             connection.setRequestProperty("Content-Encoding", "gzip");
             connection.setRequestProperty("Content-Type", "application/json");
@@ -162,8 +162,6 @@ public class HttpRequest {
             response = buffer.toString();
 
             return response;
-        } catch (SocketTimeoutException timeout){
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

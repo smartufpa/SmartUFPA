@@ -9,6 +9,7 @@ import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.JsonParser;
 import com.example.kaeuc.smartufpa.models.Place;
 
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 /**
@@ -24,9 +25,10 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
     private static final String TAG = "OsmDataRequest" ;
     // interface resposável por devolver o resultado da task pra atividade principal
-    private OsmDataRequestResponse callBack = null;
+    private OsmDataRequestResponse callBack;
     private ProgressBar progressBar;
     private String filtro;
+    private int taskStatus;
 
     private Context parentContext;
 
@@ -34,6 +36,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
         this.parentContext = parentContext;
         this.callBack = (OsmDataRequestResponse) parentContext;
         this.progressBar = progressBar;
+        this.taskStatus = Constants.SERVER_RESPONSE_SUCESS;
     }
 
     @Override
@@ -42,14 +45,19 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
         String query = null;
         String jsonResponse = null;
 
-        if(filtro.equalsIgnoreCase(Constants.RESTAURANT_FILTER))
-            query = Constants.OVERPASS_RESTAURANT_QUERY;
-        else if(filtro.equalsIgnoreCase(Constants.TOILETS_FILTER))
-            query = Constants.OVERPASS_TOILETS_QUERY;
-        else if(filtro.equalsIgnoreCase(Constants.XEROX_FILTER))
-            query = Constants.OVERPASS_XEROX_QUERY;
+        if(filtro.equalsIgnoreCase(Constants.FILTER_RESTAURANT))
+            query = Constants.QUERY_OVERPASS_RESTAURANT;
+        else if(filtro.equalsIgnoreCase(Constants.FILTER_TOILETS))
+            query = Constants.QUERY_OVERPASS_TOILETS;
+        else if(filtro.equalsIgnoreCase(Constants.FILTER_XEROX))
+            query = Constants.QUERY_OVERPASS_XEROX;
 
-        jsonResponse = HttpRequest.makeGetRequest(Constants.OVERPASS_SERVER_URL,query);
+        try {
+            jsonResponse = HttpRequest.makeGetRequest(Constants.URL_OVERPASS_SERVER,query);
+        } catch (SocketTimeoutException e) {
+            e.printStackTrace();
+            taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
+        }
 
 
         return jsonResponse;
@@ -68,7 +76,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
         // Recebe o xml em forma de uma String e e analisa as informções relevantes
         final List<Place> locais = JsonParser.parseOsmResponse(jsonResponse);
         // Retorna os valores para a activity que chamou a ASyncTask
-        callBack.onOsmTaskResponse(locais,filtro);
+        callBack.onOsmTaskResponse(locais,filtro,taskStatus);
         // esconde a barra de progresso
         progressBar.setVisibility(View.GONE);
 

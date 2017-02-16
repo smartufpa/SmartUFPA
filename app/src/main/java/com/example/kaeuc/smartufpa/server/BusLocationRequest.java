@@ -6,9 +6,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.kaeuc.smartufpa.utils.Constants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
+
+import java.net.SocketTimeoutException;
 
 /**
  * Created by kaeuc on 2/11/2017.
@@ -16,14 +20,16 @@ import org.osmdroid.util.GeoPoint;
 
 public class BusLocationRequest extends AsyncTask<String, Void, String> {
     private final String TAG = "BusLocationRequest";
-    private BusLocationRequestResponse callback = null;
+    private BusLocationRequestResponse callback;
     private Context parentContext;
     private ProgressBar progressBar;
+    private int taskStatus;
 
     public BusLocationRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
         this.callback = (BusLocationRequestResponse) parentContext;
         this.progressBar = progressBar;
+        this.taskStatus = Constants.SERVER_RESPONSE_SUCESS;
     }
 
     @Override
@@ -35,39 +41,43 @@ public class BusLocationRequest extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         String url = params[0];
-        final String response = HttpRequest.makeGetRequest(url, null);
+        String response = null;
         try {
+            response = HttpRequest.makeGetRequest(url, null);
             Log.i(TAG,response);
-        }catch (NullPointerException e){
+        }catch (NullPointerException | SocketTimeoutException e){
             e.printStackTrace();
+            this.taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
         }
         return response;
     }
 
     @Override
     protected void onPostExecute(String s) {
-        // TODO status deve vir do servidor
         super.onPostExecute(s);
+        if(this.taskStatus == Constants.SERVER_RESPONSE_TIMEOUT) {
+            callback.onBusLocationTaskResponse(null,taskStatus);
+            return;
+        }
         JSONObject jsonObject;
         double latitude;
         double longitude;
-        int status;
+
         try {
             jsonObject = new JSONObject(s);
-            JSONObject currentLocation = jsonObject.getJSONObject("currentLocation");
-            if(currentLocation.get("latitude").equals(null)){
+            if (jsonObject.getInt("status") == Constants.SERVER_RESPONSE_SUCESS){
+                latitude = jsonObject.getJSONObject("currentLocation").getDouble("latitude");
+                longitude = jsonObject.getJSONObject("currentLocation").getDouble("longitude");
+                this.taskStatus = jsonObject.getInt("status");
+            }else{
                 JSONObject lastLocation = jsonObject.getJSONObject("lastLocation");
                 latitude = lastLocation.getDouble("latitude");
                 longitude = lastLocation.getDouble("longitude");
-                status = 503;
-            }else {
-                status = 200;
-                latitude = jsonObject.getJSONObject("currentLocation").getDouble("latitude");
-                longitude = jsonObject.getJSONObject("currentLocation").getDouble("longitude");
+                this.taskStatus = jsonObject.getInt("status");
             }
             GeoPoint busLocation = new GeoPoint(latitude,longitude);
             progressBar.setVisibility(View.GONE);
-            callback.onBusLocationTaskResponse(busLocation,status);
+            callback.onBusLocationTaskResponse(busLocation,taskStatus);
         } catch (JSONException e) {
             e.printStackTrace();
         }

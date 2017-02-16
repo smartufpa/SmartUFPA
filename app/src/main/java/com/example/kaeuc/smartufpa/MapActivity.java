@@ -132,7 +132,7 @@ public class MapActivity extends AppCompatActivity
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                 btnClearMap = (Button) findViewById(R.id.btn_clear_map);
-                mapLayers.add(Constants.MY_LOCATION_LAYER);
+                mapLayers.add(Constants.LAYER_MY_LOCATION);
             }
         });
         // Configuração da action bar e do drawer lateral
@@ -197,7 +197,7 @@ public class MapActivity extends AppCompatActivity
                     */
                     mapView.getOverlays().add(1,tilesOverlay);
                     Log.i(TAG,"Layer added: Bus route -"+ mapView.getOverlayManager().toString());
-                    mapLayers.add(1,Constants.BUS_ROUTE_LAYER);
+                    mapLayers.add(1,Constants.LAYER_BUS_ROUTE);
                     mapView.invalidate();
                     isBusRouteEnabled = true;
                     fabBusRoute.setBackgroundTintList(
@@ -205,8 +205,8 @@ public class MapActivity extends AppCompatActivity
 
                 } else {
                     // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
-                    mapView.getOverlayManager().remove(mapLayers.indexOf(Constants.BUS_ROUTE_LAYER));
-                    mapLayers.remove(Constants.BUS_ROUTE_LAYER);
+                    mapView.getOverlayManager().remove(mapLayers.indexOf(Constants.LAYER_BUS_ROUTE));
+                    mapLayers.remove(Constants.LAYER_BUS_ROUTE);
                     Log.i(TAG,"RLayer Removed: Bus Route - "+ mapView.getOverlayManager().toString());
                     mapView.invalidate();
                     isBusRouteEnabled = false;
@@ -337,8 +337,8 @@ public class MapActivity extends AppCompatActivity
                 if (isSearchEnabled) {
                     isSearchEnabled = false;
 
-                    mapView.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER));
-                    mapLayers.remove(Constants.SEARCH_LAYER);
+                    mapView.getOverlays().remove(mapLayers.indexOf(Constants.LAYER_SEARCH));
+                    mapLayers.remove(Constants.LAYER_SEARCH);
                     // Contrai a bottomsheet de resultados
                     if(searchResultSheetBehavior != null) {
                         if ((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
@@ -346,8 +346,8 @@ public class MapActivity extends AppCompatActivity
                             searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     }
                     if(isGoToRouteEnabled){
-                        mapView.getOverlays().remove(mapLayers.indexOf(Constants.ROUTE_LAYER));
-                        mapLayers.remove(Constants.ROUTE_LAYER);
+                        mapView.getOverlays().remove(mapLayers.indexOf(Constants.LAYER_ROUTE));
+                        mapLayers.remove(Constants.LAYER_ROUTE);
                     }
                     if(btnClearMap.getVisibility() == View.VISIBLE){
                         btnClearMap.setVisibility(View.GONE);
@@ -372,7 +372,7 @@ public class MapActivity extends AppCompatActivity
         switch (item.getItemId()) {
            case R.id.action_bus_location:
                if(NetworkManager.checkNetworkConnection(this)) {
-                   new BusLocationRequest(this, progressBar).execute(Constants.BUS_LOCATION_URL);
+                   new BusLocationRequest(this, progressBar).execute(Constants.URL_BUS_LOCATION);
                    return true;
                }else{
                    Toast.makeText(this, "Cheque sua conexão com a internet.", Toast.LENGTH_SHORT).show();
@@ -404,18 +404,18 @@ public class MapActivity extends AppCompatActivity
         if (id == R.id.nav_xerox) {
             // Caso a camada de filtro não esteja ativa, executar a busca e adicionar marcadores
             if (!isXeroxEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.XEROX_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_XEROX);
                 isXeroxEnabled = true;
             }
 
         } else if (id == R.id.nav_restaurantes) {
             if (!isRestaurantEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.RESTAURANT_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_RESTAURANT);
                 isRestaurantEnabled = true;
             }
         } else if (id == R.id.nav_banheiros) {
             if (!isRestroomEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.TOILETS_FILTER);
+                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_TOILETS);
                 isRestroomEnabled = true;
             }
         }
@@ -457,7 +457,7 @@ public class MapActivity extends AppCompatActivity
                     roadOverlay.setWidth(15);
                     mapView.getOverlays().add(roadOverlay);
                     Log.i(TAG,"Layer added: foot path - " + mapView.getOverlayManager().toString());
-                    mapLayers.add(Constants.ROUTE_LAYER);
+                    mapLayers.add(Constants.LAYER_ROUTE);
                     btnClearMap.setVisibility(View.VISIBLE);
                     isGoToRouteEnabled = true;
 
@@ -497,49 +497,51 @@ public class MapActivity extends AppCompatActivity
 
     // Recebe dados da execução de OsmDataRequest
     @Override
-    public void onOsmTaskResponse(final List<Place> places, final String filter) {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                // Cria e adiciona a camada de marcadores ao mapa
-                final FolderOverlay poiMarkers = new FolderOverlay();
-                Drawable poiIcon = null;
-                // Configura o ícone de acordo com o filtro que será adicionado
-                if (filter.equals(Constants.XEROX_FILTER))
-                    poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
-                else if (filter.equals(Constants.RESTAURANT_FILTER))
-                    poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
-                else if(filter.equals(Constants.TOILETS_FILTER)) // Definir essa string
-                    poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
+    public void onOsmTaskResponse(final List<Place> places, final String filter, final int taskStatus) {
+        if(taskStatus == Constants.SERVER_RESPONSE_SUCESS) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    // Cria e adiciona a camada de marcadores ao mapa
+                    final FolderOverlay poiMarkers = new FolderOverlay();
+                    Drawable poiIcon = null;
+                    // Configura o ícone de acordo com o filtro que será adicionado
+                    if (filter.equals(Constants.FILTER_XEROX))
+                        poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
+                    else if (filter.equals(Constants.FILTER_RESTAURANT))
+                        poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
+                    else if (filter.equals(Constants.FILTER_TOILETS)) // Definir essa string
+                        poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
 
-                // Cria um marcador para cada local encontrado
-                for (final Place place : places) {
-                    Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker marker, MapView mapView) {
-                            MapActivity.this.mapView.invalidate();
-                            PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
-                            sheet.show(getSupportFragmentManager(), "bottom sheet");
-                            return true;
-                        }
-                    };
-                    Marker marker = createCustomMarker(poiIcon, place.getPosition(), markerClick);
-                    addMarkerToMap(marker,poiMarkers);
+                    // Cria um marcador para cada local encontrado
+                    for (final Place place : places) {
+                        Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                                MapActivity.this.mapView.invalidate();
+                                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+                                sheet.show(getSupportFragmentManager(), "bottom sheet");
+                                return true;
+                            }
+                        };
+                        Marker marker = createCustomMarker(poiIcon, place.getPosition(), markerClick);
+                        addMarkerToMap(marker, poiMarkers);
+                    }
+                    Toast.makeText(MapActivity.this, "Clique em um marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
+                    Log.println(Log.INFO, TAG, "Layer added: Filter - " + mapView.getOverlayManager().toString());
                 }
-
-            }
-        });
-        Toast.makeText(MapActivity.this, "Clique em um marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
-        Log.println(Log.INFO, TAG, "Layer added: Filter - " + mapView.getOverlayManager().toString());
-
+            });
+        }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
+            Toast.makeText(this, "Não foi possível se conectar ao servidor.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Recebe dados da execução de NominatimDataRequest
     @Override
-    public void onNominatimTaskResponse(final ArrayList<Place> places) {
+    public void onNominatimTaskResponse(final ArrayList<Place> places, final int taskStatus) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (places != null) {
+                if (taskStatus != Constants.SERVER_RESPONSE_SUCESS) {
                     // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
                     if (places.size() > 1) {
                         setupSearchResultBottomSheet(places);
@@ -578,6 +580,7 @@ public class MapActivity extends AppCompatActivity
                     }
                     isSearchEnabled = true;
                     Log.println(Log.INFO, TAG, "Layer added: Search - " + mapView.getOverlayManager().toString());
+                    mapView.invalidate();
                 } else {
                     Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
                             Toast.LENGTH_SHORT).show();
@@ -585,7 +588,7 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
-        mapView.invalidate();
+
     }
 
 
@@ -645,8 +648,8 @@ public class MapActivity extends AppCompatActivity
         findViewById(R.id.action_search).clearFocus();
         // Se uma busca ainda está ativa, limpar o mapa antes de fazer uma nova
         if (isSearchEnabled) {
-            mapView.getOverlays().remove(mapLayers.indexOf(Constants.SEARCH_LAYER));
-            mapLayers.remove(Constants.SEARCH_LAYER);
+            mapView.getOverlays().remove(mapLayers.indexOf(Constants.LAYER_SEARCH));
+            mapLayers.remove(Constants.LAYER_SEARCH);
             isSearchEnabled = false;
         }
         new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
@@ -668,19 +671,22 @@ public class MapActivity extends AppCompatActivity
 
 
     @Override
-    public void onBusLocationTaskResponse(GeoPoint busLocation, int status) {
+    public void onBusLocationTaskResponse(GeoPoint busLocation, final int taskStatus) {
+        if(taskStatus == Constants.SERVER_RESPONSE_SUCESS || taskStatus == Constants.SERVER_INTERNAL_ERROR) {
+            Marker marker = createCustomMarker(
+                    ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_bus_location_marker),
+                    busLocation, null);
+            addMarkerToMap(marker, new FolderOverlay());
+            if (taskStatus == Constants.SERVER_INTERNAL_ERROR) {
+                Toast.makeText(this, "Última localização conhecida. Pode não estar atualizada.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Localização atualizada.", Toast.LENGTH_SHORT).show();
+            }
+            Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
+        }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
+            Toast.makeText(this, "Não foi possível completar a operação. Tente novamente.", Toast.LENGTH_SHORT).show();
 
-        Marker marker = createCustomMarker(
-                ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_bus_location_marker),
-                busLocation, null);
-        addMarkerToMap(marker,new FolderOverlay());
-        if(status == 503){
-            Toast.makeText(this, "Última localização conhecida. Pode não estar atualizada.", Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(this, "Localização atualizada.", Toast.LENGTH_SHORT).show();
         }
-        Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
-
 
     }
 

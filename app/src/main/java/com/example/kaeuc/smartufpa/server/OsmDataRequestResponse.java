@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface OsmDataRequestResponse {
-    void onOsmTaskResponse(List<Place> locais, String filtro);
+    void onOsmTaskResponse(List<Place> locais, String filtro, int taskStatus);
 }
