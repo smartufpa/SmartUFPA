@@ -9,11 +9,4 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         />
 
-    <item
-        android:id="@+id/action_bus_location"
-        android:title="@string/action_bus_location"
-        android:icon="@drawable/ic_bus_location"
-        app:showAsAction="ifRoom"
-        />
-
 </menu>

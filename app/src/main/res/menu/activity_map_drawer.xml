@@ -18,6 +18,11 @@
                 android:icon="@drawable/ic_restroom"
                 android:title="Banheiros"
                 />
+            <item
+                android:id="@+id/nav_rota_circular"
+                android:icon="@drawable/ic_bus_black"
+                android:title="Rota do Circular"
+                />
         </menu>
     </item>
    <group>

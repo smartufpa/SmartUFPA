@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,6 +17,9 @@ import com.example.kaeuc.smartufpa.utils.NetworkManager;
 public class AppMenuActivity extends AppCompatActivity {
     public static final String ACTION_APP_MENU = "osmapp.ACTION_APP_MENU";
     public static final String CATEGORY_APP_MENU = "osmapp.CATEGORY_APP_MENU";
+    public static final String TAG = "AppMenu";
+
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +47,21 @@ public class AppMenuActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG,"onStop called");
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.i(TAG,"onPause called");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i(TAG,"onDestroy called");
     }
 }

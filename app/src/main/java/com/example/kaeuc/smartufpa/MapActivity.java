@@ -128,7 +128,7 @@ public class MapActivity extends AppCompatActivity
                 navigationView = (NavigationView) findViewById(R.id.nav_view);
                 mapView = (MapView) findViewById(map);
                 fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
-                fabBusRoute = (FloatingActionButton) findViewById(R.id.fab_bus_route);
+                fabBusRoute = (FloatingActionButton) findViewById(R.id.fab_bus_location);
                 fabBusRoute.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -162,6 +162,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
+        Log.i(TAG,"onPause called");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.removeUpdates(this);
@@ -173,6 +174,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(TAG,"onResume called");
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -181,38 +183,16 @@ public class MapActivity extends AppCompatActivity
         myLocationOverlay.enableMyLocation();
 
 
-        /* Cria um provedor de tiles que será setado para ser a camada de transportes
-       e então adiciona essa camada sobrepondo a existente no mapa.
-       A variável "isBusRouteEnabled" mantém o registro se essa camada está ativa ou não
-       e muda a cor do botão para indicar ao usuário o status do botão
-        */
+
+        fabBusRoute.setBackgroundTintList(
+                ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.colorAccent)));
         fabBusRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-                provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
-                TilesOverlay tilesOverlay = new TilesOverlay(provider, MapActivity.this);
-                if (!isBusRouteEnabled) {
-                    /* adiciona sempre a camada da rota de onibus na primeira posição da arraylist
-                    * de overlays para fácil remoção
-                    */
-                    mapView.getOverlays().add(1,tilesOverlay);
-                    Log.i(TAG,"Layer added: Bus route -"+ mapView.getOverlayManager().toString());
-                    mapLayers.add(1,Constants.LAYER_BUS_ROUTE);
-                    mapView.invalidate();
-                    isBusRouteEnabled = true;
-                    fabBusRoute.setBackgroundTintList(
-                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.colorAccent)));
-
-                } else {
-                    // 0 é a posição da overlay de transporte na lista de overlays aplicadas na MapView
-                    mapView.getOverlayManager().remove(mapLayers.indexOf(Constants.LAYER_BUS_ROUTE));
-                    mapLayers.remove(Constants.LAYER_BUS_ROUTE);
-                    Log.i(TAG,"RLayer Removed: Bus Route - "+ mapView.getOverlayManager().toString());
-                    mapView.invalidate();
-                    isBusRouteEnabled = false;
-                    fabBusRoute.setBackgroundTintList(
-                            ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
+                if(NetworkManager.checkNetworkConnection(MapActivity.this)) {
+                    new BusLocationRequest(MapActivity.this, progressBar).execute(Constants.URL_BUS_LOCATION);
+                }else{
+                    Toast.makeText(MapActivity.this, "Cheque sua conexão com a internet.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -257,6 +237,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i(TAG,"onDestroy called");
         locationManager = null;
         myCurrentLocation = null;
         myLocationOverlay = null;
@@ -368,21 +349,6 @@ public class MapActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-           case R.id.action_bus_location:
-               if(NetworkManager.checkNetworkConnection(this)) {
-                   new BusLocationRequest(this, progressBar).execute(Constants.URL_BUS_LOCATION);
-                   return true;
-               }else{
-                   Toast.makeText(this, "Cheque sua conexão com a internet.", Toast.LENGTH_SHORT).show();
-               }
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
 
     /* Início dos métodos de utilização da lista lateral (Drawer)*/
 
@@ -419,13 +385,15 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this, progressBar).execute(Constants.FILTER_TOILETS);
                 isRestroomEnabled = true;
             }
+
+        }else if(id == R.id.nav_rota_circular){
+            activeBusRouteLayer();
+
         }else if(id == R.id.nav_sobre){
             final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
             intent.addCategory(AboutActivity.CATEGORY_ABOUT);
             startActivity(intent);
         }
-
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -701,7 +669,7 @@ public class MapActivity extends AppCompatActivity
         int size = mapView.getOverlays().size() -1;
         for (int i= size ; i> 0 ;i--){
             if(mapView.getOverlays().get(i) instanceof FolderOverlay
-                    || mapView.getOverlays().get(i) instanceof Polyline ){
+                    || mapView.getOverlays().get(i) instanceof Polyline  || mapView.getOverlays().get(i) instanceof TilesOverlay){
                 mapView.getOverlays().remove(i);
             }
         }
@@ -710,6 +678,7 @@ public class MapActivity extends AppCompatActivity
         isSearchEnabled = false;
         isGoToRouteEnabled = false;
         isRestroomEnabled= false;
+        isBusRouteEnabled = false;
         btnClearMap.setVisibility(View.GONE);
 
         mapView.invalidate();
@@ -748,6 +717,26 @@ public class MapActivity extends AppCompatActivity
         mapView.getOverlays().add(poiMarkers);
         btnClearMap.setVisibility(View.VISIBLE);
         mapView.invalidate();
+    }
+
+
+       /* Cria um provedor de tiles que será setado para ser a camada de transportes
+       e então adiciona essa camada sobrepondo a existente no mapa.
+
+        */
+
+    private void activeBusRouteLayer(){
+        if(!isBusRouteEnabled) {
+            MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+            provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
+            TilesOverlay tilesOverlay = new TilesOverlay(provider, MapActivity.this);
+            mapView.getOverlays().add(1, tilesOverlay);
+            Log.i(TAG, "Layer added: Bus route -" + mapView.getOverlayManager().toString());
+            mapLayers.add(1, Constants.LAYER_BUS_ROUTE);
+            mapView.invalidate();
+            btnClearMap.setVisibility(View.VISIBLE);
+            isBusRouteEnabled = true;
+        }
     }
 
 

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class LoginScreenActivity extends AppCompatActivity {
     public static final String CATEGORY_LOGIN = "osmapp.CATEGORY_LOGIN";
     public static final String ACTION_LOGIN = "osmapp.ACTION_LOGIN";
+    public static final String TAG = "LoginScreen";
 
     /*private EditText edtUsername;
     private EditText edtPassword;
@@ -74,6 +76,19 @@ public class LoginScreenActivity extends AppCompatActivity {
         }).start();*/
 
 
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Requisita permissões para Android Marshmallow e devices superiores
+        if (Build.VERSION.SDK_INT >= 23) {
+            checkPermissions();
+        }
+
         // Cria um Listener para os tres botões, e ele identificará qual botão foi clicado pela sua id
         final View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
@@ -102,9 +117,10 @@ public class LoginScreenActivity extends AppCompatActivity {
                     intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
                     startActivity(intent);*/
                 }else if (v.getId() == btnVisitante.getId()) {
-                        Intent intent = new Intent(AppMenuActivity.ACTION_APP_MENU);
-                        intent.addCategory(AppMenuActivity.CATEGORY_APP_MENU);
-                        startActivity(intent);
+                    Intent intent = new Intent(AppMenuActivity.ACTION_APP_MENU);
+                    intent.addCategory(AppMenuActivity.CATEGORY_APP_MENU);
+                    startActivity(intent);
+
 
                 }
             }
@@ -114,18 +130,6 @@ public class LoginScreenActivity extends AppCompatActivity {
         btnVisitante.setOnClickListener(clickListener);
 
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-
-        // Requisita permissões para Android Marshmallow e devices superiores
-        if (Build.VERSION.SDK_INT >= 23) {
-            checkPermissions();
-        }
     }
 
     // Inicio da checagem de permissões - Métodos retirados do exemplo dado no projeto do OSMdroid
@@ -184,5 +188,25 @@ public class LoginScreenActivity extends AppCompatActivity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+        Log.i(TAG,"onStop called");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG,"onPause called");
+    }
+
+    // TODO ondestroy não está sendo chamado
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG,"onDestroy called");
+        super.onDestroy();
     }
 }
