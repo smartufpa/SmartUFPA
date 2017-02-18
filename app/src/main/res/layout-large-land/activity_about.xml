@@ -99,7 +99,7 @@
             android:id="@+id/txt_francisco"
             android:textSize="26sp"
             android:layout_below="@+id/txt_desenvolvedores"
-            android:text="Francisco Carrera Júnior"
+            android:text="Francisco Carrera Nascimento Júnior"
             android:layout_centerHorizontal="true"
             />
 
