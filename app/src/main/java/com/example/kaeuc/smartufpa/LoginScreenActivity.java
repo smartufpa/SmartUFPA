@@ -102,16 +102,9 @@ public class LoginScreenActivity extends AppCompatActivity {
                     intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
                     startActivity(intent);*/
                 }else if (v.getId() == btnVisitante.getId()) {
-                    if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                        Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
-                        intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
-                        startActivity(intent);
-                    }else{
                         Intent intent = new Intent(AppMenuActivity.ACTION_APP_MENU);
                         intent.addCategory(AppMenuActivity.CATEGORY_APP_MENU);
                         startActivity(intent);
-                    }
-
 
                 }
             }

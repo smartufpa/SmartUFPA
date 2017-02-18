@@ -3,6 +3,7 @@ package com.example.kaeuc.smartufpa;
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -418,6 +419,10 @@ public class MapActivity extends AppCompatActivity
                 new OsmDataRequest(this, progressBar).execute(Constants.FILTER_TOILETS);
                 isRestroomEnabled = true;
             }
+        }else if(id == R.id.nav_sobre){
+            final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
+            intent.addCategory(AboutActivity.CATEGORY_ABOUT);
+            startActivity(intent);
         }
 
 

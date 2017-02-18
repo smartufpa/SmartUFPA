@@ -1,7 +1,9 @@
 package com.example.kaeuc.smartufpa;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,13 +28,29 @@ public class AppMenuActivity extends AppCompatActivity {
         mobilidade.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (NetworkManager.checkNetworkConnection(AppMenuActivity.this)){
-                    Intent intent = new Intent(AppMenuActivity.this, MapActivity.class);
-                    startActivity(intent);
+                    if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                        Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
+                        intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
+                        startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(AppMenuActivity.this, MapActivity.class);
+                        startActivity(intent);
+                    }
                 }else{
                     Toast.makeText(AppMenuActivity.this, "Cheque sua conexão com a internet e tente novamente.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
