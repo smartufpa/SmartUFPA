@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.Constants;
 
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
 import org.osmdroid.bonuspack.location.POI;
@@ -19,19 +20,21 @@ import java.util.ArrayList;
  * de maneira assíncrona.
  * Recebe uma String contendo o termo da busca e retorna uma ArrayList de POIs
  */
-
+ // TODO Mudar motor de busca para overpass
 public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> {
 
     private Context parentContext;
     private ProgressBar progressBar;
     // interface resposável por devolver o resultado da task pra atividade principal
-    private NominatimDataRequestResponse callBack = null;
+    private NominatimDataRequestResponse callBack;
     private static final String TAG = "NominatatimDataRequest";
+    private int taskStatus;
 
     public NominatimDataRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
         this.callBack = (NominatimDataRequestResponse) parentContext;
         this.progressBar = progressBar;
+        this.taskStatus = Constants.SERVER_RESPONSE_SUCESS;
     }
     // Mostra a barra de progresso durante a execução da task
     @Override
@@ -56,7 +59,10 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
     @Override
     protected void onPostExecute(ArrayList<POI> pois) {
         super.onPostExecute(pois);
-        callBack.nominatimTaskResponse(Place.convertPOIsToPlaces(pois));
+        if (pois == null){
+            taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;
+        }
+        callBack.onNominatimTaskResponse(Place.convertPOIsToPlaces(pois),taskStatus);
         progressBar.setVisibility(View.GONE);
 
 

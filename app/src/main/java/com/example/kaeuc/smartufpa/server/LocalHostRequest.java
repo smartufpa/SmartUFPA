@@ -7,6 +7,8 @@ import android.util.Log;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 
+import java.net.SocketTimeoutException;
+
 /**
  * Created by kaeuc on 1/11/2017.
  */
@@ -26,9 +28,13 @@ public class LocalHostRequest extends AsyncTask<Place, Void, String> {
     @Override
     protected String doInBackground(Place... params) {
 
-        String response = "";
+        String response = null;
         Place place = params[0];
-        response = HttpRequest.makePostRequest(Constants.LOCAL_HOST_URL,null,place.toJsonObject());
+        try {
+            response = HttpRequest.makePostRequest(Constants.URL_LOCAL_HOST,null,place.toJsonObject());
+        } catch (SocketTimeoutException e) {
+            e.printStackTrace();
+        }
 
         return response;
     }
@@ -41,7 +47,7 @@ public class LocalHostRequest extends AsyncTask<Place, Void, String> {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
-        callback.LocalHostTaskResponse(s);
+        callback.onLocalHostTaskResponse(s);
 
 
     }

@@ -6,12 +6,14 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 public class NoGpsActivity extends AppCompatActivity {
     public final static String CATEGORY_NO_GPS = "osmapp.CATEGORY_NO_GPS";
     public final static String ACTION_NO_GPS = "osmapp.ACTION_NO_GPS";
+    public final static String TAG = "NoGps";
 
     private Button turnOnGps;
 
@@ -37,5 +39,24 @@ public class NoGpsActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG,"onStop called");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG,"onPause called");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG,"onDestroy called");
     }
 }

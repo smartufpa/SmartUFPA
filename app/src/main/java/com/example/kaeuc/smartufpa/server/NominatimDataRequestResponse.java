@@ -9,5 +9,5 @@ import java.util.ArrayList;
  */
 
 public interface NominatimDataRequestResponse {
-    void nominatimTaskResponse(ArrayList<Place> places);
+    void onNominatimTaskResponse(ArrayList<Place> places, int taskStatus);
 }

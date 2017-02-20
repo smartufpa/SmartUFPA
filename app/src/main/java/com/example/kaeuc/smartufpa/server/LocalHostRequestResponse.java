@@ -5,5 +5,6 @@ package com.example.kaeuc.smartufpa.server;
  */
 
 public interface LocalHostRequestResponse {
-    void LocalHostTaskResponse(String response);
+    // TODO adicionar variavel de status
+    void onLocalHostTaskResponse(String response);
 }

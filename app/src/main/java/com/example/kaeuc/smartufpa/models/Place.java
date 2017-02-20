@@ -24,6 +24,7 @@ public class Place implements Serializable {
     public Place(double latitude, double longitude, String name) {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.position = new GeoPoint(latitude,longitude);
         this.name = name;
     }
     public Place( final long id, double latitude, double longitude, String name, String shortName, String description) {
@@ -33,6 +34,7 @@ public class Place implements Serializable {
         this.name = name;
         this.description = description;
         this.shortName = shortName;
+        this.position = new GeoPoint(latitude,longitude);
     }
     public Place(double latitude, double longitude, String name,String shortName, String description) {
         this.latitude = latitude;
