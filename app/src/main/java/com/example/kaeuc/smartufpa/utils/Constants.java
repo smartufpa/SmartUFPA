@@ -61,5 +61,5 @@ public final class Constants {
     public static final int SERVER_INTERNAL_ERROR = 500;
 
 
-
+    public static final int TUTORIAL_BTN_LEFT = 1;
 }

@@ -24,7 +24,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
     <string name="drawer_subheader">LabVis - UFPA</string>
     <string name="drawer_subtitle">ICEN - Faculdade de Computação</string>
 
@@ -39,6 +38,13 @@
     <string name="loading_current_position">Carregando sua posição atual.</string>
     <string name="out_of_covered_region">Você está fora da região coberta pelo nosso mapa!</string>
     <string name="action_bus_location">Localizar Circular</string>
+
+
+
+    <string name="tutorial_search">Use a lupa para buscar locais no Campus da UFPA.</string>
+    <string name="tutorial_menu">Ao abrir o menu, selecione um tipo de serviço e veja onde o ele é ofertado.</string>
+    <string name="tutorial_current_location">Clique aqui para mover a câmera para sua localização atual.</string>
+    <string name="tutorial_bus_location">Clique aqui para consultar a última localização do circular.</string>
 
 
 </resources>

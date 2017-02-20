@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -45,6 +46,12 @@ import com.example.kaeuc.smartufpa.server.NominatimDataRequest;
 import com.example.kaeuc.smartufpa.server.NominatimDataRequestResponse;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
 import com.example.kaeuc.smartufpa.server.OsmDataRequestResponse;
+import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
+import com.example.kaeuc.smartufpa.utils.showcaseutils.ShowcaseHolder;
+import com.example.kaeuc.smartufpa.utils.showcaseutils.ToolbarActionItemTarget;
+import com.example.kaeuc.smartufpa.utils.showcaseutils.ViewTargets;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
@@ -76,6 +83,7 @@ public class MapActivity extends AppCompatActivity
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
     private static final String TAG = "MapActivity";
+    private static final String TUTORIAL_EXECUTED = "Tutorial_executed";
 
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
@@ -87,7 +95,7 @@ public class MapActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private Toolbar toolbar;
     private BottomSheetBehavior searchResultSheetBehavior;
-    private FloatingActionButton fabBusRoute;
+    private FloatingActionButton fabBusLocation;
     private FloatingActionButton fabMyLocation;
     private Button btnClearMap;
 
@@ -119,6 +127,8 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -128,8 +138,8 @@ public class MapActivity extends AppCompatActivity
                 navigationView = (NavigationView) findViewById(R.id.nav_view);
                 mapView = (MapView) findViewById(map);
                 fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
-                fabBusRoute = (FloatingActionButton) findViewById(R.id.fab_bus_location);
-                fabBusRoute.setBackgroundTintList(
+                fabBusLocation = (FloatingActionButton) findViewById(R.id.fab_bus_location);
+                fabBusLocation.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                 btnClearMap = (Button) findViewById(R.id.btn_clear_map);
@@ -184,9 +194,9 @@ public class MapActivity extends AppCompatActivity
 
 
 
-        fabBusRoute.setBackgroundTintList(
+        fabBusLocation.setBackgroundTintList(
                 ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.colorAccent)));
-        fabBusRoute.setOnClickListener(new View.OnClickListener() {
+        fabBusLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(NetworkManager.checkNetworkConnection(MapActivity.this)) {
@@ -345,6 +355,11 @@ public class MapActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(this);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
+
+        //Restaura as preferencias gravadas
+        SharedPreferences settings = getSharedPreferences(TUTORIAL_EXECUTED, 0);
+        if(settings.getInt("tutorial_executed",0) == 0)
+            runMapTutorial();
 
         return true;
     }
@@ -739,9 +754,41 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    private void runMapTutorial(){
+        ArrayList<ShowcaseHolder> holders = new ArrayList<>();
+
+        try {
+            holders.add( new ShowcaseHolder(new ToolbarActionItemTarget(toolbar,R.id.action_search),
+                    getString(R.string.tutorial_search)));
+            holders.add(new ShowcaseHolder(ViewTargets.navigationButtonViewTarget(toolbar),
+                    getString(R.string.tutorial_menu)));
+            holders.add(new ShowcaseHolder(new ViewTarget(fabMyLocation),
+                    getString(R.string.tutorial_current_location),
+                    Constants.TUTORIAL_BTN_LEFT));
+            holders.add(new ShowcaseHolder(new ViewTarget(fabBusLocation),
+                    getString(R.string.tutorial_bus_location),
+                    Constants.TUTORIAL_BTN_LEFT));
+            new AppTutorial(holders,MapActivity.this);
+        } catch (ViewTargets.MissingViewException e) {
+            e.printStackTrace();
+        }
+
+
+
+        SharedPreferences settings = getSharedPreferences(TUTORIAL_EXECUTED, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("tutorial_executed", 1);
+
+        //Confirma a gravação dos dados
+        editor.commit();
+
+
+
+    }
+
 
 
 }
 
-// TODO organizar o código e adicionar checagem de internet para todos as chamadas que necessitam.
+// TODO organizar o código e comentar código do tutorial.
 
