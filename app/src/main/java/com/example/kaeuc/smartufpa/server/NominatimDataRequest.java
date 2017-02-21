@@ -28,13 +28,13 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
     // interface resposável por devolver o resultado da task pra atividade principal
     private NominatimDataRequestResponse callBack;
     private static final String TAG = "NominatatimDataRequest";
-    private int taskStatus;
+    private int taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
 
     public NominatimDataRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
         this.callBack = (NominatimDataRequestResponse) parentContext;
         this.progressBar = progressBar;
-        this.taskStatus = Constants.SERVER_RESPONSE_SUCESS;
+        this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
     // Mostra a barra de progresso durante a execução da task
     @Override

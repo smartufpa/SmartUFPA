@@ -36,7 +36,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
         this.parentContext = parentContext;
         this.callBack = (OsmDataRequestResponse) parentContext;
         this.progressBar = progressBar;
-        this.taskStatus = Constants.SERVER_RESPONSE_SUCESS;
+        this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
 
     @Override

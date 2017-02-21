@@ -486,7 +486,7 @@ public class MapActivity extends AppCompatActivity
     // Recebe dados da execução de OsmDataRequest
     @Override
     public void onOsmTaskResponse(final List<Place> places, final String filter, final int taskStatus) {
-        if(taskStatus == Constants.SERVER_RESPONSE_SUCESS) {
+        if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS) {
             runOnUiThread(new Runnable() {
                 public void run() {
                     // Cria e adiciona a camada de marcadores ao mapa
@@ -529,7 +529,7 @@ public class MapActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (taskStatus != Constants.SERVER_RESPONSE_SUCESS) {
+                if (taskStatus == Constants.SERVER_RESPONSE_SUCCESS) {
                     // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
                     if (places.size() > 1) {
                         setupSearchResultBottomSheet(places);
@@ -660,7 +660,7 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onBusLocationTaskResponse(GeoPoint busLocation, final int taskStatus) {
-        if(taskStatus == Constants.SERVER_RESPONSE_SUCESS || taskStatus == Constants.SERVER_INTERNAL_ERROR) {
+        if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS || taskStatus == Constants.SERVER_INTERNAL_ERROR) {
             Marker marker = createCustomMarker(
                     ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_bus_location_marker),
                     busLocation, null);

@@ -29,7 +29,7 @@ public class BusLocationRequest extends AsyncTask<String, Void, String> {
         this.parentContext = parentContext;
         this.callback = (BusLocationRequestResponse) parentContext;
         this.progressBar = progressBar;
-        this.taskStatus = Constants.SERVER_RESPONSE_SUCESS;
+        this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class BusLocationRequest extends AsyncTask<String, Void, String> {
 
         try {
             jsonObject = new JSONObject(s);
-            if (jsonObject.getInt("status") == Constants.SERVER_RESPONSE_SUCESS){
+            if (jsonObject.getInt("status") == Constants.SERVER_RESPONSE_SUCCESS){
                 latitude = jsonObject.getJSONObject("currentLocation").getDouble("latitude");
                 longitude = jsonObject.getJSONObject("currentLocation").getDouble("longitude");
                 this.taskStatus = jsonObject.getInt("status");
