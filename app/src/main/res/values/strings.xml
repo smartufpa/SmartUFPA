@@ -42,9 +42,9 @@
 
 
     <string name="tutorial_search">Use a lupa para buscar locais no Campus da UFPA.</string>
-    <string name="tutorial_menu">Ao abrir o menu, selecione um tipo de serviço e veja onde o ele é ofertado.</string>
+    <string name="tutorial_menu">Ao abrir o menu, selecione um tipo de serviço e veja onde ele é ofertado.</string>
     <string name="tutorial_current_location">Clique aqui para mover a câmera para sua localização atual.</string>
-    <string name="tutorial_bus_location">Clique aqui para consultar a última localização do circular.</string>
+    <string name="tutorial_bus_location">Clique aqui para consultar a última localização do circular.\n <b>Note que esse serviço ainda se encontra em teste.</b></string>
 
 
 </resources>
