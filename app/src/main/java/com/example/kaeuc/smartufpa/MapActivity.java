@@ -328,9 +328,12 @@ public class MapActivity extends AppCompatActivity
                  */
                 if (isSearchEnabled) {
                     isSearchEnabled = false;
-
-                    mapView.getOverlays().remove(mapLayers.indexOf(Constants.LAYER_SEARCH));
-                    mapLayers.remove(Constants.LAYER_SEARCH);
+                    try {
+                        mapView.getOverlays().remove(mapLayers.indexOf(Constants.LAYER_SEARCH));
+                        mapLayers.remove(Constants.LAYER_SEARCH);
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        e.printStackTrace();
+                    }
                     // Contrai a bottomsheet de resultados
                     if(searchResultSheetBehavior != null) {
                         if ((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
