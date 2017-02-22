@@ -1,24 +1,6 @@
 <resources>
     <string name="app_name">Smart UFPA</string>
 
-    <!--Textos da tela de login-->
-    <string name="logo_title">Smart UFPA</string>
-    <string name="username_hint">Nome de Usuário</string>
-    <string name="password_hint">Senha</string>
-    <string name="log_in_button">Entrar</string>
-    <string name="aux_text">Ainda não tem uma conta?</string>
-    <string name="sign_up_button">Criar Conta</string>
-    <string name="login_error_user">Nome de usuário ou senha inválidos</string>
-    <string name="login_error_noprofile">Nenhum perfil foi criado. Crie um antes de entrar.</string>
-    <string name="new_account">Nova Conta</string>
-
-    <!--Textos da tela de criação de login-->
-    <string-array name="profiles">
-        <item>Aluno</item>
-        <item>Professor</item>
-    </string-array>
-    <string name="prompt">Escolha seu tipo de perfil</string>
-    <string name="create_account">Criar</string>
     <string name="title_activity_map">MapActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -35,8 +17,7 @@
     <string name="no_gps_error">O GPS deve estar ligado para iniciar o aplicativo.</string>
     <string name="turn_on_gps_button">Ligar GPS</string>
     <string name="turn_on_gps_msg">Por favor, ligar o GPS novamente.</string>
-    <string name="loading_current_position">Carregando sua posição atual.</string>
-    <string name="out_of_covered_region">Você está fora da região coberta pelo nosso mapa!</string>
+
     <string name="action_bus_location">Localizar Circular</string>
 
 
@@ -45,6 +26,17 @@
     <string name="tutorial_menu">Ao abrir o menu, selecione um tipo de serviço e veja onde ele é ofertado.</string>
     <string name="tutorial_current_location">Clique aqui para mover a câmera para sua localização atual.</string>
     <string name="tutorial_bus_location">Clique aqui para consultar a última localização do circular.\n <b>Note que esse serviço ainda se encontra em teste.</b></string>
+
+    <string name="error_on_connection">Houve um erro na requisição. Cheque sua conexão com a internet.</string>
+    <string name="error_server_internal_error">Não foi possível completar a operação. Tente novamente.</string>
+    <string name="error_server_timeout">Tempo de requisição esgotado. Tente novamente em alguns segundos.</string>
+
+    <string name="msg_no_results">Sua busca não retornou nenhum resultado válido.</string>
+    <string name="msg_click_marker">Clique no marcador para rotas.</string>
+    <string name="msg_bus_last_known_location">Última localização conhecida. Pode não estar atualizada.</string>
+    <string name="msg_bus_updated_location">Localização atualizada.</string>
+    <string name="msg_loading_current_position">Carregando sua posição atual.</string>
+    <string name="msg_out_of_covered_region">Você está fora da região coberta pelo nosso mapa!</string>
 
 
 </resources>

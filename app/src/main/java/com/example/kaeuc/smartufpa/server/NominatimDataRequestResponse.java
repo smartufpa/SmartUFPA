@@ -1,5 +1,7 @@
 package com.example.kaeuc.smartufpa.server;
 
+import android.support.annotation.Nullable;
+
 import com.example.kaeuc.smartufpa.models.Place;
 
 import java.util.ArrayList;
@@ -9,5 +11,6 @@ import java.util.ArrayList;
  */
 
 public interface NominatimDataRequestResponse {
-    void onNominatimTaskResponse(ArrayList<Place> places, int taskStatus);
+    void onNominatimTaskResponse(@Nullable ArrayList<Place> places, int taskStatus);
+
 }

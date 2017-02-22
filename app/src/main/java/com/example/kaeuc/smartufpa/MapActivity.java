@@ -65,6 +65,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -127,8 +128,6 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -143,7 +142,6 @@ public class MapActivity extends AppCompatActivity
                         ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
                 progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                 btnClearMap = (Button) findViewById(R.id.btn_clear_map);
-                mapLayers.add(Constants.LAYER_MY_LOCATION);
             }
         });
         // Configuração da action bar e do drawer lateral
@@ -202,7 +200,7 @@ public class MapActivity extends AppCompatActivity
                 if(NetworkManager.checkNetworkConnection(MapActivity.this)) {
                     new BusLocationRequest(MapActivity.this, progressBar).execute(Constants.URL_BUS_LOCATION);
                 }else{
-                    Toast.makeText(MapActivity.this, "Cheque sua conexão com a internet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapActivity.this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -220,11 +218,10 @@ public class MapActivity extends AppCompatActivity
                     if (!GPSEnabled) {
                         Toast.makeText(MapActivity.this, R.string.turn_on_gps_msg, Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(MapActivity.this, R.string.loading_current_position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapActivity.this, R.string.msg_loading_current_position, Toast.LENGTH_SHORT).show();
                     // se o usuário se encontra fora da região do mapa
-                } else if (!mapRegion.contains(
-                        new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude())))
-                    Toast.makeText(MapActivity.this, R.string.out_of_covered_region, Toast.LENGTH_SHORT).show();
+                } else if (!mapRegion.contains(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude())))
+                    Toast.makeText(MapActivity.this, R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
                     // senão move a camera para a localização atual do usuário
                 else
                     mapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude()));
@@ -259,7 +256,7 @@ public class MapActivity extends AppCompatActivity
 
     // Método responsável por configurar o mapa na sua inicialização
     private void setupMap() {
-            myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
+        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
         // Restrição da região mostrada do mapa usando coordenadas
         mapRegion = new BoundingBoxE6(-1.457886, -48.437957, -1.479967, -48.459779);
         runOnUiThread(new Runnable() {
@@ -297,7 +294,8 @@ public class MapActivity extends AppCompatActivity
         });
 
 
-        mapView.getOverlays().add(0,myLocationOverlay);
+//        mapView.getOverlays().add(0,myLocationOverlay);
+        addlayerToMap(myLocationOverlay,Constants.LAYER_MY_LOCATION);
         Log.i(TAG,"Layer added: My Location - " + mapView.getOverlayManager().toString());
         // Configuração para mostrar o boneco da posição do usuário
         myLocationOverlay.enableMyLocation();
@@ -328,12 +326,7 @@ public class MapActivity extends AppCompatActivity
                  */
                 if (isSearchEnabled) {
                     isSearchEnabled = false;
-                    try {
-                        mapView.getOverlays().remove(mapLayers.indexOf(Constants.LAYER_SEARCH));
-                        mapLayers.remove(Constants.LAYER_SEARCH);
-                    }catch (ArrayIndexOutOfBoundsException e){
-                        e.printStackTrace();
-                    }
+                    removeLayerFromMap(Constants.LAYER_SEARCH);
                     // Contrai a bottomsheet de resultados
                     if(searchResultSheetBehavior != null) {
                         if ((searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
@@ -341,12 +334,12 @@ public class MapActivity extends AppCompatActivity
                             searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     }
                     if(isGoToRouteEnabled){
-                        mapView.getOverlays().remove(mapLayers.indexOf(Constants.LAYER_ROUTE));
-                        mapLayers.remove(Constants.LAYER_ROUTE);
+                        isGoToRouteEnabled = false;
+                        removeLayerFromMap(Constants.LAYER_ROUTE);
                     }
-                    if(btnClearMap.getVisibility() == View.VISIBLE){
-                        btnClearMap.setVisibility(View.GONE);
-                    }
+//                    if(btnClearMap.getVisibility() == View.VISIBLE){
+//                        btnClearMap.setVisibility(View.GONE);
+//                    }
                     mapView.invalidate();
                 }
                 return true;
@@ -361,8 +354,8 @@ public class MapActivity extends AppCompatActivity
 
         //Restaura as preferencias gravadas
         SharedPreferences settings = getSharedPreferences(TUTORIAL_EXECUTED, 0);
-        if(settings.getInt("tutorial_executed",0) == 0)
-            runMapTutorial();
+        if(settings.getInt("tutorial_executed",0) == 0);
+//            runMapTutorial();
 
         return true;
     }
@@ -437,19 +430,13 @@ public class MapActivity extends AppCompatActivity
                 roadManager.addRequestOption("vehicle=foot");
                 ArrayList<GeoPoint> wayPoints = new ArrayList<>();
                 if(myCurrentLocation != null) {
-                    final GeoPoint startPoint = new GeoPoint(myCurrentLocation);
                     // final GeoPoint startPoint = new GeoPoint(-1.47465, -48.45605); // Local teste: icen
-                    final GeoPoint endPoint = new GeoPoint(place.getLatitude(),place.getLongitude());
-                    wayPoints.add(startPoint);
-                    wayPoints.add(endPoint);
-                    Road road = roadManager.getRoad(wayPoints);
-
-                    Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+                    wayPoints.add(new GeoPoint(myCurrentLocation)); // ponto de inicio
+                    wayPoints.add(new GeoPoint(place.getLatitude(),place.getLongitude())); // ponto final
+                    final Polyline roadOverlay = RoadManager.buildRoadOverlay(roadManager.getRoad(wayPoints));
                     roadOverlay.setWidth(15);
-                    mapView.getOverlays().add(roadOverlay);
+                    addlayerToMap(roadOverlay,Constants.LAYER_ROUTE);
                     Log.i(TAG,"Layer added: foot path - " + mapView.getOverlayManager().toString());
-                    mapLayers.add(Constants.LAYER_ROUTE);
-                    btnClearMap.setVisibility(View.VISIBLE);
                     isGoToRouteEnabled = true;
 
                 }
@@ -514,15 +501,15 @@ public class MapActivity extends AppCompatActivity
                                 return true;
                             }
                         };
-                        Marker marker = createCustomMarker(poiIcon, place.getPosition(), markerClick);
-                        addMarkerToMap(marker, poiMarkers);
+                        poiMarkers.add(createCustomMarker(poiIcon, place.getPosition(), markerClick));
                     }
-                    Toast.makeText(MapActivity.this, "Clique em um marcador para mais ações e direções.", Toast.LENGTH_LONG).show();
+                    addlayerToMap(poiMarkers,filter);
+                    Toast.makeText(MapActivity.this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
                     Log.println(Log.INFO, TAG, "Layer added: Filter - " + mapView.getOverlayManager().toString());
                 }
             });
         }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
-            Toast.makeText(this, "Não foi possível se conectar ao servidor.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -537,14 +524,7 @@ public class MapActivity extends AppCompatActivity
                     if (places.size() > 1) {
                         setupSearchResultBottomSheet(places);
                     }else{
-                        try {
-                            mapController.animateTo(places.get(0).getPosition());
-                        } catch (IndexOutOfBoundsException e) {
-                            e.printStackTrace();
-                            Toast.makeText(MapActivity.this, "Desculpa, não foi possível localizar este local.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
+                        mapController.animateTo(places.get(0).getPosition());
                     }
 
                     final FolderOverlay poiMarkers = new FolderOverlay();
@@ -565,16 +545,22 @@ public class MapActivity extends AppCompatActivity
                         Marker marker = createCustomMarker(ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker),
                                 place.getPosition(), place.getName(),
                                 place.getDescription(), markerClick);
-                        addMarkerToMap(marker,poiMarkers);
-
-
+                        poiMarkers.add(marker);
                     }
+
+                    addlayerToMap(poiMarkers,Constants.LAYER_SEARCH);
                     isSearchEnabled = true;
                     Log.println(Log.INFO, TAG, "Layer added: Search - " + mapView.getOverlayManager().toString());
+                    Toast.makeText(MapActivity.this, getString(R.string.msg_click_marker), Toast.LENGTH_SHORT).show();
                     mapView.invalidate();
-                } else {
-                    Toast.makeText(MapActivity.this, "Houve um problema na sua conexão. Tente novamente.",
+                } else if(taskStatus == Constants.SERVER_INTERNAL_ERROR) {
+                    Toast.makeText(MapActivity.this, getString(R.string.error_on_connection),
                             Toast.LENGTH_SHORT).show();
+                    btnClearMap.setVisibility(View.GONE);
+                }else if(taskStatus == Constants.SERVER_RESPONSE_NO_CONTENT){
+                    Toast.makeText(MapActivity.this, getString(R.string.msg_no_results ),
+                            Toast.LENGTH_SHORT).show();
+                    btnClearMap.setVisibility(View.GONE);
                 }
             }
         });
@@ -612,12 +598,9 @@ public class MapActivity extends AppCompatActivity
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     mapController.animateTo(new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude()));
                 }
-                else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                else if (newState == BottomSheetBehavior.STATE_COLLAPSED) ;
 
-                }
-                else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-
-                }
+                else if (newState == BottomSheetBehavior.STATE_HIDDEN) ;
             }
 
             @Override
@@ -634,17 +617,19 @@ public class MapActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(final String query) {
         // É necessário passar como argumentos para a requisição a lat e long para restringir a busca
         // à região da universidade
-        final String latitude = String.valueOf(defaultLocation.getLatitude());
-        final String longitude = String.valueOf(defaultLocation.getLongitude());
-        findViewById(R.id.action_search).clearFocus();
-        // Se uma busca ainda está ativa, limpar o mapa antes de fazer uma nova
-        if (isSearchEnabled) {
-            mapView.getOverlays().remove(mapLayers.indexOf(Constants.LAYER_SEARCH));
-            mapLayers.remove(Constants.LAYER_SEARCH);
-            isSearchEnabled = false;
+        if (NetworkManager.checkNetworkConnection(this)) {
+            final String latitude = String.valueOf(defaultLocation.getLatitude());
+            final String longitude = String.valueOf(defaultLocation.getLongitude());
+            findViewById(R.id.action_search).clearFocus();
+            // Se uma busca ainda está ativa, limpar o mapa antes de fazer uma nova
+            if (isSearchEnabled) {
+                removeLayerFromMap(Constants.LAYER_SEARCH);
+                isSearchEnabled = false;
+            }
+            new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
+        }else{
+            Toast.makeText(this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
         }
-        new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
-
 
         return true;
     }
@@ -664,18 +649,19 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onBusLocationTaskResponse(GeoPoint busLocation, final int taskStatus) {
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS || taskStatus == Constants.SERVER_INTERNAL_ERROR) {
-            Marker marker = createCustomMarker(
+            final FolderOverlay busLocationLayer = new FolderOverlay();
+            busLocationLayer.add(createCustomMarker(
                     ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_bus_location_marker),
-                    busLocation, null);
-            addMarkerToMap(marker, new FolderOverlay());
-            if (taskStatus == Constants.SERVER_INTERNAL_ERROR) {
-                Toast.makeText(this, "Última localização conhecida. Pode não estar atualizada.", Toast.LENGTH_LONG).show();
+                    busLocation, null));
+            addlayerToMap(busLocationLayer,Constants.LAYER_BUS_MARKER);
+            if (taskStatus == Constants.SERVER_INTERNAL_ERROR) { // TODO tratar erro de timeout devidamente
+                Toast.makeText(this, getString(R.string.msg_bus_last_known_location), Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Localização atualizada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_bus_updated_location), Toast.LENGTH_SHORT).show();
             }
             Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
         }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
-            Toast.makeText(this, "Não foi possível completar a operação. Tente novamente.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
 
         }
 
@@ -689,6 +675,7 @@ public class MapActivity extends AppCompatActivity
             if(mapView.getOverlays().get(i) instanceof FolderOverlay
                     || mapView.getOverlays().get(i) instanceof Polyline  || mapView.getOverlays().get(i) instanceof TilesOverlay){
                 mapView.getOverlays().remove(i);
+                mapLayers.remove(i);
             }
         }
         isXeroxEnabled = false;
@@ -730,11 +717,26 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    private void addMarkerToMap(Marker marker, FolderOverlay poiMarkers){
-        poiMarkers.add(marker);
+    private void addlayerToMap(Overlay poiMarkers, String layerName){
         mapView.getOverlays().add(poiMarkers);
-        btnClearMap.setVisibility(View.VISIBLE);
+        mapLayers.add(layerName);
+        if(layerName != Constants.LAYER_MY_LOCATION)
+            btnClearMap.setVisibility(View.VISIBLE);
         mapView.invalidate();
+    }
+
+    private boolean removeLayerFromMap(String layerName){
+        try{
+            mapView.getOverlays().remove(mapLayers.indexOf(layerName));
+            mapLayers.remove(layerName);
+            if(mapLayers.size() < 2){
+                btnClearMap.setVisibility(View.GONE);
+            }
+        }catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+            return false;
+        }
+       return true;
     }
 
 
@@ -745,14 +747,10 @@ public class MapActivity extends AppCompatActivity
 
     private void activeBusRouteLayer(){
         if(!isBusRouteEnabled) {
-            MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+            final MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
             provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
-            TilesOverlay tilesOverlay = new TilesOverlay(provider, MapActivity.this);
-            mapView.getOverlays().add(1, tilesOverlay);
+            addlayerToMap(new TilesOverlay(provider, MapActivity.this),Constants.LAYER_BUS_ROUTE);
             Log.i(TAG, "Layer added: Bus route -" + mapView.getOverlayManager().toString());
-            mapLayers.add(1, Constants.LAYER_BUS_ROUTE);
-            mapView.invalidate();
-            btnClearMap.setVisibility(View.VISIBLE);
             isBusRouteEnabled = true;
         }
     }

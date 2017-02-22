@@ -2,6 +2,7 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -59,11 +60,19 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
     @Override
     protected void onPostExecute(ArrayList<POI> pois) {
         super.onPostExecute(pois);
-        if (pois == null){
+        if (pois == null ){
+            taskStatus = Constants.SERVER_INTERNAL_ERROR;
+            progressBar.setVisibility(View.GONE);
+            callBack.onNominatimTaskResponse(null,taskStatus);
+        }else if(pois.isEmpty()){
             taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;
+            callBack.onNominatimTaskResponse(Place.convertPOIsToPlaces(pois),taskStatus);
+            progressBar.setVisibility(View.GONE);
+        }else{
+            callBack.onNominatimTaskResponse(Place.convertPOIsToPlaces(pois),taskStatus);
+            progressBar.setVisibility(View.GONE);
         }
-        callBack.onNominatimTaskResponse(Place.convertPOIsToPlaces(pois),taskStatus);
-        progressBar.setVisibility(View.GONE);
+
 
 
     }
