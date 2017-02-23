@@ -11,6 +11,8 @@ public final class Constants {
     public static final String FILTER_XEROX = "filter=copyshop";
     public static final String FILTER_RESTAURANT = "filter=restaurant";
     public static final String FILTER_TOILETS = "filter=toilets" ;
+    public static final String FILTER_AUDITORIUMS = "filter=auditoriums";
+    public static final String FILTER_LIBRARIES = "filter=libraries";
 
     //URLS
     public static final String URL_LOCAL_HOST = "http://192.168.0.25:80/smart-ufpa/testmysql.php?";
@@ -36,6 +38,18 @@ public final class Constants {
             "(way(area.a)[\"shop\"=\"copyshop\"];" +
             "node(area.a)[\"shop\"=\"copyshop\"];);" +
             "out body center;\n";
+    public static final String QUERY_OVERPASS_AUDITORIUMS = "[out:json][timeout:30];" +
+            "area[\"name\"=\"Universidade Federal do Pará\"]->.a;" +
+            "(way(area.a)[\"amenity\"=\"exhibition_centre\"];" +
+            "way(area.a)[\"amenity\"=\"exhibition_centre\"];" +
+            "node(area.a)[\"amenity\"=\"exhibition_centre\"];);" +
+            "out body center;";
+    public static final String QUERY_OVERPASS_LIBRARIES = "[out:json][timeout:30];" +
+            "area[\"name\"=\"Universidade Federal do Pará\"]->.a;" +
+            "(way(area.a)[\"amenity\"=\"library\"];" +
+            "way(area.a)[\"amenity\"=\"library\"];" +
+            "node(area.a)[\"amenity\"=\"library\"];);" +
+            "out body center;";;
 
     // Usados no controle de camadas plotadas no mapa
     public static final String LAYER_ROUTE = "camada-de-rota";
@@ -62,4 +76,6 @@ public final class Constants {
 
 
     public static final int TUTORIAL_BTN_LEFT = 1;
+
+
 }

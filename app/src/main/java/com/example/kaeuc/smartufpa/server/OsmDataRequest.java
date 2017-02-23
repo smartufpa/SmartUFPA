@@ -51,7 +51,10 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
             query = Constants.QUERY_OVERPASS_TOILETS;
         else if(filtro.equalsIgnoreCase(Constants.FILTER_XEROX))
             query = Constants.QUERY_OVERPASS_XEROX;
-
+        else if(filtro.equalsIgnoreCase(Constants.FILTER_AUDITORIUMS))
+            query = Constants.QUERY_OVERPASS_AUDITORIUMS;
+        else if(filtro.equalsIgnoreCase(Constants.FILTER_LIBRARIES))
+            query = Constants.QUERY_OVERPASS_LIBRARIES;
         try {
             jsonResponse = HttpRequest.makeGetRequest(Constants.URL_OVERPASS_SERVER,query);
         } catch (SocketTimeoutException e) {

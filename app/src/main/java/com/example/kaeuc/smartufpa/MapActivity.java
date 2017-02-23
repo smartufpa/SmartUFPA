@@ -55,7 +55,6 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -118,6 +117,8 @@ public class MapActivity extends AppCompatActivity
     private boolean isGoToRouteEnabled = false;
     private boolean isRestroomEnabled= false;
     private boolean isBusLocationEnabled = false;
+    private boolean isAuditoriumEnabled= false;
+    private boolean isLibrariesEnabled = false;
 
     private List<String> mapLayers = new ArrayList<>();
 
@@ -379,28 +380,35 @@ public class MapActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Guarda a ID do botão clicado
         int id = item.getItemId();
-        if (id == R.id.nav_xerox) {
+        if (id == R.id.nav_copy_service) {
             // Caso a camada de filtro não esteja ativa, executar a busca e adicionar marcadores
             if (!isXeroxEnabled) {
                 new OsmDataRequest(this, progressBar).execute(Constants.FILTER_XEROX);
                 isXeroxEnabled = true;
             }
-
-        } else if (id == R.id.nav_restaurantes) {
+        } else if (id == R.id.nav_restaurant) {
             if (!isRestaurantEnabled) {
                 new OsmDataRequest(this, progressBar).execute(Constants.FILTER_RESTAURANT);
                 isRestaurantEnabled = true;
             }
-        } else if (id == R.id.nav_banheiros) {
+        } else if (id == R.id.nav_restroom) {
             if (!isRestroomEnabled) {
                 new OsmDataRequest(this, progressBar).execute(Constants.FILTER_TOILETS);
                 isRestroomEnabled = true;
             }
-
-        }else if(id == R.id.nav_rota_circular){
+        }else if(id == R.id.nav_bus_route){
             activeBusRouteLayer();
-
-        }else if(id == R.id.nav_sobre){
+        }else if(id == R.id.nav_auditorium){
+            if(!isAuditoriumEnabled){
+                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_AUDITORIUMS);
+                isAuditoriumEnabled = true;
+            }
+        }else if(id == R.id.nav_library){
+            if (!isLibrariesEnabled){
+                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_LIBRARIES);
+                isLibrariesEnabled = true;
+            }
+        }else if(id == R.id.nav_about){
             final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
             intent.addCategory(AboutActivity.CATEGORY_ABOUT);
             startActivity(intent);
@@ -435,7 +443,9 @@ public class MapActivity extends AppCompatActivity
                     wayPoints.add(new GeoPoint(place.getLatitude(),place.getLongitude())); // ponto final
                     final Polyline roadOverlay = RoadManager.buildRoadOverlay(roadManager.getRoad(wayPoints));
                     roadOverlay.setWidth(15);
-                    addlayerToMap(roadOverlay,Constants.LAYER_ROUTE);
+                    mapView.getOverlays().add(roadOverlay);
+                    mapLayers.add(Constants.LAYER_ROUTE);
+                    btnClearMap.setVisibility(View.VISIBLE);
                     Log.i(TAG,"Layer added: foot path - " + mapView.getOverlayManager().toString());
                     isGoToRouteEnabled = true;
 
@@ -483,11 +493,12 @@ public class MapActivity extends AppCompatActivity
                     final FolderOverlay poiMarkers = new FolderOverlay();
                     Drawable poiIcon = null;
                     // Configura o ícone de acordo com o filtro que será adicionado
+                    // todo criar o ícone do auditório e bibliotecas
                     if (filter.equals(Constants.FILTER_XEROX))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
                     else if (filter.equals(Constants.FILTER_RESTAURANT))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
-                    else if (filter.equals(Constants.FILTER_TOILETS)) // Definir essa string
+                    else if (filter.equals(Constants.FILTER_TOILETS))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
 
                     // Cria um marcador para cada local encontrado
@@ -736,7 +747,7 @@ public class MapActivity extends AppCompatActivity
             e.printStackTrace();
             return false;
         }
-       return true;
+        return true;
     }
 
 
@@ -779,7 +790,6 @@ public class MapActivity extends AppCompatActivity
         SharedPreferences settings = getSharedPreferences(TUTORIAL_EXECUTED, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("tutorial_executed", 1);
-
         //Confirma a gravação dos dados
         editor.commit();
 

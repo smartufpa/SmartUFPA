@@ -111,7 +111,6 @@ public class HttpRequest {
 
 
     public static String makeGetRequest(final String url, final String query) throws SocketTimeoutException{
-        //TODO Tratamento de timeout throws SocketTimeoutException
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String response = "Resposta em branco";

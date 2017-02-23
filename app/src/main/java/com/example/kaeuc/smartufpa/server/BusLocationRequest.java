@@ -57,6 +57,7 @@ public class BusLocationRequest extends AsyncTask<String, Void, String> {
         super.onPostExecute(s);
         if(this.taskStatus == Constants.SERVER_RESPONSE_TIMEOUT) {
             callback.onBusLocationTaskResponse(null,taskStatus);
+            progressBar.setVisibility(View.GONE);
             return;
         }
         JSONObject jsonObject;

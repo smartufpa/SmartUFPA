@@ -39,4 +39,12 @@
     <string name="msg_out_of_covered_region">Você está fora da região coberta pelo nosso mapa!</string>
 
 
+    <string name="nav_auditorium">Auditórios</string>
+    <string name="nav_restrooms">Banheiros</string>
+    <string name="nav_restaurants">Restaurantes</string>
+    <string name="nav_bus_route">Rota do Circular</string>
+    <string name="nav_copy_service">Xerox</string>
+    <string name="nav_libraries">Bibliotecas</string>
+
+
 </resources>

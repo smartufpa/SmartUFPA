@@ -4,30 +4,40 @@
     <item android:title="Filtros de Busca">
         <menu>
             <item
-                android:id="@+id/nav_xerox"
-                android:icon="@drawable/ic_xerox"
-                android:title="Xerox"
-                />
+                android:id="@+id/nav_auditorium"
+                android:icon="@drawable/ic_auditorium"
+                android:title="@string/nav_auditorium"/>
             <item
-                android:id="@+id/nav_restaurantes"
-                android:icon="@drawable/ic_restaurant"
-                android:title="Restaurantes"
-                />
-            <item
-                android:id="@+id/nav_banheiros"
+                android:id="@+id/nav_restroom"
                 android:icon="@drawable/ic_restroom"
-                android:title="Banheiros"
+                android:title="@string/nav_restrooms"
+                />
+
+            <item
+                android:id="@+id/nav_library"
+                android:icon="@drawable/ic_library"
+                android:title="@string/nav_libraries"/>
+
+            <item
+                android:id="@+id/nav_restaurant"
+                android:icon="@drawable/ic_restaurant"
+                android:title="@string/nav_restaurants"
                 />
             <item
-                android:id="@+id/nav_rota_circular"
+                android:id="@+id/nav_bus_route"
                 android:icon="@drawable/ic_bus_black"
-                android:title="Rota do Circular"
+                android:title="@string/nav_bus_route"
+                />
+            <item
+                android:id="@+id/nav_copy_service"
+                android:icon="@drawable/ic_xerox"
+                android:title="@string/nav_copy_service"
                 />
         </menu>
     </item>
    <group>
        <item android:title="@string/about_title"
-           android:id="@+id/nav_sobre"
+           android:id="@+id/nav_about"
            android:icon="@drawable/ic_about"
            />
    </group>
