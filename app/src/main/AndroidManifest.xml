@@ -42,16 +42,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateProfileActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="osmapp.ACTION_CREATEPROFILE" />
-
-                <category android:name="osmapp.CATEGORY_CREATEPROFILE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".MapActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">

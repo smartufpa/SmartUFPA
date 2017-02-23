@@ -57,9 +57,9 @@ public final class Constants {
     // Constantes de Erro
     public static final int SERVER_RESPONSE_TIMEOUT = 408;
     public static final int SERVER_RESPONSE_NO_CONTENT = 204;
-    public static final int SERVER_RESPONSE_SUCESS = 200;
+    public static final int SERVER_RESPONSE_SUCCESS = 200;
     public static final int SERVER_INTERNAL_ERROR = 500;
 
 
-
+    public static final int TUTORIAL_BTN_LEFT = 1;
 }

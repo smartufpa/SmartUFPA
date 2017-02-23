@@ -2,6 +2,7 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -28,13 +29,13 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
     // interface resposável por devolver o resultado da task pra atividade principal
     private NominatimDataRequestResponse callBack;
     private static final String TAG = "NominatatimDataRequest";
-    private int taskStatus;
+    private int taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
 
     public NominatimDataRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
         this.callBack = (NominatimDataRequestResponse) parentContext;
         this.progressBar = progressBar;
-        this.taskStatus = Constants.SERVER_RESPONSE_SUCESS;
+        this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
     // Mostra a barra de progresso durante a execução da task
     @Override
@@ -59,11 +60,19 @@ public class NominatimDataRequest extends AsyncTask<String,Void,ArrayList<POI>> 
     @Override
     protected void onPostExecute(ArrayList<POI> pois) {
         super.onPostExecute(pois);
-        if (pois == null){
+        if (pois == null ){
+            taskStatus = Constants.SERVER_INTERNAL_ERROR;
+            progressBar.setVisibility(View.GONE);
+            callBack.onNominatimTaskResponse(null,taskStatus);
+        }else if(pois.isEmpty()){
             taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;
+            callBack.onNominatimTaskResponse(Place.convertPOIsToPlaces(pois),taskStatus);
+            progressBar.setVisibility(View.GONE);
+        }else{
+            callBack.onNominatimTaskResponse(Place.convertPOIsToPlaces(pois),taskStatus);
+            progressBar.setVisibility(View.GONE);
         }
-        callBack.onNominatimTaskResponse(Place.convertPOIsToPlaces(pois),taskStatus);
-        progressBar.setVisibility(View.GONE);
+
 
 
     }
