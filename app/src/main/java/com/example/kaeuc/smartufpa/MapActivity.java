@@ -500,7 +500,10 @@ public class MapActivity extends AppCompatActivity
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
                     else if (filter.equals(Constants.FILTER_TOILETS))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
-
+                    else if (filter.equals(Constants.FILTER_LIBRARIES))
+                        poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_library);
+                    else if (filter.equals(Constants.FILTER_AUDITORIUMS))
+                        poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_auditorium);
                     // Cria um marcador para cada local encontrado
                     for (final Place place : places) {
                         Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
