@@ -66,6 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="\nAvalie esta informação:"
+                android:visibility="gone"
                 />
             <RatingBar
                 android:layout_width="wrap_content"
@@ -74,6 +75,7 @@
                 android:stepSize="0.5"
                 android:isIndicator="true"
                 android:numStars="5"
+                android:visibility="gone"
                 />
         </LinearLayout>
 

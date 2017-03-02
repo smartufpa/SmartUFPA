@@ -98,7 +98,7 @@ public class MapActivity extends AppCompatActivity
     private FloatingActionButton fabBusLocation;
     private FloatingActionButton fabMyLocation;
     private Button btnClearMap;
-
+    private SearchView searchView;
 
 
     private Location myCurrentLocation;
@@ -348,7 +348,7 @@ public class MapActivity extends AppCompatActivity
         });
         // Configura a barra de busca (SearchWidget)
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
@@ -585,6 +585,7 @@ public class MapActivity extends AppCompatActivity
 
 
     // Configura a bottomsheet de múltiplos resultados da busca
+    // // TODO: 2/24/2017 reestruturar a view para multiplos resultados 
     private void setupSearchResultBottomSheet(final ArrayList<Place> places){
         // Configuração da listview
         final SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,places);
@@ -692,12 +693,22 @@ public class MapActivity extends AppCompatActivity
                 mapLayers.remove(i);
             }
         }
+        if(isSearchEnabled){
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.setIconifiedByDefault(false);
+        }
+        if(searchResultSheetBehavior != null && searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
+            searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
         isXeroxEnabled = false;
         isRestaurantEnabled = false;
         isSearchEnabled = false;
         isGoToRouteEnabled = false;
         isRestroomEnabled= false;
         isBusRouteEnabled = false;
+        isAuditoriumEnabled= false;
+        isLibrariesEnabled = false;
         btnClearMap.setVisibility(View.GONE);
 
         mapView.invalidate();
