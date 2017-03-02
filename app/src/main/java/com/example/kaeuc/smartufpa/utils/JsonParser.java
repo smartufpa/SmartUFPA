@@ -20,9 +20,9 @@ import java.util.List;
 public class JsonParser {
     // TAG para logs
     private static final String TAG = "JsonParser";
-    public static List<Place> parseOsmResponse(String jsonResponse){
+    public static ArrayList<Place> parseOsmResponse(String jsonResponse){
         // Lista de locais que será retornado ao fim da execução
-        List<Place> places = new ArrayList<>();
+        ArrayList<Place> places = new ArrayList<>();
 
         if(jsonResponse != null){
             try {

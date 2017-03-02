@@ -49,7 +49,19 @@ public final class Constants {
             "(way(area.a)[\"amenity\"=\"library\"];" +
             "way(area.a)[\"amenity\"=\"library\"];" +
             "node(area.a)[\"amenity\"=\"library\"];);" +
-            "out body center;";;
+            "out body center;";
+
+
+    public static final String QUERY_OVERPASS_SEARCH = "[out:json][timeout:30];" +
+            "area[\"name\" = \"Universidade Federal do Pará\"]->.a;" +
+            "(way(area.a)[\"name\"~\"%s\",i];" +
+            "node(area.a)[\"name\"~\"%s\",i];" +
+            "way(area.a)[\"short_name\"~\"%s\",i];" +
+            "node(area.a)[\"short_name\"~\"%s\",i];" +
+            ");" +
+            "out center;";
+
+
 
     // Usados no controle de camadas plotadas no mapa
     public static final String LAYER_ROUTE = "camada-de-rota";

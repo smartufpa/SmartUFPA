@@ -29,7 +29,6 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
     private ProgressBar progressBar;
     private String filtro;
     private int taskStatus;
-
     private Context parentContext;
 
     public OsmDataRequest(Context parentContext, ProgressBar progressBar) {
