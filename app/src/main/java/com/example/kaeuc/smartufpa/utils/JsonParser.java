@@ -62,6 +62,7 @@ public class JsonParser {
                             }
                             if(locName == null)
                                 // TODO grab short name e description
+
                                 places.add(new Place(id,lat,lon,name,"",""));
                             else
                                 places.add(new Place(id,lat,lon,locName,"",""));

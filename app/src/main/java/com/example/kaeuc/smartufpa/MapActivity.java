@@ -582,8 +582,6 @@ public class MapActivity extends AppCompatActivity
                 removeLayerFromMap(Constants.LAYER_SEARCH);
                 isSearchEnabled = false;
             }
-            //new NominatimDataRequest(this, progressBar).execute(query, latitude, longitude);
-
             new OverpassSearchRequest(this,progressBar).execute(query);
         }else{
             Toast.makeText(this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();

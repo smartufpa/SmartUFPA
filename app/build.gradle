@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.example.kaeuc.osmapp"
         minSdkVersion 16
@@ -37,4 +37,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.github.MKergall:osmbonuspack:5.9'
     compile 'org.osmdroid:osmdroid-android:5.4.1:release@aar'
+    compile 'com.google.code.gson:gson:2.8.0'
 }
