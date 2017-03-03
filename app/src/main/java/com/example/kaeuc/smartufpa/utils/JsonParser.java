@@ -2,6 +2,7 @@ package com.example.kaeuc.smartufpa.utils;
 
 import android.util.Log;
 
+import com.example.kaeuc.smartufpa.jsonParserTest.OverpassModel;
 import com.example.kaeuc.smartufpa.models.Place;
 
 import org.json.JSONArray;
@@ -61,7 +62,6 @@ public class JsonParser {
                                 }
                             }
                             if(locName == null)
-                                // TODO grab short name e description
 
                                 places.add(new Place(id,lat,lon,name,"",""));
                             else
@@ -108,8 +108,11 @@ public class JsonParser {
     }
 
     public static List<Place> parseLocalResponse(String jsonResponse){
+        return null;
+    }
 
 
+    public static OverpassModel parseJsonModel(String jsonInput){
 
         return null;
     }

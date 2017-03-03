@@ -14,6 +14,14 @@ public final class Constants {
     public static final String FILTER_AUDITORIUMS = "filter=auditoriums";
     public static final String FILTER_LIBRARIES = "filter=libraries";
 
+    public static final String TAG_COPYSHOP = "copyshop";
+    public static final String TAG_TOILETS = "toilets";
+    public static final String TAG_EXHIBITION_CENTRE = "exhibition_centre";
+    public static final String TAG_LIBRARY = "library";
+    public static final String TAG_RESTAURANT = "restaurant";
+    public static final String TAG_FOOD_COURT = "food_court";
+
+
     //URLS
     public static final String URL_LOCAL_HOST = "http://192.168.0.25:80/smart-ufpa/testmysql.php?";
     public static final String URL_BUS_LOCATION = "http://104.41.62.111:8080/bus-location";

@@ -12,7 +12,7 @@ public class Element {
     private String type;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private long id;
     @SerializedName("lat")
     @Expose
     private Double lat;
@@ -25,9 +25,6 @@ public class Element {
     @SerializedName("center")
     @Expose
     private Center center;
-    @SerializedName("nodes")
-    @Expose
-    private List<Integer> nodes = null;
 
     public String getType() {
         return type;
@@ -37,17 +34,13 @@ public class Element {
         this.type = type;
     }
 
-    public Integer getId() {
-        return id;
-    }
+    public long getId() { return id; }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public Double getLat() {
-        return lat;
-    }
+    public Double getLat() { return lat; }
 
     public void setLat(Double lat) {
         this.lat = lat;
@@ -77,12 +70,7 @@ public class Element {
         this.center = center;
     }
 
-    public List<Integer> getNodes() {
-        return nodes;
-    }
+    public boolean isCenterEmpty() { return this.center == null; }
 
-    public void setNodes(List<Integer> nodes) {
-        this.nodes = nodes;
-    }
 
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.kaeuc.smartufpa.jsonParserTest.OverpassModel;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -23,8 +24,14 @@ public class JsonParserTest extends AppCompatActivity {
 
         final String readfile = readfile();
         TextView textView = (TextView) findViewById(R.id.asd);
-        textView.setText(readfile);
-        Log.i("asd",readfile);
+
+        Gson gson = new Gson();
+        OverpassModel overpassModel = gson.fromJson(readfile, OverpassModel.class);
+        textView.setText(overpassModel.getElements().get(0).getTags().toString());
+        textView.append("\n" + String.valueOf(overpassModel.getElements().get(0).isCenterEmpty()));
+        textView.append("\n" + String.valueOf(overpassModel.getElements().get(0).getLat()));
+        textView.append("\n" + String.valueOf(overpassModel.getElements().get(0).getLon()));
+
 
 
     }
