@@ -1,5 +1,7 @@
 package com.example.kaeuc.smartufpa.models;
 
+import android.util.Log;
+
 import com.example.kaeuc.smartufpa.models.overpass.Tags;
 import com.example.kaeuc.smartufpa.utils.Constants;
 
@@ -8,7 +10,7 @@ import com.example.kaeuc.smartufpa.utils.Constants;
  */
 
 public class PlaceFactory {
-
+    public static final String TAG = "PlaceFactory";
     public Place getPlace(final long id, double latitude, double longitude, Tags tags){
         String name = Constants.NO_NAME;
         String shortName = Constants.NO_SHORT_NAME;
@@ -22,10 +24,8 @@ public class PlaceFactory {
             locName = tags.getLocName();
         }
 
-        else if(tags.getLocName() != null && tags.getName() != null){
-            locName = tags.getLocName();
-            name = tags.getName();
-        }
+        if(tags.getLocName() != null) locName = tags.getLocName();
+
 
         if(tags.getShortName() != null) shortName = tags.getShortName();
 

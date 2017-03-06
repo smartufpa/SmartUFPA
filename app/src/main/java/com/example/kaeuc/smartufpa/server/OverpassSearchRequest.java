@@ -58,6 +58,11 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
         super.onPostExecute(jsonResponse);
         progressBar.setVisibility(View.GONE);
         ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
+        if(places.isEmpty()){
+            taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;
+            callBack.onOverpassTaskResponse(places,taskStatus);
+            return;
+        }
         callBack.onOverpassTaskResponse(places,taskStatus);
 
     }
@@ -68,7 +73,8 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
         if (Character.isWhitespace(userQuery.charAt(userQuery.length()-1))){
             userQuery = userQuery.substring(0,userQuery.length()-1);
         }
-        return String.format(Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,userQuery,userQuery);
+        return String.format(Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,
+                userQuery,userQuery,userQuery,userQuery);
     }
 }
 

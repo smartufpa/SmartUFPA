@@ -766,7 +766,7 @@ public class MapActivity extends AppCompatActivity
                     // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
                     if (places.size() > 1) {
                         setupSearchResultBottomSheet(places);
-                    }else{  // TODO tratar sem resultado
+                    }else{
                         mapController.animateTo(places.get(0).getGeoPoint());
                     }
 

@@ -66,6 +66,8 @@ public final class Constants {
             "node(area.a)[\"name\"~\"%s\",i];" +
             "way(area.a)[\"short_name\"~\"%s\",i];" +
             "node(area.a)[\"short_name\"~\"%s\",i];" +
+            "way(area.a)[\"loc_name\"~\"%s\",i];" +
+            "node(area.a)[\"loc_name\"~\"%s\",i];" +
             ");" +
             "out center;";
 
