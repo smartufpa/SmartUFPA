@@ -513,7 +513,7 @@ public class MapActivity extends AppCompatActivity
                                 return true;
                             }
                         };
-                        poiMarkers.add(createCustomMarker(poiIcon, place.getPosition(), markerClick));
+                        poiMarkers.add(createCustomMarker(poiIcon, place.getGeoPoint(), markerClick));
                     }
                     addlayerToMap(poiMarkers,filter);
                     Toast.makeText(MapActivity.this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
@@ -752,8 +752,8 @@ public class MapActivity extends AppCompatActivity
                     // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
                     if (places.size() > 1) {
                         setupSearchResultBottomSheet(places);
-                    }else{
-                        mapController.animateTo(places.get(0).getPosition());
+                    }else{  // TODO tratar sem resultado
+                        mapController.animateTo(places.get(0).getGeoPoint());
                     }
 
                     final FolderOverlay poiMarkers = new FolderOverlay();
@@ -772,7 +772,7 @@ public class MapActivity extends AppCompatActivity
                         };
 
                         Marker marker = createCustomMarker(ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker),
-                                place.getPosition(), place.getName(),
+                                place.getGeoPoint(), place.getName(),
                                 place.getDescription(), markerClick);
                         poiMarkers.add(marker);
                     }

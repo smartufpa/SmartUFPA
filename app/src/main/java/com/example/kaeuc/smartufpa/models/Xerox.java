@@ -11,12 +11,16 @@ public class Xerox extends Place {
     private final String openingTime = "08:00";
     private final String closingTime = "21:00";
 
-
-    public Xerox(long id, double latitude, double longitude, String name, String shortName, String description, double coloredPrice, double bwPrice) {
-        super(id, latitude, longitude, name,shortName,description);
-        this.coloredPrice = coloredPrice;
-        this.bwPrice = bwPrice;
+    public Xerox(double latitude, double longitude, String name) {
+        super(latitude, longitude, name);
     }
+
+
+//    public Xerox(long id, double latitude, double longitude, String name, String shortName, String description, double coloredPrice, double bwPrice) {
+//        super(id, latitude, longitude, name,shortName,description);
+//        this.coloredPrice = coloredPrice;
+//        this.bwPrice = bwPrice;
+//    }
 
     public double getColoredPrice() {
         return coloredPrice;

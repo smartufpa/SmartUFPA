@@ -1,5 +1,5 @@
 
-package com.example.kaeuc.smartufpa.jsonParserTest;
+package com.example.kaeuc.smartufpa.models.overpass;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -14,6 +14,10 @@ public class Tags {
     @Expose
     private String shortName;
 
+    @SerializedName("loc_name")
+    @Expose
+    private String locName;
+
     @SerializedName("shop")
     @Expose
     private String shop;
@@ -25,10 +29,6 @@ public class Tags {
      Amenity reúne os tipos: food_court, restaurant, library, toilets, exhibition centre
      */
     private String amenity;
-
-    @SerializedName("loc_name")
-    @Expose
-    private String locName;
 
     @SerializedName("description")
     @Expose

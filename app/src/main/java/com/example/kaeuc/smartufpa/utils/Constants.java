@@ -79,9 +79,12 @@ public final class Constants {
     public static final String LAYER_BUS_MARKER = "marcador-do-circular";
 
 
-    // Usado no parser do xml retornado na requisição ao XAPI, apresentado nos detalhes sobre o local
+    // Usado na factory para places, apresentado nos detalhes sobre o local
     // caso um nome não tenha sido definido
-    public static final String NAMEPLACE_UNKNOWN = "Nome ainda não identificado";
+    public static final String NO_NAME = "Sem nome identificado";
+    public static final String NO_SHORT_NAME = "Sem abreviação";
+    public static final String NO_DESCRIPTION = "Sem descrição";
+
 
 
     // Chave para a utilização do Graphhopper como provedor de busca de rotas

@@ -1,11 +1,11 @@
 
-package com.example.kaeuc.smartufpa.jsonParserTest;
+package com.example.kaeuc.smartufpa.models.overpass;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OverpassModel {
+public class OverpassJsonModel {
 
     @SerializedName("version")
     @Expose

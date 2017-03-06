@@ -1,7 +1,6 @@
 
-package com.example.kaeuc.smartufpa.jsonParserTest;
+package com.example.kaeuc.smartufpa.models.overpass;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -42,24 +41,12 @@ public class Element {
 
     public Double getLat() { return lat; }
 
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
     public Double getLon() {
         return lon;
     }
 
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
-
     public Tags getTags() {
         return tags;
-    }
-
-    public void setTags(Tags tags) {
-        this.tags = tags;
     }
 
     public Center getCenter() {

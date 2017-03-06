@@ -64,6 +64,12 @@ public class PlaceDetailsBottomSheet extends BottomSheetDialogFragment {
         TextView placeDescription = (TextView) contentView.findViewById(R.id.place_description);
         placeDescription.setText(targetPlace.getDescription());
 
+        TextView placeShortName = (TextView) contentView.findViewById(R.id.place_short_name);
+        placeShortName.append(targetPlace.getShortName());
+
+        TextView placeLocName = (TextView) contentView.findViewById(R.id.place_loc_name);
+        placeLocName.append(targetPlace.getLocName());
+
         FloatingActionButton goToFAB = (FloatingActionButton) contentView.findViewById(R.id.fab);
         goToFAB.setOnClickListener(new View.OnClickListener() {
             @Override

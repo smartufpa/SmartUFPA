@@ -4,7 +4,7 @@
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="24" />
+        android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -34,7 +34,7 @@
             <intent-filter>
                 <action android:name="osmapp.ACTION_LOGIN" />
                 <action android:name="android.intent.action.MAIN" />
-
+                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="osmapp.CATEGORY_LOGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -94,16 +94,6 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="osmapp.CATEGORY_ABOUT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".JsonParserTest"
-            android:label="@string/title_activity_json_parser_test"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

@@ -1,5 +1,5 @@
 
-package com.example.kaeuc.smartufpa.jsonParserTest;
+package com.example.kaeuc.smartufpa.models.overpass;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -2,6 +2,7 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -11,6 +12,7 @@ import com.example.kaeuc.smartufpa.utils.JsonParser;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,12 +57,17 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
     protected void onPostExecute(String jsonResponse) {
         super.onPostExecute(jsonResponse);
         progressBar.setVisibility(View.GONE);
-        ArrayList<Place> places = JsonParser.parseOsmResponse(jsonResponse);
+        ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
         callBack.onOverpassTaskResponse(places,taskStatus);
 
     }
 
     private String buildSearchQuery(String userQuery){
+        // Tratamento da query para eliminar espaços extras e espaço no final da string
+        userQuery = userQuery.replaceAll("\\s+", " ");
+        if (Character.isWhitespace(userQuery.charAt(userQuery.length()-1))){
+            userQuery = userQuery.substring(0,userQuery.length()-1);
+        }
         return String.format(Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,userQuery,userQuery);
     }
 }
