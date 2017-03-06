@@ -21,7 +21,6 @@
     <string name="action_bus_location">Localizar Circular</string>
 
 
-
     <string name="tutorial_search">Use a lupa para buscar locais no Campus da UFPA.</string>
     <string name="tutorial_menu">Ao abrir o menu, selecione um tipo de serviço e veja onde ele é ofertado.</string>
     <string name="tutorial_current_location">Clique aqui para mover a câmera para sua localização atual.</string>
@@ -45,6 +44,7 @@
     <string name="nav_bus_route">Rota do Circular</string>
     <string name="nav_copy_service">Xerox</string>
     <string name="nav_libraries">Bibliotecas</string>
+    <string name="title_activity_json_parser_test">JsonParserTest</string>
 
 
 </resources>
