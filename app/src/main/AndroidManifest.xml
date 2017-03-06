@@ -4,7 +4,7 @@
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="24" />
+        android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -29,16 +29,15 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginScreenActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:launchMode="singleTop"
-            >
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="osmapp.ACTION_LOGIN" />
                 <action android:name="android.intent.action.MAIN" />
-
+                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="osmapp.CATEGORY_LOGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
         <activity
@@ -86,17 +85,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".AboutActivity"
-            android:launchMode="singleTop"
-            android:label="Sobre">
+        <activity
+            android:name=".AboutActivity"
+            android:label="Sobre"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="osmapp.ACTION_ABOUT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="osmapp.CATEGORY_ABOUT" />
             </intent-filter>
-
-
         </activity>
     </application>
 

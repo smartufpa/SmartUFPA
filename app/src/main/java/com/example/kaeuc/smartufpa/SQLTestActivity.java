@@ -16,7 +16,7 @@ public class SQLTestActivity extends AppCompatActivity implements LocalHostReque
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sqltest);
-        new LocalHostRequest(this).execute(new Place(123456,48.23,7.48,"nome qualquer","nome","descrição qualquer"));
+//        new LocalHostRequest(this).execute(new Place(123456,48.23,7.48,"nome qualquer","nome","descrição qualquer"));
 
 
     }

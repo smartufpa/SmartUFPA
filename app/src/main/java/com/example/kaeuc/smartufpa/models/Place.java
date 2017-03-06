@@ -2,47 +2,44 @@ package com.example.kaeuc.smartufpa.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by kaeuc on 9/29/2016.
  */
 
 public class Place implements Serializable {
+    private String amenity;
+    private String description;
+    private long ID;
+    private GeoPoint geoPoint;
     private double latitude;
+    private String locName;
     private double longitude;
     private String name;
+    private String shop;
     private String shortName;
-    private long ID;
-    private String description;
-    private GeoPoint position;
 
+    public Place(final long id, double latitude, double longitude, String name, String shortName,
+                 String locName, String shop, String amenity, String description) {
+        this.ID = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.geoPoint = new GeoPoint(latitude,longitude);
+        this.shortName = shortName;
+        this.locName = locName;
+        this.shop = shop;
+        this.amenity = amenity;
+        this.description = description;
+        this.name = name;
+    }
     public Place(double latitude, double longitude, String name) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.position = new GeoPoint(latitude,longitude);
         this.name = name;
-    }
-    public Place( final long id, double latitude, double longitude, String name, String shortName, String description) {
-        this.ID= id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.name = name;
-        this.description = description;
-        this.shortName = shortName;
-        this.position = new GeoPoint(latitude,longitude);
-    }
-    public Place(double latitude, double longitude, String name,String shortName, String description) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.name = name;
-        this.shortName = shortName;
-        this.description = description;
-        this.position = new GeoPoint(latitude,longitude);
+        this.geoPoint = new GeoPoint(latitude,longitude);
     }
 
     public double getLatitude() {
@@ -54,6 +51,14 @@ public class Place implements Serializable {
         return longitude;
     }
 
+    public String getLocName() {
+        return locName;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
     public String getName() {
         return name;
     }
@@ -62,7 +67,7 @@ public class Place implements Serializable {
         return description;
     }
 
-    public GeoPoint getPosition(){return position;}
+    public GeoPoint getGeoPoint(){return geoPoint;}
 
     @Override
     public String toString() {
@@ -85,16 +90,5 @@ public class Place implements Serializable {
         return jsonObject;
     }
 
-
-    // Converte a ArrayList de POIs retornadas pela busca e transforma para uma da classe Place
-    public static ArrayList<Place> convertPOIsToPlaces(final ArrayList<POI> pois){
-        ArrayList<Place> places = new ArrayList<>();
-        for (POI poi : pois) {
-            String poiName = poi.mDescription.substring(0, poi.mDescription.indexOf(","));
-            places.add(new Place(poi.mLocation.getLatitude(), poi.mLocation.getLongitude(),
-                    poiName,"sem nome curto", poi.mDescription));
-        }
-        return places;
-    }
 
 }
