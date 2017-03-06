@@ -99,7 +99,7 @@ public class MapActivity extends AppCompatActivity
     private FloatingActionButton fabBusLocation;
     private FloatingActionButton fabMyLocation;
     private Button btnClearMap;
-
+    private SearchView searchView;
 
 
     private Location myCurrentLocation;
@@ -349,7 +349,7 @@ public class MapActivity extends AppCompatActivity
         });
         // Configura a barra de busca (SearchWidget)
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
@@ -501,7 +501,10 @@ public class MapActivity extends AppCompatActivity
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
                     else if (filter.equals(Constants.FILTER_TOILETS))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
-
+                    else if (filter.equals(Constants.FILTER_LIBRARIES))
+                        poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_library);
+                    else if (filter.equals(Constants.FILTER_AUDITORIUMS))
+                        poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_auditorium);
                     // Cria um marcador para cada local encontrado
                     for (final Place place : places) {
                         Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
@@ -527,6 +530,7 @@ public class MapActivity extends AppCompatActivity
 
 
     // Configura a bottomsheet de múltiplos resultados da busca
+    // // TODO: 2/24/2017 reestruturar a view para multiplos resultados 
     private void setupSearchResultBottomSheet(final ArrayList<Place> places){
         // Configuração da listview
         final SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,places);
@@ -634,12 +638,22 @@ public class MapActivity extends AppCompatActivity
                 mapLayers.remove(i);
             }
         }
+        if(isSearchEnabled){
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.setIconifiedByDefault(false);
+        }
+        if(searchResultSheetBehavior != null && searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
+            searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
         isXeroxEnabled = false;
         isRestaurantEnabled = false;
         isSearchEnabled = false;
         isGoToRouteEnabled = false;
         isRestroomEnabled= false;
         isBusRouteEnabled = false;
+        isAuditoriumEnabled= false;
+        isLibrariesEnabled = false;
         btnClearMap.setVisibility(View.GONE);
 
         mapView.invalidate();
