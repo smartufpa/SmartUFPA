@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by kaeuc on 11/14/2016.
  * ArrayAdapter para ser utilizado na lista de resultados da Busca
- * TODO 1. ViewHolder (Melhora a performance); 2. Setar a imagem para cada local
+ * TODO 1. ViewHolder (Melhora a performance); 2. Setar a imagem para cada local 3. Adicionar short_name, loc name e +
  */
 
 public class SearchListAdapter extends ArrayAdapter<Place>{
@@ -43,11 +43,16 @@ public class SearchListAdapter extends ArrayAdapter<Place>{
 
         TextView placeName = (TextView) view.findViewById(R.id.list_txt_place_name);
         TextView placeDetails = (TextView) view.findViewById(R.id.list_txt_place_description);
+        TextView placeShortName = (TextView) view.findViewById(R.id.list_txt_place_short_name);
+        TextView placeLocName = (TextView) view.findViewById(R.id.list_txt_place_loc_name);
+
 
         Place place = places.get(position);
 
         placeName.setText(place.getName());
         placeDetails.setText(place.getDescription());
+        placeShortName.append(place.getShortName());
+        placeLocName.append(place.getLocName());
 
 
         return view;

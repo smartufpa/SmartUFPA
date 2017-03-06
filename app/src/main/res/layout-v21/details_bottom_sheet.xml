@@ -62,20 +62,21 @@
                 android:textSize="14sp"
                 />
 
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="\nAvalie esta informação:"
-                android:visibility="gone"
+                android:text="Abreviação: "
+                android:id="@+id/place_short_name"
+                android:layout_marginTop="5dp"
                 />
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@android:style/Widget.Material.RatingBar.Indicator"
-                android:stepSize="0.5"
-                android:isIndicator="true"
-                android:numStars="5"
-                android:visibility="gone"
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Apelido: "
+                android:id="@+id/place_loc_name"
+                android:layout_marginTop="5dp"
                 />
         </LinearLayout>
 

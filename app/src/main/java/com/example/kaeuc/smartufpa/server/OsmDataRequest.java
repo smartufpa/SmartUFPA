@@ -29,7 +29,6 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
     private ProgressBar progressBar;
     private String filtro;
     private int taskStatus;
-
     private Context parentContext;
 
     public OsmDataRequest(Context parentContext, ProgressBar progressBar) {
@@ -77,9 +76,10 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
     protected void onPostExecute(String jsonResponse) {
         super.onPostExecute(jsonResponse);
         // Recebe o xml em forma de uma String e e analisa as informções relevantes
-        final List<Place> locais = JsonParser.parseOsmResponse(jsonResponse);
+//        final List<Place> locais = JsonParser.parseOsmResponse(jsonResponse);
+        final List<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
         // Retorna os valores para a activity que chamou a ASyncTask
-        callBack.onOsmTaskResponse(locais,filtro,taskStatus);
+        callBack.onOsmTaskResponse(places,filtro,taskStatus);
         // esconde a barra de progresso
         progressBar.setVisibility(View.GONE);
 

@@ -14,6 +14,14 @@ public final class Constants {
     public static final String FILTER_AUDITORIUMS = "filter=auditoriums";
     public static final String FILTER_LIBRARIES = "filter=libraries";
 
+    public static final String TAG_COPYSHOP = "copyshop";
+    public static final String TAG_TOILETS = "toilets";
+    public static final String TAG_EXHIBITION_CENTRE = "exhibition_centre";
+    public static final String TAG_LIBRARY = "library";
+    public static final String TAG_RESTAURANT = "restaurant";
+    public static final String TAG_FOOD_COURT = "food_court";
+
+
     //URLS
     public static final String URL_LOCAL_HOST = "http://192.168.0.25:80/smart-ufpa/testmysql.php?";
     public static final String URL_BUS_LOCATION = "http://104.41.62.111:8080/bus-location";
@@ -49,7 +57,19 @@ public final class Constants {
             "(way(area.a)[\"amenity\"=\"library\"];" +
             "way(area.a)[\"amenity\"=\"library\"];" +
             "node(area.a)[\"amenity\"=\"library\"];);" +
-            "out body center;";;
+            "out body center;";
+
+
+    public static final String QUERY_OVERPASS_SEARCH = "[out:json][timeout:30];" +
+            "area[\"name\" = \"Universidade Federal do Pará\"]->.a;" +
+            "(way(area.a)[\"name\"~\"%s\",i];" +
+            "node(area.a)[\"name\"~\"%s\",i];" +
+            "way(area.a)[\"short_name\"~\"%s\",i];" +
+            "node(area.a)[\"short_name\"~\"%s\",i];" +
+            ");" +
+            "out center;";
+
+
 
     // Usados no controle de camadas plotadas no mapa
     public static final String LAYER_ROUTE = "camada-de-rota";
@@ -59,9 +79,12 @@ public final class Constants {
     public static final String LAYER_BUS_MARKER = "marcador-do-circular";
 
 
-    // Usado no parser do xml retornado na requisição ao XAPI, apresentado nos detalhes sobre o local
+    // Usado na factory para places, apresentado nos detalhes sobre o local
     // caso um nome não tenha sido definido
-    public static final String NAMEPLACE_UNKNOWN = "Nome ainda não identificado";
+    public static final String NO_NAME = "Sem nome identificado";
+    public static final String NO_SHORT_NAME = "Sem abreviação";
+    public static final String NO_DESCRIPTION = "Sem descrição";
+
 
 
     // Chave para a utilização do Graphhopper como provedor de busca de rotas
