@@ -48,9 +48,7 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
             e.printStackTrace();
             taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
         }
-
         return jsonResponse;
-
     }
 
     @Override
@@ -64,7 +62,6 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
             return;
         }
         callBack.onOverpassTaskResponse(places,taskStatus);
-
     }
 
     private String buildSearchQuery(String userQuery){
@@ -77,5 +74,3 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
                 userQuery,userQuery,userQuery,userQuery);
     }
 }
-
-

@@ -56,6 +56,7 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -63,6 +64,7 @@ import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
@@ -79,7 +81,7 @@ public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
         OsmDataRequestResponse,BusLocationRequestResponse,
         OverpassSearchResponse,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener, View.OnLongClickListener {
 
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
@@ -292,6 +294,7 @@ public class MapActivity extends AppCompatActivity
 
                 // Restringe a área do mapa à região escolhida
                 mapView.setScrollableAreaLimit(mapRegion);
+
             }
         });
 
@@ -808,6 +811,14 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+
+
+
+        return false;
     }
 }
 
