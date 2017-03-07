@@ -28,6 +28,7 @@
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="Oportunidades"
+            android:textColor="@android:color/darker_gray"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/btn_mobilidade"
             />
@@ -37,7 +38,7 @@
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="Segurança"
-
+            android:textColor="@android:color/darker_gray"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/btn_oportunidades"
             />
@@ -56,6 +57,7 @@
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="Alimentação"
+            android:textColor="@android:color/darker_gray"
             android:layout_centerHorizontal="true"
             />
 
@@ -64,6 +66,7 @@
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="Eventos e informações"
+            android:textColor="@android:color/darker_gray"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/btn_alimentacao"
             />
@@ -73,6 +76,7 @@
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="Acessibilidade"
+            android:textColor="@android:color/darker_gray"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/btn_eventos"
             />

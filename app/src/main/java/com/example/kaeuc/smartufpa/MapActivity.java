@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -41,6 +42,7 @@ import com.example.kaeuc.smartufpa.server.BusLocationRequestResponse;
 import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
 import com.example.kaeuc.smartufpa.server.OverpassSearchResponse;
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.CustomInfoWindow;
 import com.example.kaeuc.smartufpa.utils.NetworkManager;
 import com.example.kaeuc.smartufpa.utils.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.utils.SearchListAdapter;
@@ -56,7 +58,6 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -64,11 +65,12 @@ import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
-import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.TilesOverlay;
+import org.osmdroid.views.overlay.infowindow.InfoWindow;
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -81,7 +83,7 @@ public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
         OsmDataRequestResponse,BusLocationRequestResponse,
         OverpassSearchResponse,
-        SearchView.OnQueryTextListener, View.OnLongClickListener {
+        SearchView.OnQueryTextListener {
 
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
@@ -192,8 +194,13 @@ public class MapActivity extends AppCompatActivity
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
         }
-        myLocationOverlay.enableMyLocation();
 
+        addlayerToMap(myLocationOverlay,Constants.LAYER_MY_LOCATION);
+        Log.i(TAG,"Layer added: My Location - " + mapView.getOverlayManager().toString());
+        // Configuração para mostrar o boneco da posição do usuário
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.disableFollowLocation();
+        myLocationOverlay.setOptionsMenuEnabled(true);
 
 
         fabBusLocation.setBackgroundTintList(
@@ -220,7 +227,7 @@ public class MapActivity extends AppCompatActivity
                     boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
                     //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
                     if (!GPSEnabled) {
-                        Toast.makeText(MapActivity.this, R.string.turn_on_gps_msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapActivity.this, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
                     }
                     Toast.makeText(MapActivity.this, R.string.msg_loading_current_position, Toast.LENGTH_SHORT).show();
                     // se o usuário se encontra fora da região do mapa
@@ -232,16 +239,12 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
-
-
         btnClearMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clearMapView();
             }
         });
-
-
 
     }
 
@@ -297,15 +300,6 @@ public class MapActivity extends AppCompatActivity
 
             }
         });
-
-
-//        mapView.getOverlays().add(0,myLocationOverlay);
-        addlayerToMap(myLocationOverlay,Constants.LAYER_MY_LOCATION);
-        Log.i(TAG,"Layer added: My Location - " + mapView.getOverlayManager().toString());
-        // Configuração para mostrar o boneco da posição do usuário
-        myLocationOverlay.enableMyLocation();
-        myLocationOverlay.disableFollowLocation();
-        myLocationOverlay.setOptionsMenuEnabled(true);
     }
 
 
@@ -355,7 +349,7 @@ public class MapActivity extends AppCompatActivity
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
+        searchView.setIconifiedByDefault(true);
 
         //Restaura as preferencias gravadas
         SharedPreferences settings = getSharedPreferences(TUTORIAL_EXECUTED, 0);
@@ -365,6 +359,49 @@ public class MapActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add_location:
+                addLocationToMap();
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private boolean addLocationToMap() {
+        Toast.makeText(MapActivity.this, R.string.msg_drag_marker, Toast.LENGTH_LONG).show();
+        Marker.OnMarkerClickListener onClickListener = new Marker.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker, MapView mapView) {
+
+                return false;
+            }
+        };
+        Marker customMarker = createCustomMarker(null, (GeoPoint) mapView.getMapCenter(), onClickListener);
+        customMarker.setDraggable(true);
+        customMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDrag(Marker marker) {}
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                marker.setInfoWindow(new CustomInfoWindow(R.layout.custom_info_window,mapView));
+                marker.showInfoWindow();
+            }
+
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+
+            }
+        });
+        final FolderOverlay folderOverlay = new FolderOverlay();
+        folderOverlay.add(customMarker);
+        addlayerToMap(folderOverlay,Constants.LAYER_ADD_LOCATION);
+        return false;
+    }
 
     /* Início dos métodos de utilização da lista lateral (Drawer)*/
 
@@ -497,7 +534,6 @@ public class MapActivity extends AppCompatActivity
                     final FolderOverlay poiMarkers = new FolderOverlay();
                     Drawable poiIcon = null;
                     // Configura o ícone de acordo com o filtro que será adicionado
-                    // todo criar o ícone do auditório e bibliotecas
                     if (filter.equals(Constants.FILTER_XEROX))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
                     else if (filter.equals(Constants.FILTER_RESTAURANT))
@@ -663,10 +699,12 @@ public class MapActivity extends AppCompatActivity
         Log.i(TAG+"-clearMap","Cleared map: "+ mapView.getOverlayManager().toString());
     }
 
-    private Marker createCustomMarker(Drawable poiIcon, GeoPoint location, Marker.OnMarkerClickListener clickListener){
+    private Marker createCustomMarker(@Nullable Drawable poiIcon, GeoPoint location, @Nullable Marker.OnMarkerClickListener clickListener){
         Marker poiMarker = new Marker(mapView);
         poiMarker.setAnchor(0.5f,1);
         poiMarker.setPosition(location);
+        if(poiIcon == null)
+            poiIcon = ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker);
         poiMarker.setIcon(poiIcon);
         if(clickListener != null){
             poiMarker.setOnMarkerClickListener(clickListener);
@@ -676,10 +714,12 @@ public class MapActivity extends AppCompatActivity
     }
 
     private Marker createCustomMarker(Drawable poiIcon, GeoPoint location, String markerTitle,
-                                      String markerDescription, Marker.OnMarkerClickListener clickListener){
+                                      String markerDescription, @Nullable Marker.OnMarkerClickListener clickListener){
         Marker poiMarker = new Marker(mapView);
         poiMarker.setAnchor(0.5f,1);
         poiMarker.setPosition(location);
+        if(poiIcon == null)
+            poiIcon = ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker);
         poiMarker.setIcon(poiIcon);
         poiMarker.setSnippet(markerDescription);
         if(clickListener != null){
@@ -788,7 +828,7 @@ public class MapActivity extends AppCompatActivity
                             }
                         };
 
-                        Marker marker = createCustomMarker(ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker),
+                        Marker marker = createCustomMarker(null,
                                 place.getGeoPoint(), place.getName(),
                                 place.getDescription(), markerClick);
                         poiMarkers.add(marker);
@@ -813,13 +853,6 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-
-
-
-        return false;
-    }
 }
 
 // TODO organizar o código e comentar código do tutorial.

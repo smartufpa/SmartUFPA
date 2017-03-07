@@ -79,6 +79,7 @@ public final class Constants {
     public static final String LAYER_BUS_ROUTE = "camada-de-onibus";
     public static final String LAYER_MY_LOCATION = "camada-de-localização-atual";
     public static final String LAYER_BUS_MARKER = "marcador-do-circular";
+    public static final String LAYER_ADD_LOCATION = "camada-de-novo-local";
 
 
     // Usado na factory para places, apresentado nos detalhes sobre o local
@@ -103,4 +104,5 @@ public final class Constants {
     public static final int TUTORIAL_BTN_LEFT = 1;
 
 
+    ;
 }
