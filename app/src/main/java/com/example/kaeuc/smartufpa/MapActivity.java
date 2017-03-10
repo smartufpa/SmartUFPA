@@ -88,7 +88,7 @@ public class MapActivity extends AppCompatActivity
     public static final String ACTION_MAP = "osmapp.ACTION_MAP";
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
     private static final String TAG = "MapActivity";
-    private static final String TUTORIAL_EXECUTED = "Tutorial_executed";
+    private static final String TUTORIAL_EXECUTED = "tutorial_executed";
 
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
