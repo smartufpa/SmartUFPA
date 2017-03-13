@@ -18,6 +18,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -42,10 +43,10 @@ import com.example.kaeuc.smartufpa.server.BusLocationRequestResponse;
 import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
 import com.example.kaeuc.smartufpa.server.OverpassSearchResponse;
 import com.example.kaeuc.smartufpa.utils.Constants;
-import com.example.kaeuc.smartufpa.utils.CustomInfoWindow;
+import com.example.kaeuc.smartufpa.customviews.CustomInfoWindow;
 import com.example.kaeuc.smartufpa.utils.NetworkManager;
-import com.example.kaeuc.smartufpa.utils.PlaceDetailsBottomSheet;
-import com.example.kaeuc.smartufpa.utils.SearchListAdapter;
+import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
+import com.example.kaeuc.smartufpa.customviews.SearchListAdapter;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
 import com.example.kaeuc.smartufpa.server.OsmDataRequestResponse;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
@@ -69,8 +70,6 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.TilesOverlay;
-import org.osmdroid.views.overlay.infowindow.InfoWindow;
-import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -376,8 +375,11 @@ public class MapActivity extends AppCompatActivity
         Marker.OnMarkerClickListener onClickListener = new Marker.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker, MapView mapView) {
-
-                return false;
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                marker.setInfoWindow(new CustomInfoWindow(R.layout.custom_info_window,mapView,marker,fragmentManager));
+                if(!marker.isInfoWindowShown())
+                    marker.showInfoWindow();
+                    return false;
             }
         };
         Marker customMarker = createCustomMarker(null, (GeoPoint) mapView.getMapCenter(), onClickListener);
@@ -388,13 +390,15 @@ public class MapActivity extends AppCompatActivity
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                marker.setInfoWindow(new CustomInfoWindow(R.layout.custom_info_window,mapView));
+
                 marker.showInfoWindow();
+                mapController.animateTo(marker.getPosition());
             }
 
             @Override
             public void onMarkerDragStart(Marker marker) {
-
+                if(marker.getInfoWindow().isOpen())
+                    marker.getInfoWindow().close();
             }
         });
         final FolderOverlay folderOverlay = new FolderOverlay();
@@ -685,6 +689,7 @@ public class MapActivity extends AppCompatActivity
         if(searchResultSheetBehavior != null && searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
             searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
+
         isXeroxEnabled = false;
         isRestaurantEnabled = false;
         isSearchEnabled = false;

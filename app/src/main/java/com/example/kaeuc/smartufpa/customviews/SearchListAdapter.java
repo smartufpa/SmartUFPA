@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.utils;
+package com.example.kaeuc.smartufpa.customviews;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
