@@ -10,7 +10,7 @@ import com.example.kaeuc.smartufpa.server.LocalHostRequestResponse;
 
 public class SQLTestActivity extends AppCompatActivity implements LocalHostRequestResponse {
 
-    public static final String SQL_ACTION = "osmapp.SQL_ACTION";
+    public static final String SQL_ACTION = "smartufpa.SQL_ACTION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

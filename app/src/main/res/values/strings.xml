@@ -21,10 +21,12 @@
     <string name="action_search">Busca</string>
 
 
-    <string name="tutorial_search">Use a lupa para buscar locais no Campus da UFPA.</string>
-    <string name="tutorial_menu">Ao abrir o menu, selecione um tipo de serviço e veja onde ele é ofertado.</string>
-    <string name="tutorial_current_location">Clique aqui para mover a câmera para sua localização atual.</string>
-    <string name="tutorial_bus_location">Clique aqui para consultar a última localização do circular.\n <b>Note que esse serviço ainda se encontra em teste.</b></string>
+    <string name="tutorial_msg_search">Use a lupa para buscar locais no Campus da UFPA.</string>
+    <string name="tutorial_msg_menu">Ao abrir o menu, selecione um tipo de serviço e veja onde ele é ofertado.</string>
+    <string name="tutorial_msg_current_location">Clique aqui para mover a câmera para sua localização atual.</string>
+    <string name="tutorial_msg_bus_location">Clique aqui para consultar a última localização do circular.\n <b>Note que esse serviço ainda se encontra em teste.</b></string>
+    <string name="tutorial_msg_add_location">Clique aqui para criar um registro a um local não cadastrado no mapa.</string>
+
 
     <string name="error_on_connection">Houve um erro na requisição. Cheque sua conexão com a internet.</string>
     <string name="error_server_internal_error">Não foi possível completar a operação. Tente novamente.</string>
@@ -48,8 +50,20 @@
     <string name="nav_copy_service">Xerox</string>
     <string name="nav_libraries">Bibliotecas</string>
 
-    <string-array name="default_places">
+    <string name="input_fragment_name">Nome</string>
+    <string name="input_fragment_nickname">Apelido/Nome não-oficial</string>
+    <string name="input_fragment_short_name">Abreviação</string>
+    <string name="input_fragment_description">Descrição</string>
+    <string name="input_fragment_other">Outro</string>
 
+
+    <string name="btn_fragment_cancel">Cancelar</string>
+    <string name="btn_fragment_confirm">Confirmar</string>
+    <string name="tutorial_map_executed">tutorial_executed=</string>
+
+
+    <string-array name="default_places">
+        <item>Tipo do Local</item>
         <item>Auditório</item>
         <item>Banheiro</item>
         <item>Biblioteca</item>

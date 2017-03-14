@@ -1,17 +1,19 @@
 package com.example.kaeuc.smartufpa.customviews;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.kaeuc.smartufpa.R;
@@ -25,10 +27,14 @@ import com.example.kaeuc.smartufpa.R;
  * create an instance of this fragment.
  */
 
+// TODO: Consertar o tamanho do fragment
+
+
 public class AddPlaceFragment extends DialogFragment {
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
-
+    public static final String FRAGMENT_TAG = "AddPlaceDialog";
+    private static final String TAG = AddPlaceFragment.class.getSimpleName();
 
     private double latitude;
     private double longitude;
@@ -37,11 +43,11 @@ public class AddPlaceFragment extends DialogFragment {
     private Spinner spinnerDefaultMarkers;
     private Button btnConfirm;
     private Button btnCancel;
-    private EditText edtName;
-    private EditText edtDescription;
-    private EditText edtShortName;
-    private EditText edtNickname;
-    private EditText edtOther;
+    private TextInputEditText edtName;
+    private TextInputEditText edtDescription;
+    private TextInputEditText edtShortName;
+    private TextInputEditText edtNickname;
+    private TextInputEditText edtOther;
     
     
     private OnFragmentInteractionListener mListener;
@@ -75,6 +81,7 @@ public class AddPlaceFragment extends DialogFragment {
             latitude = getArguments().getDouble(ARG_LATITUDE);
             longitude = getArguments().getDouble(ARG_LONGITUDE);
         }
+        setCancelable(false);
     }
 
     @Override
@@ -86,10 +93,34 @@ public class AddPlaceFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_add_place, container, false);
+        btnCancel = (Button) view.findViewById(R.id.btn_fragment_cancel);
+        btnConfirm = (Button) view.findViewById(R.id.btn_fragment_confirm);
+        edtName = (TextInputEditText) view.findViewById(R.id.edt_name);
+        edtShortName = (TextInputEditText) view.findViewById(R.id.edt_short_name);
+        edtNickname = (TextInputEditText) view.findViewById(R.id.edt_nickname);
+        edtDescription = (TextInputEditText) view.findViewById(R.id.edt_description);
+        edtOther = (TextInputEditText) view.findViewById(R.id.edt_other);
+
+        final Button.OnClickListener btnsClickListener = new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.btn_fragment_cancel:
+                        dismiss();
+                        break;
+                    case R.id.btn_fragment_confirm:
+                        //TODO: Tratar o formulário
+                        break;
+                }
+            }
+        };
+        btnConfirm.setOnClickListener(btnsClickListener);
+        btnCancel.setOnClickListener(btnsClickListener);
+
         spinnerSetup(view);
-        final int selectedItemPosition = spinnerDefaultMarkers.getSelectedItemPosition();
-//        if(selectedItemPosition == spinnerDefaultMarkers.getCount())
-            //TODO:set input enabled
+
+
+
 
         // Inflate the layout for this fragment
         return view;
@@ -102,8 +133,7 @@ public class AddPlaceFragment extends DialogFragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * See the Android Training lesson <a href="http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
@@ -118,5 +148,64 @@ public class AddPlaceFragment extends DialogFragment {
                 R.array.default_places,android.R.layout.simple_spinner_dropdown_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinnerDefaultMarkers.setAdapter(arrayAdapter);
+        spinnerDefaultMarkers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i == spinnerDefaultMarkers.getCount()-1)
+                    edtOther.setEnabled(true);
+                else {
+                    edtOther.setText("");
+                    edtOther.setEnabled(false);
+                    edtOther.clearFocus();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        Log.i(TAG, "onDestroyView()");
+    }
+
+
+    @Override
+    public void onDetach(){
+        super.onDetach();
+        Log.i(TAG, "onDetach()");
+    }
+
+
+    @Override
+    public void onDismiss(DialogInterface dialog){
+        super.onDismiss(dialog);
+        Log.i(TAG, "onDismiss()");
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState()");
+    }
+
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.i(TAG, "onStart()");
+    }
+
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.i(TAG, "onStop()");
     }
 }

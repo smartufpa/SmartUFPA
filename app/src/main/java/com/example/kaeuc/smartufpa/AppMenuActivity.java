@@ -15,9 +15,9 @@ import android.widget.Toast;
 import com.example.kaeuc.smartufpa.utils.NetworkManager;
 
 public class AppMenuActivity extends AppCompatActivity {
-    public static final String ACTION_APP_MENU = "osmapp.ACTION_APP_MENU";
-    public static final String CATEGORY_APP_MENU = "osmapp.CATEGORY_APP_MENU";
-    public static final String TAG = "AppMenu";
+    public static final String ACTION_APP_MENU = "smartufpa.ACTION_APP_MENU";
+    public static final String CATEGORY_APP_MENU = "smartufpa.CATEGORY_APP_MENU";
+    public static final String TAG = AppMenuActivity.class.getSimpleName();
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -26,10 +26,10 @@ public class AppMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_menu);
 
-        Button mobilidade = (Button) findViewById(R.id.btn_mobilidade);
+        Button btnMobility = (Button) findViewById(R.id.btn_mobilidade);
 
 
-        mobilidade.setOnClickListener(new View.OnClickListener() {
+        btnMobility.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 if (NetworkManager.checkNetworkConnection(AppMenuActivity.this)){
                     if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
@@ -50,18 +50,18 @@ public class AppMenuActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i(TAG,"onStop called");
+        Log.i(TAG,"onStop()");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(TAG,"onPause called");
+        Log.i(TAG,"onPause()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG,"onDestroy called");
+        Log.i(TAG,"onDestroy()");
     }
 }

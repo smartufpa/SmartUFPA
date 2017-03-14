@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.Button;
 
 public class NoGpsActivity extends AppCompatActivity {
-    public final static String CATEGORY_NO_GPS = "osmapp.CATEGORY_NO_GPS";
-    public final static String ACTION_NO_GPS = "osmapp.ACTION_NO_GPS";
-    public final static String TAG = "NoGps";
+    public final static String CATEGORY_NO_GPS = "smartufpa.CATEGORY_NO_GPS";
+    public final static String ACTION_NO_GPS = "smartufpa.ACTION_NO_GPS";
+    public final static String TAG = NoGpsActivity.class.getSimpleName();
 
     private Button turnOnGps;
 
