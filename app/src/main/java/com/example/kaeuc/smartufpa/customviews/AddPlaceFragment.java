@@ -2,6 +2,7 @@ package com.example.kaeuc.smartufpa.customviews;
 
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.utils.InputParser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +45,7 @@ public class AddPlaceFragment extends DialogFragment {
     private Spinner spinnerDefaultMarkers;
     private Button btnConfirm;
     private Button btnCancel;
+
     private TextInputEditText edtName;
     private TextInputEditText edtDescription;
     private TextInputEditText edtShortName;
@@ -60,8 +63,8 @@ public class AddPlaceFragment extends DialogFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param latitude Parameter 1.
-     * @param longitude Parameter 2.
+     * @param latitude marker latitude.
+     * @param longitude marker longitude.
      * @return A new instance of fragment AddPlaceFragment.
      */
 
@@ -82,6 +85,10 @@ public class AddPlaceFragment extends DialogFragment {
             longitude = getArguments().getDouble(ARG_LONGITUDE);
         }
         setCancelable(false);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setStyle(DialogFragment.STYLE_NO_FRAME,android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
+        }
     }
 
     @Override
@@ -101,6 +108,18 @@ public class AddPlaceFragment extends DialogFragment {
         edtDescription = (TextInputEditText) view.findViewById(R.id.edt_description);
         edtOther = (TextInputEditText) view.findViewById(R.id.edt_other);
 
+
+
+        edtName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) checkNameField();
+            }
+        });
+
+
+
+
         final Button.OnClickListener btnsClickListener = new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +128,9 @@ public class AddPlaceFragment extends DialogFragment {
                         dismiss();
                         break;
                     case R.id.btn_fragment_confirm:
-                        //TODO: Tratar o formulário
+                            // TODO: Enviar formulário
+                            parseForm();
+
                         break;
                 }
             }
@@ -119,25 +140,13 @@ public class AddPlaceFragment extends DialogFragment {
 
         spinnerSetup(view);
 
-
-
-
         // Inflate the layout for this fragment
         return view;
     }
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href="http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    //Implementar caso necessite de comunicação com a activity
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -145,8 +154,8 @@ public class AddPlaceFragment extends DialogFragment {
     private void spinnerSetup(View view){
         spinnerDefaultMarkers = (Spinner) view.findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(view.getContext(),
-                R.array.default_places,android.R.layout.simple_spinner_dropdown_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                R.array.default_places,R.layout.support_simple_spinner_dropdown_item);
+        arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         spinnerDefaultMarkers.setAdapter(arrayAdapter);
         spinnerDefaultMarkers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -165,6 +174,30 @@ public class AddPlaceFragment extends DialogFragment {
 
             }
         });
+    }
+
+    private boolean checkNameField(){
+        try {
+            InputParser.validateInput(edtName, 80, 4);
+        } catch (InputParser.EmptyInputException e) {
+            edtName.setError(getString(R.string.error_fragment_no_name));
+            return false;
+        } catch (InputParser.ExtenseInputException e) {
+            edtName.setError(getString(R.string.error_fragment_name_too_long));
+            return false;
+        } catch (InputParser.ShortInputException e) {
+            edtName.setError(getString(R.string.error_fragment_name_too_short));
+            return false;
+        }
+
+        return true;
+    }
+
+    private void parseForm(){
+        if(checkNameField()){
+            String parsedString = InputParser.parseInputString(edtName.getText().toString());
+        }
+
     }
 
 

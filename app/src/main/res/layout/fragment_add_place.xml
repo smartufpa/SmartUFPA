@@ -79,18 +79,19 @@
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="right"
+        >
 
         <Button
             android:id="@+id/btn_fragment_cancel"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
             android:layout_margin="5dp"
-            android:elevation="2dp"
+            android:background="@color/colorPrimaryDark"
             android:text="@string/btn_fragment_cancel" />
 
         <Button
@@ -98,9 +99,8 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
             android:layout_margin="5dp"
-            android:elevation="2dp"
+            android:background="@color/colorPrimaryDark"
             android:text="@string/btn_fragment_confirm" />
     </LinearLayout>
 

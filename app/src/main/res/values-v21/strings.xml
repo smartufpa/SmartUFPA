@@ -32,6 +32,9 @@
     <string name="error_server_internal_error">Não foi possível completar a operação. Tente novamente.</string>
     <string name="error_server_timeout">Tempo de requisição esgotado. Tente novamente em alguns segundos.</string>
     <string name="error_no_gps">O GPS deve estar ligado para iniciar o aplicativo.</string>
+    <string name="error_fragment_no_name">Você deve inserir um nome para este local.</string>
+    <string name="error_fragment_name_too_long">O nome inserido é muito longo.</string>
+    <string name="error_fragment_name_too_short">O nome inserido é muito curto.</string>
 
     <string name="msg_no_results">Sua busca não retornou nenhum resultado válido.</string>
     <string name="msg_click_marker">Clique no marcador para rotas.</string>
@@ -55,6 +58,7 @@
     <string name="input_fragment_short_name">Abreviação</string>
     <string name="input_fragment_description">Descrição</string>
     <string name="input_fragment_other">Outro</string>
+
 
 
     <string name="btn_fragment_cancel">Cancelar</string>
