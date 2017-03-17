@@ -71,8 +71,10 @@ public class Place implements Serializable {
 
     @Override
     public String toString() {
-        return "Nome: " + this.name + "\nDescrição: " + this.description;
+        return String.format("[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,shop=%s,amenity=%s,loc_name=%s,description=%s]",
+                ID,latitude,longitude,name,shortName,shop,amenity,locName,description);
     }
+
 
     public JSONObject toJsonObject(){
         JSONObject jsonObject = new JSONObject();

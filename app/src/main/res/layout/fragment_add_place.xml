@@ -48,14 +48,14 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_nickname"
+        android:id="@+id/input_local_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/edt_nickname"
+            android:id="@+id/edt_local_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/input_fragment_nickname"
+            android:hint="@string/input_fragment_local_name"
             />
     </android.support.design.widget.TextInputLayout>
 

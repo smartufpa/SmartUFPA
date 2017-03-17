@@ -33,6 +33,12 @@
     <string name="error_server_timeout">Tempo de requisição esgotado. Tente novamente em alguns segundos.</string>
     <string name="error_no_gps">O GPS deve estar ligado para iniciar o aplicativo.</string>
 
+    <string name="error_fragment_no_input">Você deve inserir uma entrada.</string>
+    <string name="error_fragment_input_too_long">A entrada inserida é muito longa.</string>
+    <string name="error_fragment_input_too_short">A entrada inserida é muito curta.</string>
+    <string name="error_fragment_select_valid_option">Selecione uma opção válida.</string>
+    <string name="error_fragment_create_other">Adicione um tipo novo.</string>
+
     <string name="msg_no_results">Sua busca não retornou nenhum resultado válido.</string>
     <string name="msg_click_marker">Clique no marcador para rotas.</string>
     <string name="msg_bus_last_known_location">Última localização conhecida. Pode não estar atualizada.</string>
@@ -51,15 +57,17 @@
     <string name="nav_libraries">Bibliotecas</string>
 
     <string name="input_fragment_name">Nome</string>
-    <string name="input_fragment_nickname">Apelido/Nome não-oficial</string>
+    <string name="input_fragment_local_name">Nome Local/Nome não-oficial</string>
     <string name="input_fragment_short_name">Abreviação</string>
     <string name="input_fragment_description">Descrição</string>
     <string name="input_fragment_other">Outro</string>
 
 
+
     <string name="btn_fragment_cancel">Cancelar</string>
     <string name="btn_fragment_confirm">Confirmar</string>
     <string name="tutorial_map_executed">tutorial_executed=</string>
+
 
 
     <string-array name="default_places">

@@ -156,31 +156,32 @@ public class MapActivity extends AppCompatActivity
 
     private boolean addLocationToMap() {
         Toast.makeText(MapActivity.this, R.string.msg_drag_marker, Toast.LENGTH_LONG).show();
-        Marker.OnMarkerClickListener onClickListener = new Marker.OnMarkerClickListener() {
+        Marker customMarker = createCustomMarker(null, (GeoPoint) mapView.getMapCenter(), null);
+        customMarker.setInfoWindow(new AddPlaceInfoWindow(R.layout.custom_info_window,mapView,customMarker,MapActivity.this));
+        customMarker.setDraggable(true);
+
+        customMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker, MapView mapView) {
-                marker.setInfoWindow(new AddPlaceInfoWindow(R.layout.custom_info_window,mapView,marker,MapActivity.this));
                 if(!marker.isInfoWindowShown())
                     marker.showInfoWindow();
                 return false;
             }
-        };
-        Marker customMarker = createCustomMarker(null, (GeoPoint) mapView.getMapCenter(), onClickListener);
-        customMarker.setDraggable(true);
+        });
+
         customMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
             @Override
             public void onMarkerDrag(Marker marker) {}
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-
                 marker.showInfoWindow();
                 mapController.animateTo(marker.getPosition());
             }
 
             @Override
             public void onMarkerDragStart(Marker marker) {
-                if(marker.getInfoWindow().isOpen())
+                if(marker.isInfoWindowShown())
                     marker.getInfoWindow().close();
             }
         });

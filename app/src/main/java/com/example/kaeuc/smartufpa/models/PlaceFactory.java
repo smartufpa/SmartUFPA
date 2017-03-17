@@ -10,7 +10,7 @@ import com.example.kaeuc.smartufpa.utils.Constants;
  */
 
 public class PlaceFactory {
-    public static final String TAG = "PlaceFactory";
+    public static final String TAG = PlaceFactory.class.getSimpleName();
     public Place getPlace(final long id, double latitude, double longitude, Tags tags){
         String name = Constants.NO_NAME;
         String shortName = Constants.NO_SHORT_NAME;
