@@ -24,7 +24,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
     private static final String TAG = "OsmDataRequest" ;
     // interface resposável por devolver o resultado da task pra atividade principal
-    private OsmDataRequestResponse callBack;
+    private OnOsmDataListener callBack;
     private ProgressBar progressBar;
     private String filtro;
     private int taskStatus;
@@ -32,10 +32,15 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
     public OsmDataRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
-        this.callBack = (OsmDataRequestResponse) parentContext;
+        this.callBack = (OnOsmDataListener) parentContext;
         this.progressBar = progressBar;
         this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
+
+    public interface OnOsmDataListener {
+        void onOsmDataResponse(List<Place> locais, String filtro, int taskStatus);
+    }
+
 
     @Override
     protected String doInBackground(String... params) {
@@ -77,7 +82,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
         //Recebe a resposta em json e processa os lugares em uma lista
         final List<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
         // Retorna os valores para a activity que chamou a ASyncTask
-        callBack.onOsmTaskResponse(places,filtro,taskStatus);
+        callBack.onOsmDataResponse(places,filtro,taskStatus);
         // esconde a barra de progresso
         progressBar.setVisibility(View.GONE);
 

@@ -14,7 +14,6 @@ public class Place implements Serializable {
     private String amenity;
     private String description;
     private long ID;
-    private GeoPoint geoPoint;
     private double latitude;
     private String locName;
     private double longitude;
@@ -27,7 +26,6 @@ public class Place implements Serializable {
         this.ID = id;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.geoPoint = new GeoPoint(latitude,longitude);
         this.shortName = shortName;
         this.locName = locName;
         this.shop = shop;
@@ -39,7 +37,6 @@ public class Place implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
         this.name = name;
-        this.geoPoint = new GeoPoint(latitude,longitude);
     }
 
     public double getLatitude() {
@@ -67,7 +64,7 @@ public class Place implements Serializable {
         return description;
     }
 
-    public GeoPoint getGeoPoint(){return geoPoint;}
+    public GeoPoint getGeoPoint(){return  new GeoPoint(latitude,longitude);}
 
     @Override
     public String toString() {

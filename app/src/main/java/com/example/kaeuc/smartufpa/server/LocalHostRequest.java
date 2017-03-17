@@ -16,12 +16,17 @@ import java.net.SocketTimeoutException;
 public class LocalHostRequest extends AsyncTask<Place, Void, String> {
     private static final String TAG = "LocalHostRequest";
 
-    private LocalHostRequestResponse callback = null;
+    private OnLocalHostListener callback = null;
     private Context parent;
 
 
     public LocalHostRequest(Context parent) {
-        this.callback = (LocalHostRequestResponse) parent;
+        this.callback = (OnLocalHostListener) parent;
+    }
+
+    public interface OnLocalHostListener {
+        // TODO adicionar variavel de status
+        void onLocalHostResponse(String response);
     }
 
 
@@ -47,7 +52,7 @@ public class LocalHostRequest extends AsyncTask<Place, Void, String> {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
-        callback.onLocalHostTaskResponse(s);
+        callback.onLocalHostResponse(s);
 
 
     }

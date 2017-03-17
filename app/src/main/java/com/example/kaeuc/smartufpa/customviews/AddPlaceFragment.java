@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
@@ -25,6 +24,8 @@ import com.example.kaeuc.smartufpa.models.PlaceFactory;
 import com.example.kaeuc.smartufpa.models.overpass.Tags;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.InputParser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +60,7 @@ public class AddPlaceFragment extends DialogFragment {
     private TextInputEditText edtOther;
 
 
-    private OnFragmentInteractionListener mListener;
+    private OnAddPlaceListener mListener;
 
     public AddPlaceFragment() {
         // Required empty public constructor
@@ -137,7 +138,10 @@ public class AddPlaceFragment extends DialogFragment {
                         dismiss();
                         break;
                     case R.id.btn_fragment_confirm:
-                        parseForm();
+                        //TODO: Checar se já existe no banco
+                        String jsonReturn = parseFormToJson();
+                        Log.i(TAG+"-json",jsonReturn);
+                        dismiss();
                         break;
                 }
             }
@@ -153,8 +157,8 @@ public class AddPlaceFragment extends DialogFragment {
 
 
     //Implementar caso necessite de comunicação com a activity
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    public interface OnAddPlaceListener {
+        void onAddPlaceResponse(int taskStatus);
     }
 
 
@@ -206,20 +210,15 @@ public class AddPlaceFragment extends DialogFragment {
         return true;
     }
 
-    private void parseForm(){
+    private String parseFormToJson(){
         Tags tags = new Tags();
         if(checkField(edtName)){
             tags.setName(InputParser.parseInputString(edtName.getText().toString()));
         }else{
             Log.e(TAG,"Name field must be filled");
-            return;
+            return null;
         }
-        if(edtOther.isEnabled() && checkField(edtOther))
-            tags.setAmenity(InputParser.parseInputString(edtOther.getText().toString()));
-        else{
-            Log.e(TAG,"Other field must be filled");
-            return;
-        }
+
         if(!edtDescription.getText().toString().isEmpty())
             tags.setDescription(InputParser.parseInputString(edtDescription.getText().toString()));
         if(!edtShortName.getText().toString().isEmpty())
@@ -242,14 +241,20 @@ public class AddPlaceFragment extends DialogFragment {
             case 5: // Xerox
                 tags.setAmenity(Constants.TAG_COPYSHOP);
                 break;
-
+            case 6:
+                if(checkField(edtOther))
+                    tags.setAmenity(InputParser.parseInputString(edtOther.getText().toString()));
+                break;
         }
 
 
         PlaceFactory placeFactory = new PlaceFactory();
-        Place place = placeFactory.getPlace(1234565654, latitude, longitude, tags);
-        // TODO: resolver ID, gerar o gson e enviar para o servidor
-
+        Place place = placeFactory.getPlace(123456789, latitude, longitude, tags);
+        tags = null;
+        // TODO: resolver ID,enviar para o servidor
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.toJson(place);
     }
 
 

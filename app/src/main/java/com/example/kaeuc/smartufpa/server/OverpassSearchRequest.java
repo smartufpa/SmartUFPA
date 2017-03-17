@@ -2,7 +2,6 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -12,8 +11,6 @@ import com.example.kaeuc.smartufpa.utils.JsonParser;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by kaeuc on 02/03/2017.
@@ -21,16 +18,20 @@ import java.util.List;
 
 public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
     public final String TAG = "OverpassSearch";
-    private OverpassSearchResponse callBack;
+    private OnOverpassListener callBack;
     private Context parentContext;
     private ProgressBar progressBar;
     private int taskStatus;
 
     public OverpassSearchRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
-        this.callBack = (OverpassSearchResponse) parentContext;
+        this.callBack = (OnOverpassListener) parentContext;
         this.progressBar = progressBar;
         this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
+    }
+
+    public interface OnOverpassListener {
+        void onOverpassResponse(ArrayList<Place> places, int taskStatus);
     }
 
     @Override
@@ -58,10 +59,10 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
         ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
         if(places.isEmpty()){
             taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;
-            callBack.onOverpassTaskResponse(places,taskStatus);
+            callBack.onOverpassResponse(places,taskStatus);
             return;
         }
-        callBack.onOverpassTaskResponse(places,taskStatus);
+        callBack.onOverpassResponse(places,taskStatus);
     }
 
     private String buildSearchQuery(String userQuery){

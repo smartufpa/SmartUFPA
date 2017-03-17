@@ -4,11 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 
-import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.LocalHostRequest;
-import com.example.kaeuc.smartufpa.server.LocalHostRequestResponse;
 
-public class SQLTestActivity extends AppCompatActivity implements LocalHostRequestResponse {
+
+public class SQLTestActivity extends AppCompatActivity implements LocalHostRequest.OnLocalHostListener {
 
     public static final String SQL_ACTION = "smartufpa.SQL_ACTION";
 
@@ -22,7 +21,7 @@ public class SQLTestActivity extends AppCompatActivity implements LocalHostReque
     }
 
     @Override
-    public void onLocalHostTaskResponse(String response) {
+    public void onLocalHostResponse(String response) {
         ((AppCompatTextView)findViewById(R.id.txt_localhost)).setText(response);
     }
 }
