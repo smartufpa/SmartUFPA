@@ -1,7 +1,6 @@
 package com.example.kaeuc.smartufpa.customviews;
 
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -44,6 +43,9 @@ public class AddPlaceFragment extends DialogFragment {
     private static final String ARG_LONGITUDE = "longitude";
     public static final String FRAGMENT_TAG = "AddPlaceDialog";
     private static final String TAG = AddPlaceFragment.class.getSimpleName();
+    private final int VALIDATION_NO_SPECIAL_CHAR = 0;
+    private final int VALIDATION_REGULAR_TEXT = 1;
+
 
     private double latitude;
     private double longitude;
@@ -118,14 +120,21 @@ public class AddPlaceFragment extends DialogFragment {
         edtName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) checkField(edtName);
+                if(!hasFocus) checkField(edtName,80,3,VALIDATION_NO_SPECIAL_CHAR);
+            }
+        });
+
+        edtShortName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) checkField(edtShortName,8,2,VALIDATION_NO_SPECIAL_CHAR);
             }
         });
 
         edtOther.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) checkField(edtOther);
+                if(!hasFocus) checkField(edtOther,10,3,VALIDATION_NO_SPECIAL_CHAR);
             }
         });
 
@@ -193,36 +202,51 @@ public class AddPlaceFragment extends DialogFragment {
         });
     }
 
-    private boolean checkField(TextInputEditText inputField){
+    private boolean checkField(TextInputEditText inputField, int maxLength, int minLenght,int validationCode){
         try {
-            InputParser.validateInput(inputField, 80, 3);
+            if (validationCode == VALIDATION_NO_SPECIAL_CHAR)
+                InputParser.validateNoSpecialChar(inputField, maxLength, minLenght);
+            else if(validationCode == VALIDATION_REGULAR_TEXT)
+                InputParser.validateRegularText(inputField,maxLength,minLenght);
         } catch (InputParser.EmptyInputException e) {
+            Log.e(TAG,"1");
             inputField.setError(getString(R.string.error_fragment_no_input));
             return false;
         } catch (InputParser.ExtenseInputException e) {
+            Log.e(TAG,"2");
             inputField.setError(getString(R.string.error_fragment_input_too_long));
             return false;
         } catch (InputParser.ShortInputException e) {
+            Log.e(TAG,"3");
             inputField.setError(getString(R.string.error_fragment_input_too_short));
             return false;
+        } catch (InputParser.InvalidCharacterException e) {
+            Log.e(TAG,"4");
+            inputField.setError(getString(R.string.error_fragment_invalid_character));
+            return false;
         }
-
         return true;
     }
 
     private String parseFormToJson(){
         Tags tags = new Tags();
-        if(checkField(edtName)){
+        if(checkField(edtName,80,3,VALIDATION_NO_SPECIAL_CHAR)){
             tags.setName(InputParser.parseInputString(edtName.getText().toString()));
         }else{
-            Log.e(TAG,"Name field must be filled");
+            Log.e(TAG,"Name field contains validation errors");
             return null;
         }
+        if(!edtShortName.getText().toString().isEmpty())
+            if(checkField(edtShortName,8,2,VALIDATION_NO_SPECIAL_CHAR)) {
+                tags.setShortName(InputParser.parseInputString(edtShortName.getText().toString().toUpperCase()));
+            }else{
+                Log.e(TAG,"Short name field contains validation errors");
+                return null;
+            }
 
         if(!edtDescription.getText().toString().isEmpty())
             tags.setDescription(InputParser.parseInputString(edtDescription.getText().toString()));
-        if(!edtShortName.getText().toString().isEmpty())
-            tags.setShortName(InputParser.parseInputString(edtShortName.getText().toString()));
+
         if(!edtLocalName.getText().toString().isEmpty())
             tags.setLocName(InputParser.parseInputString(edtLocalName.getText().toString()));
         switch (spinnerDefaultMarkers.getSelectedItemPosition()){
@@ -242,7 +266,7 @@ public class AddPlaceFragment extends DialogFragment {
                 tags.setAmenity(Constants.TAG_COPYSHOP);
                 break;
             case 6:
-                if(checkField(edtOther))
+                if(checkField(edtOther,10,3,VALIDATION_NO_SPECIAL_CHAR))
                     tags.setAmenity(InputParser.parseInputString(edtOther.getText().toString()));
                 break;
         }

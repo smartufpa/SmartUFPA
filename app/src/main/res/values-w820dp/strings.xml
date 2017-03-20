@@ -67,7 +67,7 @@
     <string name="btn_fragment_cancel">Cancelar</string>
     <string name="btn_fragment_confirm">Confirmar</string>
     <string name="tutorial_map_executed">tutorial_executed=</string>
-
+    <string name="error_fragment_invalid_character">A entrada deve conter apenas letras e números.</string>
 
 
     <string-array name="default_places">
