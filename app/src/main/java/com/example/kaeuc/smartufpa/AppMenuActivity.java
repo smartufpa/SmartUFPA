@@ -37,6 +37,7 @@ public class AppMenuActivity extends AppCompatActivity {
                         intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
                         startActivity(intent);
                     }else{
+                        // TODO: baixar o arquivo tiles.zip do servidor
                         Intent intent = new Intent(AppMenuActivity.this, MapActivity.class);
                         startActivity(intent);
                     }
