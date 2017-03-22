@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Filtros de Busca">
+        <menu>
+            <item
+                android:id="@+id/nav_auditorium"
+                android:icon="@drawable/ic_auditorium"
+                android:title="@string/nav_auditorium"/>
+            <item
+                android:id="@+id/nav_restroom"
+                android:icon="@drawable/ic_restroom"
+                android:title="@string/nav_restrooms"
+                />
+
+            <item
+                android:id="@+id/nav_library"
+                android:icon="@drawable/ic_library"
+                android:title="@string/nav_libraries"/>
+
+            <item
+                android:id="@+id/nav_restaurant"
+                android:icon="@drawable/ic_restaurant"
+                android:title="@string/nav_restaurants"
+                />
+            <item
+                android:id="@+id/nav_bus_route"
+                android:icon="@drawable/ic_bus_black"
+                android:title="@string/nav_bus_route"
+                />
+            <item
+                android:id="@+id/nav_copy_service"
+                android:icon="@drawable/ic_xerox"
+                android:title="@string/nav_copy_service"
+                />
+        </menu>
+    </item>
+   <group>
+       <item android:title="@string/about_title"
+           android:id="@+id/nav_about"
+           android:icon="@drawable/ic_about"
+           />
+   </group>
+
+
+
+</menu>
+
+    <!--
+        Icone do restaurante:
+            créditos: Domínio público
+        Icone do banheiro:
+            créditos: corpus delicti from noun project
+        Icone da xerox:
+            créditos: Arthur Shlain from noun project
+        Icone carinha andando:
+            créditos: Kiran Joseph from noun project
+    -->
+

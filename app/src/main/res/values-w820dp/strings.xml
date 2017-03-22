@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="drawer_subheader">LabVis - UFPA</string>
+    <string name="drawer_subtitle">ICEN - Faculdade de Computação</string>
+    <string name="search_hint">Procure na UFPA</string>
+    <string name="no_gps_error">O GPS deve estar ligado para iniciar o aplicativo</string>
+    <string name="action_bus_location">Localizar Circular</string>
+</resources>
