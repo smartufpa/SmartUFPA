@@ -58,7 +58,9 @@ import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
+import org.osmdroid.tileprovider.modules.OfflineTileProvider;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -85,6 +87,11 @@ public class MapActivity extends AppCompatActivity
     public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
     private static final String TAG = "MapActivity";
     private static final String TUTORIAL_EXECUTED = "Tutorial_executed";
+
+    private final XYTileSource MAPA_UFPA = new XYTileSource("ufpa_mapa", 15, 18, 256, ".png", new String[] {});
+
+    private final XYTileSource MAPA_UFPA_TRANSPORTE = new XYTileSource("ufpa_transporte", 15, 18, 256, ".png", new String[] {});
+
 
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
@@ -273,19 +280,19 @@ public class MapActivity extends AppCompatActivity
 
                 // Configuração do Mapa
                 mapView.setTilesScaledToDpi(true);
-                mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+//                mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
 
                 //  Atribui o mapa offline em mapView
-                //mapView.setTileSource(new XYTileSource("actions_bar_items.xml.mbtiles", 0, 18, 256, ".jpg", new String[] {}));
+                mapView.setTileSource(MAPA_UFPA);
 
                 /* Desabilita o uso da internet (opcional, mas uma boa forma de previnir que o mapa
                  * seja carregado via rede e de testar se o zip está carregando
                  */
-                //mapView.setUseDataConnection(false);
+                mapView.setUseDataConnection(false);
 
                 mapView.setBuiltInZoomControls(false);
                 mapView.setMinZoomLevel(15);
-                mapView.setMaxZoomLevel(19);
+                mapView.setMaxZoomLevel(18);
                 mapView.setMultiTouchControls(true);
                 mapView.setUseDataConnection(true);
 
@@ -296,7 +303,7 @@ public class MapActivity extends AppCompatActivity
         });
 
 
-//        mapView.getOverlays().add(0,myLocationOverlay);
+
         addlayerToMap(myLocationOverlay,Constants.LAYER_MY_LOCATION);
         Log.i(TAG,"Layer added: My Location - " + mapView.getOverlayManager().toString());
         // Configuração para mostrar o boneco da posição do usuário
@@ -646,6 +653,10 @@ public class MapActivity extends AppCompatActivity
         if(searchResultSheetBehavior != null && searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
             searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
+
+        if(isBusRouteEnabled){
+            mapView.setTileSource(MAPA_UFPA);
+        }
         isXeroxEnabled = false;
         isRestaurantEnabled = false;
         isSearchEnabled = false;
@@ -717,11 +728,13 @@ public class MapActivity extends AppCompatActivity
 
     private void activeBusRouteLayer(){
         if(!isBusRouteEnabled) {
-            final MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-            provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
-            addlayerToMap(new TilesOverlay(provider, MapActivity.this),Constants.LAYER_BUS_ROUTE);
-            Log.i(TAG, "Layer added: Bus route -" + mapView.getOverlayManager().toString());
+
+            mapView.setTileSource(MAPA_UFPA_TRANSPORTE);
+            mapView.invalidate();
+
+            Log.i(TAG, "Layer activated: Bus route -" + mapView.getOverlayManager().toString());
             isBusRouteEnabled = true;
+            btnClearMap.setVisibility(View.VISIBLE);
         }
     }
 
