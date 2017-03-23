@@ -5,4 +5,6 @@
     <string name="search_hint">Procure na UFPA</string>
     <string name="no_gps_error">O GPS deve estar ligado para iniciar o aplicativo</string>
     <string name="action_bus_location">Localizar Circular</string>
+    <string name="fragment_map_download_title">Realizando o download do mapa:</string>
+    <string name="map_download_url">http://www.smartufpa.ufpa.br/map-download.php</string>
 </resources>
