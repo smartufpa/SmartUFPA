@@ -209,19 +209,15 @@ public class AddPlaceFragment extends DialogFragment {
             else if(validationCode == VALIDATION_REGULAR_TEXT)
                 InputParser.validateRegularText(inputField,maxLength,minLenght);
         } catch (InputParser.EmptyInputException e) {
-            Log.e(TAG,"1");
             inputField.setError(getString(R.string.error_fragment_no_input));
             return false;
         } catch (InputParser.ExtenseInputException e) {
-            Log.e(TAG,"2");
             inputField.setError(getString(R.string.error_fragment_input_too_long));
             return false;
         } catch (InputParser.ShortInputException e) {
-            Log.e(TAG,"3");
             inputField.setError(getString(R.string.error_fragment_input_too_short));
             return false;
         } catch (InputParser.InvalidCharacterException e) {
-            Log.e(TAG,"4");
             inputField.setError(getString(R.string.error_fragment_invalid_character));
             return false;
         }

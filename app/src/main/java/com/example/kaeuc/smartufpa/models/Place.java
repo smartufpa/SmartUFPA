@@ -73,21 +73,6 @@ public class Place implements Serializable {
     }
 
 
-    public JSONObject toJsonObject(){
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id",this.ID);
-            jsonObject.put("name",this.name);
-            jsonObject.put("short_name",this.shortName);
-            jsonObject.put("description",this.description);
-            jsonObject.put("latitude",this.latitude);
-            jsonObject.put("longitude",this.longitude);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
-    }
 
 
 }
