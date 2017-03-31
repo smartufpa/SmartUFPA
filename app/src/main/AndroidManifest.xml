@@ -32,10 +32,10 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
-                <action android:name="osmapp.ACTION_LOGIN" />
+                <action android:name="smartufpa.ACTION_LOGIN" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="osmapp.CATEGORY_LOGIN" />
+                <category android:name="smartufpa.CATEGORY_LOGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
 
             </intent-filter>
@@ -46,9 +46,9 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-                <action android:name="osmapp.ACTION_MAP" />
+                <action android:name="smartufpa.ACTION_MAP" />
 
-                <category android:name="osmapp.CATEGORY_MAP" />
+                <category android:name="smartufpa.CATEGORY_MAP" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -61,9 +61,9 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="osmapp.ACTION_NO_GPS" />
+                <action android:name="smartufpa.ACTION_NO_GPS" />
 
-                <category android:name="osmapp.CATEGORY_NO_GPS" />
+                <category android:name="smartufpa.CATEGORY_NO_GPS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -72,15 +72,15 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="osmapp.ACTION_APP_MENU" />
+                <action android:name="smartufpa.ACTION_APP_MENU" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="osmapp.CATEGORY_APP_MENU" />
+                <category android:name="smartufpa.CATEGORY_APP_MENU" />
             </intent-filter>
         </activity>
         <activity android:name=".SQLTestActivity">
             <intent-filter>
-                <action android:name="osmapp.SQL_ACTION" />
+                <action android:name="smartufpa.SQL_ACTION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -90,10 +90,10 @@
             android:label="Sobre"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="osmapp.ACTION_ABOUT" />
+                <action android:name="smartufpa.ACTION_ABOUT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="osmapp.CATEGORY_ABOUT" />
+                <category android:name="smartufpa.CATEGORY_ABOUT" />
             </intent-filter>
         </activity>
     </application>

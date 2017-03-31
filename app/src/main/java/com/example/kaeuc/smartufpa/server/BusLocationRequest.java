@@ -20,17 +20,22 @@ import java.net.SocketTimeoutException;
 
 public class BusLocationRequest extends AsyncTask<String, Void, String> {
     private final String TAG = "BusLocationRequest";
-    private BusLocationRequestResponse callback;
+    private OnBusLocationListener callback;
     private Context parentContext;
     private ProgressBar progressBar;
     private int taskStatus;
 
     public BusLocationRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
-        this.callback = (BusLocationRequestResponse) parentContext;
+        this.callback = (OnBusLocationListener) parentContext;
         this.progressBar = progressBar;
         this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
+
+    public interface OnBusLocationListener {
+        void onBusLocationResponse(GeoPoint busLocation, int taskStatus);
+    }
+
 
     @Override
     protected void onPreExecute() {
@@ -56,7 +61,7 @@ public class BusLocationRequest extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
         if(this.taskStatus == Constants.SERVER_RESPONSE_TIMEOUT) {
-            callback.onBusLocationTaskResponse(null,taskStatus);
+            callback.onBusLocationResponse(null,taskStatus);
             progressBar.setVisibility(View.GONE);
             return;
         }
@@ -78,7 +83,7 @@ public class BusLocationRequest extends AsyncTask<String, Void, String> {
             }
             GeoPoint busLocation = new GeoPoint(latitude,longitude);
             progressBar.setVisibility(View.GONE);
-            callback.onBusLocationTaskResponse(busLocation,taskStatus);
+            callback.onBusLocationResponse(busLocation,taskStatus);
         } catch (JSONException e) {
             e.printStackTrace();
         }

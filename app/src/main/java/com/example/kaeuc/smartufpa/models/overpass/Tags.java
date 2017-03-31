@@ -78,7 +78,8 @@ public class Tags {
 
     @Override
     public String toString() {
-        return "name: " + this.name + " short_name: " + this.shortName;
+        return String.format("[name=%s,short_name=%s,shop=%s,amenity=%s,loc_name=%s,description=%s]",
+                name,shortName,shop,amenity,locName,description);
     }
 
     public String getDescription() {

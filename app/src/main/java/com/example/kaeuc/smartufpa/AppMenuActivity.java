@@ -27,16 +27,17 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
     private final int MAP_DOWNLOAD_EXECUTED = 1;
 
 
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_menu);
 
-        Button mobilidade = (Button) findViewById(R.id.btn_mobilidade);
+        Button btnMobility = (Button) findViewById(R.id.btn_mobilidade);
 
 
-        mobilidade.setOnClickListener(new View.OnClickListener() {
+        btnMobility.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 if (NetworkManager.checkNetworkConnection(AppMenuActivity.this)){
                     if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
@@ -66,19 +67,19 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i(TAG,"onStop called");
+        Log.i(TAG,"onStop()");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(TAG,"onPause called");
+        Log.i(TAG,"onPause()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG,"onDestroy called");
+        Log.i(TAG,"onDestroy()");
     }
 
     private void downloadMap(){

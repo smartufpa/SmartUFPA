@@ -4,6 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:elevation="@dimen/cardview_default_elevation"
+
     >
     <ImageView
         android:layout_width="wrap_content"
@@ -33,7 +35,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Abreviação: "
+            android:text="@string/input_fragment_short_name"
             android:id="@+id/list_txt_place_short_name"
             android:textSize="12sp"
             android:layout_marginTop="5dp"
@@ -42,7 +44,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Apelido: "
+            android:text="@string/input_fragment_local_name"
             android:id="@+id/list_txt_place_loc_name"
             android:textSize="12sp"
             android:layout_marginTop="5dp"

@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 
 public class AppTutorial implements OnShowcaseEventListener {
-    private static final String TAG = "AppTutorial";
+    private static final String TAG = AppTutorial.class.getSimpleName();
     private int itemsShown;
     private ShowcaseView sv;
     private ArrayList<ShowcaseHolder> caseHolders;
@@ -50,7 +50,6 @@ public class AppTutorial implements OnShowcaseEventListener {
     public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
         sv = null;
         itemsShown ++;
-        Log.i(TAG, String.valueOf(itemsShown));
         if (itemsShown < caseHolders.size()) {
             sv =  new ShowcaseView.Builder(context)
                     .withMaterialShowcase()

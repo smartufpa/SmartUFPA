@@ -25,9 +25,9 @@ import java.util.Map;
  * Created by kaeuc on 10/5/2016.
  */
 public class LoginScreenActivity extends AppCompatActivity {
-    public static final String CATEGORY_LOGIN = "osmapp.CATEGORY_LOGIN";
-    public static final String ACTION_LOGIN = "osmapp.ACTION_LOGIN";
-    public static final String TAG = "LoginScreen";
+    public static final String CATEGORY_LOGIN = "smartufpa.CATEGORY_LOGIN";
+    public static final String ACTION_LOGIN = "smartufpa.ACTION_LOGIN";
+    public static final String TAG = LoginScreenActivity.class.getSimpleName();
 
     /*private EditText edtUsername;
     private EditText edtPassword;
@@ -40,6 +40,7 @@ public class LoginScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG,"onCreate()");
         setContentView(R.layout.login_screen_activity);
 
         // Views
@@ -194,19 +195,18 @@ public class LoginScreenActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         finish();
-        Log.i(TAG,"onStop called");
+        Log.i(TAG,"onStop()");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(TAG,"onPause called");
+        Log.i(TAG,"onPause()");
     }
 
-    // TODO ondestroy não está sendo chamado
     @Override
     protected void onDestroy() {
-        Log.i(TAG,"onDestroy called");
         super.onDestroy();
+        Log.i(TAG,"onDestroy()");
     }
 }

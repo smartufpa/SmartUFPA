@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textSize="15sp"
-            android:text="@string/no_gps_error"
+            android:text="@string/error_no_gps"
             />
 
         <Button

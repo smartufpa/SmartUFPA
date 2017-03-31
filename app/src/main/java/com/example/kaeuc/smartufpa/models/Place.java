@@ -14,7 +14,6 @@ public class Place implements Serializable {
     private String amenity;
     private String description;
     private long ID;
-    private GeoPoint geoPoint;
     private double latitude;
     private String locName;
     private double longitude;
@@ -27,7 +26,6 @@ public class Place implements Serializable {
         this.ID = id;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.geoPoint = new GeoPoint(latitude,longitude);
         this.shortName = shortName;
         this.locName = locName;
         this.shop = shop;
@@ -39,7 +37,6 @@ public class Place implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
         this.name = name;
-        this.geoPoint = new GeoPoint(latitude,longitude);
     }
 
     public double getLatitude() {
@@ -67,28 +64,15 @@ public class Place implements Serializable {
         return description;
     }
 
-    public GeoPoint getGeoPoint(){return geoPoint;}
+    public GeoPoint getGeoPoint(){return  new GeoPoint(latitude,longitude);}
 
     @Override
     public String toString() {
-        return "Nome: " + this.name + "\nDescrição: " + this.description;
+        return String.format("[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,shop=%s,amenity=%s,loc_name=%s,description=%s]",
+                ID,latitude,longitude,name,shortName,shop,amenity,locName,description);
     }
 
-    public JSONObject toJsonObject(){
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id",this.ID);
-            jsonObject.put("name",this.name);
-            jsonObject.put("short_name",this.shortName);
-            jsonObject.put("description",this.description);
-            jsonObject.put("latitude",this.latitude);
-            jsonObject.put("longitude",this.longitude);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        return jsonObject;
-    }
 
 
 }

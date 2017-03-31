@@ -14,18 +14,17 @@ import java.util.List;
 
 /**
  * Created by kaeuc on 10/22/2016.
- * Classe responsável por executar busca de Pontos de Interesse Específicos baseado na buca do usuário
- * no servidor do OSM (XAPI - API direta de busca) de maneira assíncrona
- * Referência: http://wiki.openstreetmap.org/wiki/Xapi#Overpass_API
- * Recebe uma String contendo qual informação/filtro deseja ser buscado e retorna uma objeto XML
- * em formato String que deve ser analisado para retirar as localizações relevantes
+ * Classe responsável por executar busca de Pontos de Interesse Específicos baseado na busca do usuário
+ * utilizando a Overpass query language de maneira assíncrona
+ * Referência: http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL
+ * Recebe uma String contendo qual informação/filtro deseja ser buscado e retorna uma lista com os locais encontrados
  */
 
 public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
     private static final String TAG = "OsmDataRequest" ;
     // interface resposável por devolver o resultado da task pra atividade principal
-    private OsmDataRequestResponse callBack;
+    private OnOsmDataListener callBack;
     private ProgressBar progressBar;
     private String filtro;
     private int taskStatus;
@@ -33,10 +32,15 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
     public OsmDataRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
-        this.callBack = (OsmDataRequestResponse) parentContext;
+        this.callBack = (OnOsmDataListener) parentContext;
         this.progressBar = progressBar;
         this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
+
+    public interface OnOsmDataListener {
+        void onOsmDataResponse(List<Place> locais, String filtro, int taskStatus);
+    }
+
 
     @Override
     protected String doInBackground(String... params) {
@@ -75,14 +79,12 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String jsonResponse) {
         super.onPostExecute(jsonResponse);
-        // Recebe o xml em forma de uma String e e analisa as informções relevantes
-//        final List<Place> locais = JsonParser.parseOsmResponse(jsonResponse);
+        //Recebe a resposta em json e processa os lugares em uma lista
         final List<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
         // Retorna os valores para a activity que chamou a ASyncTask
-        callBack.onOsmTaskResponse(places,filtro,taskStatus);
+        callBack.onOsmDataResponse(places,filtro,taskStatus);
         // esconde a barra de progresso
         progressBar.setVisibility(View.GONE);
-
 
     }
 

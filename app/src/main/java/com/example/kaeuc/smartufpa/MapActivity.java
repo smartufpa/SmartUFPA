@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -37,15 +38,13 @@ import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.BusLocationRequest;
-import com.example.kaeuc.smartufpa.server.BusLocationRequestResponse;
 import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
-import com.example.kaeuc.smartufpa.server.OverpassSearchResponse;
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.customviews.AddPlaceInfoWindow;
 import com.example.kaeuc.smartufpa.utils.NetworkManager;
-import com.example.kaeuc.smartufpa.utils.PlaceDetailsBottomSheet;
-import com.example.kaeuc.smartufpa.utils.SearchListAdapter;
+import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
+import com.example.kaeuc.smartufpa.customviews.SearchListAdapter;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
-import com.example.kaeuc.smartufpa.server.OsmDataRequestResponse;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ShowcaseHolder;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ToolbarActionItemTarget;
@@ -79,14 +78,15 @@ import static com.example.kaeuc.smartufpa.R.id.map;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
-        OsmDataRequestResponse,BusLocationRequestResponse,
-        OverpassSearchResponse,
+        OsmDataRequest.OnOsmDataListener,BusLocationRequest.OnBusLocationListener,
+        OverpassSearchRequest.OnOverpassListener,
         SearchView.OnQueryTextListener {
 
-    public static final String ACTION_MAP = "osmapp.ACTION_MAP";
-    public static final String CATEGORY_MAP = "osmapp.CATEGORY_MAP";
-    private static final String TAG = "MapActivity";
-    private static final String TUTORIAL_EXECUTED = "Tutorial_executed";
+    public static final String ACTION_MAP = "smartufpa.ACTION_MAP";
+    public static final String CATEGORY_MAP = "smartufpa.CATEGORY_MAP";
+    private static final String TAG = MapActivity.class.getSimpleName();
+    private final int TUTORIAL_EXECUTED = 1;
+    private final int TUTORIAL_NOT_EXECUTED = 0;
 
     private final XYTileSource MAPA_UFPA = new XYTileSource("ufpa_mapa", 15, 18, 256, ".png", new String[] {});
 
@@ -131,28 +131,190 @@ public class MapActivity extends AppCompatActivity
     private List<String> mapLayers = new ArrayList<>();
 
 
+    // TODO: 2. Implementar onSavedInstace
 
-    /* Inicio dos métodos do ciclo da activity*/
+    /*
+     * Cria um provedor de tiles que será setado para ser a camada de transportes
+     *  e então adiciona essa camada sobrepondo a existente no mapa.
+     */
+
+    private void activeBusRouteLayer(){
+        if(!isBusRouteEnabled) {
+            final MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
+            provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
+            addlayerToMap(new TilesOverlay(provider, MapActivity.this),Constants.LAYER_BUS_ROUTE);
+            Log.i(TAG, "Layer added: Bus route -" + mapView.getOverlayManager().toString());
+            isBusRouteEnabled = true;
+        }
+    }
+
+
+    private void addlayerToMap(Overlay poiMarkers, String layerName){
+        mapView.getOverlays().add(poiMarkers);
+        mapLayers.add(layerName);
+        if(!layerName.equals(Constants.LAYER_MY_LOCATION))
+            btnClearMap.setVisibility(View.VISIBLE);
+        mapView.invalidate();
+    }
+
+
+    private boolean addLocationToMap() {
+        Toast.makeText(MapActivity.this, R.string.msg_drag_marker, Toast.LENGTH_LONG).show();
+        Marker customMarker = createCustomMarker(null, (GeoPoint) mapView.getMapCenter(), null);
+        customMarker.setInfoWindow(new AddPlaceInfoWindow(R.layout.custom_info_window,mapView,customMarker,MapActivity.this));
+        customMarker.setDraggable(true);
+
+        customMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                if(!marker.isInfoWindowShown())
+                    marker.showInfoWindow();
+                return false;
+            }
+        });
+
+        customMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDrag(Marker marker) {}
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                marker.showInfoWindow();
+                mapController.animateTo(marker.getPosition());
+            }
+
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                if(marker.isInfoWindowShown())
+                    marker.getInfoWindow().close();
+            }
+        });
+        final FolderOverlay folderOverlay = new FolderOverlay();
+        folderOverlay.add(customMarker);
+        addlayerToMap(folderOverlay,Constants.LAYER_ADD_LOCATION);
+        return false;
+    }
+
+
+    private void clearMapView(){
+        Log.i(TAG+".clearMap()","Previous map overlays: "+ mapView.getOverlayManager().toString());
+        int size = mapView.getOverlays().size() -1;
+        for (int i= size ; i> 0 ;i--){
+            if(mapView.getOverlays().get(i) instanceof FolderOverlay
+                    || mapView.getOverlays().get(i) instanceof Polyline  || mapView.getOverlays().get(i) instanceof TilesOverlay){
+                mapView.getOverlays().remove(i);
+                mapLayers.remove(i);
+            }
+        }
+        if(isSearchEnabled){
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.setIconifiedByDefault(false);
+        }
+        if(searchResultSheetBehavior != null && searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
+            searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
+
+        if(isBusRouteEnabled){
+            mapView.setTileSource(MAPA_UFPA);
+        }
+        isXeroxEnabled = false;
+        isRestaurantEnabled = false;
+        isSearchEnabled = false;
+        isGoToRouteEnabled = false;
+        isRestroomEnabled= false;
+        isBusRouteEnabled = false;
+        isAuditoriumEnabled= false;
+        isLibrariesEnabled = false;
+        btnClearMap.setVisibility(View.GONE);
+
+        mapView.invalidate();
+        Log.i(TAG+".clearMap()","Cleared map: "+ mapView.getOverlayManager().toString());
+    }
+
+    private Marker createCustomMarker(@Nullable Drawable poiIcon, GeoPoint location, @Nullable Marker.OnMarkerClickListener clickListener){
+        Marker poiMarker = new Marker(mapView);
+        poiMarker.setAnchor(0.5f,1);
+        poiMarker.setPosition(location);
+        if(poiIcon == null)
+            poiIcon = ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker);
+        poiMarker.setIcon(poiIcon);
+        if(clickListener != null){
+            poiMarker.setOnMarkerClickListener(clickListener);
+        }
+        return poiMarker;
+
+    }
+
+
+    private Marker createCustomMarker(@Nullable Drawable poiIcon, GeoPoint location, String markerTitle,
+                                      String markerDescription, @Nullable Marker.OnMarkerClickListener clickListener){
+        Marker poiMarker = new Marker(mapView);
+        poiMarker.setAnchor(0.5f,1);
+        poiMarker.setPosition(location);
+        if(poiIcon == null)
+            poiIcon = ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker);
+        poiMarker.setIcon(poiIcon);
+        poiMarker.setSnippet(markerDescription);
+        if(clickListener != null){
+            poiMarker.setOnMarkerClickListener(clickListener);
+        }
+
+        return poiMarker;
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onBusLocationResponse(GeoPoint busLocation, final int taskStatus) {
+        if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS || taskStatus == Constants.SERVER_INTERNAL_ERROR) {
+            final FolderOverlay busLocationLayer = new FolderOverlay();
+            busLocationLayer.add(createCustomMarker(
+                    ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_bus_location_marker),
+                    busLocation, null));
+            addlayerToMap(busLocationLayer,Constants.LAYER_BUS_MARKER);
+            if (taskStatus == Constants.SERVER_INTERNAL_ERROR) { // TODO tratar erro de timeout devidamente
+                Toast.makeText(this, getString(R.string.msg_bus_last_known_location), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, getString(R.string.msg_bus_updated_location), Toast.LENGTH_SHORT).show();
+            }
+            Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
+        }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
+            Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG,"onCreate()");
         setContentView(R.layout.activity_map);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Views
-                drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                toolbar = (Toolbar) findViewById(R.id.toolbar);
-                navigationView = (NavigationView) findViewById(R.id.nav_view);
-                mapView = (MapView) findViewById(map);
-                fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
-                fabBusLocation = (FloatingActionButton) findViewById(R.id.fab_bus_location);
-                fabBusLocation.setBackgroundTintList(
-                        ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
-                progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-                btnClearMap = (Button) findViewById(R.id.btn_clear_map);
-            }
-        });
+
+        // Views
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        mapView = (MapView) findViewById(map);
+        fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
+        fabBusLocation = (FloatingActionButton) findViewById(R.id.fab_bus_location);
+        fabBusLocation.setBackgroundTintList(
+                ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.disabledButton)));
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        btnClearMap = (Button) findViewById(R.id.btn_clear_map);
+
+
         // Configuração da action bar e do drawer lateral
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -175,144 +337,6 @@ public class MapActivity extends AppCompatActivity
         setupMap();
 
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(TAG,"onPause called");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.removeUpdates(this);
-        }
-
-        myLocationOverlay.disableMyLocation();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(TAG,"onResume called");
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
-        }
-        myLocationOverlay.enableMyLocation();
-
-
-
-        fabBusLocation.setBackgroundTintList(
-                ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.colorAccent)));
-        fabBusLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(NetworkManager.checkNetworkConnection(MapActivity.this)) {
-                    new BusLocationRequest(MapActivity.this, progressBar).execute(Constants.URL_BUS_LOCATION);
-                }else{
-                    Toast.makeText(MapActivity.this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
-        // Ações para os butões flutuantes
-        fabMyLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (myCurrentLocation == null) {
-                    //Ações do GPS, é verificado se o gps está ativo quando o usuário aperta o botão flutuante da localização
-                    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
-                    //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
-                    if (!GPSEnabled) {
-                        Toast.makeText(MapActivity.this, R.string.turn_on_gps_msg, Toast.LENGTH_SHORT).show();
-                    }
-                    Toast.makeText(MapActivity.this, R.string.msg_loading_current_position, Toast.LENGTH_SHORT).show();
-                    // se o usuário se encontra fora da região do mapa
-                } else if (!mapRegion.contains(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude())))
-                    Toast.makeText(MapActivity.this, R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
-                    // senão move a camera para a localização atual do usuário
-                else
-                    mapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude()));
-            }
-        });
-
-
-
-        btnClearMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearMapView();
-            }
-        });
-
-
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG,"onDestroy called");
-        locationManager = null;
-        myCurrentLocation = null;
-        myLocationOverlay = null;
-        this.mapView = null;
-        this.mapController = null;
-    }
-
-    /* Fim dos métodos do ciclo da activity*/
-
-    // Método responsável por configurar o mapa na sua inicialização
-    private void setupMap() {
-        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
-        // Restrição da região mostrada do mapa usando coordenadas
-        mapRegion = new BoundingBoxE6(-1.457886, -48.437957, -1.479967, -48.459779);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Configuração do MapController: Posição inicial e zoom
-                defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
-                startPoint = new GeoPoint(defaultLocation.getLatitude(), defaultLocation.getLongitude());
-                mapController = mapView.getController();
-                mapController.setZoom(16);
-                mapController.animateTo(startPoint);
-
-                // Configuração do Mapa
-                mapView.setTilesScaledToDpi(true);
-//                mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-
-                //  Atribui o mapa offline em mapView
-                mapView.setTileSource(MAPA_UFPA);
-
-                /* Desabilita o uso da internet (opcional, mas uma boa forma de previnir que o mapa
-                 * seja carregado via rede e de testar se o zip está carregando
-                 */
-                mapView.setUseDataConnection(false);
-
-                mapView.setBuiltInZoomControls(false);
-                mapView.setMinZoomLevel(15);
-                mapView.setMaxZoomLevel(18);
-                mapView.setMultiTouchControls(true);
-                mapView.setUseDataConnection(true);
-
-
-                // Restringe a área do mapa à região escolhida
-                mapView.setScrollableAreaLimit(mapRegion);
-            }
-        });
-
-
-
-        addlayerToMap(myLocationOverlay,Constants.LAYER_MY_LOCATION);
-        Log.i(TAG,"Layer added: My Location - " + mapView.getOverlayManager().toString());
-        // Configuração para mostrar o boneco da posição do usuário
-        myLocationOverlay.enableMyLocation();
-        myLocationOverlay.disableFollowLocation();
-        myLocationOverlay.setOptionsMenuEnabled(true);
-    }
-
-
     // Método responsável por criar as opções de menu na barra superior do aplicativo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -359,27 +383,31 @@ public class MapActivity extends AppCompatActivity
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
+        searchView.setIconifiedByDefault(true);
 
-        //Restaura as preferencias gravadas
-        SharedPreferences settings = getSharedPreferences(TUTORIAL_EXECUTED, 0);
-        if(settings.getInt("tutorial_executed",0) == 0);
-//            runMapTutorial();
+        //Restaura as preferencias gravadas para executar ou não o tutorial
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        final int tutorialStatus = sharedPref.getInt(getString(R.string.tutorial_map_executed), TUTORIAL_NOT_EXECUTED);
+        if(tutorialStatus == TUTORIAL_NOT_EXECUTED)
+            runMapTutorial();
 
         return true;
     }
 
-
-    /* Início dos métodos de utilização da lista lateral (Drawer)*/
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG,"onDestroy()");
+        locationManager = null;
+        myCurrentLocation = null;
+        myLocationOverlay = null;
+        this.mapView = null;
+        this.mapController = null;
+    }
 
     @Override
-    public void onBackPressed() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    public void onLocationChanged(Location location) {
+        myCurrentLocation = location;
     }
 
     // Configuração dos items da lista lateral
@@ -425,75 +453,21 @@ public class MapActivity extends AppCompatActivity
         return true;
     }
 
-    /* Fim dos métodos de utilização do Drawer lateral*/
-
-
-    /* Início de  métodos envolvendo localização*/
-
-
-    /* Localiza e traça as rotas entre dois pontos no mapa
-    * Referências: https://github.com/MKergall/osmbonuspack/wiki/Tutorial_1
-    *              https://graphhopper.com/api/1/docs/routing/
-    *              https://github.com/MKergall/osmbonuspack/wiki/WhichRoutingService
-    *              RoadManager Class
-    */
-    public void traceRoute(final Place place){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RoadManager roadManager = new GraphHopperRoadManager(Constants.GRAPHHOPPER_KEY,true);
-                // RoadManager roadManager = new GoogleRoadManager(); // bom para carros
-                roadManager.addRequestOption("vehicle=foot");
-                ArrayList<GeoPoint> wayPoints = new ArrayList<>();
-                if(myCurrentLocation != null) {
-                    // final GeoPoint startPoint = new GeoPoint(-1.47465, -48.45605); // Local teste: icen
-                    wayPoints.add(new GeoPoint(myCurrentLocation)); // ponto de inicio
-                    wayPoints.add(new GeoPoint(place.getLatitude(),place.getLongitude())); // ponto final
-                    final Polyline roadOverlay = RoadManager.buildRoadOverlay(roadManager.getRoad(wayPoints));
-                    roadOverlay.setWidth(15);
-                    mapView.getOverlays().add(roadOverlay);
-                    mapLayers.add(Constants.LAYER_ROUTE);
-                    btnClearMap.setVisibility(View.VISIBLE);
-                    Log.i(TAG,"Layer added: foot path - " + mapView.getOverlayManager().toString());
-                    isGoToRouteEnabled = true;
-
-                }
-            }
-        }).start();
-        mapView.invalidate();
-
-    }
-
     @Override
-    public void onLocationChanged(Location location) {
-        myCurrentLocation = location;
-    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add_location:
+                addLocationToMap();
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    /* Fim dos  métodos envolvendo localização*/
-
-
-    /* Início dos métodos que são chamados em uma AsyncTask.
-    *  Esses são responsáveis por receber o resultado dessas tarefas
-    */
 
     // Recebe dados da execução de OsmDataRequest
     @Override
-    public void onOsmTaskResponse(final List<Place> places, final String filter, final int taskStatus) {
+    public void onOsmDataResponse(final List<Place> places, final String filter, final int taskStatus) {
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS) {
             runOnUiThread(new Runnable() {
                 public void run() {
@@ -501,7 +475,6 @@ public class MapActivity extends AppCompatActivity
                     final FolderOverlay poiMarkers = new FolderOverlay();
                     Drawable poiIcon = null;
                     // Configura o ícone de acordo com o filtro que será adicionado
-                    // todo criar o ícone do auditório e bibliotecas
                     if (filter.equals(Constants.FILTER_XEROX))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
                     else if (filter.equals(Constants.FILTER_RESTAURANT))
@@ -523,7 +496,9 @@ public class MapActivity extends AppCompatActivity
                                 return true;
                             }
                         };
-                        poiMarkers.add(createCustomMarker(poiIcon, place.getGeoPoint(), markerClick));
+                        poiMarkers.add(createCustomMarker(poiIcon,
+                                new GeoPoint(place.getLatitude(),place.getLongitude()),
+                                markerClick));
                     }
                     addlayerToMap(poiMarkers,filter);
                     Toast.makeText(MapActivity.this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
@@ -535,9 +510,316 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onOverpassResponse(final ArrayList<Place> places, final int taskStatus) {
+
+        if (taskStatus == Constants.SERVER_RESPONSE_SUCCESS) {
+            // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
+            if (places.size() > 1) {
+                setupSearchResultBottomSheet(places);
+            }else{
+                mapController.animateTo(places.get(0).getGeoPoint());
+            }
+
+            final FolderOverlay poiMarkers = new FolderOverlay();
+
+            for (final Place place : places) {
+                Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker, MapView mapView) {
+                        marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
+                        marker.setAnchor(0.5f,1);
+                        MapActivity.this.mapView.invalidate();
+                        PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+                        sheet.show(getSupportFragmentManager(),"bottom sheet");
+                        return true;
+                    }
+                };
+
+                Marker marker = createCustomMarker(null,
+                        place.getGeoPoint(),
+                        place.getName(),
+                        place.getDescription(),
+                        markerClick);
+                poiMarkers.add(marker);
+            }
+
+            addlayerToMap(poiMarkers,Constants.LAYER_SEARCH);
+            isSearchEnabled = true;
+            Log.println(Log.INFO, TAG, "Layer added: Search - " + mapView.getOverlayManager().toString());
+            Toast.makeText(MapActivity.this, getString(R.string.msg_click_marker), Toast.LENGTH_SHORT).show();
+            mapView.invalidate();
+        } else if(taskStatus == Constants.SERVER_INTERNAL_ERROR) {
+            Toast.makeText(MapActivity.this, getString(R.string.error_on_connection),
+                    Toast.LENGTH_SHORT).show();
+            btnClearMap.setVisibility(View.GONE);
+        }else if(taskStatus == Constants.SERVER_RESPONSE_NO_CONTENT){
+            Toast.makeText(MapActivity.this, getString(R.string.msg_no_results ),
+                    Toast.LENGTH_SHORT).show();
+            btnClearMap.setVisibility(View.GONE);
+        }
+
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG,"onPause()");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this);
+        }
+
+        myLocationOverlay.disableMyLocation();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    // Método executado quando a busca é a submetida na Searchview
+    @Override
+    public boolean onQueryTextSubmit(final String query) {
+        // É necessário passar como argumentos para a requisição a lat e long para restringir a busca
+        // à região da universidade
+        if (NetworkManager.checkNetworkConnection(this)) {
+            final String latitude = String.valueOf(defaultLocation.getLatitude());
+            final String longitude = String.valueOf(defaultLocation.getLongitude());
+            findViewById(R.id.action_search).clearFocus();
+            // Se uma busca ainda está ativa, limpar o mapa antes de fazer uma nova
+            if (isSearchEnabled) {
+                removeLayerFromMap(Constants.LAYER_SEARCH);
+                isSearchEnabled = false;
+            }
+            new OverpassSearchRequest(this,progressBar).execute(query);
+        }else{
+            Toast.makeText(this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
+        }
+
+        return true;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG,"onRestart()");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG,"onResume()");
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
+        }
+
+        addlayerToMap(myLocationOverlay,Constants.LAYER_MY_LOCATION);
+        Log.i(TAG,"Layer added: My Location - " + mapView.getOverlayManager().toString());
+        // Configuração para mostrar o boneco da posição do usuário
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.disableFollowLocation();
+        myLocationOverlay.setOptionsMenuEnabled(true);
+
+
+        fabBusLocation.setBackgroundTintList(
+                ColorStateList.valueOf(ContextCompat.getColor(MapActivity.this, R.color.colorAccent)));
+        fabBusLocation.setOnClickListener(new FloatingActionButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(NetworkManager.checkNetworkConnection(MapActivity.this)) {
+                    new BusLocationRequest(MapActivity.this, progressBar).execute(Constants.URL_BUS_LOCATION);
+                }else{
+                    Toast.makeText(MapActivity.this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        // Ações para os butões flutuantes
+        fabMyLocation.setOnClickListener(new FloatingActionButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myCurrentLocation == null) {
+                    //Ações do GPS, é verificado se o gps está ativo quando o usuário aperta o botão flutuante da localização
+                    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    boolean GPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER); //GPSEnabled(Variável booleana) recebe o status do gps
+                    //Verifica se o gps está ligado, se sim abre o menu de configurações para ativá-lo
+                    if (!GPSEnabled) {
+                        Toast.makeText(MapActivity.this, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
+                    }
+                    Toast.makeText(MapActivity.this, R.string.msg_loading_current_position, Toast.LENGTH_SHORT).show();
+                    // se o usuário se encontra fora da região do mapa
+                } else if (!mapRegion.contains(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude())))
+                    Toast.makeText(MapActivity.this, R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
+                    // senão move a camera para a localização atual do usuário
+                else
+                    mapController.animateTo(new GeoPoint(myCurrentLocation.getLatitude(), myCurrentLocation.getLongitude()));
+            }
+        });
+
+        btnClearMap.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearMapView();
+            }
+
+        }
+       
+
+        });
+
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG,"onStart()");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG,"onStop()");
+    }
+
+    private boolean removeLayerFromMap(String layerName){
+        try{
+            mapView.getOverlays().remove(mapLayers.indexOf(layerName));
+            mapLayers.remove(layerName);
+            if(mapLayers.size() < 2){
+                btnClearMap.setVisibility(View.GONE);
+            }
+        }catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+
+       /* Cria um provedor de tiles que será setado para ser a camada de transportes
+       e então adiciona essa camada sobrepondo a existente no mapa.
+
+        */
+
+    private void activeBusRouteLayer(){
+        if(!isBusRouteEnabled) {
+
+            mapView.setTileSource(MAPA_UFPA_TRANSPORTE);
+            mapView.invalidate();
+
+            Log.i(TAG, "Layer activated: Bus route -" + mapView.getOverlayManager().toString());
+            isBusRouteEnabled = true;
+            btnClearMap.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    private void runMapTutorial(){
+        ArrayList<ShowcaseHolder> holders = new ArrayList<>();
+
+        try {
+            holders.add(new ShowcaseHolder(new ToolbarActionItemTarget(toolbar,R.id.action_add_location),
+                    getString(R.string.tutorial_msg_add_location)));
+            holders.add( new ShowcaseHolder(new ToolbarActionItemTarget(toolbar,R.id.action_search),
+                    getString(R.string.tutorial_msg_search)));
+            holders.add(new ShowcaseHolder(ViewTargets.navigationButtonViewTarget(toolbar),
+                    getString(R.string.tutorial_msg_menu)));
+            holders.add(new ShowcaseHolder(new ViewTarget(fabMyLocation),
+                    getString(R.string.tutorial_msg_current_location),
+                    Constants.TUTORIAL_BTN_LEFT));
+            holders.add(new ShowcaseHolder(new ViewTarget(fabBusLocation),
+                    getString(R.string.tutorial_msg_bus_location),
+                    Constants.TUTORIAL_BTN_LEFT));
+            new AppTutorial(holders,MapActivity.this);
+        } catch (ViewTargets.MissingViewException e) {
+            e.printStackTrace();
+        }
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(getString(R.string.tutorial_map_executed),TUTORIAL_EXECUTED);
+        final boolean commit = editor.commit();
+        Log.i(TAG + ".tutorial()", String.valueOf(commit));
+
+    }
+
+    /* Fim dos métodos do ciclo da activity*/
+
+    // Método responsável por configurar o mapa na sua inicialização
+    private void setupMap() {
+        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
+        // Restrição da região mostrada do mapa usando coordenadas
+        mapRegion = new BoundingBoxE6(-1.457886, -48.437957, -1.479967, -48.459779);
+
+        // Configuração do MapController: Posição inicial e zoom
+        defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
+        startPoint = new GeoPoint(defaultLocation.getLatitude(), defaultLocation.getLongitude());
+        mapController = mapView.getController();
+        mapController.setZoom(16);
+        mapController.animateTo(startPoint);
+
+         // Configuração do Mapa
+                mapView.setTilesScaledToDpi(true);
+//                mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+
+                //  Atribui o mapa offline em mapView
+                mapView.setTileSource(MAPA_UFPA);
+
+                /* Desabilita o uso da internet (opcional, mas uma boa forma de previnir que o mapa
+                 * seja carregado via rede e de testar se o zip está carregando
+                 */
+                mapView.setUseDataConnection(false);
+
+                mapView.setBuiltInZoomControls(false);
+                mapView.setMinZoomLevel(15);
+                mapView.setMaxZoomLevel(18);
+                mapView.setMultiTouchControls(true);
+                mapView.setUseDataConnection(true);
+
+
+        // Restringe a área do mapa à região escolhida
+        mapView.setScrollableAreaLimit(mapRegion);
+      
+       addlayerToMap(myLocationOverlay,Constants.LAYER_MY_LOCATION);
+        Log.i(TAG,"Layer added: My Location - " + mapView.getOverlayManager().toString());
+        // Configuração para mostrar o boneco da posição do usuário
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.disableFollowLocation();
+        myLocationOverlay.setOptionsMenuEnabled(true);
+
+    }
+
+
 
     // Configura a bottomsheet de múltiplos resultados da busca
-    // // TODO: 2/24/2017 reestruturar a view para multiplos resultados 
+    // // TODO: 2/24/2017 reestruturar a view para multiplos resultados
     private void setupSearchResultBottomSheet(final ArrayList<Place> places){
         // Configuração da listview
         final SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,places);
@@ -579,250 +861,40 @@ public class MapActivity extends AppCompatActivity
     }
 
 
-    // Método executado quando a busca é a submetida na Searchview
-    @Override
-    public boolean onQueryTextSubmit(final String query) {
-        // É necessário passar como argumentos para a requisição a lat e long para restringir a busca
-        // à região da universidade
-        if (NetworkManager.checkNetworkConnection(this)) {
-            final String latitude = String.valueOf(defaultLocation.getLatitude());
-            final String longitude = String.valueOf(defaultLocation.getLongitude());
-            findViewById(R.id.action_search).clearFocus();
-            // Se uma busca ainda está ativa, limpar o mapa antes de fazer uma nova
-            if (isSearchEnabled) {
-                removeLayerFromMap(Constants.LAYER_SEARCH);
-                isSearchEnabled = false;
-            }
-            new OverpassSearchRequest(this,progressBar).execute(query);
-        }else{
-            Toast.makeText(this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
-
-    // // TODO: Salvar informações relevantes para restaurar o estado da aplicação
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-
-    @Override
-    public void onBusLocationTaskResponse(GeoPoint busLocation, final int taskStatus) {
-        if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS || taskStatus == Constants.SERVER_INTERNAL_ERROR) {
-            final FolderOverlay busLocationLayer = new FolderOverlay();
-            busLocationLayer.add(createCustomMarker(
-                    ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_bus_location_marker),
-                    busLocation, null));
-            addlayerToMap(busLocationLayer,Constants.LAYER_BUS_MARKER);
-            if (taskStatus == Constants.SERVER_INTERNAL_ERROR) { // TODO tratar erro de timeout devidamente
-                Toast.makeText(this, getString(R.string.msg_bus_last_known_location), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, getString(R.string.msg_bus_updated_location), Toast.LENGTH_SHORT).show();
-            }
-            Log.println(Log.INFO, TAG, "Layer added: Bus Location - " + mapView.getOverlayManager().toString());
-        }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
-            Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
-
-        }
-
-    }
-
-
-    private void clearMapView(){
-        Log.i(TAG+"-clearMap","Current map overlays: "+ mapView.getOverlayManager().toString());
-        int size = mapView.getOverlays().size() -1;
-        for (int i= size ; i> 0 ;i--){
-            if(mapView.getOverlays().get(i) instanceof FolderOverlay
-                    || mapView.getOverlays().get(i) instanceof Polyline  || mapView.getOverlays().get(i) instanceof TilesOverlay){
-                mapView.getOverlays().remove(i);
-                mapLayers.remove(i);
-            }
-        }
-        if(isSearchEnabled){
-            searchView.setQuery("", false);
-            searchView.clearFocus();
-            searchView.setIconifiedByDefault(false);
-        }
-        if(searchResultSheetBehavior != null && searchResultSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
-            searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
-
-        if(isBusRouteEnabled){
-            mapView.setTileSource(MAPA_UFPA);
-        }
-        isXeroxEnabled = false;
-        isRestaurantEnabled = false;
-        isSearchEnabled = false;
-        isGoToRouteEnabled = false;
-        isRestroomEnabled= false;
-        isBusRouteEnabled = false;
-        isAuditoriumEnabled= false;
-        isLibrariesEnabled = false;
-        btnClearMap.setVisibility(View.GONE);
-
-        mapView.invalidate();
-        Log.i(TAG+"-clearMap","Cleared map: "+ mapView.getOverlayManager().toString());
-    }
-
-    private Marker createCustomMarker(Drawable poiIcon, GeoPoint location, Marker.OnMarkerClickListener clickListener){
-        Marker poiMarker = new Marker(mapView);
-        poiMarker.setAnchor(0.5f,1);
-        poiMarker.setPosition(location);
-        poiMarker.setIcon(poiIcon);
-        if(clickListener != null){
-            poiMarker.setOnMarkerClickListener(clickListener);
-        }
-        return poiMarker;
-
-    }
-
-    private Marker createCustomMarker(Drawable poiIcon, GeoPoint location, String markerTitle,
-                                      String markerDescription, Marker.OnMarkerClickListener clickListener){
-        Marker poiMarker = new Marker(mapView);
-        poiMarker.setAnchor(0.5f,1);
-        poiMarker.setPosition(location);
-        poiMarker.setIcon(poiIcon);
-        poiMarker.setSnippet(markerDescription);
-        if(clickListener != null){
-            poiMarker.setOnMarkerClickListener(clickListener);
-        }
-
-        return poiMarker;
-
-    }
-
-    private void addlayerToMap(Overlay poiMarkers, String layerName){
-        mapView.getOverlays().add(poiMarkers);
-        mapLayers.add(layerName);
-        if(layerName != Constants.LAYER_MY_LOCATION)
-            btnClearMap.setVisibility(View.VISIBLE);
-        mapView.invalidate();
-    }
-
-    private boolean removeLayerFromMap(String layerName){
-        try{
-            mapView.getOverlays().remove(mapLayers.indexOf(layerName));
-            mapLayers.remove(layerName);
-            if(mapLayers.size() < 2){
-                btnClearMap.setVisibility(View.GONE);
-            }
-        }catch (ArrayIndexOutOfBoundsException e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-
-       /* Cria um provedor de tiles que será setado para ser a camada de transportes
-       e então adiciona essa camada sobrepondo a existente no mapa.
-
-        */
-
-    private void activeBusRouteLayer(){
-        if(!isBusRouteEnabled) {
-
-            mapView.setTileSource(MAPA_UFPA_TRANSPORTE);
-            mapView.invalidate();
-
-            Log.i(TAG, "Layer activated: Bus route -" + mapView.getOverlayManager().toString());
-            isBusRouteEnabled = true;
-            btnClearMap.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void runMapTutorial(){
-        ArrayList<ShowcaseHolder> holders = new ArrayList<>();
-
-        try {
-            holders.add( new ShowcaseHolder(new ToolbarActionItemTarget(toolbar,R.id.action_search),
-                    getString(R.string.tutorial_search)));
-            holders.add(new ShowcaseHolder(ViewTargets.navigationButtonViewTarget(toolbar),
-                    getString(R.string.tutorial_menu)));
-            holders.add(new ShowcaseHolder(new ViewTarget(fabMyLocation),
-                    getString(R.string.tutorial_current_location),
-                    Constants.TUTORIAL_BTN_LEFT));
-            holders.add(new ShowcaseHolder(new ViewTarget(fabBusLocation),
-                    getString(R.string.tutorial_bus_location),
-                    Constants.TUTORIAL_BTN_LEFT));
-            new AppTutorial(holders,MapActivity.this);
-        } catch (ViewTargets.MissingViewException e) {
-            e.printStackTrace();
-        }
-
-
-
-        SharedPreferences settings = getSharedPreferences(TUTORIAL_EXECUTED, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("tutorial_executed", 1);
-        //Confirma a gravação dos dados
-        editor.apply();
-
-
-
-    }
-
-
-    @Override
-    public void onOverpassTaskResponse(final ArrayList<Place> places, final int taskStatus) {
-        runOnUiThread(new Runnable() {
+    /* Localiza e traça as rotas entre dois pontos no mapa
+    * Referências: https://github.com/MKergall/osmbonuspack/wiki/Tutorial_1
+    *              https://graphhopper.com/api/1/docs/routing/
+    *              https://github.com/MKergall/osmbonuspack/wiki/WhichRoutingService
+    *              RoadManager Class
+    */
+    public void traceRoute(final Place place){
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                if (taskStatus == Constants.SERVER_RESPONSE_SUCCESS) {
-                    // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
-                    if (places.size() > 1) {
-                        setupSearchResultBottomSheet(places);
-                    }else{  // TODO tratar sem resultado
-                        mapController.animateTo(places.get(0).getGeoPoint());
-                    }
+                RoadManager roadManager = new GraphHopperRoadManager(Constants.GRAPHHOPPER_KEY,true);
+                // RoadManager roadManager = new GoogleRoadManager(); // bom para carros
+                roadManager.addRequestOption("vehicle=foot");
+                ArrayList<GeoPoint> wayPoints = new ArrayList<>();
+                if(myCurrentLocation != null) {
+                    // final GeoPoint startPoint = new GeoPoint(-1.47465, -48.45605); // Local teste: icen
+                    wayPoints.add(new GeoPoint(myCurrentLocation)); // ponto de inicio
+                    wayPoints.add(new GeoPoint(place.getLatitude(),place.getLongitude())); // ponto final
+                    final Polyline roadOverlay = RoadManager.buildRoadOverlay(roadManager.getRoad(wayPoints));
+                    roadOverlay.setWidth(15);
+                    mapView.getOverlays().add(roadOverlay);
+                    mapLayers.add(Constants.LAYER_ROUTE);
+                    btnClearMap.setVisibility(View.VISIBLE);
+                    Log.i(TAG,"Layer added: foot path - " + mapView.getOverlayManager().toString());
+                    isGoToRouteEnabled = true;
 
-                    final FolderOverlay poiMarkers = new FolderOverlay();
-
-                    for (final Place place : places) {
-                        Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
-                            @Override
-                            public boolean onMarkerClick(Marker marker, MapView mapView) {
-                                marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
-                                marker.setAnchor(0.5f,1);
-                                MapActivity.this.mapView.invalidate();
-                                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
-                                sheet.show(getSupportFragmentManager(),"bottom sheet");
-                                return true;
-                            }
-                        };
-
-                        Marker marker = createCustomMarker(ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker),
-                                place.getGeoPoint(), place.getName(),
-                                place.getDescription(), markerClick);
-                        poiMarkers.add(marker);
-                    }
-
-                    addlayerToMap(poiMarkers,Constants.LAYER_SEARCH);
-                    isSearchEnabled = true;
-                    Log.println(Log.INFO, TAG, "Layer added: Search - " + mapView.getOverlayManager().toString());
-                    Toast.makeText(MapActivity.this, getString(R.string.msg_click_marker), Toast.LENGTH_SHORT).show();
-                    mapView.invalidate();
-                } else if(taskStatus == Constants.SERVER_INTERNAL_ERROR) {
-                    Toast.makeText(MapActivity.this, getString(R.string.error_on_connection),
-                            Toast.LENGTH_SHORT).show();
-                    btnClearMap.setVisibility(View.GONE);
-                }else if(taskStatus == Constants.SERVER_RESPONSE_NO_CONTENT){
-                    Toast.makeText(MapActivity.this, getString(R.string.msg_no_results ),
-                            Toast.LENGTH_SHORT).show();
-                    btnClearMap.setVisibility(View.GONE);
                 }
             }
-        });
+        }).start();
+        mapView.invalidate();
 
     }
+
 }
 
-// TODO organizar o código e comentar código do tutorial.
+
 

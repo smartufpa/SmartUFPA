@@ -2,7 +2,6 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -12,8 +11,6 @@ import com.example.kaeuc.smartufpa.utils.JsonParser;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by kaeuc on 02/03/2017.
@@ -21,16 +18,20 @@ import java.util.List;
 
 public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
     public final String TAG = "OverpassSearch";
-    private OverpassSearchResponse callBack;
+    private OnOverpassListener callBack;
     private Context parentContext;
     private ProgressBar progressBar;
     private int taskStatus;
 
     public OverpassSearchRequest(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
-        this.callBack = (OverpassSearchResponse) parentContext;
+        this.callBack = (OnOverpassListener) parentContext;
         this.progressBar = progressBar;
         this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
+    }
+
+    public interface OnOverpassListener {
+        void onOverpassResponse(ArrayList<Place> places, int taskStatus);
     }
 
     @Override
@@ -48,9 +49,7 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
             e.printStackTrace();
             taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
         }
-
         return jsonResponse;
-
     }
 
     @Override
@@ -58,8 +57,12 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
         super.onPostExecute(jsonResponse);
         progressBar.setVisibility(View.GONE);
         ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
-        callBack.onOverpassTaskResponse(places,taskStatus);
-
+        if(places.isEmpty()){
+            taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;
+            callBack.onOverpassResponse(places,taskStatus);
+            return;
+        }
+        callBack.onOverpassResponse(places,taskStatus);
     }
 
     private String buildSearchQuery(String userQuery){
@@ -68,8 +71,7 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
         if (Character.isWhitespace(userQuery.charAt(userQuery.length()-1))){
             userQuery = userQuery.substring(0,userQuery.length()-1);
         }
-        return String.format(Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,userQuery,userQuery);
+        return String.format(Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,
+                userQuery,userQuery,userQuery,userQuery);
     }
 }
-
-

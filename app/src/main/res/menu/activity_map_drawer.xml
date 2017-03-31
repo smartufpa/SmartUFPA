@@ -36,7 +36,7 @@
         </menu>
     </item>
    <group>
-       <item android:title="@string/about_title"
+       <item android:title="@string/title_about"
            android:id="@+id/nav_about"
            android:icon="@drawable/ic_about"
            />
