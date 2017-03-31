@@ -20,8 +20,8 @@ import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.NetworkManager;
 
 public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFragment.OnMapDownloadFragmentListener{
-    public static final String ACTION_APP_MENU = "osmapp.ACTION_APP_MENU";
-    public static final String CATEGORY_APP_MENU = "osmapp.CATEGORY_APP_MENU";
+    public static final String ACTION_APP_MENU = "smartufpa.ACTION_APP_MENU";
+    public static final String CATEGORY_APP_MENU = "smartufpa.CATEGORY_APP_MENU";
     public static final String TAG = "AppMenu";
     private final int MAP_DOWNLOAD_NOT_EXECUTED = 0;
     private final int MAP_DOWNLOAD_EXECUTED = 1;
@@ -47,14 +47,19 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
                     }else{
 
                         //Restaura as preferencias gravadas para executar ou não o download
-                        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                        final int tutorialStatus = sharedPref.getInt(getString(R.string.map_download_executed), MAP_DOWNLOAD_NOT_EXECUTED);
-                        if(tutorialStatus == MAP_DOWNLOAD_NOT_EXECUTED) downloadMap();
-                        else{
-                            Intent intent = new Intent(MapActivity.ACTION_MAP);
-                            intent.addCategory(MapActivity.CATEGORY_MAP);
-                            startActivity(intent);
-                        }
+//                        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+//                        final int tutorialStatus = sharedPref.getInt(getString(R.string.map_download_executed), MAP_DOWNLOAD_NOT_EXECUTED);
+//                        if(tutorialStatus == MAP_DOWNLOAD_NOT_EXECUTED) downloadMap();
+//                        else{
+//                            Intent intent = new Intent(MapActivity.ACTION_MAP);
+//                            intent.addCategory(MapActivity.CATEGORY_MAP);
+//                            startActivity(intent);
+//                        }
+
+//                         TODO: CÓDIGO PROVISÓRIO ATÉ RESOLVER PROBLEMA NO CERTIFICADO
+                        Intent intent = new Intent(MapActivity.ACTION_MAP);
+                        intent.addCategory(MapActivity.CATEGORY_MAP);
+                        startActivity(intent);
 
                     }
                 }else{

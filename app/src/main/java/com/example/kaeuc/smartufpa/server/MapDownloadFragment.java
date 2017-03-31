@@ -163,6 +163,7 @@ public class MapDownloadFragment extends DialogFragment {
                 }else
                     inputStream = connection.getInputStream();
 
+                Log.i(TAG, "Connection Status: " + status);
                 // se a resposta for vazia
                 if(inputStream == null){
                     return null;

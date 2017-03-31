@@ -60,7 +60,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_map_download_title">Realizando o download do mapa:</string>
     <string name="map_download_executed">map_download_executed</string>
-    <string name="map_download_url">http://www.smartufpa.ufpa.br/map-download.php</string>
+    <string name="map_download_url">https://www.smartufpa.ufpa.br/map-download.php</string>
 
 
     <string name="input_fragment_name">Nome</string>

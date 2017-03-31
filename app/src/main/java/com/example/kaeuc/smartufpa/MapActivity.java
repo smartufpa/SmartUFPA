@@ -138,16 +138,6 @@ public class MapActivity extends AppCompatActivity
      *  e então adiciona essa camada sobrepondo a existente no mapa.
      */
 
-    private void activeBusRouteLayer(){
-        if(!isBusRouteEnabled) {
-            final MapTileProviderBasic provider = new MapTileProviderBasic(getApplicationContext());
-            provider.setTileSource(TileSourceFactory.PUBLIC_TRANSPORT);
-            addlayerToMap(new TilesOverlay(provider, MapActivity.this),Constants.LAYER_BUS_ROUTE);
-            Log.i(TAG, "Layer added: Bus route -" + mapView.getOverlayManager().toString());
-            isBusRouteEnabled = true;
-        }
-    }
-
 
     private void addlayerToMap(Overlay poiMarkers, String layerName){
         mapView.getOverlays().add(poiMarkers);
@@ -677,10 +667,11 @@ public class MapActivity extends AppCompatActivity
                 clearMapView();
             }
 
-        }
+
+    });
        
 
-        });
+
 
 
     }

@@ -32,16 +32,16 @@ public class LocalHostRequest extends AsyncTask<Place, Void, String> {
 
     @Override
     protected String doInBackground(Place... params) {
-
-        String response = null;
-        Place place = params[0];
-        try {
-            response = HttpRequest.makePostRequest(Constants.URL_LOCAL_HOST,null,place.toJsonObject());
-        } catch (SocketTimeoutException e) {
-            e.printStackTrace();
-        }
-
-        return response;
+//
+//        String response = null;
+//        Place place = params[0];
+//        try {
+////            response = HttpRequest.makePostRequest(Constants.URL_LOCAL_HOST,null,place.toJsonObject());
+//        } catch (SocketTimeoutException e) {
+//            e.printStackTrace();
+//        }
+//
+        return null;
     }
 
     @Override
