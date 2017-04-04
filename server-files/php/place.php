@@ -8,16 +8,29 @@ require_once("./utf8_encode.php");
 
 class Place {
 
-    var $latitude;
-    var $longitude;
-    var $name;
-    var $shortName;
-    var $id;
-    var $description;
+  var $amenity;
+  var $description;
+  var $id;
+  var $latitude;
+  var $locName;
+  var $longitude;
+  var $name;
+  var $shop;
+  var $shortName;
+
 
     const dbTable = "places";
+    const amenity_row = "amenity"
+    const description_row = "description";
+    const id_row = "place_id";
+    const latitude_row = "latitude";
+    const locName_row = "loc_name";
+    const longitude_row = "longitude";
+    const name_row = "name";
+    const shortName_row = "short_name";
 
-    function __construct($id, $name, $shortName, $description, $latitude, $longitude) {
+    function __construct($id, $name, $shortName, $description, $latitude,
+        $longitude, ) {
         $this->id = $id;
         $this->name = $name;
         $this->shortName = $shortName;
@@ -56,19 +69,19 @@ class Place {
                 'INSERT INTO ' . self::dbTable .' (id,name,short_name,description,latitude,longitude)'
                 . ' VALUES (?,?,?,?,?,?)'
         );
-       
+
        $name = Utf8Encoder::encode($place->name);
        $shortName = Utf8Encoder::encode($place->shortName);
        $description = Utf8Encoder::encode($place->description);
         $statement->bind_param('isssdd', $place->id,
                 $name,
                 $shortName,
-                $description,$place->latitude,$place->longitude);       
-        
+                $description,$place->latitude,$place->longitude);
+
         $statement->execute();
-        //Logs 
+        //Logs
         echo "Inserção bem sucedida.";
-        
+
     }
 
 }

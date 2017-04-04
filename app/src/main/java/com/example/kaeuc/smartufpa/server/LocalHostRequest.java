@@ -36,7 +36,7 @@ public class LocalHostRequest extends AsyncTask<Place, Void, String> {
 //        String response = null;
 //        Place place = params[0];
 //        try {
-////            response = HttpRequest.makePostRequest(Constants.URL_LOCAL_HOST,null,place.toJsonObject());
+//            response = HttpRequest.makePostRequest(Constants.URL_LOCAL_HOST,null,place.toJsonObject());
 //        } catch (SocketTimeoutException e) {
 //            e.printStackTrace();
 //        }

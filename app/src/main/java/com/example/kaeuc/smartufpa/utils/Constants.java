@@ -23,7 +23,7 @@ public final class Constants {
 
 
     //URLS
-    public static final String URL_LOCAL_HOST = "http://192.168.0.25:80/smart-ufpa/testmysql.php?";
+    public static final String URL_LOCAL_HOST = "http://192.168.0.25:80/";
     public static final String URL_BUS_LOCATION = "http://104.41.62.111:8080/bus-location";
     public static final String URL_OVERPASS_SERVER = "http://overpass-api.de/api/interpreter?data=";
 
