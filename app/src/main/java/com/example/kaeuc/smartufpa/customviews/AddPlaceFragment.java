@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.database.PlaceDAO;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.models.PlaceFactory;
 import com.example.kaeuc.smartufpa.models.overpass.Tags;
@@ -147,9 +148,9 @@ public class AddPlaceFragment extends DialogFragment {
                         dismiss();
                         break;
                     case R.id.btn_fragment_confirm:
-                        //TODO: Checar se já existe no banco
                         String jsonReturn = parseFormToJson();
-                        Log.i(TAG+"-json",jsonReturn);
+                        final PlaceDAO placeDAO = PlaceDAO.getInstance();
+                        placeDAO.insertPlace(jsonReturn);
                         dismiss();
                         break;
                 }
@@ -268,10 +269,9 @@ public class AddPlaceFragment extends DialogFragment {
         }
 
 
-        PlaceFactory placeFactory = new PlaceFactory();
-        Place place = placeFactory.getPlace(123456789, latitude, longitude, tags);
+        PlaceFactory placeFactory = PlaceFactory.getInstance();
+        Place place = placeFactory.createPlace(null, latitude, longitude, tags);
         tags = null;
-        // TODO: resolver ID,enviar para o servidor
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.toJson(place);

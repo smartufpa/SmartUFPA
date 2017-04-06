@@ -2,12 +2,15 @@ package com.example.kaeuc.smartufpa;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+import android.view.View;
+import android.widget.Button;
 
-import com.example.kaeuc.smartufpa.server.LocalHostRequest;
+import com.example.kaeuc.smartufpa.database.PlaceDAO;
+
+import java.net.SocketTimeoutException;
 
 
-public class SQLTestActivity extends AppCompatActivity implements LocalHostRequest.OnLocalHostListener {
+public class SQLTestActivity extends AppCompatActivity {
 
     public static final String SQL_ACTION = "smartufpa.SQL_ACTION";
 
@@ -15,13 +18,17 @@ public class SQLTestActivity extends AppCompatActivity implements LocalHostReque
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sqltest);
-//        new LocalHostRequest(this).execute(new Place(123456,48.23,7.48,"nome qualquer","nome","descrição qualquer"));
+        final Button btn = (Button) findViewById(R.id.btn_sqltest);
+        btn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlaceDAO placeDAO = PlaceDAO.getInstance();
+                placeDAO.getPlaceByName("Biblioteca Central");
+            }
+        });
 
 
     }
 
-    @Override
-    public void onLocalHostResponse(String response) {
-        ((AppCompatTextView)findViewById(R.id.txt_localhost)).setText(response);
-    }
+
 }

@@ -1,7 +1,7 @@
 package com.example.kaeuc.smartufpa.models;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.support.annotation.Nullable;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class Place implements Serializable {
     private String amenity;
     private String description;
-    private long ID;
+    private long id;
     private double latitude;
     private String locName;
     private double longitude;
@@ -21,9 +21,9 @@ public class Place implements Serializable {
     private String shop;
     private String shortName;
 
-    public Place(final long id, double latitude, double longitude, String name, String shortName,
+    public Place(@Nullable  final Long id, double latitude, double longitude, String name, String shortName,
                  String locName, String shop, String amenity, String description) {
-        this.ID = id;
+        if(id != null)  this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.shortName = shortName;
@@ -69,7 +69,7 @@ public class Place implements Serializable {
     @Override
     public String toString() {
         return String.format("[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,shop=%s,amenity=%s,loc_name=%s,description=%s]",
-                ID,latitude,longitude,name,shortName,shop,amenity,locName,description);
+                id,latitude,longitude,name,shortName,shop,amenity,locName,description);
     }
 
 

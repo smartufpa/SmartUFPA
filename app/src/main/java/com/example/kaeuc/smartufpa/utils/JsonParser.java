@@ -26,16 +26,16 @@ public class JsonParser {
     public static ArrayList<Place> parseOverpassResponse(String jsonInput){
         Gson gson = new Gson();
         OverpassJsonModel overpassJsonModel = gson.fromJson(jsonInput, OverpassJsonModel.class);
-        PlaceFactory factory = new PlaceFactory();
+        PlaceFactory factory = PlaceFactory.getInstance();
         ArrayList<Place> places = new ArrayList<>();
         for (Element element :
                 overpassJsonModel.getElements()) {
             try {
                 if (element.isCenterEmpty())
-                    places.add(factory.getPlace(element.getId(),
+                    places.add(factory.createPlace(element.getId(),
                             element.getLat(), element.getLon(), element.getTags()));
                 else
-                    places.add(factory.getPlace(element.getId(),
+                    places.add(factory.createPlace(element.getId(),
                             element.getCenter().getLat(), element.getCenter().getLon(), element.getTags()));
             }catch (NullPointerException e){
                 e.printStackTrace();

@@ -27,7 +27,7 @@ import java.net.URLEncoder;
 public class HttpRequest {
     private static final String TAG = "HttpRequest";
 
-    public static String makePostRequest(final String url,final String query, JSONObject jsonBody) throws SocketTimeoutException {
+    public static String makePostRequest(final String url,final String query, String jsonBody) throws SocketTimeoutException {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         OutputStream os = null;
@@ -50,10 +50,10 @@ public class HttpRequest {
             connection.setRequestProperty("Accept", "application/json");
 
             // Send POST output.
-            Log.println(Log.INFO,TAG+"/POST",jsonBody.toString());
+            Log.println(Log.INFO,TAG+"/POST",jsonBody);
             os = connection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
-            writer.write(jsonBody.toString());
+            writer.write(jsonBody);
             writer.flush();
             writer.close();
             os.close();
