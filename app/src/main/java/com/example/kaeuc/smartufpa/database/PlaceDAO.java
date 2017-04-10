@@ -37,7 +37,6 @@ public class PlaceDAO {
     private PlaceDAO() {}
 
     public boolean insertPlace(final String jsonInput){
-        //TODO: Checar se já existe no banco
         final Uri builtUri = Uri.parse(Constants.URL_LOCAL_HOST).buildUpon()
                 .appendPath(API_PATH)
                 .appendPath(FILE_NAME)

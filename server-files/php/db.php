@@ -1,6 +1,6 @@
 <?php
 
-    class DB {
+    class DBHelper {
 
     public static function connection(){
         $dbServer = '127.0.0.1';
