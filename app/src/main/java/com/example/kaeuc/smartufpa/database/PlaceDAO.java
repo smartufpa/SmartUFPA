@@ -20,8 +20,8 @@ public class PlaceDAO {
     private static final int GET_PLACE_BY_NAME = 0;
 
     private final String API_PATH = "phpAPI";
-    private final String FILE_NAME = "placeDAO.php";
-    private final String QUERY_METHOD = "method";
+    private final String FILE_NAME = "insertPlace.php";
+
 
     private final String TAG = PlaceDAO.class.getSimpleName();
 
@@ -66,7 +66,6 @@ public class PlaceDAO {
         final Uri builtUri = Uri.parse(Constants.URL_LOCAL_HOST).buildUpon()
                 .appendPath(API_PATH)
                 .appendPath(FILE_NAME)
-                .appendQueryParameter(QUERY_METHOD, String.valueOf(GET_PLACE_BY_NAME))
                 .appendQueryParameter(QUERY_PLACE_NAME,placeName)
                 .build();
 
