@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $obj = json_clean_decode($json);
     $place = new Place($obj->amenity,$obj->description, $obj->id,$obj->latitude,$obj->longitude,$obj->locName,
           $obj->name,$obj->shortName);
+    // TODO inserir local para moderação
   }
 }
 

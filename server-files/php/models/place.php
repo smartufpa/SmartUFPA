@@ -7,15 +7,15 @@ include_once("../utils/utf8_encode.php");
 
 class Place {
 
-  var $amenity;
-  var $description;
-  var $id;
-  var $latitude;
-  var $locName;
-  var $longitude;
-  var $name;
-  var $shop;
-  var $shortName;
+  private $amenity;
+  private $description;
+  private $id;
+  private $latitude;
+  private $locName;
+  private $longitude;
+  private $name;
+  private $shop;
+  private $shortName;
 
     function __construct($amenity,$description, $id,$latitude,$longitude,$locName,
           $name,$shortName) {

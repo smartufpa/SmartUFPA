@@ -1,12 +1,31 @@
 <?php
-// TODO Criar modelo do usuário e seu DAO 
-require_once './utils/Bcrypt.php';
-$input = json_decode(file_get_contents('php://input'),true);
+include_once '../utils/Bcrypt.php';
+require_once '../DAO/userDAO.php';
 
-$hash_pass = Bcrypt::hash($input["password"], 11);
-$username = $input["username"];
+$contents = utf8_encode(file_get_contents('php://input'));
+$input = json_decode($contents,true);
 
-// TODO Enviar resposta para a página do app.js
-header("HTTP/1.0 404 Not Found");
+if (json_last_error() === JSON_ERROR_NONE) {
+	$hashPassword = Bcrypt::hash($input["password"], 11);
+	$username = $input["username"];
+	
+	$dao = UserDAO::getInstance();
+	$result = $dao->insertUser(new User($username, $hashPassword));
+	var_dump($result);
+	switch ($result) {
+		case 1062:
+		 http_response_code(304);
+		break;		
+		case 0:
+			http_response_code(500);
+		break;
+		default:
+			http_response_code(200);
+		break;
+	}
+} else {
+	print("Erro ao processar JSON");
+} 
+
 
 ?>

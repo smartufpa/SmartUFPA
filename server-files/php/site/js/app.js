@@ -10,8 +10,13 @@ validationApp
 							.then(function success(data, status, headers, config){
 								console.log(status);
 								alert("Conta criada com sucesso.");
+								location.reload();
 							}, function error(data, status, headers, config){
-								alert("Erro interno do servidor.");
+								if(data.status == 304){
+									alert("Nome de usuário já existe, tente outra vez.");
+								}else{
+									alert("Erro interno do servidor.");									
+								}
 							});
 
 						}
