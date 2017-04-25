@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 19-Abr-2017 às 23:35
+-- Generation Time: 25-Abr-2017 às 03:23
 -- Versão do servidor: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -37,6 +37,13 @@ CREATE TABLE `places` (
   `short_name` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Extraindo dados da tabela `places`
+--
+
+INSERT INTO `places` (`place_id`, `amenity`, `description`, `latitude`, `loc_name`, `longitude`, `name`, `short_name`) VALUES
+(1, 'library', 'Super DescriÃ§Ã£o', -48.4516, 'local name', -1.26549, 'Nome da ora', 'NDO');
+
 -- --------------------------------------------------------
 
 --
@@ -52,7 +59,14 @@ CREATE TABLE `places_mod` (
   `longitude` float NOT NULL,
   `name` varchar(35) NOT NULL,
   `short_name` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+
+--
+-- Extraindo dados da tabela `places_mod`
+--
+
+INSERT INTO `places_mod` (`place_id`, `amenity`, `description`, `latitude`, `loc_name`, `longitude`, `name`, `short_name`) VALUES
+(68, 'library', 'Super Descrição', -48.4516, 'local name', -1.26549, 'Nome da ora2', 'NDO');
 
 -- --------------------------------------------------------
 
@@ -72,9 +86,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `hash_password`, `permission`) VALUES
-(8, 'kae', '$2a$11$ODEwMTAyNjc0NThmN2JmOOiqnQ635XHD/Vvgf3rjwPsCSM/0tryCK', 1),
-(19, 'kaes', '$2a$11$MjMwMTMxMzM2NThmN2NhYOhfwpg3N99Ec6x/9Cje/kLPRlYQO9N6a', 0),
-(20, 'kaeu', '$2a$11$ODUzODEyNDg5NThmN2NlOO8bqsEGQnHnjKnhnLrP0ZF8pm6To8SJ.', 0);
+(21, 'kae', '$2a$11$MTQ2OTY4MTM1OGZlOTc0NOUae8fMMoBlyMA.gwq6m6Cf6VEudFQXi', 0);
 
 --
 -- Indexes for dumped tables
@@ -84,13 +96,15 @@ INSERT INTO `users` (`user_id`, `username`, `hash_password`, `permission`) VALUE
 -- Indexes for table `places`
 --
 ALTER TABLE `places`
-  ADD PRIMARY KEY (`place_id`);
+  ADD PRIMARY KEY (`place_id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `places_mod`
 --
 ALTER TABLE `places_mod`
-  ADD PRIMARY KEY (`place_id`);
+  ADD PRIMARY KEY (`place_id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `users`
@@ -107,17 +121,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `places`
 --
 ALTER TABLE `places`
-  MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `places_mod`
 --
 ALTER TABLE `places_mod`
-  MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
