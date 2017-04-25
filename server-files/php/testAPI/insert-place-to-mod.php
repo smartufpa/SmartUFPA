@@ -1,20 +1,38 @@
-<?php
-include_once '.\DAO\placeDAO.php';
-include_once '.\models\place.php';
 
-header('Content-type: application/json;charset=utf-8"');
+
+<?php
+/**
+ * Script para inserção de conteúdo para moderação
+ * Recebe via método POST um arquivo json contendo as 
+ * informações do modelo estipulado para "Locais".
+ * 
+ */
+
+include_once dirname(__DIR__) . '/DAO/placeDAO.php';
+include_once dirname(__DIR__) . '/models/place.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $json = file_get_contents('php://input');
   if($json){
-    $obj = json_clean_decode($json);
-    $place = new Place($obj->amenity,$obj->description, $obj->id,$obj->latitude,$obj->longitude,$obj->locName,
-          $obj->name,$obj->shortName);
-    // TODO inserir local para moderação
+  	$jsonObj = json_decode($json);
+    $place = new Place(
+    		$jsonObj->amenity,
+    		$jsonObj->description, 
+    		$jsonObj->id,
+    		$jsonObj->latitude,
+    		$jsonObj->longitude,
+    		$jsonObj->locName,
+	        $jsonObj->name,
+    		$jsonObj->shortName
+    		);
+    //insere local para moderação
+	$placeDao = PlaceDAO::getInstance();
+	$placeDao->insertPlaceToModeration($place);
+  }else if(count($_POST) > 0){ // TODO fazer a chamada a API também pela URL
+  	
   }
 }
-
-
 
 ?>
 

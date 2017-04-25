@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Super classe que servirá de base para as locações dentro da universidade
+ * @author kaeuc
+ * Super classe que servirá de base para as locações dentro da universidade.
+ * Apresenta o modelo com os atributos selecionados para o projeto,
+ * baseado naquele usado a partir do OSM.
  */
-include_once("../utils/utf8_encode.php");
 
 class Place {
 
