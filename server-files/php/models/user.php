@@ -4,12 +4,12 @@ class User {
 	
 	private $userId;
 	private $username;
-	private $hashPassword;
+	private $password;
 
 	
-	function __construct($username,$hashPassword) {
+	function __construct($username,$password) {
 		$this->username = $username;
-		$this->hashPassword = $hashPassword;
+		$this->password = $password;
 	}
 	
 	function getUsername() {
@@ -20,8 +20,8 @@ class User {
 		return $this->userId;
 	}
 	
-	function getHashPassword() {
-		return $this->hashPassword;
+	function getPassword() {
+		return $this->password;
 	}
 }
 

@@ -71,7 +71,34 @@ class UserDAO {
 	
 	
 	// READ
+	/**
+	 * Função para validar login do usuário. Checa o hash da senha com 
+	 * o hash salvo no db.
+	 * @param User user
+	 * @return boolean true se os dados batem;
+	 * 		   false se não batem.
+	 */
 	
+	public function validateLogin(User $user){
+		
+		$connection = DBHelper::connection();
+		$SQL = $connection->prepare("SELECT " . self::COL_PASSWORD . " FROM " . self::DB_TABLE . " WHERE " 
+				. self::COL_USERNAME . " = ?");
+		if($connection->error){
+			die($connection->error);
+		}
+		$username = $user->getUsername();
+		$SQL->bind_param("s",$username);
+		$SQL->execute();
+		$SQL->bind_result($hash);
+		$SQL->fetch();
+	
+		if(password_verify($user->getPassword(), $hash)){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	
 	
 	// UPDATE
@@ -115,6 +142,7 @@ class UserDAO {
 			return false;
 		}
 	}
+	
 }
 
 ?>
