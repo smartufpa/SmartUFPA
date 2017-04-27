@@ -13,6 +13,7 @@ include_once dirname(__DIR__) . '/models/place.php';
 class PlaceDAO {
 	private static $instance = NULL;
 	const DB_TABLE = "places";
+	const DB_MOD_TABLE = "places_mod";
 	const COL_AMENITY = "amenity";
 	const COL_DESCRIPTION = "description";
 	const COL_ID = "place_id";
@@ -58,8 +59,11 @@ class PlaceDAO {
 			
 			$SQL = $connection->prepare ( 'INSERT INTO ' . $dbTable . $columns . ' VALUES (?,?,?,?,?,?,?,?)' );
 			if ($connection->error) {
-				echo $connection->error;
-				die ();
+				die ($connection->error);
+			}
+			
+			if(!$SQL){
+				die($connection->error);
 			}
 			
 			// Variaveis para guardar dados do obj Place
@@ -72,8 +76,14 @@ class PlaceDAO {
 			$name = $place->getName ();
 			$shortName = $place->getShortName ();
 			
-			$SQL->bind_param ( 'issdsdss', $id, $amenity, $description, $latitude, $locName, $longitude, $name, $shortName );
-			$SQL->execute ();
+			if(!$SQL->bind_param ( 'issdsdss', $id, $amenity, $description, $latitude, $locName, $longitude, $name, $shortName )){
+				// TODO tratar erro
+				die($SQL->error);
+			}
+			if(!$SQL->execute ()){
+				// TODO tratar erro
+				die($SQL->error);
+			}
 			
 			
 			$connection->close();
@@ -105,13 +115,12 @@ class PlaceDAO {
 		} else {
 			$columns = '(' . self::COL_ID . ',' . self::COL_AMENITY . ',' . self::COL_DESCRIPTION . ',' . self::COL_LATITUDE . ',' . self::COL_LOCNAME . ',' . self::COL_LONGITUDE . ',' . self::COL_NAME . ',' . self::COL_SHORTNAME . ')';
 			
-			$dbTable = "places_mod";
 			$connection = DBHelper::connection ();
 			
-			$SQL = $connection->prepare ( 'INSERT INTO ' . $dbTable . $columns . ' VALUES (?,?,?,?,?,?,?,?)' );
-			if ($connection->error) {
-				echo $connection->error;
-				die ();
+			$SQL = $connection->prepare ( 'INSERT INTO ' . self::DB_MOD_TABLE . $columns . ' VALUES (?,?,?,?,?,?,?,?)' );
+			if (!$SQL) {
+				// TODO tratar erro
+				die ($connection->error);
 			}
 			
 			// Variaveis para guardar dados do obj Place
@@ -124,8 +133,14 @@ class PlaceDAO {
 			$name = $place->getName ();
 			$shortName = $place->getShortName ();
 			
-			$SQL->bind_param ( 'issdsdss', $id, $amenity, $description, $latitude, $locName, $longitude, $name, $shortName );
-			$SQL->execute ();
+			if(!$SQL->bind_param ( 'issdsdss', $id, $amenity, $description, $latitude, $locName, $longitude, $name, $shortName )){
+				// TODO Tratar erro
+				die($SQL->error);
+			}
+			if(!$SQL->execute ()){
+				// TODO Tratar erro
+				die($SQL->error);
+			}
 			
 			
 			$connection->close();
@@ -144,7 +159,37 @@ class PlaceDAO {
 	
 	// READ 
 	
+	/**
+	 * Função que retorna todos os lugares que estão na tabela de moderação atualmente
+	 * @return Place[] - Array de Place
+	 */
 	
+	public function getAllPlacesToModeration(){
+		$connection = DBHelper::connection();
+		$SQL = $connection->prepare("SELECT * FROM " . self::DB_MOD_TABLE);
+		if(!$SQL){
+			// TODO tratar erro
+			die($connection->error);
+		}
+		
+		if(!$SQL->execute()){
+			// TODO tratar erro
+			die($SQL->error);
+		}
+		
+		if(!$SQL->bind_result($id,$amenity,$description,$latitude,$locName,$longitude,$name,$shortName)){
+			// TODO tratar erro
+			die($SQL->error);
+		}
+		
+		$placesToModeration = [];
+		while($SQL->fetch()){
+			$placesToModeration[$id] = new Place($amenity, $description, $id, $latitude, $longitude, $locName, $name, $shortName);
+		}
+		
+		return $placesToModeration;
+		
+	}
 	
 	// UPDATE
 	

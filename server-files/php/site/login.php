@@ -45,7 +45,7 @@ $loggedIn = SessionClient::checkIfLoggedIn();
 			<button type="submit" class="btn btn-default">Entrar</button>
 
 		</form>
-	<?php }else{ header("Location: moderation.php"); } ?>
+	<?php }else{ header("Location: moderate.php"); } ?>
 	</div>
 </body>
 </html>

@@ -31,6 +31,8 @@ class Place {
         // $this->shop = $shop;
         $this->shortName = $shortName;
     }
+    
+    function __construct(){}
 
     public function getAmenity() { return $this->amenity; }
 
@@ -47,6 +49,22 @@ class Place {
     public function getName() { return $this->name; }
 
     public function getShortName() { return $this->shortName; }
+    
+    public function setAmenity($amenity) { $this->amenity = $amenity; }
+    
+    public function setDescription($description) { $this->description = $description; }
+    
+    public function setId($id) { $this->id = $id; }
+    
+    public function setLatitude($latitude) { $this->latitude = $latitude; }
+    
+    public function setLocalName($localName) { $this->locName = $localName; }
+    
+    public function setLongitude($longitude) { $this->longitude = $longitude; }
+    
+    public function setName($name) { $this->name = $name; }
+    
+    public function setShortName($shortName) { $this->shortName = $shortName; }
 
 
 
