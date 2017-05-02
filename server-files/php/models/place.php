@@ -31,8 +31,6 @@ class Place {
         // $this->shop = $shop;
         $this->shortName = $shortName;
     }
-    
-    function __construct(){}
 
     public function getAmenity() { return $this->amenity; }
 

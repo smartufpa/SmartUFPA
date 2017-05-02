@@ -6,8 +6,8 @@
  * TODO: Padronizar retorno de erros na inserção (buscar melhor prática)
  */
 
-include_once dirname(__DIR__). '/db.php';
-include_once dirname(__DIR__) . '/models/place.php';
+include_once dirname(__DIR__) . '/db.php';
+include_once dirname(__DIR__) .'/models/place.php';
 
 
 class PlaceDAO {
@@ -166,7 +166,7 @@ class PlaceDAO {
 	
 	public function getAllPlacesToModeration(){
 		$connection = DBHelper::connection();
-		$SQL = $connection->prepare("SELECT * FROM " . self::DB_MOD_TABLE);
+		$SQL = $connection->prepare("SELECT * FROM " . self::DB_MOD_TABLE . " ORDER BY " . self::COL_NAME );
 		if(!$SQL){
 			// TODO tratar erro
 			die($connection->error);

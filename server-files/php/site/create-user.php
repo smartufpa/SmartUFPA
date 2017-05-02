@@ -1,26 +1,10 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Smart UFPA - Novo usuário</title>
-      <!-- Latest compiled and minified CSS bootstrap -->
-      <link rel="stylesheet" href="css/bootstrap-3.3.7-dist/css/bootstrap.min.css"
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-      crossorigin="anonymous">
-        <!-- Angular js e código js -->
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-      <script src="js/app.js"></script>
-      <script src="js/angular-password/angular-password.min.js"></script>
-	  <script
-	  src="https://code.jquery.com/jquery-3.2.1.min.js"
-	  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-	  crossorigin="anonymous"></script>
-  </head>
-  <body ng-app="validationApp" ng-controller="mainController">
-      <div class="container">
+<?php 
+$pageTitle = "Smart UFPA - Criar Usuário";
+include "./header.php"?>
+  <section ng-app="validationApp" ng-controller="userFormController">
         <div class="row">
           <h2>Criar usuário</h2>
-          <form name="userForm" ng-submit="submitForm(userForm.$valid)" autocomplete="off" novalidate>
+          <form name="userForm" ng-submit="submitUserForm(userForm.$valid)" autocomplete="off" novalidate>
             <!-- TODO mudar ng-show para ng-messages -->
             <!-- USERNAME -->
             <div class="form-group" ng-class="{'has-error':userForm.username.$invalid && userForm.username.$touched }">
@@ -67,7 +51,8 @@
 
 
 
-    </div>
+    
 
-  </body>
-</html>
+  </section>
+<script src="js/validation-app.js"></script>
+<?php include "./footer.php"?>

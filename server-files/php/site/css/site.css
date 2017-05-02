@@ -1,0 +1,9 @@
+@CHARSET "ISO-8859-1";
+
+.card{
+	padding: 10px;
+	background-color: #F5F5F5;
+	border-radius: 5px;
+	box-shadow: 2px 2px 0px 2px #E0E0E0;
+	
+}

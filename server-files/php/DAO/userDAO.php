@@ -49,7 +49,7 @@ class UserDAO {
 				die ( $connection->error);
 			}
 			$username = $user->getUsername ();
-			$password = $user->getHashPassword ();
+			$password = $user->getPassword ();
 			$SQL->bind_param ( 'ss', $username, $password );
 			$SQL->execute ();
 			$connection->close();
@@ -79,25 +79,52 @@ class UserDAO {
 	 * 		   false se não batem.
 	 */
 	
-	public function validateLogin(User $user){
-		
+	public function validatePassword($userId, $password){
 		$connection = DBHelper::connection();
 		$SQL = $connection->prepare("SELECT " . self::COL_PASSWORD . " FROM " . self::DB_TABLE . " WHERE " 
-				. self::COL_USERNAME . " = ?");
-		if($connection->error){
+				. self::COL_USERID . " = ?");
+		if(!$SQL){
 			die($connection->error);
 		}
-		$username = $user->getUsername();
-		$SQL->bind_param("s",$username);
-		$SQL->execute();
-		$SQL->bind_result($hash);
-		$SQL->fetch();
-	
-		if(password_verify($user->getPassword(), $hash)){
+		if(!$SQL->bind_param("i",$userId)){
+			die($SQL->error);
+		}
+		if(!$SQL->execute()){
+			die($SQL->error);
+		}
+		if(!$SQL->bind_result($hash)){
+			die($SQL->error);
+		}
+		if(!$SQL->fetch()){
+			die($SQL->error);
+		}
+		if(password_verify($password, $hash)){
 			return true;
 		}else{
 			return false;
 		}
+	}
+	
+	public function getUserByUsername($username){
+		$connection = DBHelper::connection();
+		$SQL = $connection->prepare("SELECT * FROM " . self::DB_TABLE . " WHERE "
+				. self::COL_USERNAME . " = ?");
+		if(!$SQL){
+			die($connection->error);
+		}
+		if(!$SQL->bind_param("s",$username)){
+			die($SQL->error);
+		}
+		if(!$SQL->execute()){
+			die($SQL->error);
+		}
+		if(!$SQL->bind_result($id,$username, $password, $permission)){
+			die($SQL->error);
+		}
+		if(!$SQL->fetch()){
+			die($SQL->error);
+		}
+		return new User($id,$username, $password, $permission);
 	}
 	
 	

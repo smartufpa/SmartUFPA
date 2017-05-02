@@ -12,7 +12,7 @@ if ($_SERVER ['REQUEST_METHOD'] === 'POST') {
 		$username = $input->username;
 		
 		$userDao = UserDAO::getInstance ();
-		$result = $userDao->insertUser ( new User ( $username, $hashPassword ) );
+		$result = $userDao->insertUser ( new User ( "",$username, $hashPassword , false) );
 // 		var_dump ( $result );
 		switch ($result) {
 			case 1062 :

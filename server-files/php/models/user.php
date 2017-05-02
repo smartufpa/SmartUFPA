@@ -5,11 +5,14 @@ class User {
 	private $userId;
 	private $username;
 	private $password;
+	private $permission;
 
 	
-	function __construct($username,$password) {
+	function __construct($userId,$username,$password,$permission) {
+		$this->userId = $userId;
 		$this->username = $username;
 		$this->password = $password;
+		$this->permission = $permission;
 	}
 	
 	function getUsername() {
@@ -22,6 +25,9 @@ class User {
 	
 	function getPassword() {
 		return $this->password;
+	}
+	function getPermission(){
+		return $this->permission;
 	}
 }
 
