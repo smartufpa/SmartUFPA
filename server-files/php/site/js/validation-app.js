@@ -27,6 +27,7 @@ validationApp.controller('userFormController',function($scope, $http) {
 
 validationApp.controller('moderationController', function($scope,$http){
 	$scope.places = [];
+	
 	$scope.addToPlaces = function(place){
 		if(place.checked == true)
 			$scope.places.push(place);
@@ -41,6 +42,7 @@ validationApp.controller('moderationController', function($scope,$http){
 		}else{
 			// TODO executar script para adicionar à tabela de locais
 			alert("executar script para adicionar à tabela de locais");
+			
 		}
 	}
 	

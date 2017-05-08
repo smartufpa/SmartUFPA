@@ -1,9 +1,36 @@
 @CHARSET "ISO-8859-1";
 
+
+/* MODERATION PAGE */
+
 .card{
 	padding: 10px;
 	background-color: #F5F5F5;
 	border-radius: 5px;
 	box-shadow: 2px 2px 0px 2px #E0E0E0;
 	
+}
+
+.editable-input{ 
+    background-color: transparent;	 
+} 
+
+.editing{
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    user-select: text;
+    cursor: auto;
+}
+
+.btn-save {
+	display: none;
+	margin:3px;
+}
+.btn-edit {
+	margin:3px;
+}
+
+#logout{
+	margin:3px;
+	float: right;
 }
