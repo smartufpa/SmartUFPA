@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 25-Abr-2017 às 03:23
+-- Generation Time: 09-Maio-2017 às 17:43
 -- Versão do servidor: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -28,21 +28,21 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `places` (
   `place_id` int(11) NOT NULL,
-  `amenity` varchar(20) NOT NULL,
-  `description` varchar(140) NOT NULL,
+  `amenity` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `description` varchar(140) CHARACTER SET latin1 NOT NULL,
   `latitude` float NOT NULL,
-  `loc_name` varchar(30) NOT NULL,
+  `loc_name` varchar(30) CHARACTER SET latin1 NOT NULL,
   `longitude` float NOT NULL,
-  `name` varchar(35) NOT NULL,
-  `short_name` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `name` varchar(35) CHARACTER SET latin1 NOT NULL,
+  `short_name` varchar(10) CHARACTER SET latin1 NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 --
 -- Extraindo dados da tabela `places`
 --
 
 INSERT INTO `places` (`place_id`, `amenity`, `description`, `latitude`, `loc_name`, `longitude`, `name`, `short_name`) VALUES
-(1, 'library', 'Super DescriÃ§Ã£o', -48.4516, 'local name', -1.26549, 'Nome da ora', 'NDO');
+(87, 'library', 'Descrição teste', -48.4527, 'Nome Local do prédio', -1.47346, 'Nome oficial', 'NO');
 
 -- --------------------------------------------------------
 
@@ -61,13 +61,6 @@ CREATE TABLE `places_mod` (
   `short_name` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
---
--- Extraindo dados da tabela `places_mod`
---
-
-INSERT INTO `places_mod` (`place_id`, `amenity`, `description`, `latitude`, `loc_name`, `longitude`, `name`, `short_name`) VALUES
-(68, 'library', 'Super Descrição', -48.4516, 'local name', -1.26549, 'Nome da ora2', 'NDO');
-
 -- --------------------------------------------------------
 
 --
@@ -76,17 +69,18 @@ INSERT INTO `places_mod` (`place_id`, `amenity`, `description`, `latitude`, `loc
 
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
-  `username` varchar(12) NOT NULL,
-  `hash_password` varchar(72) NOT NULL,
+  `username` varchar(12) CHARACTER SET latin1 NOT NULL,
+  `hash_password` varchar(72) CHARACTER SET latin1 NOT NULL,
   `permission` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 --
 -- Extraindo dados da tabela `users`
 --
 
 INSERT INTO `users` (`user_id`, `username`, `hash_password`, `permission`) VALUES
-(21, 'kae', '$2a$11$MTQ2OTY4MTM1OGZlOTc0NOUae8fMMoBlyMA.gwq6m6Cf6VEudFQXi', 0);
+(21, 'kae', '$2a$11$MTQ2OTY4MTM1OGZlOTc0NOUae8fMMoBlyMA.gwq6m6Cf6VEudFQXi', 1),
+(24, 'kaeuchoa', '$2a$11$MTgxMDMwODgyMzU5MDYzNukiUStFAKX24zGbeNYYhwb1gcvt8foD6', 0);
 
 --
 -- Indexes for dumped tables
@@ -121,17 +115,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `places`
 --
 ALTER TABLE `places`
-  MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 --
 -- AUTO_INCREMENT for table `places_mod`
 --
 ALTER TABLE `places_mod`
-  MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `place_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

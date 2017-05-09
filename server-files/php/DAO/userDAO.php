@@ -2,12 +2,19 @@
 include_once  dirname(__DIR__) . '/db.php';
 include_once dirname(__DIR__) . '/models/user.php';
 
+/*
+ * TODO userDAO | Padronizar retorno de erros na inserção (buscar melhor prática)
+ * TODO userDAO | Tratar erros nas funções
+ * TODO userDAO | Gerar Logs
+ * TODO userDAO | Atualizar Documentação
+ */
+
 /**
  *
  * @author kaeuc
- * Classe responsável por operações CRUD no Banco de Dados da tabela 'users'.
- * É uma classe do tipo singleton.
- * TODO: Padronizar retorno de erros na inserção (buscar melhor prática)
+ * @desc Classe responsável por operações CRUD no Banco de Dados da tabela 'users'.
+ * <br>É uma classe do tipo <i>Singleton</i>.
+ * 
  */
 class UserDAO {
 	private static $instance = NULL;

@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @author kaeuc
- * Super classe que servirá de base para as locações dentro da universidade.
- * Apresenta o modelo com os atributos selecionados para o projeto,
- * baseado naquele usado a partir do OSM.
+ * @author kaeuchoa
+ * 
+ * 
+ * @desc Super classe que serve de base para os lugares dentro da universidade.
+ * O modelo é construído a partir dos atributos selecionados para o projeto,
+ * baseado naquele usado no OSM.
  */
 
 class Place {
@@ -13,56 +15,132 @@ class Place {
   private $description;
   private $id;
   private $latitude;
-  private $locName;
+  private $localName;
   private $longitude;
   private $name;
   private $shop;
   private $shortName;
 
-    function __construct($amenity,$description, $id,$latitude,$longitude,$locName,
-          $name,$shortName) {
+  /**
+   * Construtor base.
+   * @param string $amenity - Tag utilizada no OSM para identificar o tipo do lugar.
+   * @param string $description - Descrição sobre o lugar.
+   * @param integer $id - ID registrada no DB.
+   * @param double $latitude - Coordenada de latitude do lugar.
+   * @param double $longitude - Coordenada de longitude do lugar.
+   * @param string $localName - Nome local/Apelido do lugar.
+   * @param string $name - Nome oficial do lugar.
+   * @param string $shortName - Sigla baseada no nome do lugar.
+   */
+    function __construct(string $amenity,string $description, integer $id, double $latitude,
+    		double $longitude,string $localName,string $name,string $shortName) {
         $this->amenity = $amenity;
         $this->description = $description;
         $this->id = $id;
         $this->latitude = $latitude;
         $this->longitude = $longitude;
-        $this->locName = $locName;
+        $this->localName = $localName;
         $this->name = $name;
         // $this->shop = $shop;
         $this->shortName = $shortName;
     }
-
+    
+	/**
+	 * 
+	 * @return string $amenity - Tag utilizada no OSM para identificar o tipo do lugar.
+	 */
     public function getAmenity() { return $this->amenity; }
 
+    /**
+     * 
+     * @return string $description - Descrição sobre o lugar.
+     */
     public function getDescription() { return $this->description; }
-
+	
+    
+    /**
+     * 
+     * @return integer $id - ID registrada no DB.
+     */
     public function getId() { return $this->id; }
 
+    /**
+     * 
+     * @return double $latitude - Coordenada de latitude do lugar.
+     */
     public function getLatitude() { return $this->latitude; }
+	
+    /**
+     * 
+     * @return string $localName - Nome local/Apelido do lugar.
+     */
+    public function getLocalName() { return $this->localName; }
 
-    public function getLocalName() { return $this->locName; }
-
+    /**
+     * 
+     * @return double $longitude - Coordenada de longitude do lugar.
+     */
     public function getLongitude() { return $this->longitude; }
 
+    /**
+     * 
+     * @return string $name - Nome oficial do lugar.
+     */
     public function getName() { return $this->name; }
-
+	
+    /**
+     * 
+     * @return string $shortName - Sigla baseada no nome do lugar.
+     */
     public function getShortName() { return $this->shortName; }
     
-    public function setAmenity($amenity) { $this->amenity = $amenity; }
+    /**
+     * 
+     * @param string $amenity - Novo valor para o atributo $amenity.
+     */
+    public function setAmenity(string $amenity) { $this->amenity = $amenity; }
     
-    public function setDescription($description) { $this->description = $description; }
+    /**
+     * 
+     * @param string $description - Novo valor para o atributo $description.
+     */
+    public function setDescription(string $description) { $this->description = $description; }
     
-    public function setId($id) { $this->id = $id; }
+    /**
+     * 
+     * @param integer $id - Novo valor para o atributo $id.
+     */
+    public function setId(integer $id) { $this->id = $id; }
     
-    public function setLatitude($latitude) { $this->latitude = $latitude; }
+    /**
+     * 
+     * @param double $latitude - Novo valor para o atributo $latitude.
+     */
+    public function setLatitude(double $latitude) { $this->latitude = $latitude; }
     
-    public function setLocalName($localName) { $this->locName = $localName; }
+    /**
+     * 
+     * @param string $localName - Novo valor para o atributo $localName.
+     */
+    public function setLocalName(string $localName) { $this->localName = $localName; }
     
-    public function setLongitude($longitude) { $this->longitude = $longitude; }
+    /**
+     * 
+     * @param double $longitude - Novo valor para o atributo $longitude.
+     */
+    public function setLongitude(double $longitude) { $this->longitude = $longitude; }
     
-    public function setName($name) { $this->name = $name; }
+    /**
+     * 
+     * @param string $name - Novo valor para o atributo $name.
+     */
+    public function setName(string $name) { $this->name = $name; }
     
-    public function setShortName($shortName) { $this->shortName = $shortName; }
+    /**
+     * 
+     * @param string $shortName - Novo valor para o atributo $shortName.
+     */
+    public function setShortName(string $shortName) { $this->shortName = $shortName; }
 
 
 

@@ -1,12 +1,18 @@
 <?php
 
+/*
+ * TODO db | logs: registrar uma conexão ao banco!
+ */
+	/**
+	 * 
+	 * @author kaeuchoa
+	 *
+	 */
     class DBHelper {
-	
-    	
     /**
      * Retorna uma conexão válida ao banco de dados selecionado usando paramêtros default.
-     * @return mysqli
-     * Um objeto mysqli
+     * @return mysqli - Um objeto <b>mysqli</b>.
+     * 
      */	
     	
     public static function connection(){
@@ -19,10 +25,9 @@
         $connection->set_charset('utf8');
         
         if ($connection->connect_errno) {
-        	echo "Failed to connect to MySQL: (" . $connection->connect_errno . ") " . $connection->connect_error;
+        	echo "Falha ao conectar ao MySQL: (" . $connection->connect_errno . ") " . $connection->connect_error;
         }
-        // TODO
-        // logs: registrar uma conexão ao banco!
+
         // DEBUG
         //echo "Success: A proper connection to MySQL was made!" . PHP_EOL;
         //echo "Host information: " . mysqli_get_host_info($connection) . PHP_EOL;

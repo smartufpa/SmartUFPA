@@ -1,16 +1,22 @@
 <?php
-/**
- * @author kaeuc
- * Classe responsável por operações CRUD no Banco de Dados da tabela 'places'.
- * É uma classe do tipo singleton.
- * TODO: Padronizar retorno de erros na inserção (buscar melhor prática)
+/*
+ * TODO placeDAO | Padronizar retorno de erros na inserção (buscar melhor prática)
+ * TODO placeDAO | Tratar erros nas funções
+ * TODO placeDAO | Gerar Logs
  */
 
 include_once dirname(__DIR__) . '/db.php';
 include_once dirname(__DIR__) .'/models/place.php';
 
-
+/**
+ * @author kaeuchoa
+ *
+ * @desc Classe responsável por operações CRUD no Banco de Dados da tabela 'places'.
+ * <br>É uma classe do tipo <i>Singleton</i>.
+ *
+ */
 class PlaceDAO {
+	
 	private static $instance = NULL;
 	const DB_TABLE = "places";
 	const DB_MOD_TABLE = "places_mod";
@@ -27,7 +33,9 @@ class PlaceDAO {
 	private function __construct() {
 	}
 	
-	
+	/**
+	 * @return PlaceDAO  - Nova instância da classe ou a instância já existente.
+	 */
 	public static function getInstance() {
 		if (! isset ( self::$instance )) {
 			return new PlaceDAO ();
@@ -41,11 +49,9 @@ class PlaceDAO {
 	
 	
 	/**
-	 * Função para inserir um objeto do tipo Place no banco de dados(SQL) direto na tabela principal.
+	 * Insere um objeto do tipo Place no banco de dados(SQL) direto na tabela principal.
 	 * @param Place $place
-	 * @return boolean
-	 * true para inserção bem sucedida;
-	 * false para falha na inserção.
+	 * @return boolean - <b>true</b> para inserção bem sucedida ou <b>false</b> para falha na inserção.
 	 */
 	
 	
@@ -57,7 +63,7 @@ class PlaceDAO {
 			
 			$connection = DBHelper::connection ();
 			
-			$SQL = $connection->prepare ( 'INSERT INTO ' . $dbTable . $columns . ' VALUES (?,?,?,?,?,?,?,?)' );
+			$SQL = $connection->prepare ( 'INSERT INTO ' . self::DB_TABLE . $columns . ' VALUES (?,?,?,?,?,?,?,?)' );
 			if ($connection->error) {
 				die ($connection->error);
 			}
@@ -77,11 +83,9 @@ class PlaceDAO {
 			$shortName = $place->getShortName ();
 			
 			if(!$SQL->bind_param ( 'issdsdss', $id, $amenity, $description, $latitude, $locName, $longitude, $name, $shortName )){
-				// TODO tratar erro
 				die($SQL->error);
 			}
 			if(!$SQL->execute ()){
-				// TODO tratar erro
 				die($SQL->error);
 			}
 			
@@ -96,16 +100,15 @@ class PlaceDAO {
 				//echo "Nenhuma linha afetada.<br>";
 				return false;
 			}
+			
 			// Logs
 		}
 	}
 	
 	/**
-	 * Função para inserir um objeto do tipo Place no banco de dados(SQL) na tabela de moderação.
+	 * Insere um objeto do tipo Place no banco de dados(SQL) na tabela de moderação.
 	 * @param Place $place
-	 * @return boolean
-	 * true para inserção bem sucedida;
-	 * false para falha na inserção.
+	 * @return boolean - <b>true</b> para inserção bem sucedida ou <b>false</b> para falha na inserção.
 	 */
 	
 	
@@ -119,7 +122,6 @@ class PlaceDAO {
 			
 			$SQL = $connection->prepare ( 'INSERT INTO ' . self::DB_MOD_TABLE . $columns . ' VALUES (?,?,?,?,?,?,?,?)' );
 			if (!$SQL) {
-				// TODO tratar erro
 				die ($connection->error);
 			}
 			
@@ -134,11 +136,9 @@ class PlaceDAO {
 			$shortName = $place->getShortName ();
 			
 			if(!$SQL->bind_param ( 'issdsdss', $id, $amenity, $description, $latitude, $locName, $longitude, $name, $shortName )){
-				// TODO Tratar erro
 				die($SQL->error);
 			}
 			if(!$SQL->execute ()){
-				// TODO Tratar erro
 				die($SQL->error);
 			}
 			
@@ -160,7 +160,7 @@ class PlaceDAO {
 	// READ 
 	
 	/**
-	 * Função que retorna todos os lugares que estão na tabela de moderação atualmente
+	 * Retorna todos os lugares que estão na tabela de moderação atualmente.
 	 * @return Place[] - Array de Place
 	 */
 	
@@ -168,17 +168,14 @@ class PlaceDAO {
 		$connection = DBHelper::connection();
 		$SQL = $connection->prepare("SELECT * FROM " . self::DB_MOD_TABLE . " ORDER BY " . self::COL_NAME );
 		if(!$SQL){
-			// TODO tratar erro
 			die($connection->error);
 		}
 		
 		if(!$SQL->execute()){
-			// TODO tratar erro
 			die($SQL->error);
 		}
 		
 		if(!$SQL->bind_result($id,$amenity,$description,$latitude,$locName,$longitude,$name,$shortName)){
-			// TODO tratar erro
 			die($SQL->error);
 		}
 		
@@ -191,6 +188,132 @@ class PlaceDAO {
 		
 	}
 	
+	
+	
+	/**
+	 * Retorna um lugar que está na tabela de moderação pela sua ID.
+	 * @param integer $id - ID única do lugar para a busca.
+	 * @return Place|NULL - Um objeto <b>Place</b> se encontrou ou <b>NULL</b> se nenhum lugar foi encontrado.
+	 */
+	
+	public function getPlaceFromModerationById(integer $id){
+		$connection = DBHelper::connection();
+		$SQL = $connection->prepare("SELECT * FROM " . self::DB_MOD_TABLE . " WHERE " .self::COL_ID . " = ? " );
+		if(!$SQL){
+			die($connection->error);
+		}
+		
+		if(!$SQL->bind_param("i", $id)){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->execute()){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->bind_result($id,$amenity,$description,$latitude,$locName,$longitude,$name,$shortName)){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->fetch()){
+			die($SQL->error);
+		}
+		$connection->close();
+		
+		if ($SQL->affected_rows > 0) {
+			// para debug
+			//echo " Local " . $id . " excluído com sucesso da tabela de moderação.<br>";
+			return new Place($amenity, $description, $id, $latitude, $longitude, $locName, $name, $shortName);;
+		} else {
+			// para debug
+			//echo "Nenhuma linha afetada.<br>";
+			return NULL;
+		}
+		
+	}
+	
+	/**
+	 * Retorna um lugar pela sua ID.
+	 * @param integer $id - ID única do lugar para a busca.
+	 * @return Place|NULL - Um objeto <b>Place</b> se encontrou ou <b>NULL</b> se nenhum lugar foi encontrado.
+	 */
+	
+	public function getPlaceById(integer $id){
+		$connection = DBHelper::connection();
+		$SQL = $connection->prepare("SELECT * FROM " . self::DB_TABLE . " WHERE " .self::COL_ID . " = ? " );
+		if(!$SQL){
+			die($connection->error);
+		}
+		
+		if(!$SQL->bind_param("i", $id)){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->execute()){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->bind_result($id,$amenity,$description,$latitude,$locName,$longitude,$name,$shortName)){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->fetch()){
+			die($SQL->error);
+		}
+		
+		$connection->close();
+		if ($SQL->affected_rows > 0) {
+			// para debug
+			//echo " Local " . $id . " excluído com sucesso da tabela de moderação.<br>";
+			return new Place($amenity, $description, $id, $latitude, $longitude, $locName, $name, $shortName);;
+		} else {
+			// para debug
+			//echo "Nenhuma linha afetada.<br>";
+			return NULL;
+		}
+		
+		
+		
+	}
+	
+	/**
+	 * Retorna um lugar que está na tabela de moderação pelo seu nome.
+	 * @param string $placeName - Nome do lugar para a busca.
+	 * @return Place - objeto da classe Place
+	 */
+	
+	public function getPlaceByName(string $placeName){
+		$connection = DBHelper::connection();
+		$SQL = $connection->prepare("SELECT * FROM " . self::DB_MOD_TABLE . " WHERE " .self::COL_NAME . " = ? " );
+		if(!$SQL){
+			die($connection->error);
+		}
+		
+		if(!$SQL->bind_param("s", $placeName)){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->execute()){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->bind_result($id,$amenity,$description,$latitude,$locName,$longitude,$name,$shortName)){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->fetch()){
+			die($SQL->error);
+		}
+		$connection->close();
+		
+		if($SQL->affected_rows > 0){		
+			return new Place($amenity, $description, $id, $latitude, $longitude, $locName, $name, $shortName);
+		}else{
+			return NULL;
+		}
+		
+	}
+	
 	// UPDATE
 	
 	
@@ -198,22 +321,52 @@ class PlaceDAO {
 	
 	// DELETE
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
-	 * Função interna para checar se um local já existe no banco de dados pelo nome.
-	 * @param string $placeName
-	 * @return boolean
-	 * true se já existir;
-	 * false se não.
+	 * Deleta um lugar da tabela de moderação pela sua ID
+	 * @param integer $id - ID única do lugar para deletar.
+	 * @return boolean - <b>true</b> se o local foi deletado ou <b>false</b> se o local não foi deletado
 	 */
-	private function isPlaceSet($placeName) {
+	
+	public function deletePlaceFromModeration(integer $id){
+		$connection = DBHelper::connection();
+		$SQL = $connection->prepare("DELETE FROM " . self::DB_MOD_TABLE . " WHERE " . self::COL_ID . "= ?");
+		if(!$SQL){
+			die($connection->error);
+		}
+		
+		if(!$SQL->bind_param("i", $id)){
+			die($SQL->error);
+		}
+		
+		if(!$SQL->execute()){
+			die($SQL->error);
+		}
+		
+		$connection->close();
+		if ($SQL->affected_rows > 0) {
+			// para debug
+			//echo " Local " . $id . " excluído com sucesso da tabela de moderação.<br>";
+			return true;
+		} else {
+			// para debug
+			//echo "Nenhuma linha afetada.<br>";
+			return false;
+		}
+		// Logs
+	}
+	
+	
+	
+	
+	
+	
+	// AUXILIAR
+	/**
+	 * Checa se um local já existe no banco de dados pelo nome.
+	 * @param string $placeName
+	 * @return boolean - true se existe ou false se não existe.
+	 */
+	private function isPlaceSet(string $placeName) {
 		$connection = DBHelper::connection ();
 		$SQL = $connection->prepare ( 'SELECT ' . self::COL_NAME . ' FROM ' . self::DB_TABLE . ' WHERE '
 										. self::COL_NAME . ' = ?' );
@@ -221,8 +374,12 @@ class PlaceDAO {
 			die ($connection->error);
 		}
 		
-		$SQL->bind_param ( 's', $placeName );
-		$SQL->execute ();
+		if(!$SQL->bind_param ( 's', $placeName )){
+			die($SQL->error);
+		}
+		if(!$SQL->execute ()){
+			die($SQL->error);;
+		}
 		$result = $SQL->fetch();
 		$connection->close();
 		if (isset($result)) {

@@ -1,33 +1,32 @@
 <?php
 
-include_once  dirname(__DIR__). '/utils/Bcrypt.php';
-include_once dirname(__DIR__). '/DAO/userDAO.php';
+/**
+ *   @author kaeuchoa
+ *   Script contendo o código para inserção de usuários no DB;
+ *   Recebe via método POST um arquivo json contendo as 
+ *   informações do modelo estipulado para "Locais".
+ *   
+ *   TODO insert-user | Enviar um json contendo o erro lançado pela inserção
+ */
 
-if ($_SERVER ['REQUEST_METHOD'] === 'POST') {
-	$jsonObj = utf8_encode ( file_get_contents ( 'php://input' ) );
-	$input = json_decode ( $jsonObj );
+
+include_once dirname ( __DIR__ ) . '/utils/Bcrypt.php';
+include_once dirname ( __DIR__ ) . '/DAO/userDAO.php';
+
+$jsonObj = utf8_encode ( file_get_contents ( 'php://input' ) );
+$input = json_decode ( $jsonObj );
+
+if (json_last_error () === JSON_ERROR_NONE) {
+	$hashPassword = Bcrypt::hash ( $input->password, 11 );
+	$username = $input->username;
 	
-	if (json_last_error () === JSON_ERROR_NONE) {
-		$hashPassword = Bcrypt::hash ( $input->password, 11 );
-		$username = $input->username;
+	$userDao = UserDAO::getInstance ();
+	if($userDao->insertUser ( new User ( "", $username, $hashPassword, false ) )){
 		
-		$userDao = UserDAO::getInstance ();
-		$result = $userDao->insertUser ( new User ( "",$username, $hashPassword , false) );
-// 		var_dump ( $result );
-		switch ($result) {
-			case 1062 :
-				http_response_code ( 304 );
-				break;
-			case 0 :
-				http_response_code ( 500 );
-				break;
-			default :
-				http_response_code ( 200 );
-				break;
-		}
-	} else {
-		print ("Erro ao processar JSON") ;
 	}
+
+} else {
+	print ("Erro ao processar JSON") ;
 }
 
 ?>
