@@ -131,7 +131,7 @@ public class MapActivity extends AppCompatActivity
     private List<String> mapLayers = new ArrayList<>();
 
 
-    // TODO: 2. Implementar onSavedInstace
+    // TODO: 2. Implementar onSavedInstance
 
     /*
      * Cria um provedor de tiles que será setado para ser a camada de transportes
