@@ -10,7 +10,7 @@
         <item name="nav_libraries">Bibliotecas</item>
     </string-array>
 
-    <string-array name="default_places_teste">
+    <string-array name="default_places">
         <item>Tipo do Local</item>
         <item>Auditório</item>
         <item>Banheiro</item>

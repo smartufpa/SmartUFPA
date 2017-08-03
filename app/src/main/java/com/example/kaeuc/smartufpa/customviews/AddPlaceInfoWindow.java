@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.fragments.AddPlaceFragment;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;

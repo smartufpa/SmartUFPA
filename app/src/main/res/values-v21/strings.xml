@@ -76,15 +76,7 @@
     <string name="error_fragment_invalid_character">A entrada deve conter apenas letras e números.</string>
 
 
-    <string-array name="default_places">
-        <item>Tipo do Local</item>
-        <item>Auditório</item>
-        <item>Banheiro</item>
-        <item>Biblioteca</item>
-        <item>Restaurante</item>
-        <item>Xerox</item>
-        <item>Outro</item>
-    </string-array>
+
 
 </resources>
 

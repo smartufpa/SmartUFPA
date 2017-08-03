@@ -56,8 +56,6 @@
     <string name="nav_copy_service">Xerox</string>
     <string name="nav_libraries">Bibliotecas</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_map_download_title">Realizando o download do mapa:</string>
     <string name="map_download_executed">map_download_executed</string>
     <string name="map_download_url">https://www.smartufpa.ufpa.br/map-download.php</string>
@@ -75,16 +73,8 @@
     <string name="tutorial_map_executed">tutorial_executed=</string>
     <string name="error_fragment_invalid_character">A entrada deve conter apenas letras e números.</string>
 
-
-    <string-array name="default_places">
-        <item>Tipo do Local</item>
-        <item>Auditório</item>
-        <item>Banheiro</item>
-        <item>Biblioteca</item>
-        <item>Restaurante</item>
-        <item>Xerox</item>
-        <item>Outro</item>
-    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

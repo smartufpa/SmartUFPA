@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.customviews;
+package com.example.kaeuc.smartufpa.fragments;
 
 import android.content.DialogInterface;
 import android.os.Build;
@@ -30,7 +30,7 @@ import com.google.gson.GsonBuilder;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddPlaceFragment.OnFragmentInteractionListener} interface
+ * {@link AddPlaceFragment.OnAddPlaceListener} interface
  * to handle interaction events.
  * Use the {@link AddPlaceFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -40,10 +40,16 @@ import com.google.gson.GsonBuilder;
 
 
 public class AddPlaceFragment extends DialogFragment {
+
+    // Rótulos para os argumentos passados na instanciação do fragmento
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
-    public static final String FRAGMENT_TAG = "AddPlaceDialog";
-    private static final String TAG = AddPlaceFragment.class.getSimpleName();
+
+    //Tags de identificação do fragmento
+    public static final String FRAGMENT_TAG = AddPlaceFragment.class.getName();
+    private static final String LOG_TAG = AddPlaceFragment.class.getSimpleName();
+
+
     private final int VALIDATION_NO_SPECIAL_CHAR = 0;
     private final int VALIDATION_REGULAR_TEXT = 1;
 
@@ -81,6 +87,8 @@ public class AddPlaceFragment extends DialogFragment {
     public static AddPlaceFragment newInstance(double latitude, double longitude) {
         AddPlaceFragment fragment = new AddPlaceFragment();
         Bundle args = new Bundle();
+
+        //Armazena os dados passados na instanciação em um bundle e guarda no fragmento
         args.putDouble(ARG_LATITUDE, latitude);
         args.putDouble(ARG_LONGITUDE, longitude);
         fragment.setArguments(args);
@@ -90,10 +98,14 @@ public class AddPlaceFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Recupera os dados do bundle
         if (getArguments() != null) {
             latitude = getArguments().getDouble(ARG_LATITUDE);
             longitude = getArguments().getDouble(ARG_LONGITUDE);
         }
+
+        // Evita que o dialog seja fechado ao clicar fora do quadro
         setCancelable(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -109,7 +121,10 @@ public class AddPlaceFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Infla a o layout
         final View view = inflater.inflate(R.layout.fragment_add_place, container, false);
+
+        // Encontra todas as Views do layout
         btnCancel = (Button) view.findViewById(R.id.btn_fragment_cancel);
         btnConfirm = (Button) view.findViewById(R.id.btn_fragment_confirm);
         edtName = (TextInputEditText) view.findViewById(R.id.edt_name);
@@ -117,6 +132,7 @@ public class AddPlaceFragment extends DialogFragment {
         edtLocalName = (TextInputEditText) view.findViewById(R.id.edt_local_name);
         edtDescription = (TextInputEditText) view.findViewById(R.id.edt_description);
         edtOther = (TextInputEditText) view.findViewById(R.id.edt_other);
+        spinnerDefaultMarkers = (Spinner) view.findViewById(R.id.spinner);
 
         edtName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -159,7 +175,7 @@ public class AddPlaceFragment extends DialogFragment {
         btnConfirm.setOnClickListener(btnsClickListener);
         btnCancel.setOnClickListener(btnsClickListener);
 
-        spinnerSetup(view);
+        spinnerSetup();
 
         // Inflate the layout for this fragment
         return view;
@@ -172,12 +188,14 @@ public class AddPlaceFragment extends DialogFragment {
     }
 
 
-    private void spinnerSetup(View view){
-        spinnerDefaultMarkers = (Spinner) view.findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(view.getContext(),
+    private void spinnerSetup(){
+        //Preenche o spinner com a lista de lugares em Arrays.xml
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.default_places,R.layout.support_simple_spinner_dropdown_item);
         arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         spinnerDefaultMarkers.setAdapter(arrayAdapter);
+
+        // Lidar com os cliques: Se a opção outros for escolhida, ativar o campo "Outros"
         spinnerDefaultMarkers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -203,6 +221,7 @@ public class AddPlaceFragment extends DialogFragment {
         });
     }
 
+    // FAZER PARTE DE ALGUM UTIL?
     private boolean checkField(TextInputEditText inputField, int maxLength, int minLenght,int validationCode){
         try {
             if (validationCode == VALIDATION_NO_SPECIAL_CHAR)
@@ -224,20 +243,20 @@ public class AddPlaceFragment extends DialogFragment {
         }
         return true;
     }
-
+    // FAZER PARTE DE ALGUM UTIL?
     private String parseFormToJson(){
         Tags tags = new Tags();
         if(checkField(edtName,80,3,VALIDATION_NO_SPECIAL_CHAR)){
             tags.setName(InputParser.parseInputString(edtName.getText().toString()));
         }else{
-            Log.e(TAG,"Name field contains validation errors");
+            Log.e(LOG_TAG,"Name field contains validation errors");
             return null;
         }
         if(!edtShortName.getText().toString().isEmpty())
             if(checkField(edtShortName,8,2,VALIDATION_NO_SPECIAL_CHAR)) {
                 tags.setShortName(InputParser.parseInputString(edtShortName.getText().toString().toUpperCase()));
             }else{
-                Log.e(TAG,"Short name field contains validation errors");
+                Log.e(LOG_TAG,"Short name field contains validation errors");
                 return null;
             }
 
@@ -281,41 +300,41 @@ public class AddPlaceFragment extends DialogFragment {
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        Log.i(TAG, "onDestroyView()");
+        Log.i(LOG_TAG, "onDestroyView()");
     }
 
 
     @Override
     public void onDetach(){
         super.onDetach();
-        Log.i(TAG, "onDetach()");
+        Log.i(LOG_TAG, "onDetach()");
     }
 
 
     @Override
     public void onDismiss(DialogInterface dialog){
         super.onDismiss(dialog);
-        Log.i(TAG, "onDismiss()");
+        Log.i(LOG_TAG, "onDismiss()");
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        Log.i(TAG, "onSaveInstanceState()");
+        Log.i(LOG_TAG, "onSaveInstanceState()");
     }
 
 
     @Override
     public void onStart(){
         super.onStart();
-        Log.i(TAG, "onStart()");
+        Log.i(LOG_TAG, "onStart()");
     }
 
 
     @Override
     public void onStop(){
         super.onStop();
-        Log.i(TAG, "onStop()");
+        Log.i(LOG_TAG, "onStop()");
     }
 }

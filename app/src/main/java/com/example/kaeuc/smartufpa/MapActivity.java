@@ -766,6 +766,7 @@ public class MapActivity extends AppCompatActivity
     // Método responsável por configurar o mapa na sua inicialização
     private void setupMap() {
         myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
+
         // Restrição da região mostrada do mapa usando coordenadas
         mapRegion = new BoundingBoxE6(-1.457886, -48.437957, -1.479967, -48.459779);
 
