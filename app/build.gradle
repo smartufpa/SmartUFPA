@@ -23,6 +23,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     productFlavors {
     }
+   
 }
 apply plugin: 'org.greenrobot.greendao'
 dependencies {

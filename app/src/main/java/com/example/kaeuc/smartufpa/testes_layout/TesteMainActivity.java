@@ -15,16 +15,15 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 public class TesteMainActivity extends AppCompatActivity {
 
-
-
     // VIEWS
     private Toolbar mapToolbar;
     private DrawerLayout layoutDrawer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remake_drawer_layout);
-
         // Encontra as views
         mapToolbar= (Toolbar) findViewById(R.id.tb_main);
         layoutDrawer = (DrawerLayout) findViewById(R.id.layout_drawer);

@@ -2,9 +2,13 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FFEB3B</color>
-    <color name="disabledButton">#cccccc</color>
-    <color name="enabledButton">#e10a0a</color>
-    <color name="loginBackground">#ffffff</color>
-    <color name="white">#ffff</color>
+    <color name="colorPrimaryLight">#C5CAE9</color>
+    <color name="colorAccent">#448AFF</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorIcons">#FFFFFF</color>
+    <color name="colorDivider">#BDBDBD</color>
+    <color name="disabledButton">#BDBDBD</color>
+    <color name="white">@android:color/white</color>
+
 </resources>

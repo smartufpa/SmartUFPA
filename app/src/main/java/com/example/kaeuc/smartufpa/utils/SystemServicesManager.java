@@ -2,6 +2,7 @@ package com.example.kaeuc.smartufpa.utils;
 
 
 import android.content.Context;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -9,10 +10,10 @@ import android.net.NetworkInfo;
  * Created by kaeuc on 26/01/2017.
  */
 
-public class NetworkManager {
+public class SystemServicesManager {
 
 
-    public static boolean checkWifiConnection(Context parentContext){
+    public static boolean isWifiEnabled(Context parentContext){
         boolean isConnected = false;
         ConnectivityManager cm =
                 (ConnectivityManager)parentContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -28,7 +29,7 @@ public class NetworkManager {
         return isConnected;
     }
 
-    public static boolean checkMobileConnection(Context parentContext){
+    public static boolean isMobileDataEnabled(Context parentContext){
         boolean isConnected = false;
         ConnectivityManager cm =
                 (ConnectivityManager)parentContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -44,7 +45,12 @@ public class NetworkManager {
         return isConnected;
     }
 
-    public static boolean checkNetworkConnection(Context parentContext){
-        return checkMobileConnection(parentContext) || checkWifiConnection(parentContext);
+    public static boolean isNetworkEnabled(Context parentContext){
+        return isMobileDataEnabled(parentContext) || isWifiEnabled(parentContext);
+    }
+
+    public static boolean isGPSEnabled(Context parentContext){
+        LocationManager locationManager = (LocationManager) parentContext.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }

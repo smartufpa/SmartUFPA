@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.server.MapDownloadFragment;
 import com.example.kaeuc.smartufpa.utils.Constants;
-import com.example.kaeuc.smartufpa.utils.NetworkManager;
+import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
 public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFragment.OnMapDownloadFragmentListener{
     public static final String ACTION_APP_MENU = "smartufpa.ACTION_APP_MENU";
@@ -39,7 +39,7 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
 
         btnMobility.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                if (NetworkManager.checkNetworkConnection(AppMenuActivity.this)){
+                if (SystemServicesManager.isNetworkEnabled(AppMenuActivity.this)){
                     if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
                         Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
                         intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);

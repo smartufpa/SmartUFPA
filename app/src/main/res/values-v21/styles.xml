@@ -9,7 +9,27 @@
 
     <style name="ProgressBarTheme" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:progressBackgroundTint">@color/white</item>
+        <item name="android:progressBackgroundTint">@android:color/white</item>
 
     </style>
+
+    <style name="RaisedButton" parent="Theme.AppCompat">
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:layout_margin">@dimen/button_margin</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="MyFAB" parent="Theme.AppCompat">
+        <item name="backgroundTint">@color/colorAccent</item>
+    </style>
+
+
+
 </resources>

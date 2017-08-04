@@ -41,7 +41,7 @@ import com.example.kaeuc.smartufpa.server.BusLocationRequest;
 import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.customviews.AddPlaceInfoWindow;
-import com.example.kaeuc.smartufpa.utils.NetworkManager;
+import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.customviews.SearchListAdapter;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
@@ -55,10 +55,7 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
-import org.osmdroid.tileprovider.modules.OfflineTileProvider;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
@@ -584,7 +581,7 @@ public class MapActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(final String query) {
         // É necessário passar como argumentos para a requisição a lat e long para restringir a busca
         // à região da universidade
-        if (NetworkManager.checkNetworkConnection(this)) {
+        if (SystemServicesManager.isNetworkEnabled(this)) {
             final String latitude = String.valueOf(defaultLocation.getLatitude());
             final String longitude = String.valueOf(defaultLocation.getLongitude());
             findViewById(R.id.action_search).clearFocus();
@@ -630,7 +627,7 @@ public class MapActivity extends AppCompatActivity
         fabBusLocation.setOnClickListener(new FloatingActionButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(NetworkManager.checkNetworkConnection(MapActivity.this)) {
+                if(SystemServicesManager.isNetworkEnabled(MapActivity.this)) {
                     new BusLocationRequest(MapActivity.this, progressBar).execute(Constants.URL_BUS_LOCATION);
                 }else{
                     Toast.makeText(MapActivity.this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();

@@ -23,7 +23,7 @@
         >
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_bus_location"
+            android:id="@+id/fab_bus_location_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
@@ -33,7 +33,7 @@
             />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_my_location"
+            android:id="@+id/fab_my_location_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
@@ -44,7 +44,7 @@
             />
 
         <Button
-            android:id="@+id/btn_clear_map"
+            android:id="@+id/btn_clear_map_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"
