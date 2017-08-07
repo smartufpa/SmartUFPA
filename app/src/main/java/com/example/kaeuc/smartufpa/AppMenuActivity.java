@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.server.MapDownloadFragment;
+import com.example.kaeuc.smartufpa.testes_layout.TesteMainActivity;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
@@ -57,8 +58,13 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
 //                        }
 
 //                         TODO: CÓDIGO PROVISÓRIO ATÉ RESOLVER PROBLEMA NO CERTIFICADO
-                        Intent intent = new Intent(MapActivity.ACTION_MAP);
-                        intent.addCategory(MapActivity.CATEGORY_MAP);
+//                        Intent intent = new Intent(MapActivity.ACTION_MAP);
+//                        intent.addCategory(MapActivity.CATEGORY_MAP);
+//                        startActivity(intent);
+
+
+
+                        Intent intent = new Intent(v.getContext(), TesteMainActivity.class);
                         startActivity(intent);
 
                     }

@@ -1,11 +1,15 @@
 package com.example.kaeuc.smartufpa.fragments;
 
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +18,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.kaeuc.smartufpa.BuildConfig;
+import com.example.kaeuc.smartufpa.CustomOverlayManager;
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -40,8 +47,10 @@ public class MapFragment extends Fragment implements LocationListener{
 
     // MAP
     private MyLocationNewOverlay myLocationOverlay;
-    private IMapController mapCameraController;
+    private IMapController mapCamera;
     private static final int DEFAULT_ZOOM = 16;
+    private static final int MIN_ZOOM = 15;
+    private static final int MAX_ZOOM = 18;
 
     // VIEWS
     private MapView mapView;
@@ -62,8 +71,37 @@ public class MapFragment extends Fragment implements LocationListener{
     private String mParam2;
 
     // TODO: BUSCAR ESSES VALORES A PARTIR DA CONFIGURAÇÃO
-    private Place defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
+    private final Place defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
+    // Restrição da região mostrada do mapa usando coordenadas
+    private final BoundingBox mapBoundaries = new BoundingBox(-1.457886, -48.437957, -1.479967, -48.459779);
+
+
     private Location myCurrentLocation;
+    private LocationManager locationManager;
+
+      /* CLICK LISTENERS */
+
+    private Button.OnClickListener myLocationListener = new Button.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            moveCameraToMyLocation();
+        }
+    };
+
+    private Button.OnClickListener busLocationListener = new Button.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(parentContext, "Adicionar lógica da função de localizar o circular", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private Button.OnClickListener clearMapListener = new Button.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(parentContext, "Adicionar lógica da função de limpar o mapa", Toast.LENGTH_SHORT).show();
+        }
+    };
+
 
 
     public MapFragment() {
@@ -91,19 +129,20 @@ public class MapFragment extends Fragment implements LocationListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(LOG_TAG, "onCreate()");
         parentContext = getContext();
-        // TODO: INVESTIGAR A UTILIDADE DESSAS LINHAS COMENTADAS
 
         /* Configura o caminho do armazenamento em cache do mapa, se o device não possui cartão SD,
          * ele deve ser configurado para o caminho de arquivos do device
          */
-        //OpenStreetMapTileProviderConstants.setCachePath(getActivity().getFilesDir().getAbsolutePath());
+        OpenStreetMapTileProviderConstants.setCachePath(getActivity().getFilesDir().getAbsolutePath());
 
         /* Importante! Configure o user agent para previnir ser banido dos servidores do OSM
          * O user agent deve ser uma identificação única do seu aplicativo
          * Um exemplo mostra a utilização de "BuildConfig.APPLICATION_ID"
          */
-        //OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -111,20 +150,17 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
     private void initializeMap(){
-
+        // Camada de posição do usuário
         myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(parentContext),mapView);
+        myLocationOverlay.disableFollowLocation();
+        myLocationOverlay.setOptionsMenuEnabled(true);
 
-        // ANALISAR SE PRECISA SER GLOBAL
-        // Restrição da região mostrada do mapa usando coordenadas
-        // TODO: BUSCAR ESSES VALORES A PARTIR DA CONFIGURAÇÃO
-        BoundingBox mapRegion = new BoundingBox(-1.457886, -48.437957, -1.479967, -48.459779);
-
+        // Configuração da câmera do mapa
         GeoPoint startCameraPoint = new GeoPoint
                 (defaultLocation.getLatitude(),defaultLocation.getLongitude());
-        mapCameraController = mapView.getController();
-        mapCameraController.setZoom(DEFAULT_ZOOM);
-        mapCameraController.animateTo(startCameraPoint);
-
+        mapCamera = mapView.getController();
+        mapCamera.setZoom(DEFAULT_ZOOM);
+        mapCamera.animateTo(startCameraPoint);
         // Configuração do Mapa
         mapView.setTilesScaledToDpi(true);
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
@@ -135,17 +171,14 @@ public class MapFragment extends Fragment implements LocationListener{
         /* Desabilita o uso da internet (opcional, mas uma boa forma de previnir que o mapa
          * seja carregado via rede e de testar se o zip está carregando
          */
-        mapView.setUseDataConnection(false);
+//        mapView.setUseDataConnection(false);
 
         mapView.setBuiltInZoomControls(false);
-        mapView.setMinZoomLevel(15);
-        mapView.setMaxZoomLevel(18);
+        mapView.setMinZoomLevel(MIN_ZOOM);
+        mapView.setMaxZoomLevel(MAX_ZOOM);
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
-
-
-        // Restringe a área do mapa à região escolhida
-        mapView.setScrollableAreaLimitDouble(mapRegion);
+        mapView.setScrollableAreaLimitDouble(mapBoundaries); // Restringe a área do mapa à região escolhida
 
         mapView.getOverlays().add(myLocationOverlay);
         mapView.postInvalidate();
@@ -155,7 +188,9 @@ public class MapFragment extends Fragment implements LocationListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        Log.i(LOG_TAG, "onCreateView()");
+
+        // Infla o layout para este fragmento
         View view =  inflater.inflate(R.layout.fragment_map, container, false);
 
         // Encontra as views
@@ -178,6 +213,11 @@ public class MapFragment extends Fragment implements LocationListener{
     public void onResume() {
         super.onResume();
         Log.i(LOG_TAG, "onResume()");
+        locationManager = (LocationManager) parentContext.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
+        }
         myLocationOverlay.enableMyLocation();
     }
 
@@ -191,10 +231,11 @@ public class MapFragment extends Fragment implements LocationListener{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i(LOG_TAG, "onDestroy()");
         myCurrentLocation = null;
         myLocationOverlay = null;
         mapView = null;
-        mapCameraController = null;
+        mapCamera = null;
     }
 
     @Override
@@ -202,46 +243,30 @@ public class MapFragment extends Fragment implements LocationListener{
         super.onSaveInstanceState(outState);
     }
 
+    private void moveCameraToMyLocation(){
+        try {
+            double latitude = myCurrentLocation.getLatitude(),
+                    longitude = myCurrentLocation.getLongitude();
 
-
-    /* CLICK LISTENERS */
-
-    private Button.OnClickListener myLocationListener = new Button.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            try {
-                double latitude = myCurrentLocation.getLatitude(),
-                        longitude = myCurrentLocation.getLongitude();
-                if(mapView.getBoundingBox().contains(latitude,longitude)) {
-                    Toast.makeText(parentContext, R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
-                }else{
-                    mapCameraController.animateTo(new GeoPoint(latitude,longitude));
-                }
-            }catch (NullPointerException e){
-                Log.e(FRAGMENT_TAG,"COULD NOT GET CURRENT LOCATION");
-                e.printStackTrace();
-
-                if(!isGPSEnabled(parentContext)) Toast.makeText(parentContext, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
-
-                Toast.makeText(parentContext, R.string.msg_loading_current_position, Toast.LENGTH_SHORT).show();
+            // Checa se o usuário se encontra dentro da area do mapa
+            if(!mapBoundaries.contains(latitude,longitude)) Toast.makeText(parentContext,
+                    R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
+            else{
+                Log.i(LOG_TAG,"Current Location: (" + latitude + "," + longitude + ")" );
+                mapCamera.animateTo(new GeoPoint(latitude,longitude));
             }
+        // Se capturar a exception, o sistema não pôde recuperar as informações do GPS
+        }catch (NullPointerException e){
+            Log.e(LOG_TAG,"Could not get current location.");
+            e.printStackTrace();
+            // Checa se o GPS está ligado
+            if(!isGPSEnabled(parentContext)) {
+                Toast.makeText(parentContext, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Toast.makeText(parentContext, R.string.msg_loading_current_position, Toast.LENGTH_SHORT).show();
         }
-    };
-
-    private Button.OnClickListener busLocationListener = new Button.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(parentContext, "Adicionar lógica da função de localizar o circular", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    private Button.OnClickListener clearMapListener = new Button.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(parentContext, "Adicionar lógica da função de limpar o mapa", Toast.LENGTH_SHORT).show();
-        }
-    };
-
+    }
 
 
     @Override
@@ -250,17 +275,11 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
+    public void onStatusChanged(String provider, int status, Bundle extras){}
 
     @Override
-    public void onProviderEnabled(String provider) {
-
-    }
+    public void onProviderEnabled(String provider) {}
 
     @Override
-    public void onProviderDisabled(String provider) {
-
-    }
+    public void onProviderDisabled(String provider) {}
 }
