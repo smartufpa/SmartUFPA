@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa;
+package com.example.kaeuc.smartufpa.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -15,8 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.server.MapDownloadFragment;
-import com.example.kaeuc.smartufpa.testes_layout.TesteMainActivity;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
@@ -64,7 +64,7 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
 
 
 
-                        Intent intent = new Intent(v.getContext(), TesteMainActivity.class);
+                        Intent intent = new Intent(v.getContext(), MainActivity.class);
                         startActivity(intent);
 
                     }

@@ -1,8 +1,10 @@
-package com.example.kaeuc.smartufpa;
+package com.example.kaeuc.smartufpa.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.example.kaeuc.smartufpa.R;
 
 public class AboutActivity extends AppCompatActivity {
     public static final String ACTION_ABOUT = "smartufpa.ACTION_ABOUT";

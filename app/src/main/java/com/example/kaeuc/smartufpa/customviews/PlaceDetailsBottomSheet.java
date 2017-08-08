@@ -10,7 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.kaeuc.smartufpa.MapActivity;
+import com.example.kaeuc.smartufpa.activities.MapActivity;
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
 

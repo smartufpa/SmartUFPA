@@ -40,20 +40,13 @@
            android:id="@+id/nav_about"
            android:icon="@drawable/ic_about"
            />
+       <item android:title="@string/title_settings"
+           android:id="@+id/nav_settings"
+           android:icon="@drawable/ic_settings"
+           />
    </group>
 
 
 
 </menu>
-
-    <!--
-        Icone do restaurante:
-            créditos: Domínio público
-        Icone do banheiro:
-            créditos: corpus delicti from noun project
-        Icone da xerox:
-            créditos: Arthur Shlain from noun project
-        Icone carinha andando:
-            créditos: Kiran Joseph from noun project
-    -->
 

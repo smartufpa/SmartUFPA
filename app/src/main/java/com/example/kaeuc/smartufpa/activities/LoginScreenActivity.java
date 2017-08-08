@@ -1,11 +1,9 @@
-package com.example.kaeuc.smartufpa;
+package com.example.kaeuc.smartufpa.activities;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -15,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+
+import com.example.kaeuc.smartufpa.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

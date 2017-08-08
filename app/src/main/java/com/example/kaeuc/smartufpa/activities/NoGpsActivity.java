@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa;
+package com.example.kaeuc.smartufpa.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.kaeuc.smartufpa.R;
 
 public class NoGpsActivity extends AppCompatActivity {
     public final static String CATEGORY_NO_GPS = "smartufpa.CATEGORY_NO_GPS";

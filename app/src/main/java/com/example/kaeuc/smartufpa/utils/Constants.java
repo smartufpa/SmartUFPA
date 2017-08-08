@@ -4,13 +4,15 @@ package com.example.kaeuc.smartufpa.utils;
  * Created by kaeuc on 10/22/2016.
  * Classe para manter constantes que serão usado diretamente no código, para evitar a utilização
  * de resources.
+ *
+ * TODO: Transformar essa classe em um ou mais arquivos de resource
  */
 
 public final class Constants {
     // Usados na requisição do nominatim e controle de camadas plotadas no mapa
     public static final String FILTER_XEROX = "filter=copyshop";
     public static final String FILTER_RESTAURANT = "filter=restaurant";
-    public static final String FILTER_TOILETS = "filter=toilets" ;
+    public static final String FILTER_RESTROOM = "filter=toilets" ;
     public static final String FILTER_AUDITORIUMS = "filter=auditoriums";
     public static final String FILTER_LIBRARIES = "filter=libraries";
 

@@ -3,17 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/coordinator_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
     tools:context="com.example.kaeuc.smartufpa.fragments.MapFragment">
 
-    <!-- MAP VIEW HERE-->
-    <org.osmdroid.views.MapView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/mapview"
-        android:layout_weight="1"
-        />
+    <!-- MAP VIEW WILL BE INSERTED HERE PROGRAMMATICALLY -->
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

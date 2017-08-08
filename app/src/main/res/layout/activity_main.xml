@@ -32,6 +32,7 @@
 
     <android.support.design.widget.NavigationView
         android:layout_width="@dimen/drawer_mobile"
+        android:id="@+id/nav_view"
         android:layout_height="match_parent"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/activity_map_drawer"

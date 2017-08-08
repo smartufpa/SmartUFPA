@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginScreenActivity"
+            android:name=".activities.LoginScreenActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapActivity"
+            android:name=".activities.MapActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -57,7 +57,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".NoGpsActivity"
+            android:name=".activities.NoGpsActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -68,7 +68,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AppMenuActivity"
+            android:name=".activities.AppMenuActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -78,7 +78,7 @@
                 <category android:name="smartufpa.CATEGORY_APP_MENU" />
             </intent-filter>
         </activity>
-        <activity android:name=".SQLTestActivity">
+        <activity android:name=".activities.SQLTestActivity">
             <intent-filter>
                 <action android:name="smartufpa.SQL_ACTION" />
 
@@ -86,7 +86,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AboutActivity"
+            android:name=".activities.AboutActivity"
             android:label="Sobre"
             android:launchMode="singleTop">
             <intent-filter>
@@ -96,7 +96,7 @@
                 <category android:name="smartufpa.CATEGORY_ABOUT" />
             </intent-filter>
         </activity>
-        <activity android:name=".testes_layout.TesteMainActivity"
+        <activity android:name=".activities.MainActivity"
             android:theme="@style/Theme.MyTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

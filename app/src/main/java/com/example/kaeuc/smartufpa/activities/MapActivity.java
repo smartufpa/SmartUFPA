@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa;
+package com.example.kaeuc.smartufpa.activities;
 
 import android.Manifest;
 import android.app.SearchManager;
@@ -36,6 +36,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.kaeuc.smartufpa.BuildConfig;
+import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.BusLocationRequest;
 import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
@@ -43,7 +45,7 @@ import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.customviews.AddPlaceInfoWindow;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
-import com.example.kaeuc.smartufpa.customviews.SearchListAdapter;
+import com.example.kaeuc.smartufpa.adapters.SearchListAdapter;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ShowcaseHolder;
@@ -416,7 +418,7 @@ public class MapActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_restroom) {
             if (!isRestroomEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_TOILETS);
+                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_RESTROOM);
                 isRestroomEnabled = true;
             }
         }else if(id == R.id.nav_bus_route){
@@ -466,7 +468,7 @@ public class MapActivity extends AppCompatActivity
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_xerox);
                     else if (filter.equals(Constants.FILTER_RESTAURANT))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restaurant);
-                    else if (filter.equals(Constants.FILTER_TOILETS))
+                    else if (filter.equals(Constants.FILTER_RESTROOM))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_restroom);
                     else if (filter.equals(Constants.FILTER_LIBRARIES))
                         poiIcon = ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_marker_library);

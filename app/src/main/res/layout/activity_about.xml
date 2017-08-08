@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:callback="com.example.kaeuc.smartufpa.AboutActivity">
+    tools:callback="com.example.kaeuc.smartufpa.activities.AboutActivity">
     
     <RelativeLayout
         android:layout_width="wrap_content"

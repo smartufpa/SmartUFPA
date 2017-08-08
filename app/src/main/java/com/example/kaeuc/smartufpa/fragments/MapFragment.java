@@ -8,7 +8,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,16 +21,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
-import com.example.kaeuc.smartufpa.CustomOverlayManager;
+import com.example.kaeuc.smartufpa.customviews.CustomMapView;
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.Constants;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -53,7 +55,7 @@ public class MapFragment extends Fragment implements LocationListener{
     private static final int MAX_ZOOM = 18;
 
     // VIEWS
-    private MapView mapView;
+    private static CustomMapView mapView;
     private FloatingActionButton fabMyLocation;
     private FloatingActionButton fabBusLocation;
     private Button btnClearMap;
@@ -103,10 +105,8 @@ public class MapFragment extends Fragment implements LocationListener{
     };
 
 
-
-    public MapFragment() {
-        // Required empty public constructor
-    }
+    // Required empty public constructor
+    public MapFragment() {}
 
     /**
      * Use this factory method to create a new instance of
@@ -150,11 +150,6 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
     private void initializeMap(){
-        // Camada de posição do usuário
-        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(parentContext),mapView);
-        myLocationOverlay.disableFollowLocation();
-        myLocationOverlay.setOptionsMenuEnabled(true);
-
         // Configuração da câmera do mapa
         GeoPoint startCameraPoint = new GeoPoint
                 (defaultLocation.getLatitude(),defaultLocation.getLongitude());
@@ -172,32 +167,42 @@ public class MapFragment extends Fragment implements LocationListener{
          * seja carregado via rede e de testar se o zip está carregando
          */
 //        mapView.setUseDataConnection(false);
-
         mapView.setBuiltInZoomControls(false);
         mapView.setMinZoomLevel(MIN_ZOOM);
         mapView.setMaxZoomLevel(MAX_ZOOM);
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
         mapView.setScrollableAreaLimitDouble(mapBoundaries); // Restringe a área do mapa à região escolhida
-
-        mapView.getOverlays().add(myLocationOverlay);
-        mapView.postInvalidate();
-
     }
+
+    private void enableMyLocationOverlay(){
+        // Camada de posição do usuário
+        if(myCurrentLocation == null)
+            myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(parentContext),mapView);
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.disableFollowLocation();
+        myLocationOverlay.setOptionsMenuEnabled(true);
+        mapView.addTileOverlay(myLocationOverlay, Constants.LAYER_MY_LOCATION);
+        Log.d(LOG_TAG, "initializeMap: " + mapView.getLayersTagsNames());
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(LOG_TAG, "onCreateView()");
-
-        // Infla o layout para este fragmento
         View view =  inflater.inflate(R.layout.fragment_map, container, false);
 
+        // Adiciona a CustomMapView ao layout na posição 0 por conta do eixo Z do CoordinatorLayout
+        mapView = new CustomMapView(parentContext);
+        final CoordinatorLayout cl = (CoordinatorLayout) view.findViewById(R.id.coordinator_layout);
+        cl.addView(mapView,0);
+
         // Encontra as views
-        mapView = (MapView) view.findViewById(R.id.mapview);
         fabMyLocation = (FloatingActionButton) view.findViewById(R.id.fab_my_location);
         fabBusLocation = (FloatingActionButton) view.findViewById(R.id.fab_bus_location);
         btnClearMap = (Button) view.findViewById(R.id.btn_clear_map);
+
 
         // Atrela os listerners aos botões
         fabMyLocation.setOnClickListener(myLocationListener);
@@ -205,6 +210,7 @@ public class MapFragment extends Fragment implements LocationListener{
         btnClearMap.setOnClickListener(clearMapListener);
 
         initializeMap();
+
         return view;
     }
 
@@ -218,13 +224,20 @@ public class MapFragment extends Fragment implements LocationListener{
                 ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
         }
-        myLocationOverlay.enableMyLocation();
+        // Adiciona a camada de localização do usuário
+        // TODO: ERRO COM BITMAP!!!!! AAAAAAAAH
+        enableMyLocationOverlay();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i(LOG_TAG, "onPause()");
+        Log.i(LOG_TAG,"onPause()");
+        if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this);
+        }
         myLocationOverlay.disableMyLocation();
     }
 
@@ -269,10 +282,12 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
 
-    @Override
-    public void onLocationChanged(Location location) {
-        myCurrentLocation = location;
+    public static boolean isLayerEnabled(final String layerTag){
+        return mapView.containsOverlay(layerTag);
     }
+
+    @Override
+    public void onLocationChanged(Location location) {  myCurrentLocation = location; }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras){}

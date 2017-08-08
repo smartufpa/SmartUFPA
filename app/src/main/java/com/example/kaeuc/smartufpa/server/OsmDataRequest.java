@@ -50,7 +50,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
         if(filtro.equalsIgnoreCase(Constants.FILTER_RESTAURANT))
             query = Constants.QUERY_OVERPASS_RESTAURANT;
-        else if(filtro.equalsIgnoreCase(Constants.FILTER_TOILETS))
+        else if(filtro.equalsIgnoreCase(Constants.FILTER_RESTROOM))
             query = Constants.QUERY_OVERPASS_TOILETS;
         else if(filtro.equalsIgnoreCase(Constants.FILTER_XEROX))
             query = Constants.QUERY_OVERPASS_XEROX;
