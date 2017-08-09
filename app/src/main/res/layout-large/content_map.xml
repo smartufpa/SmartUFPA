@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:callback="com.example.kaeuc.smartufpa.activities.MapActivity"
-    tools:showIn="@layout/app_bar_map">
+    tools:showIn="@layout/toolbar_top">
 
     <org.osmdroid.views.MapView
         android:layout_width="match_parent"

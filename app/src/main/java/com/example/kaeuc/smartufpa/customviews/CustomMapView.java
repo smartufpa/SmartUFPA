@@ -41,6 +41,10 @@ public class CustomMapView extends MapView {
         this.postInvalidate();
     }
 
+    public void clearMap(){
+
+    }
+
     public String getLayersTagsNames() {
         return layersTags.toString();
     }

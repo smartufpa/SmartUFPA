@@ -130,7 +130,7 @@ public class MapActivity extends AppCompatActivity
     private List<String> mapLayers = new ArrayList<>();
 
 
-    // TODO: 2. Implementar onSavedInstance
+
 
     /*
      * Cria um provedor de tiles que será setado para ser a camada de transportes
@@ -293,7 +293,7 @@ public class MapActivity extends AppCompatActivity
 
         // Views
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.tb_main);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         mapView = (MapView) findViewById(map);
         fabMyLocation = (FloatingActionButton) findViewById(R.id.fab_my_location);
@@ -408,29 +408,29 @@ public class MapActivity extends AppCompatActivity
         if (id == R.id.nav_copy_service) {
             // Caso a camada de filtro não esteja ativa, executar a busca e adicionar marcadores
             if (!isXeroxEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_XEROX);
+//                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_XEROX);
                 isXeroxEnabled = true;
             }
         } else if (id == R.id.nav_restaurant) {
             if (!isRestaurantEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_RESTAURANT);
+//                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_RESTAURANT);
                 isRestaurantEnabled = true;
             }
         } else if (id == R.id.nav_restroom) {
             if (!isRestroomEnabled) {
-                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_RESTROOM);
+//                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_RESTROOM);
                 isRestroomEnabled = true;
             }
         }else if(id == R.id.nav_bus_route){
             activeBusRouteLayer();
         }else if(id == R.id.nav_auditorium){
             if(!isAuditoriumEnabled){
-                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_AUDITORIUMS);
+//                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_AUDITORIUMS);
                 isAuditoriumEnabled = true;
             }
         }else if(id == R.id.nav_library){
             if (!isLibrariesEnabled){
-                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_LIBRARIES);
+//                new OsmDataRequest(this, progressBar).execute(Constants.FILTER_LIBRARIES);
                 isLibrariesEnabled = true;
             }
         }else if(id == R.id.nav_about){

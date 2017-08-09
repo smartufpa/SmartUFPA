@@ -15,6 +15,7 @@ public final class Constants {
     public static final String FILTER_RESTROOM = "filter=toilets" ;
     public static final String FILTER_AUDITORIUMS = "filter=auditoriums";
     public static final String FILTER_LIBRARIES = "filter=libraries";
+    public static final String DEFAULT_MARKER = "default_marker";
 
     public static final String TAG_COPYSHOP = "copyshop";
     public static final String TAG_TOILETS = "toilets";

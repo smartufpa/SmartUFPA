@@ -22,23 +22,22 @@ import java.util.List;
 
 public class OsmDataRequest extends AsyncTask<String,Void,String> {
 
-    private static final String TAG = "OsmDataRequest" ;
+    private static final String TAG = OsmDataRequest.class.getSimpleName() ;
     // interface resposável por devolver o resultado da task pra atividade principal
     private OnOsmDataListener callBack;
-    private ProgressBar progressBar;
+
     private String filtro;
     private int taskStatus;
     private Context parentContext;
 
-    public OsmDataRequest(Context parentContext, ProgressBar progressBar) {
+    public OsmDataRequest(Context parentContext) {
         this.parentContext = parentContext;
         this.callBack = (OnOsmDataListener) parentContext;
-        this.progressBar = progressBar;
         this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
 
     public interface OnOsmDataListener {
-        void onOsmDataResponse(List<Place> locais, String filtro, int taskStatus);
+        void onOsmDataResponse(List<Place> places, String filter, int taskStatus);
     }
 
 
@@ -58,6 +57,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
             query = Constants.QUERY_OVERPASS_AUDITORIUMS;
         else if(filtro.equalsIgnoreCase(Constants.FILTER_LIBRARIES))
             query = Constants.QUERY_OVERPASS_LIBRARIES;
+
         try {
             jsonResponse = HttpRequest.makeGetRequest(Constants.URL_OVERPASS_SERVER,query);
         } catch (SocketTimeoutException e) {
@@ -65,14 +65,7 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
             taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
         }
 
-
         return jsonResponse;
-    }
-    // Mostra a barra de progresso
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
     }
 
     // executa após a operação ser finalizada
@@ -83,8 +76,6 @@ public class OsmDataRequest extends AsyncTask<String,Void,String> {
         final List<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
         // Retorna os valores para a activity que chamou a ASyncTask
         callBack.onOsmDataResponse(places,filtro,taskStatus);
-        // esconde a barra de progresso
-        progressBar.setVisibility(View.GONE);
 
     }
 

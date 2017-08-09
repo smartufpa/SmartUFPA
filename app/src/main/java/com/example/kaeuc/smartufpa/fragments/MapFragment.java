@@ -4,6 +4,7 @@ package com.example.kaeuc.smartufpa.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,18 +22,27 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
+import com.example.kaeuc.smartufpa.activities.MapActivity;
 import com.example.kaeuc.smartufpa.customviews.CustomMapView;
 import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.MapUtils;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.FolderOverlay;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.util.List;
 
 import static com.example.kaeuc.smartufpa.utils.SystemServicesManager.isGPSEnabled;
 
@@ -53,24 +63,18 @@ public class MapFragment extends Fragment implements LocationListener{
     private static final int DEFAULT_ZOOM = 16;
     private static final int MIN_ZOOM = 15;
     private static final int MAX_ZOOM = 18;
+    private final XYTileSource MAPA_UFPA = new XYTileSource("ufpa_mapa", 15, 18, 256, ".png", new String[] {});
+
+    private final XYTileSource MAPA_UFPA_TRANSPORTE = new XYTileSource("ufpa_transporte", 15, 18, 256, ".png", new String[] {});
 
     // VIEWS
-    private static CustomMapView mapView;
+    private CustomMapView mapView;
     private FloatingActionButton fabMyLocation;
     private FloatingActionButton fabBusLocation;
     private Button btnClearMap;
 
 
     private Context parentContext;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     // TODO: BUSCAR ESSES VALORES A PARTIR DA CONFIGURAÇÃO
     private final Place defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
@@ -104,25 +108,12 @@ public class MapFragment extends Fragment implements LocationListener{
         }
     };
 
-
+    // TODO: Implementar onSavedInstance
     // Required empty public constructor
     public MapFragment() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MapFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
+    public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -131,7 +122,6 @@ public class MapFragment extends Fragment implements LocationListener{
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "onCreate()");
         parentContext = getContext();
-
         /* Configura o caminho do armazenamento em cache do mapa, se o device não possui cartão SD,
          * ele deve ser configurado para o caminho de arquivos do device
          */
@@ -143,10 +133,6 @@ public class MapFragment extends Fragment implements LocationListener{
          */
         OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     private void initializeMap(){
@@ -183,7 +169,13 @@ public class MapFragment extends Fragment implements LocationListener{
         myLocationOverlay.disableFollowLocation();
         myLocationOverlay.setOptionsMenuEnabled(true);
         mapView.addTileOverlay(myLocationOverlay, Constants.LAYER_MY_LOCATION);
-        Log.d(LOG_TAG, "initializeMap: " + mapView.getLayersTagsNames());
+    }
+
+    public void enableBusOverlay(){
+        mapView.setTileSource(MAPA_UFPA_TRANSPORTE);
+        mapView.postInvalidate();
+        Log.i(LOG_TAG, "Layer activated: Bus route -" + mapView.getOverlayManager().toString());
+        btnClearMap.setVisibility(View.VISIBLE);
     }
 
 
@@ -282,8 +274,34 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
 
-    public static boolean isLayerEnabled(final String layerTag){
+    public boolean isLayerEnabled(final String layerTag){
         return mapView.containsOverlay(layerTag);
+    }
+
+    public void addMarkersToMap(List<Place> places, String filter){
+        // Cria e adiciona a camada de marcadores ao mapa
+        final FolderOverlay poiMarkers = new FolderOverlay();
+        MapUtils mapUtils = new MapUtils(getContext());
+        Drawable poiIcon = mapUtils.getIconDrawable(filter);
+        // Cria um marcador para cada local encontrado
+        for (final Place place : places) {
+            Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    mapView.postInvalidate();
+                    PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+                    sheet.show(getFragmentManager(), "bottom sheet");
+                    return true;
+                }
+            };
+            poiMarkers.add(mapUtils.createCustomMarker(mapView,poiIcon,
+                    new GeoPoint(place.getLatitude(),place.getLongitude()),
+                    markerClick));
+        }
+        mapView.addTileOverlay(poiMarkers,filter);
+        btnClearMap.setVisibility(View.VISIBLE);
+        Toast.makeText(getContext(), getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
+
     }
 
     @Override

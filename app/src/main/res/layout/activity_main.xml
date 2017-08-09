@@ -15,19 +15,7 @@
         android:id="@+id/frame_map_container"
         />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/tb_main"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="4dp"
-            android:layout_margin="8dp"
-            android:theme="@style/Theme.MyTheme"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-    </FrameLayout>
+   <include layout="@layout/toolbar_top"/>
 
 
     <android.support.design.widget.NavigationView
