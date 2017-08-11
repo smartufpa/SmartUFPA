@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 public class JsonParser {
-    // TAG para logs
+    // LOG_TAG para logs
     private static final String TAG = "JsonParser";
 
     public static List<Place> parseLocalResponse(String jsonResponse){

@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_drawer"
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
     >
 
-    <FrameLayout
+    <android.support.v4.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/frame_map_container"
-        />
+        android:id="@+id/layout_drawer"
+        >
 
-   <include layout="@layout/toolbar_top"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/frame_map_container"
+            />
+
+        <include layout="@layout/toolbar_top"/>
 
 
-    <android.support.design.widget.NavigationView
-        android:layout_width="@dimen/drawer_mobile"
-        android:id="@+id/nav_view"
-        android:layout_height="match_parent"
-        app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/activity_map_drawer"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="8dp"
-        android:layout_gravity="start"
-        android:elevation="@dimen/drawer_elevation"
-        />
+        <android.support.design.widget.NavigationView
+            android:layout_width="@dimen/drawer_mobile"
+            android:id="@+id/nav_view"
+            android:layout_height="match_parent"
+            app:headerLayout="@layout/drawer_header"
+            app:menu="@menu/activity_map_drawer"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="8dp"
+            android:layout_gravity="start"
+            android:elevation="@dimen/drawer_elevation"
+            />
 
-</android.support.v4.widget.DrawerLayout>
+
+
+    </android.support.v4.widget.DrawerLayout>
+
+    <include layout="@layout/bottom_sheet"/>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -2,8 +2,7 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.view.View;
-import android.widget.ProgressBar;
+
 
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
@@ -11,22 +10,21 @@ import com.example.kaeuc.smartufpa.utils.JsonParser;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kaeuc on 02/03/2017.
  */
 
 public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
-    public final String TAG = "OverpassSearch";
+    public final String LOG_TAG = OverpassSearchRequest.class.getSimpleName();
     private OnOverpassListener callBack;
     private Context parentContext;
-    private ProgressBar progressBar;
     private int taskStatus;
 
-    public OverpassSearchRequest(Context parentContext, ProgressBar progressBar) {
+    public OverpassSearchRequest(Context parentContext) {
         this.parentContext = parentContext;
         this.callBack = (OnOverpassListener) parentContext;
-        this.progressBar = progressBar;
         this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
 
@@ -37,8 +35,8 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
     }
+
 
     @Override
     protected String doInBackground(String... params) {
@@ -55,7 +53,6 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String jsonResponse) {
         super.onPostExecute(jsonResponse);
-        progressBar.setVisibility(View.GONE);
         ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
         if(places.isEmpty()){
             taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;

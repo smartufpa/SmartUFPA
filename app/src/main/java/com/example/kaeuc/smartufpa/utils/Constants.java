@@ -77,12 +77,12 @@ public final class Constants {
 
 
     // Usados no controle de camadas plotadas no mapa
-    public static final String LAYER_ROUTE = "camada-de-rota";
-    public static final String LAYER_SEARCH = "camada-de-busca";
-    public static final String LAYER_BUS_ROUTE = "camada-de-onibus";
-    public static final String LAYER_MY_LOCATION = "camada-de-localização-atual";
-    public static final String LAYER_BUS_MARKER = "marcador-do-circular";
-    public static final String LAYER_ADD_LOCATION = "camada-de-novo-local";
+    public static final String LAYER_ROUTE = "ROUTE_OVERLAY";
+    public static final String LAYER_SEARCH = "SEARCH_OVERLAY";
+    public static final String LAYER_BUS_ROUTE = "BUS_OVERLAY";
+    public static final String LAYER_MY_LOCATION = "MY_LOCATION_OVERLAY";
+    public static final String LAYER_BUS_MARKER = "BUS_MARKER_OVERLAY";
+    public static final String LAYER_ADD_NEW_PLACE = "ADD_NEW_PLACE_OVERLAY";
 
 
     // Usado na factory para places, apresentado nos detalhes sobre o local

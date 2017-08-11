@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.kaeuc.smartufpa.fragments.SearchResultFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryText"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:textAllCaps="true"
+        android:text="Resultados"
+        android:id="@+id/txt_results"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_search_result"
+        android:paddingTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_results"
+        />
+
+
+</LinearLayout>

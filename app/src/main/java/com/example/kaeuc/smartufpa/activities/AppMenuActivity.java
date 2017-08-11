@@ -64,7 +64,8 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
 
 
 
-                        Intent intent = new Intent(v.getContext(), MainActivity.class);
+                        Intent intent = new Intent(MainActivity.ACTION_MAIN);
+                        intent.addCategory(MainActivity.CATEGORY_MAIN);
                         startActivity(intent);
 
                     }

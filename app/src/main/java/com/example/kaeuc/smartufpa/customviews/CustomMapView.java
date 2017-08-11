@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,14 @@ public class CustomMapView extends MapView {
     }
 
     public void clearMap(){
+        int size = layersTags.size()- 1;
+        for (int i = size; i > 0 ; i--) {
+            Overlay currentOverlay = this.getOverlays().get(i);
+            if(!(currentOverlay instanceof MyLocationNewOverlay))
+                this.removeTileOverlay(layersTags.get(i));
+        }
+        Log.i(LOG_TAG, "Map Cleared.");
+        Log.i(LOG_TAG, "Current Overlays: " + this.getLayersTagsNames());
 
     }
 

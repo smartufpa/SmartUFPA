@@ -11,7 +11,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,13 +21,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
-import com.example.kaeuc.smartufpa.activities.MapActivity;
-import com.example.kaeuc.smartufpa.customviews.CustomMapView;
 import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.customviews.CustomMapView;
 import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.MapUtils;
+import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -44,14 +43,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.List;
 
-import static com.example.kaeuc.smartufpa.utils.SystemServicesManager.isGPSEnabled;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MapFragment extends Fragment implements LocationListener{
 
     private static final String LOG_TAG = MapFragment.class.getSimpleName() ;
@@ -104,11 +96,12 @@ public class MapFragment extends Fragment implements LocationListener{
     private Button.OnClickListener clearMapListener = new Button.OnClickListener(){
         @Override
         public void onClick(View v) {
-            Toast.makeText(parentContext, "Adicionar lógica da função de limpar o mapa", Toast.LENGTH_SHORT).show();
+            clearMap();
         }
     };
+    private boolean isBusOverlayEnabled = false;
 
-    // TODO: Implementar onSavedInstance
+
     // Required empty public constructor
     public MapFragment() {}
 
@@ -174,10 +167,19 @@ public class MapFragment extends Fragment implements LocationListener{
     public void enableBusOverlay(){
         mapView.setTileSource(MAPA_UFPA_TRANSPORTE);
         mapView.postInvalidate();
-        Log.i(LOG_TAG, "Layer activated: Bus route -" + mapView.getOverlayManager().toString());
+        Log.i(LOG_TAG, "Bus Overlay Enabled.");
+        isBusOverlayEnabled = true;
         btnClearMap.setVisibility(View.VISIBLE);
     }
 
+    private void clearMap(){
+        mapView.clearMap();
+        if(isBusOverlayEnabled){
+            mapView.setTileSource(MAPA_UFPA);
+            isBusOverlayEnabled = false;
+        }
+        if(btnClearMap.getVisibility() == View.VISIBLE) btnClearMap.setVisibility(View.GONE);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -205,7 +207,6 @@ public class MapFragment extends Fragment implements LocationListener{
 
         return view;
     }
-
 
     @Override
     public void onResume() {
@@ -243,6 +244,7 @@ public class MapFragment extends Fragment implements LocationListener{
         mapCamera = null;
     }
 
+    // TODO: Implementar onSavedInstance
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -262,10 +264,9 @@ public class MapFragment extends Fragment implements LocationListener{
             }
         // Se capturar a exception, o sistema não pôde recuperar as informações do GPS
         }catch (NullPointerException e){
-            Log.e(LOG_TAG,"Could not get current location.");
-            e.printStackTrace();
+            Log.e(LOG_TAG,"Could not get current location.",e);
             // Checa se o GPS está ligado
-            if(!isGPSEnabled(parentContext)) {
+            if(!SystemServicesManager.isGPSEnabled(parentContext)) {
                 Toast.makeText(parentContext, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
                 return;
             }

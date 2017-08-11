@@ -23,7 +23,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     productFlavors {
     }
-   
+
 }
 apply plugin: 'org.greenrobot.greendao'
 dependencies {
@@ -35,10 +35,9 @@ dependencies {
     compile 'org.osmdroid:osmdroid-android:5.4.1:release@aar'
 
     // Biblioteca para criar tutoriais de uso facilmente
-    
 
     // Bibliotecas android para design compatível
-    
+
     // Biblioteca para processamento de JSON
     // Biblioteca ORM
     compile 'com.github.MKergall:osmbonuspack:5.9'

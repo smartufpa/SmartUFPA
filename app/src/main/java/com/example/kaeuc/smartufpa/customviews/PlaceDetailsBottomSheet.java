@@ -41,7 +41,7 @@ public class PlaceDetailsBottomSheet extends BottomSheetDialogFragment {
     public static PlaceDetailsBottomSheet newInstance(Place place) {
         Bundle args = new Bundle();
         PlaceDetailsBottomSheet fragment = new PlaceDetailsBottomSheet();
-        args.putSerializable("place",place);
+//        args.putSerializable("place",place);
         fragment.setArguments(args);
         return fragment;
     }

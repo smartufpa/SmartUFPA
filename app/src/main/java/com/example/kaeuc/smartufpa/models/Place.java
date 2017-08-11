@@ -1,5 +1,7 @@
 package com.example.kaeuc.smartufpa.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import org.osmdroid.util.GeoPoint;
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * Created by kaeuc on 9/29/2016.
  */
 
-public class Place implements Serializable {
+public class Place implements Parcelable {
     private String amenity;
     private String description;
     private long id;
@@ -73,6 +75,13 @@ public class Place implements Serializable {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
 
+    }
 }

@@ -45,7 +45,7 @@ import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.customviews.AddPlaceInfoWindow;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
-import com.example.kaeuc.smartufpa.adapters.SearchListAdapter;
+import com.example.kaeuc.smartufpa.adapters.SearchResultAdapter;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ShowcaseHolder;
@@ -180,7 +180,7 @@ public class MapActivity extends AppCompatActivity
         });
         final FolderOverlay folderOverlay = new FolderOverlay();
         folderOverlay.add(customMarker);
-        addlayerToMap(folderOverlay,Constants.LAYER_ADD_LOCATION);
+        addlayerToMap(folderOverlay,Constants.LAYER_ADD_NEW_PLACE);
         return false;
     }
 
@@ -330,7 +330,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //  Infla o menu; Isso adiciona os itens à barra de ações se existir
-        getMenuInflater().inflate(R.menu.actions_bar_items, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
         // Acha o item de busca e seta as ações que serão executadas ao clicar no ícone
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -505,7 +505,7 @@ public class MapActivity extends AppCompatActivity
         if (taskStatus == Constants.SERVER_RESPONSE_SUCCESS) {
             // Se mais de um resultado for retornado, utiliza uma bottomsheet para apresentar os resultados
             if (places.size() > 1) {
-                setupSearchResultBottomSheet(places);
+//                setupSearchResultBottomSheet(places);
             }else{
                 mapController.animateTo(places.get(0).getGeoPoint());
             }
@@ -592,7 +592,7 @@ public class MapActivity extends AppCompatActivity
                 removeLayerFromMap(Constants.LAYER_SEARCH);
                 isSearchEnabled = false;
             }
-            new OverpassSearchRequest(this,progressBar).execute(query);
+//            new OverpassSearchRequest(this,progressBar).execute(query);
         }else{
             Toast.makeText(this, getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
         }
@@ -811,45 +811,45 @@ public class MapActivity extends AppCompatActivity
 
     // Configura a bottomsheet de múltiplos resultados da busca
     // // TODO: 2/24/2017 reestruturar a view para multiplos resultados
-    private void setupSearchResultBottomSheet(final ArrayList<Place> places){
-        // Configuração da listview
-        final SearchListAdapter searchListAdapter = new SearchListAdapter(MapActivity.this,places);
-        ListView listView = (ListView) findViewById(R.id.listview);
-        listView.setAdapter(searchListAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Configura a bottomsheet de detalhes sobre o local
-                searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(places.get(position));
-                sheet.show(getSupportFragmentManager(),"bottom sheet");
-            }
-        });
-
-        View bottomSheet = findViewById(R.id.bottom_sheet_results);
-        bottomSheet.setVisibility(View.VISIBLE);
-        searchResultSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        searchResultSheetBehavior.setHideable(true);
-        searchResultSheetBehavior.setPeekHeight(120);
-        searchResultSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    mapController.animateTo(new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude()));
-                }
-                else if (newState == BottomSheetBehavior.STATE_COLLAPSED) ;
-
-                else if (newState == BottomSheetBehavior.STATE_HIDDEN) ;
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-
-    }
+//    private void setupSearchResultBottomSheet(final ArrayList<Place> places){
+//        // Configuração da listview
+////        final SearchResultAdapter searchResultAdapter = new SearchResultAdapter(MapActivity.this,places);
+////        ListView listView = (ListView) findViewById(R.id.listview);
+////        listView.setAdapter(searchResultAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // Configura a bottomsheet de detalhes sobre o local
+//                searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+//                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(places.get(position));
+//                sheet.show(getSupportFragmentManager(),"bottom sheet");
+//            }
+//        });
+//
+//        View bottomSheet = findViewById(R.id.bottom_sheet_results);
+//        bottomSheet.setVisibility(View.VISIBLE);
+//        searchResultSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+//        searchResultSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//        searchResultSheetBehavior.setHideable(true);
+//        searchResultSheetBehavior.setPeekHeight(120);
+//        searchResultSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+//                    mapController.animateTo(new GeoPoint(defaultLocation.getLatitude(),defaultLocation.getLongitude()));
+//                }
+//                else if (newState == BottomSheetBehavior.STATE_COLLAPSED) ;
+//
+//                else if (newState == BottomSheetBehavior.STATE_HIDDEN) ;
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//
+//            }
+//        });
+//
+//    }
 
 
     /* Localiza e traça as rotas entre dois pontos no mapa

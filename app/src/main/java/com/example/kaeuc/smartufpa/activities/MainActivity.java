@@ -1,47 +1,52 @@
 package com.example.kaeuc.smartufpa.activities;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.R;
-import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.fragments.MapFragment;
+import com.example.kaeuc.smartufpa.fragments.SearchResultFragment;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
+import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
 import com.example.kaeuc.smartufpa.utils.Constants;
-import com.example.kaeuc.smartufpa.utils.MapUtils;
 
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.FolderOverlay;
-import org.osmdroid.views.overlay.Marker;
-
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OsmDataRequest.OnOsmDataListener {
+public class MainActivity extends AppCompatActivity
+        implements OsmDataRequest.OnOsmDataListener,OverpassSearchRequest.OnOverpassListener {
 
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
+    public static final String CATEGORY_MAIN = "smartufpa.CATEGORY_MAIN";
     // VIEWS
     private Toolbar mapToolbar;
     private DrawerLayout layoutDrawer;
     private NavigationView navigationView;
     private ProgressBar progressBar;
+
+    private View bottomSheetContainer;
 
     private MapFragment mapFragment;
 
@@ -50,15 +55,37 @@ public class MainActivity extends AppCompatActivity implements OsmDataRequest.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.i(LOG_TAG,"onCreate()");
+
         // Encontra as views
         layoutDrawer = (DrawerLayout) findViewById(R.id.layout_drawer);
         mapToolbar= (Toolbar) findViewById(R.id.tb_main);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        bottomSheetContainer = findViewById(R.id.bottom_sheet);
         setupToolbar();
         setupDrawer();
         setupMapFragment();
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            new OverpassSearchRequest(this).execute(query);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(LOG_TAG, "onResume()");
+        setupSearchResultBottomSheet();
     }
 
     private void setupToolbar(){
@@ -149,6 +176,28 @@ public class MainActivity extends AppCompatActivity implements OsmDataRequest.On
         drawerToggle.syncState();
     }
 
+    private void setupSearchResultBottomSheet(){
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
+        // ADICIONAR LISTENERS
+
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView)
+                MenuItemCompat.getActionView(searchItem);
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconified(false);
+
+        return true;
+    }
+
     @Override
     public void onBackPressed() {
         layoutDrawer = (DrawerLayout) findViewById(R.id.layout_drawer);
@@ -167,4 +216,22 @@ public class MainActivity extends AppCompatActivity implements OsmDataRequest.On
         }
         progressBar.setVisibility(View.GONE);
     }
+
+    @Override
+    public void onOverpassResponse(ArrayList<Place> places, int taskStatus) {
+        progressBar.setVisibility(View.GONE);
+        if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
+            bottomSheetContainer.setVisibility(View.VISIBLE);
+            SearchResultFragment searchResultFrag = (SearchResultFragment) getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
+            if(searchResultFrag == null){
+                searchResultFrag = SearchResultFragment.newInstance(places,null);
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG);
+                ft.commit();
+            }
+        }
+
+    }
+
+
 }
