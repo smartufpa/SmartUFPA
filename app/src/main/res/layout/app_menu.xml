@@ -17,10 +17,9 @@
             android:id="@+id/btn_mobilidade"
             android:layout_width="280dp"
             android:layout_height="48dp"
-            android:background="@color/colorPrimaryDark"
             android:text="Mobilidade e Localização"
-            android:textColor="@color/white"
             android:layout_centerHorizontal="true"
+            style="@style/RaisedButton"
             />
 
         <Button

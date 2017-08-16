@@ -64,8 +64,6 @@
     </RelativeLayout>
 
 
-    <include layout="@layout/bottom_sheet"/>
-
 
 
 

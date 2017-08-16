@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.io.Serializable;
-
 /**
  * Created by kaeuc on 9/29/2016.
  */
@@ -40,6 +38,30 @@ public class Place implements Parcelable {
         this.longitude = longitude;
         this.name = name;
     }
+
+    protected Place(Parcel in) {
+        amenity = in.readString();
+        description = in.readString();
+        id = in.readLong();
+        latitude = in.readDouble();
+        locName = in.readString();
+        longitude = in.readDouble();
+        name = in.readString();
+        shop = in.readString();
+        shortName = in.readString();
+    }
+
+    public static final Creator<Place> CREATOR = new Creator<Place>() {
+        @Override
+        public Place createFromParcel(Parcel in) {
+            return new Place(in);
+        }
+
+        @Override
+        public Place[] newArray(int size) {
+            return new Place[size];
+        }
+    };
 
     public double getLatitude() {
         return latitude;
@@ -82,6 +104,14 @@ public class Place implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(amenity);
+        dest.writeString(description);
+        dest.writeLong(id);
+        dest.writeDouble(latitude);
+        dest.writeString(locName);
+        dest.writeDouble(longitude);
+        dest.writeString(name);
+        dest.writeString(shop);
+        dest.writeString(shortName);
     }
 }

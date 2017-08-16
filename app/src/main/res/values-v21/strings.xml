@@ -44,6 +44,7 @@
     <string name="error_fragment_input_too_short">A entrada inserida é muito curta.</string>
     <string name="error_fragment_select_valid_option">Selecione uma opção válida.</string>
     <string name="error_fragment_create_other">Adicione um tipo novo.</string>
+    <string name="error_fragment_invalid_character">A entrada deve conter apenas letras e números.</string>
 
     <string name="msg_no_results">Sua busca não retornou nenhum resultado válido.</string>
     <string name="msg_click_marker">Clique no marcador para rotas.</string>
@@ -73,8 +74,10 @@
     <string name="btn_fragment_cancel">Cancelar</string>
     <string name="btn_fragment_confirm">Confirmar</string>
     <string name="tutorial_map_executed">tutorial_executed=</string>
-    <string name="error_fragment_invalid_character">A entrada deve conter apenas letras e números.</string>
+
     <string name="title_settings">Configurações</string>
+    <string name="lbl_placeholder">PlaceHolder Text</string>
+    <string name="lbl_search_result_title">Resultados</string>
 
 
 </resources>

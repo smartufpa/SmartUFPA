@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.adapters.SearchResultAdapter;
@@ -75,14 +76,23 @@ public class SearchResultFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_result, container, false);
         rvSearchResult = (RecyclerView) view.findViewById(R.id.list_search_result);
-        rvSearchResult.setAdapter(new SearchResultAdapter(places,getContext()));
+        SearchResultAdapter searchResultAdapter = new SearchResultAdapter(places, getContext());
+
+        searchResultAdapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                // TODO: CALL DETAILS FRAGMENT
+                Toast.makeText(getContext(), places.get(postion).getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        rvSearchResult.setAdapter(searchResultAdapter);
         LinearLayoutManager llm =
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rvSearchResult.setLayoutManager(llm);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvSearchResult.getContext(),
-                ((LinearLayoutManager) rvSearchResult.getLayoutManager()).getOrientation());
-        rvSearchResult.addItemDecoration(dividerItemDecoration);
+
+
         return view;
     }
 

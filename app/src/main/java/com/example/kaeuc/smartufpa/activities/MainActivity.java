@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -45,8 +46,9 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout layoutDrawer;
     private NavigationView navigationView;
     private ProgressBar progressBar;
+    private FrameLayout bottomSheetContainer;
+    private BottomSheetBehavior bottomSheetBehavior;
 
-    private View bottomSheetContainer;
 
     private MapFragment mapFragment;
 
@@ -62,7 +64,8 @@ public class MainActivity extends AppCompatActivity
         mapToolbar= (Toolbar) findViewById(R.id.tb_main);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        bottomSheetContainer = findViewById(R.id.bottom_sheet);
+        bottomSheetContainer = (FrameLayout) findViewById(R.id.bottom_sheet_container);
+
         setupToolbar();
         setupDrawer();
         setupMapFragment();
@@ -177,7 +180,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupSearchResultBottomSheet(){
-        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         // ADICIONAR LISTENERS
 
 
@@ -221,14 +225,18 @@ public class MainActivity extends AppCompatActivity
     public void onOverpassResponse(ArrayList<Place> places, int taskStatus) {
         progressBar.setVisibility(View.GONE);
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
-            bottomSheetContainer.setVisibility(View.VISIBLE);
-//            SearchResultFragment searchResultFrag = (SearchResultFragment) getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
-//            if(searchResultFrag == null){
-//                searchResultFrag = SearchResultFragment.newInstance(places,null);
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG);
-//                ft.commit();
-//            }
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            SearchResultFragment searchResultFrag = (SearchResultFragment) getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            if(searchResultFrag == null){
+                searchResultFrag = SearchResultFragment.newInstance(places,null);
+                ft.add(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG);
+                ft.commit();
+            }else{
+                searchResultFrag = SearchResultFragment.newInstance(places,null);
+                ft.replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG);
+                ft.commit();
+            }
         }
 
     }

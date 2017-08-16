@@ -24,10 +24,9 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:id="@+id/btn_visitante"
-            android:textColor="@android:color/white"
-            android:background="@color/colorPrimaryDark"
             android:layout_below="@id/img_logo"
             android:layout_margin="20dp"
+            style="@style/RaisedButton"
             />
         <Button
             android:layout_width="match_parent"

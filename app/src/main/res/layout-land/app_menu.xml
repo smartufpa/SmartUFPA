@@ -19,11 +19,11 @@
             android:id="@+id/btn_mobilidade"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
             android:text="Mobilidade e Localização"
-            android:textColor="@color/white"
             android:layout_centerHorizontal="true"
+            style="@style/RaisedButton"
             />
+
 
         <Button
             android:id="@+id/btn_oportunidades"

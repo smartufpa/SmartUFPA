@@ -88,6 +88,7 @@ public final class Constants {
     // Usado na factory para places, apresentado nos detalhes sobre o local
     // caso um nome não tenha sido definido
     public static final String NO_NAME = "Sem nome identificado";
+    public static final String NO_LOCAL_NAME = "Sem nome local identificado";
     public static final String NO_SHORT_NAME = "Sem abreviação";
     public static final String NO_DESCRIPTION = "Sem descrição";
 

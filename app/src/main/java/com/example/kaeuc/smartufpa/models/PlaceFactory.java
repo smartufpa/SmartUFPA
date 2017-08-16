@@ -26,7 +26,7 @@ public class PlaceFactory {
     public Place createPlace(@Nullable final Long id, double latitude, double longitude, Tags tags){
         String name = Constants.NO_NAME;
         String shortName = Constants.NO_SHORT_NAME;
-        String locName = Constants.NO_NAME;
+        String locName = Constants.NO_LOCAL_NAME;
         String description = Constants.NO_DESCRIPTION;
 
         if (tags.getName() != null) name = tags.getName();

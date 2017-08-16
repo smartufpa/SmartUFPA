@@ -16,7 +16,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:theme="@style/Theme.MyTheme"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
         <ProgressBar
             android:id="@+id/progress_bar"

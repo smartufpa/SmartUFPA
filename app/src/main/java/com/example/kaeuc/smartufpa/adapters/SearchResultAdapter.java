@@ -1,18 +1,18 @@
 package com.example.kaeuc.smartufpa.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.Constants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,10 +24,19 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
 
     private List<Place> places;
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
     public SearchResultAdapter(List<Place> places, Context context) {
         this.places = places;
         this.context = context;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(View view, int postion);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -35,9 +44,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.search_result_item,parent,false);
 
-        SearchResultViewHolder holder = new SearchResultViewHolder(view);
-
-        return holder;
+        return new SearchResultViewHolder(view);
     }
 
     @Override
@@ -46,9 +53,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
         SearchResultViewHolder viewHolder = (SearchResultViewHolder) holder;
 
         Place place = places.get(position);
-
-        viewHolder.txtPlaceName.setText(place.getName() + "(" + place.getShortName() + ")");
+        if(!place.getShortName().equals(Constants.NO_SHORT_NAME))
+            viewHolder.txtPlaceName.setText(place.getName() + " (" + place.getShortName() + ")");
+        else
+            viewHolder.txtPlaceName.setText(place.getName());
         viewHolder.txtLocName.setText(place.getLocName());
+
 
     }
 
@@ -58,14 +68,23 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
     }
 
 
-    private class SearchResultViewHolder extends RecyclerView.ViewHolder {
+   private class SearchResultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView txtPlaceName, txtLocName;
 
+
         private SearchResultViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             txtPlaceName = (TextView) itemView.findViewById(R.id.list_txt_place_name);
             txtLocName = (TextView) itemView.findViewById(R.id.list_txt_place_loc_name);
+
         }
-    }
+
+       @Override
+       public void onClick(View v) {
+           if(onItemClickListener != null)
+               onItemClickListener.onItemClick(v, getAdapterPosition());
+       }
+   }
 }

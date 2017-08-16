@@ -7,6 +7,7 @@
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
     <color name="colorIcons">#FFFFFF</color>
+    <color name="colorActionBarTitle">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="disabledButton">#BDBDBD</color>
     <color name="white">@android:color/white</color>
