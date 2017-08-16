@@ -17,11 +17,12 @@
         android:src="@drawable/img_place_holder"
         android:layout_gravity="center_vertical"
         />
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:gravity="center_horizontal"
+        android:layout_gravity="center_vertical"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +32,6 @@
             android:textSize="12sp"
             android:textColor="@color/colorPrimaryText"
             />
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,29 +44,7 @@
             android:layout_below="@+id/list_txt_place_name"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_place_description"
-            android:id="@+id/list_txt_description_label"
-            android:textSize="12sp"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/colorPrimaryText"
-            android:layout_below="@+id/list_txt_place_loc_name"
-            />
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lorem_ipsum"
-            android:id="@+id/list_txt_place_description"
-            android:textColor="@color/colorSecondaryText"
-            android:textSize="12sp"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/list_txt_description_label"
-            android:maxLength="120"
-            />
         >
     </RelativeLayout>
 </LinearLayout>

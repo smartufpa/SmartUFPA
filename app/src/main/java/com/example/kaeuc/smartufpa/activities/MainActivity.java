@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -40,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
     public static final String CATEGORY_MAIN = "smartufpa.CATEGORY_MAIN";
+
     // VIEWS
     private Toolbar mapToolbar;
     private DrawerLayout layoutDrawer;
@@ -222,13 +222,13 @@ public class MainActivity extends AppCompatActivity
         progressBar.setVisibility(View.GONE);
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
             bottomSheetContainer.setVisibility(View.VISIBLE);
-            SearchResultFragment searchResultFrag = (SearchResultFragment) getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
-            if(searchResultFrag == null){
-                searchResultFrag = SearchResultFragment.newInstance(places,null);
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG);
-                ft.commit();
-            }
+//            SearchResultFragment searchResultFrag = (SearchResultFragment) getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
+//            if(searchResultFrag == null){
+//                searchResultFrag = SearchResultFragment.newInstance(places,null);
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                ft.replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG);
+//                ft.commit();
+//            }
         }
 
     }

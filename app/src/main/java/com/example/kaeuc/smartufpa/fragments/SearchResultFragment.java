@@ -3,6 +3,7 @@ package com.example.kaeuc.smartufpa.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ public class SearchResultFragment extends Fragment {
     private String mParam2;
 
 
-    private RecyclerView listSearchResult;
+    private RecyclerView rvSearchResult;
 
     public SearchResultFragment() {
         // Required empty public constructor
@@ -73,11 +74,15 @@ public class SearchResultFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_result, container, false);
-        listSearchResult = (RecyclerView) view.findViewById(R.id.list_search_result);
-        listSearchResult.setAdapter(new SearchResultAdapter(places,getContext()));
+        rvSearchResult = (RecyclerView) view.findViewById(R.id.list_search_result);
+        rvSearchResult.setAdapter(new SearchResultAdapter(places,getContext()));
         LinearLayoutManager llm =
-                new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        listSearchResult.setLayoutManager(llm);
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        rvSearchResult.setLayoutManager(llm);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvSearchResult.getContext(),
+                ((LinearLayoutManager) rvSearchResult.getLayoutManager()).getOrientation());
+        rvSearchResult.addItemDecoration(dividerItemDecoration);
         return view;
     }
 

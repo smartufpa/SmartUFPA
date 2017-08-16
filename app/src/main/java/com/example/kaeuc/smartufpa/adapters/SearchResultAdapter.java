@@ -49,7 +49,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
 
         viewHolder.txtPlaceName.setText(place.getName() + "(" + place.getShortName() + ")");
         viewHolder.txtLocName.setText(place.getLocName());
-        viewHolder.txtPlaceDescription.setText(place.getDescription());
 
     }
 
@@ -61,14 +60,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
 
     private class SearchResultViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtPlaceName, txtLocName,txtPlaceDescription;
+        private TextView txtPlaceName, txtLocName;
 
         private SearchResultViewHolder(View itemView) {
             super(itemView);
-
             txtPlaceName = (TextView) itemView.findViewById(R.id.list_txt_place_name);
             txtLocName = (TextView) itemView.findViewById(R.id.list_txt_place_loc_name);
-            txtPlaceDescription = (TextView) itemView.findViewById(R.id.list_txt_place_description);
         }
     }
 }
