@@ -9,21 +9,25 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
 import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.activities.MainActivity;
 import com.example.kaeuc.smartufpa.customviews.CustomMapView;
-import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.MapUtils;
@@ -46,7 +50,7 @@ import java.util.List;
 
 public class MapFragment extends Fragment implements LocationListener{
 
-    private static final String LOG_TAG = MapFragment.class.getSimpleName() ;
+    private static final String TAG = MapFragment.class.getSimpleName() ;
     public static String FRAGMENT_TAG = MapFragment.class.getName();
 
     // MAP
@@ -113,7 +117,7 @@ public class MapFragment extends Fragment implements LocationListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(LOG_TAG, "onCreate()");
+        Log.i(TAG, "onCreate()");
         parentContext = getContext();
         /* Configura o caminho do armazenamento em cache do mapa, se o device não possui cartão SD,
          * ele deve ser configurado para o caminho de arquivos do device
@@ -167,7 +171,7 @@ public class MapFragment extends Fragment implements LocationListener{
     public void enableBusOverlay(){
         mapView.setTileSource(MAPA_UFPA_TRANSPORTE);
         mapView.postInvalidate();
-        Log.i(LOG_TAG, "Bus Overlay Enabled.");
+        Log.i(TAG, "Bus Overlay Enabled.");
         isBusOverlayEnabled = true;
         btnClearMap.setVisibility(View.VISIBLE);
     }
@@ -184,7 +188,7 @@ public class MapFragment extends Fragment implements LocationListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(LOG_TAG, "onCreateView()");
+        Log.i(TAG, "onCreateView()");
         View view =  inflater.inflate(R.layout.fragment_map, container, false);
 
         // Adiciona a CustomMapView ao layout na posição 0 por conta do eixo Z do CoordinatorLayout
@@ -205,13 +209,14 @@ public class MapFragment extends Fragment implements LocationListener{
 
         initializeMap();
 
-        return view;
+
+          return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(LOG_TAG, "onResume()");
+        Log.i(TAG, "onResume()");
         locationManager = (LocationManager) parentContext.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -226,7 +231,7 @@ public class MapFragment extends Fragment implements LocationListener{
     @Override
     public void onPause() {
         super.onPause();
-        Log.i(LOG_TAG,"onPause()");
+        Log.i(TAG,"onPause()");
         if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.removeUpdates(this);
@@ -237,7 +242,7 @@ public class MapFragment extends Fragment implements LocationListener{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(LOG_TAG, "onDestroy()");
+        Log.i(TAG, "onDestroy()");
         myCurrentLocation = null;
         myLocationOverlay = null;
         mapView = null;
@@ -259,12 +264,12 @@ public class MapFragment extends Fragment implements LocationListener{
             if(!mapBoundaries.contains(latitude,longitude)) Toast.makeText(parentContext,
                     R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
             else{
-                Log.i(LOG_TAG,"Current Location: (" + latitude + "," + longitude + ")" );
+                Log.i(TAG,"Current Location: (" + latitude + "," + longitude + ")" );
                 mapCamera.animateTo(new GeoPoint(latitude,longitude));
             }
         // Se capturar a exception, o sistema não pôde recuperar as informações do GPS
         }catch (NullPointerException e){
-            Log.e(LOG_TAG,"Could not get current location.",e);
+            Log.e(TAG,"Could not get current location.",e);
             // Checa se o GPS está ligado
             if(!SystemServicesManager.isGPSEnabled(parentContext)) {
                 Toast.makeText(parentContext, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
@@ -279,31 +284,41 @@ public class MapFragment extends Fragment implements LocationListener{
         return mapView.containsOverlay(layerTag);
     }
 
-    public void addMarkersToMap(List<Place> places, String filter){
+    public void addMarkerToMap(final Place place, String filter){
         // Cria e adiciona a camada de marcadores ao mapa
         final FolderOverlay poiMarkers = new FolderOverlay();
         MapUtils mapUtils = new MapUtils(getContext());
         Drawable poiIcon = mapUtils.getIconDrawable(filter);
+
         // Cria um marcador para cada local encontrado
-        for (final Place place : places) {
-            Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    mapView.postInvalidate();
-                    PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
-                    sheet.show(getFragmentManager(), "bottom sheet");
-                    return true;
-                }
-            };
-            poiMarkers.add(mapUtils.createCustomMarker(mapView,poiIcon,
-                    new GeoPoint(place.getLatitude(),place.getLongitude()),
-                    markerClick));
-        }
+        Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FrameLayout bottomSheetContainer = (FrameLayout) getActivity().findViewById(R.id.bottom_sheet_container);
+
+                BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
+                        .commit();
+                return true;
+            }
+        };
+        poiMarkers.add(mapUtils.createCustomMarker(mapView,poiIcon,
+            new GeoPoint(place.getLatitude(),place.getLongitude()),
+            markerClick));
+
         mapView.addTileOverlay(poiMarkers,filter);
+        Log.i(TAG,"Overlay added: " + filter);
         btnClearMap.setVisibility(View.VISIBLE);
-        Toast.makeText(getContext(), getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
 
     }
+
+
+
 
     @Override
     public void onLocationChanged(Location location) {  myCurrentLocation = location; }

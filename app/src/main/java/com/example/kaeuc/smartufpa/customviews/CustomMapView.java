@@ -17,7 +17,7 @@ import java.util.List;
 public class CustomMapView extends MapView {
 
     private List<String> layersTags;
-    private final static String LOG_TAG = CustomMapView.class.getSimpleName();
+    private final static String TAG = CustomMapView.class.getSimpleName();
 
 
     public CustomMapView(Context context) {
@@ -30,7 +30,6 @@ public class CustomMapView extends MapView {
         layersTags.add(layerTag);
         final int overlayIndex = layersTags.indexOf(layerTag);
         this.getOverlays().add(overlayIndex, newOverlay);
-        Log.i(LOG_TAG,"Overlay added: " + layerTag);
         this.postInvalidate();
     }
 
@@ -38,10 +37,11 @@ public class CustomMapView extends MapView {
         final int overlayIndex = layersTags.indexOf(layerTag);
         layersTags.remove(overlayIndex);
         this.getOverlays().remove(overlayIndex);
-        Log.i(LOG_TAG,"Overlay removed: " + layerTag);
+        Log.i(TAG,"Overlay removed: " + layerTag);
         this.postInvalidate();
     }
 
+    // TODO: CORRIGIR - TÁ REMOVENDO A MYLOCATION OVERLAY
     public void clearMap(){
         int size = layersTags.size()- 1;
         for (int i = size; i > 0 ; i--) {
@@ -49,8 +49,8 @@ public class CustomMapView extends MapView {
             if(!(currentOverlay instanceof MyLocationNewOverlay))
                 this.removeTileOverlay(layersTags.get(i));
         }
-        Log.i(LOG_TAG, "Map Cleared.");
-        Log.i(LOG_TAG, "Current Overlays: " + this.getLayersTagsNames());
+        Log.i(TAG, "Map Cleared.");
+        Log.i(TAG, "Current Overlays: " + this.getLayersTagsNames());
 
     }
 

@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:context="com.example.kaeuc.smartufpa.fragments.PlaceDetailsFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:textAllCaps="true"
+        android:text="@string/lbl_place_details"
+        android:id="@+id/txt_results"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="125dp"
+        android:src="@drawable/horizontal_img_place_holder"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_det_placename"
+        android:textStyle="bold"
+        android:text="@string/lbl_placeholder"
+        android:textSize="16sp"
+        android:textAllCaps="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_placeholder"
+        android:id="@+id/txt_det_place_loc_name"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_det_place_desc"
+        android:text="@string/lorem_ipsum"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/btn_det_foot_route"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/RaisedButton"
+        android:text="@string/btn_foot_route"
+        android:layout_gravity="bottom|end"
+        />
+
+</LinearLayout>
+
+
+

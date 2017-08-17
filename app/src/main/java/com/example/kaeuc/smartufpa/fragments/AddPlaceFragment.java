@@ -47,7 +47,7 @@ public class AddPlaceFragment extends DialogFragment {
 
     //Tags de identificação do fragmento
     public static final String FRAGMENT_TAG = AddPlaceFragment.class.getName();
-    private static final String LOG_TAG = AddPlaceFragment.class.getSimpleName();
+    private static final String TAG = AddPlaceFragment.class.getSimpleName();
 
 
     private final int VALIDATION_NO_SPECIAL_CHAR = 0;
@@ -249,14 +249,14 @@ public class AddPlaceFragment extends DialogFragment {
         if(checkField(edtName,80,3,VALIDATION_NO_SPECIAL_CHAR)){
             tags.setName(InputParser.parseInputString(edtName.getText().toString()));
         }else{
-            Log.e(LOG_TAG,"Name field contains validation errors");
+            Log.e(TAG,"Name field contains validation errors");
             return null;
         }
         if(!edtShortName.getText().toString().isEmpty())
             if(checkField(edtShortName,8,2,VALIDATION_NO_SPECIAL_CHAR)) {
                 tags.setShortName(InputParser.parseInputString(edtShortName.getText().toString().toUpperCase()));
             }else{
-                Log.e(LOG_TAG,"Short name field contains validation errors");
+                Log.e(TAG,"Short name field contains validation errors");
                 return null;
             }
 
@@ -300,41 +300,41 @@ public class AddPlaceFragment extends DialogFragment {
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        Log.i(LOG_TAG, "onDestroyView()");
+        Log.i(TAG, "onDestroyView()");
     }
 
 
     @Override
     public void onDetach(){
         super.onDetach();
-        Log.i(LOG_TAG, "onDetach()");
+        Log.i(TAG, "onDetach()");
     }
 
 
     @Override
     public void onDismiss(DialogInterface dialog){
         super.onDismiss(dialog);
-        Log.i(LOG_TAG, "onDismiss()");
+        Log.i(TAG, "onDismiss()");
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        Log.i(LOG_TAG, "onSaveInstanceState()");
+        Log.i(TAG, "onSaveInstanceState()");
     }
 
 
     @Override
     public void onStart(){
         super.onStart();
-        Log.i(LOG_TAG, "onStart()");
+        Log.i(TAG, "onStart()");
     }
 
 
     @Override
     public void onStop(){
         super.onStop();
-        Log.i(LOG_TAG, "onStop()");
+        Log.i(TAG, "onStop()");
     }
 }

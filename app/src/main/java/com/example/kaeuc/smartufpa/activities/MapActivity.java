@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
@@ -30,29 +29,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
 import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.customviews.AddPlaceInfoWindow;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.BusLocationRequest;
+import com.example.kaeuc.smartufpa.server.OsmDataRequest;
 import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
 import com.example.kaeuc.smartufpa.utils.Constants;
-import com.example.kaeuc.smartufpa.customviews.AddPlaceInfoWindow;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
-import com.example.kaeuc.smartufpa.customviews.PlaceDetailsBottomSheet;
-import com.example.kaeuc.smartufpa.adapters.SearchResultAdapter;
-import com.example.kaeuc.smartufpa.server.OsmDataRequest;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ShowcaseHolder;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ToolbarActionItemTarget;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ViewTargets;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
-
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
@@ -480,8 +474,8 @@ public class MapActivity extends AppCompatActivity
                             @Override
                             public boolean onMarkerClick(Marker marker, MapView mapView) {
                                 MapActivity.this.mapView.invalidate();
-                                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
-                                sheet.show(getSupportFragmentManager(), "bottom sheet");
+//                                PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+//                                sheet.show(getSupportFragmentManager(), "bottom sheet");
                                 return true;
                             }
                         };
@@ -519,8 +513,8 @@ public class MapActivity extends AppCompatActivity
                         marker.setIcon(ContextCompat.getDrawable(MapActivity.this,R.drawable.ic_marker_details));
                         marker.setAnchor(0.5f,1);
                         MapActivity.this.mapView.invalidate();
-                        PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
-                        sheet.show(getSupportFragmentManager(),"bottom sheet");
+//                        PlaceDetailsBottomSheet sheet = PlaceDetailsBottomSheet.newInstance(place);
+//                        sheet.show(getSupportFragmentManager(),"bottom sheet");
                         return true;
                     }
                 };

@@ -87,23 +87,12 @@
             android:layout_centerHorizontal="true"
             />
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_francisco"
-            android:textSize="15sp"
-            android:layout_below="@+id/txt_desenvolvedores"
-            android:text="Francisco Carrera Nascimento Júnior"
-            android:layout_centerHorizontal="true"
-            />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_kae"
             android:textSize="15sp"
-            android:layout_below="@+id/txt_francisco"
+            android:layout_below="@+id/txt_desenvolvedores"
             android:text="Kaê Uchôa Sarmanho"
             android:layout_centerHorizontal="true"
             />

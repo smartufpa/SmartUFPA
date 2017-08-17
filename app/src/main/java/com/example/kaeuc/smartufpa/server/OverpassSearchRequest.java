@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
-    public final String LOG_TAG = OverpassSearchRequest.class.getSimpleName();
+    public final String TAG = OverpassSearchRequest.class.getSimpleName();
     private OnOverpassListener callBack;
     private Context parentContext;
     private int taskStatus;
@@ -57,9 +57,9 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
         if(places.isEmpty()){
             taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;
             callBack.onOverpassResponse(places,taskStatus);
-            return;
+        }else{
+            callBack.onOverpassResponse(places,taskStatus);
         }
-        callBack.onOverpassResponse(places,taskStatus);
     }
 
     private String buildSearchQuery(String userQuery){

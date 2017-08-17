@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_turn_on_gps"
-            android:text="@string/turn_on_gps_button"
+            android:text="@string/btn_turn_on_gps"
             android:layout_gravity="center_horizontal"
             />
 

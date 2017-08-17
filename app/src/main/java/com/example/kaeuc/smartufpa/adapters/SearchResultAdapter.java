@@ -32,7 +32,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
     }
 
     public interface OnItemClickListener{
-        void onItemClick(View view, int postion);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){

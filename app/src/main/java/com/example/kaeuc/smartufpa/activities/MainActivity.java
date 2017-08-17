@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.fragments.MapFragment;
+import com.example.kaeuc.smartufpa.fragments.PlaceDetailsFragment;
 import com.example.kaeuc.smartufpa.fragments.SearchResultFragment;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
@@ -37,7 +39,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements OsmDataRequest.OnOsmDataListener,OverpassSearchRequest.OnOverpassListener {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
     public static final String CATEGORY_MAIN = "smartufpa.CATEGORY_MAIN";
 
@@ -51,17 +53,18 @@ public class MainActivity extends AppCompatActivity
 
 
     private MapFragment mapFragment;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i(LOG_TAG,"onCreate()");
+        Log.i(TAG,"onCreate()");
 
         // Encontra as views
         layoutDrawer = (DrawerLayout) findViewById(R.id.layout_drawer);
-        mapToolbar= (Toolbar) findViewById(R.id.tb_main);
+        mapToolbar = (Toolbar) findViewById(R.id.tb_main);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         bottomSheetContainer = (FrameLayout) findViewById(R.id.bottom_sheet_container);
@@ -87,8 +90,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(LOG_TAG, "onResume()");
-        setupSearchResultBottomSheet();
+        Log.i(TAG, "onResume()");
+        setupBottomSheetContainer();
     }
 
     private void setupToolbar(){
@@ -109,10 +112,19 @@ public class MainActivity extends AppCompatActivity
 
     private void setupDrawer(){
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-                this, layoutDrawer, mapToolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close
-        );
+                this, layoutDrawer, mapToolbar,R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close){
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                final int state = bottomSheetBehavior.getState();
+                if(state  == BottomSheetBehavior.STATE_EXPANDED || state == BottomSheetBehavior.STATE_COLLAPSED){
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+        };
         layoutDrawer.addDrawerListener(drawerToggle);
+
         NavigationView.OnNavigationItemSelectedListener navigationItemListener = new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -175,14 +187,44 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
         };
+
         navigationView.setNavigationItemSelectedListener(navigationItemListener);
         drawerToggle.syncState();
     }
 
-    private void setupSearchResultBottomSheet(){
+    private void setupBottomSheetContainer(){
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         // ADICIONAR LISTENERS
+        // TODO: DECIDIR O QUE FAZER NOS ESTADOS DA BOTTOMSHEET
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState){
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        Fragment searchFrag = getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
+                        if(searchFrag != null){
+                            getSupportFragmentManager().beginTransaction()
+                                    .remove(searchFrag)
+                                    .commit();
+                        }else{
+                            searchFrag = getSupportFragmentManager().findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
+                            if(searchFrag != null){
+                                getSupportFragmentManager().beginTransaction()
+                                        .remove(searchFrag)
+                                        .commit();
+                            }
+                        }
+
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
 
 
     }
@@ -193,7 +235,7 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView)
+        searchView = (SearchView)
                 MenuItemCompat.getActionView(searchItem);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -202,11 +244,15 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    // TODO: IMPLEMENTAR
     @Override
     public void onBackPressed() {
         layoutDrawer = (DrawerLayout) findViewById(R.id.layout_drawer);
+        int state = bottomSheetBehavior.getState();
         if (layoutDrawer.isDrawerOpen(GravityCompat.START))
             layoutDrawer.closeDrawer(GravityCompat.START);
+        else if(state == BottomSheetBehavior.STATE_EXPANDED || state == BottomSheetBehavior.STATE_COLLAPSED)
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         else
             super.onBackPressed();
     }
@@ -214,7 +260,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onOsmDataResponse(List<Place> places, String filter, int taskStatus) {
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
-            mapFragment.addMarkersToMap(places,filter);
+            for (final Place place : places) mapFragment.addMarkerToMap(place,filter);
+            Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
         }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
         }
@@ -224,22 +271,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onOverpassResponse(ArrayList<Place> places, int taskStatus) {
         progressBar.setVisibility(View.GONE);
+        // TODO: IF PLACES > 1
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            SearchResultFragment searchResultFrag = (SearchResultFragment) getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            if(searchResultFrag == null){
-                searchResultFrag = SearchResultFragment.newInstance(places,null);
-                ft.add(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG);
-                ft.commit();
-            }else{
-                searchResultFrag = SearchResultFragment.newInstance(places,null);
-                ft.replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG);
-                ft.commit();
-            }
+            searchView.clearFocus();
+
+            SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
+            // TODO: CREATE A TRANSTION
+            getSupportFragmentManager().beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG)
+                    .commit();
+        }else{
+            Toast.makeText(this, "PLACES IS EMPTY", Toast.LENGTH_SHORT).show();
         }
 
     }
-
 
 }

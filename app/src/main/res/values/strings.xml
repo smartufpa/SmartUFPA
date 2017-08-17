@@ -3,18 +3,14 @@
 
     <string name="title_activity_map">MapActivity</string>
     <string name="title_about">Sobre o aplicativo</string>
+    <string name="title_settings">Configurações</string>
+    <string name="title_fragment_map_download">Realizando o download do mapa:</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="drawer_subheader">LabVis - UFPA</string>
     <string name="drawer_subtitle">ICEN - Faculdade de Computação</string>
-
-
-    <string name="search_hint">Procure um local na UFPA</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dui tellus, lacinia non ipsum vel, interdum varius nulla. Curabitur ultrices ipsum at porta placerat.</string>
-
-    <string name="turn_on_gps_button">Ligar GPS</string>
 
 
     <string name="action_add_location">Adicione um lugar ao Mapa</string>
@@ -38,6 +34,7 @@
     <string name="error_fragment_input_too_short">A entrada inserida é muito curta.</string>
     <string name="error_fragment_select_valid_option">Selecione uma opção válida.</string>
     <string name="error_fragment_create_other">Adicione um tipo novo.</string>
+    <string name="error_fragment_invalid_character">A entrada deve conter apenas letras e números.</string>
 
     <string name="msg_no_results">Sua busca não retornou nenhum resultado válido.</string>
     <string name="msg_click_marker">Clique no marcador para rotas.</string>
@@ -56,7 +53,7 @@
     <string name="nav_copy_service">Xerox</string>
     <string name="nav_libraries">Bibliotecas</string>
 
-    <string name="fragment_map_download_title">Realizando o download do mapa:</string>
+
     <string name="map_download_executed">map_download_executed</string>
     <string name="map_download_url">https://www.smartufpa.ufpa.br/map-download.php</string>
 
@@ -71,16 +68,18 @@
     <string name="btn_fragment_clear">Limpar o Mapa</string>
     <string name="btn_fragment_cancel">Cancelar</string>
     <string name="btn_fragment_confirm">Confirmar</string>
-    <string name="tutorial_map_executed">tutorial_executed=</string>
-    <string name="error_fragment_invalid_character">A entrada deve conter apenas letras e números.</string>
-
-    <string name="title_settings">Configurações</string>
+    <string name="btn_foot_route">Mostrar Caminho</string>
+    <string name="btn_turn_on_gps">Ligar GPS</string>
 
     <string name="lbl_place_description">Descrição:</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lbl_search_result_title">Resultados</string>
+
+    <string name="tutorial_map_executed">tutorial_executed</string>
+    <string name="search_hint">Procure um local na UFPA</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dui tellus, lacinia non ipsum vel, interdum varius nulla. Curabitur ultrices ipsum at porta placerat.</string>
+    <string name="btn_login_visitante">Visitante</string>
+    <string name="btn_login_login">Realizar Login</string>
+    <string name="lbl_place_details">Detalhes</string>
 
 
 </resources>

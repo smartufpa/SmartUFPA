@@ -48,42 +48,42 @@ public class PlaceDetailsBottomSheet extends BottomSheetDialogFragment {
 
     @Override
     public void setupDialog(Dialog dialog, int style) {
-        super.setupDialog(dialog, style);
-        final View contentView = View.inflate(getContext(), R.layout.details_bottom_sheet, null);
-        dialog.setContentView(contentView);
-
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
-        final CoordinatorLayout.Behavior behavior = params.getBehavior();
-        bottomSheetBehavior = (BottomSheetBehavior) behavior;
-
-        final Place targetPlace = (Place) getArguments().getSerializable("place");
-        // Views
-        TextView placeName = (TextView) contentView.findViewById(R.id.place_name);
-        placeName.setText(targetPlace.getName());
-
-        TextView placeDescription = (TextView) contentView.findViewById(R.id.place_description);
-        placeDescription.setText(targetPlace.getDescription());
-
-        TextView placeShortName = (TextView) contentView.findViewById(R.id.place_short_name);
-        placeShortName.append(targetPlace.getShortName());
-
-        TextView placeLocName = (TextView) contentView.findViewById(R.id.place_loc_name);
-        placeLocName.append(targetPlace.getLocName());
-
-        FloatingActionButton goToFAB = (FloatingActionButton) contentView.findViewById(R.id.fab);
-        goToFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MapActivity)getActivity()).traceRoute(targetPlace);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            }
-        });
-
-
-        if (behavior != null && behavior instanceof BottomSheetBehavior) {
-            ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
-            ((BottomSheetBehavior) behavior).setPeekHeight(800);
-        }
+//        super.setupDialog(dialog, style);
+//        final View contentView = View.inflate(getContext(), R.layout.details_bottom_sheet, null);
+//        dialog.setContentView(contentView);
+//
+//        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
+//        final CoordinatorLayout.Behavior behavior = params.getBehavior();
+//        bottomSheetBehavior = (BottomSheetBehavior) behavior;
+//
+//        final Place targetPlace = (Place) getArguments().getSerializable("place");
+//        // Views
+//        TextView placeName = (TextView) contentView.findViewById(R.id.txt_det_placename);
+//        placeName.setText(targetPlace.getName());
+//
+//        TextView placeDescription = (TextView) contentView.findViewById(R.id.txt_det_place_desc);
+//        placeDescription.setText(targetPlace.getDescription());
+//
+//        TextView placeShortName = (TextView) contentView.findViewById(R.id.place_short_name);
+//        placeShortName.append(targetPlace.getShortName());
+//
+//        TextView placeLocName = (TextView) contentView.findViewById(R.id.txt_det_place_loc_name);
+//        placeLocName.append(targetPlace.getLocName());
+//
+//        FloatingActionButton goToFAB = (FloatingActionButton) contentView.findViewById(R.id.fab);
+//        goToFAB.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((MapActivity)getActivity()).traceRoute(targetPlace);
+//                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+//            }
+//        });
+//
+//
+//        if (behavior != null && behavior instanceof BottomSheetBehavior) {
+//            ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
+//            ((BottomSheetBehavior) behavior).setPeekHeight(800);
+//        }
     }
 
 }

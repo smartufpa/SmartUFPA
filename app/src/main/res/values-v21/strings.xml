@@ -15,12 +15,12 @@
 
     <string name="no_gps_error">O GPS deve estar ligado para iniciar o aplicativo</string>
     <string name="action_bus_location">Localizar Circular</string>
-    <string name="fragment_map_download_title">Realizando o download do mapa:</string>
+    <string name="title_fragment_map_download">Realizando o download do mapa:</string>
     <string name="map_download_url">https://www.smartufpa.ufpa.br/map-download.php</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dui tellus, lacinia non ipsum vel, interdum varius nulla. Curabitur ultrices ipsum at porta placerat.</string>
 
-    <string name="turn_on_gps_button">Ligar GPS</string>
+    <string name="btn_turn_on_gps">Ligar GPS</string>
 
 
     <string name="action_add_location">Adicione um lugar ao Mapa</string>
@@ -78,6 +78,10 @@
     <string name="title_settings">Configurações</string>
     <string name="lbl_placeholder">PlaceHolder Text</string>
     <string name="lbl_search_result_title">Resultados</string>
+    <string name="btn_foot_route">Rota a Pé</string>
+    <string name="visitante">btn_login_visitante</string>
+    <string name="btn_login_login">Realizar Login</string>
+    <string name="lbl_place_details">Detalhes</string>
 
 
 </resources>
