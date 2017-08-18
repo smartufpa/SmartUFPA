@@ -73,13 +73,15 @@
 
     <string name="lbl_place_description">Descrição:</string>
     <string name="lbl_search_result_title">Resultados</string>
+    <string name="lbl_place_details">Detalhes</string>
+    <string name="lbl_placeholder">PlaceHolder Text</string>
 
     <string name="tutorial_map_executed">tutorial_executed</string>
-    <string name="search_hint">Procure um local na UFPA</string>
+    <string name="search_hint">Busque na UFPA</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dui tellus, lacinia non ipsum vel, interdum varius nulla. Curabitur ultrices ipsum at porta placerat.</string>
     <string name="btn_login_visitante">Visitante</string>
     <string name="btn_login_login">Realizar Login</string>
-    <string name="lbl_place_details">Detalhes</string>
+
 
 
 </resources>
