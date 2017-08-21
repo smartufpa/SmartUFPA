@@ -36,8 +36,8 @@ public class NoGpsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Intent intent = new Intent(MapActivity.ACTION_MAP);
-            intent.addCategory(MapActivity.CATEGORY_MAP);
+            Intent intent = new Intent(MainActivity.ACTION_MAIN);
+            intent.addCategory(MainActivity.CATEGORY_MAIN);
             startActivity(intent);
             finish();
         }

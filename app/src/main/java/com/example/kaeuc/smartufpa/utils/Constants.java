@@ -2,20 +2,12 @@ package com.example.kaeuc.smartufpa.utils;
 
 /**
  * Created by kaeuc on 10/22/2016.
- * Classe para manter constantes que serão usado diretamente no código, para evitar a utilização
- * de resources.
+ * Classe para manter constantes que serão usado diretamente no código.
  *
  * TODO: Transformar essa classe em um ou mais arquivos de resource
  */
 
 public final class Constants {
-    // Usados na requisição do nominatim e controle de camadas plotadas no mapa
-    public static final String FILTER_XEROX = "filter=copyshop";
-    public static final String FILTER_RESTAURANT = "filter=restaurant";
-    public static final String FILTER_RESTROOM = "filter=toilets" ;
-    public static final String FILTER_AUDITORIUMS = "filter=auditoriums";
-    public static final String FILTER_LIBRARIES = "filter=libraries";
-    public static final String DEFAULT_MARKER = "default_marker";
 
     public static final String TAG_COPYSHOP = "copyshop";
     public static final String TAG_TOILETS = "toilets";
@@ -24,6 +16,25 @@ public final class Constants {
     public static final String TAG_RESTAURANT = "restaurant";
     public static final String TAG_FOOD_COURT = "food_court";
 
+
+    public enum MarkerTypes {
+        DEFAULT, RESTAURANT, RESTROOM, AUDITORIUM, LIBRARY, XEROX
+    }
+
+    public enum MarkerStatuses {
+        CLICKED, NOT_CLICKED
+    }
+
+    // Usados no controle de camadas plotadas no mapa
+    public enum OverlayTags {
+        ROUTE, SEARCH, BUS_ROUTE, MY_LOCATION, BUS_LOCATION, NEW_LOCATION,
+        FILTER_XEROX, FILTER_RESTAURANT, FILTER_RESTROOM, FILTER_AUDITORIUMS, FILTER_LIBRARIES
+
+    }
+
+    public enum OverpassFilters  {
+        XEROX, RESTAURANT, RESTROOM, AUDITORIUMS, BUS_ROUTE, LIBRARIES
+    }
 
     //URLS
     public static final String URL_LOCAL_HOST = "http://177.194.168.159:80/";
@@ -76,13 +87,7 @@ public final class Constants {
 
 
 
-    // Usados no controle de camadas plotadas no mapa
-    public static final String LAYER_ROUTE = "ROUTE_OVERLAY";
-    public static final String LAYER_SEARCH = "SEARCH_OVERLAY";
-    public static final String LAYER_BUS_ROUTE = "BUS_OVERLAY";
-    public static final String LAYER_MY_LOCATION = "MY_LOCATION_OVERLAY";
-    public static final String LAYER_BUS_MARKER = "BUS_MARKER_OVERLAY";
-    public static final String LAYER_ADD_NEW_PLACE = "ADD_NEW_PLACE_OVERLAY";
+
 
 
     // Usado na factory para places, apresentado nos detalhes sobre o local
@@ -107,6 +112,7 @@ public final class Constants {
 
 
     public static final int TUTORIAL_BTN_LEFT = 1;
+
 
 
     ;

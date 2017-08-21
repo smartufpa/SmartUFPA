@@ -11,10 +11,16 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
+import java.util.HashMap;
+
 /**
  * Created by kaeuc on 09/08/2017.
  */
 
+import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
+import com.example.kaeuc.smartufpa.utils.Constants.MarkerStatuses;
+
+// TODO: MAKE THIS CLASS A SINGLETON
 public class MapUtils {
     
     private Context parentContext;
@@ -23,33 +29,70 @@ public class MapUtils {
         this.parentContext = parentContext;
     }
 
-    public Drawable getIconDrawable(final String iconTag){
-        Drawable poiIcon = null;
-        if (iconTag.equals(Constants.FILTER_XEROX))
-            poiIcon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_xerox);
-        else if (iconTag.equals(Constants.FILTER_RESTAURANT))
-            poiIcon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restaurant);
-        else if (iconTag.equals(Constants.FILTER_RESTROOM))
-            poiIcon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restroom);
-        else if (iconTag.equals(Constants.FILTER_LIBRARIES))
-            poiIcon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_library);
-        else if (iconTag.equals(Constants.FILTER_AUDITORIUMS))
-            poiIcon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_auditorium);
-        else if(iconTag.equals(Constants.DEFAULT_MARKER)){
-            poiIcon = ContextCompat.getDrawable(parentContext,R.drawable.ic_marker);
+    public HashMap<MarkerStatuses,Drawable> getMarkerDrawable(final MarkerTypes markerType){
+
+        final HashMap<MarkerStatuses, Drawable> markerIcons = new HashMap<>(2);
+
+
+        // TODO: CHANGE ICONS FOR CLICKED
+        if (markerType.equals(MarkerTypes.XEROX)) {
+
+            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_xerox));
+            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_details));
+
+        }else if (markerType.equals(MarkerTypes.RESTAURANT)){
+
+            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_restaurant));
+            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_details));
+
+        }else if (markerType.equals(MarkerTypes.RESTROOM)) {
+
+            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_restroom));
+            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_details));
+
+        }else if (markerType.equals(MarkerTypes.AUDITORIUM)) {
+
+            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_auditorium));
+            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_details));
+
+        }else if (markerType.equals(MarkerTypes.LIBRARY)){
+
+            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_library));
+            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_details));
+
+        }else if(markerType.equals(MarkerTypes.DEFAULT)){
+
+            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker));
+            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_details));
+
         }
         
-        return poiIcon;
+        return markerIcons;
     }
 
-    public Marker createCustomMarker(MapView mapView, @Nullable Drawable poiIcon, GeoPoint location, @Nullable Marker.OnMarkerClickListener clickListener){
+    public Marker createCustomMarker(MapView mapView, Drawable markerIcon, GeoPoint location, @Nullable Marker.OnMarkerClickListener clickListener){
 
         Marker poiMarker = new Marker(mapView);
         poiMarker.setAnchor(0.5f,1);
         poiMarker.setPosition(location);
-        if(poiIcon == null)
-            poiIcon = this.getIconDrawable(Constants.DEFAULT_MARKER);
-        poiMarker.setIcon(poiIcon);
+        if(markerIcon == null){
+            throw new NullMarkerDrawableException("You must choose a drawable asset for your Marker");
+        }
+
+        poiMarker.setIcon(markerIcon);
+
         if(clickListener != null){
             poiMarker.setOnMarkerClickListener(clickListener);
         }
@@ -58,23 +101,8 @@ public class MapUtils {
     }
 
 
-    public Marker createCustomMarker(MapView mapView,@Nullable Drawable poiIcon, GeoPoint location,
-                                      String markerTitle, String markerDescription,
-                                      @Nullable Marker.OnMarkerClickListener clickListener){
-
-        Marker poiMarker = new Marker(mapView);
-        poiMarker.setAnchor(0.5f,1);
-        poiMarker.setPosition(location);
-        if(poiIcon == null)
-            poiIcon = this.getIconDrawable(Constants.DEFAULT_MARKER);
-        poiMarker.setIcon(poiIcon);
-        poiMarker.setSnippet(markerDescription);
-        if(clickListener != null){
-            poiMarker.setOnMarkerClickListener(clickListener);
-        }
-
-        return poiMarker;
-
+    private class NullMarkerDrawableException extends RuntimeException{
+        public NullMarkerDrawableException(String message) { super(message); }
     }
 
 }

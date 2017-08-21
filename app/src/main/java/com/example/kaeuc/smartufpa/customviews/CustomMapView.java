@@ -3,6 +3,8 @@ package com.example.kaeuc.smartufpa.customviews;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
+
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -16,7 +18,7 @@ import java.util.List;
 
 public class CustomMapView extends MapView {
 
-    private List<String> layersTags;
+    private List<OverlayTags> layersTags;
     private final static String TAG = CustomMapView.class.getSimpleName();
 
 
@@ -26,22 +28,23 @@ public class CustomMapView extends MapView {
     }
 
 
-    public void addTileOverlay(Overlay newOverlay, final String layerTag){
+    public void addTileOverlay(Overlay newOverlay, final OverlayTags layerTag){
         layersTags.add(layerTag);
         final int overlayIndex = layersTags.indexOf(layerTag);
         this.getOverlays().add(overlayIndex, newOverlay);
         this.postInvalidate();
+        Log.i(TAG, "Overlay added: " + layerTag);
+        Log.i(TAG, "Current Overlays: " + this.getLayersTagsNames());
     }
 
-    public void removeTileOverlay(final String layerTag){
+    public void removeTileOverlay(final OverlayTags layerTag){
         final int overlayIndex = layersTags.indexOf(layerTag);
         layersTags.remove(overlayIndex);
         this.getOverlays().remove(overlayIndex);
-        Log.i(TAG,"Overlay removed: " + layerTag);
         this.postInvalidate();
+        Log.i(TAG,"Overlay removed: " + layerTag);
     }
 
-    // TODO: CORRIGIR - TÁ REMOVENDO A MYLOCATION OVERLAY
     public void clearMap(){
         int size = layersTags.size()- 1;
         for (int i = size; i > 0 ; i--) {
@@ -59,7 +62,7 @@ public class CustomMapView extends MapView {
     }
 
 
-    public boolean containsOverlay(final String layerTag){
+    public boolean containsOverlay(final OverlayTags layerTag){
         return layersTags.contains(layerTag);
     }
 

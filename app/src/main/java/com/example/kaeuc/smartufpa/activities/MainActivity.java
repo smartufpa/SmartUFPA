@@ -32,6 +32,9 @@ import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.server.OsmDataRequest;
 import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
+import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
+import com.example.kaeuc.smartufpa.utils.Constants.OverpassFilters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +54,6 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout bottomSheetContainer;
     private BottomSheetBehavior bottomSheetBehavior;
     private MenuItem searchItem;
-    private SearchView searchView;
 
     private MapFragment mapFragment;
 
@@ -131,46 +133,46 @@ public class MainActivity extends AppCompatActivity
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // Guarda a ID do botão clicado
                 final int id = item.getItemId();
-                String filter;
+                OverpassFilters filter;
                 Context context = MainActivity.this;
                 switch (id){
                     case R.id.nav_copy_service:
-                        filter = Constants.FILTER_XEROX;
-                        if (!mapFragment.isLayerEnabled(filter)) { // Caso a camada de filtro não esteja ativa, executar a busca
+                        filter = OverpassFilters.XEROX;
+                        if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) { // Caso a camada de filtro não esteja ativa, executar a busca
                             progressBar.setVisibility(View.VISIBLE);
                             new OsmDataRequest(context).execute(filter);
                         }
                         break;
                     case  R.id.nav_restaurant:
-                        filter = Constants.FILTER_RESTAURANT;
-                        if (!mapFragment.isLayerEnabled(filter)) {
+                        filter = OverpassFilters.RESTAURANT;
+                        if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTAURANT)) {
                             progressBar.setVisibility(View.VISIBLE);
                             new OsmDataRequest(context).execute(filter);
                         }
                         break;
                     case R.id.nav_restroom:
-                        filter = Constants.FILTER_RESTROOM;
-                        if (!mapFragment.isLayerEnabled(filter)) {
+                        filter = OverpassFilters.RESTROOM;
+                        if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM)) {
                             progressBar.setVisibility(View.VISIBLE);
                             new OsmDataRequest(context).execute(filter);
                         }
                         break;
                     case R.id.nav_bus_route:
-                        filter = Constants.LAYER_BUS_ROUTE;
-                        if (!mapFragment.isLayerEnabled(filter)) {
+                        filter = OverpassFilters.BUS_ROUTE;
+                        if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE)) {
                             mapFragment.enableBusOverlay();
                         }
                         break;
                     case R.id.nav_auditorium:
-                        filter = Constants.FILTER_AUDITORIUMS;
-                        if(!mapFragment.isLayerEnabled(filter)){
+                        filter = OverpassFilters.AUDITORIUMS;
+                        if(!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS)){
                             progressBar.setVisibility(View.VISIBLE);
                             new OsmDataRequest(context).execute(filter);
                         }
                         break;
                     case R.id.nav_library:
-                        filter = Constants.FILTER_LIBRARIES;
-                        if (!mapFragment.isLayerEnabled(filter)){
+                        filter = OverpassFilters.LIBRARIES;
+                        if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES)){
                             progressBar.setVisibility(View.VISIBLE);
                             new OsmDataRequest(context).execute(filter);
                         }
@@ -196,8 +198,6 @@ public class MainActivity extends AppCompatActivity
     private void setupBottomSheetContainer(){
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        // ADICIONAR LISTENERS
-        // TODO: DECIDIR O QUE FAZER NOS ESTADOS DA BOTTOMSHEET
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView)
+        SearchView searchView = (SearchView)
                 MenuItemCompat.getActionView(searchItem);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity
         SearchResultFragment searchResultFragment = (SearchResultFragment) getSupportFragmentManager()
                 .findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
 
-        // Define bottomshet behavior
+        // Defines bottomshet behavior
         if(placeDetailsFragment != null && (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         else if((placeDetailsFragment != null && searchResultFragment == null ) && (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED))
@@ -278,9 +278,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOsmDataResponse(List<Place> places, String filter, int taskStatus) {
+    public void onOsmDataResponse(final List<Place> places, MarkerTypes markersType, OverlayTags overlayTag, int taskStatus) {
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
-            for (final Place place : places) mapFragment.addMarkerToMap(place,filter);
+            mapFragment.addLayerToMap(places,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
         }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity
             if(places.size() > 1){
                 // Open SearchResultFragment
                 SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
-                // TODO: CREATE A TRANSTION
+                // TODO: CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG)
@@ -305,12 +305,12 @@ public class MainActivity extends AppCompatActivity
             }else{
                 // Open PlaceDetailsFragment
                 PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(places.get(0));
-                // TODO: CREATE A TRANSTION
+                // TODO: CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
                         .commit();
-                mapFragment.addMarkerToMap(places.get(0),Constants.DEFAULT_MARKER);
+                mapFragment.addLayerToMap(places, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
             }
 
         }else{

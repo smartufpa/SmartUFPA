@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +25,11 @@ import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
 import com.example.kaeuc.smartufpa.R;
-import com.example.kaeuc.smartufpa.activities.MainActivity;
 import com.example.kaeuc.smartufpa.customviews.CustomMapView;
 import com.example.kaeuc.smartufpa.models.Place;
-import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.Constants.MarkerStatuses;
+import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
+import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
 import com.example.kaeuc.smartufpa.utils.MapUtils;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
@@ -45,6 +45,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -165,7 +166,7 @@ public class MapFragment extends Fragment implements LocationListener{
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
         myLocationOverlay.setOptionsMenuEnabled(true);
-        mapView.addTileOverlay(myLocationOverlay, Constants.LAYER_MY_LOCATION);
+        mapView.addTileOverlay(myLocationOverlay, OverlayTags.MY_LOCATION);
     }
 
     public void enableBusOverlay(){
@@ -280,40 +281,55 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
 
-    public boolean isLayerEnabled(final String layerTag){
+    public boolean isLayerEnabled(final OverlayTags layerTag){
         return mapView.containsOverlay(layerTag);
     }
 
-    public void addMarkerToMap(final Place place, String filter){
+
+    public void addLayerToMap(final List<Place> places, MarkerTypes markersType, OverlayTags overlayTag){
         // Cria e adiciona a camada de marcadores ao mapa
         final FolderOverlay poiMarkers = new FolderOverlay();
+
         MapUtils mapUtils = new MapUtils(getContext());
-        Drawable poiIcon = mapUtils.getIconDrawable(filter);
+        final HashMap<MarkerStatuses, Drawable> markerDrawables = mapUtils.getMarkerDrawable(markersType);
 
         // Cria um marcador para cada local encontrado
-        Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker, MapView mapView) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FrameLayout bottomSheetContainer = (FrameLayout) getActivity().findViewById(R.id.bottom_sheet_container);
+        for (final Place place : places) {
+            Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    // Sets up a PlaceDetailsFragment to show specific information about the selected Place
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FrameLayout bottomSheetContainer = (FrameLayout) getActivity().findViewById(R.id.bottom_sheet_container);
 
-                BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
-                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
-                        .commit();
-                return true;
-            }
-        };
-        poiMarkers.add(mapUtils.createCustomMarker(mapView,poiIcon,
-            new GeoPoint(place.getLatitude(),place.getLongitude()),
-            markerClick));
+                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
+                            .commit();
 
-        mapView.addTileOverlay(poiMarkers,filter);
-        Log.i(TAG,"Overlay added: " + filter);
+                    // Will change the marker to its clicked icon
+                    marker.setIcon(markerDrawables.get(MarkerStatuses.CLICKED));
+                    mapView.postInvalidate();
+                    return true;
+                }
+            };
+
+            final Marker customMarker = mapUtils.createCustomMarker(mapView,
+                    markerDrawables.get(MarkerStatuses.NOT_CLICKED),
+                    new GeoPoint(place.getLatitude(), place.getLongitude()),
+                    markerClick);
+
+            poiMarkers.add(customMarker);
+
+        }
+
+        mapView.addTileOverlay(poiMarkers,overlayTag);
         btnClearMap.setVisibility(View.VISIBLE);
+
+
 
     }
 

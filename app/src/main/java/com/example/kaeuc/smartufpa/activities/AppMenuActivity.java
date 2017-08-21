@@ -112,9 +112,9 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putInt(getString(R.string.map_download_executed),MAP_DOWNLOAD_EXECUTED);
             editor.commit();
-            Intent intent = new Intent(MapActivity.ACTION_MAP);
-            intent.addCategory(MapActivity.CATEGORY_MAP);
-            startActivity(intent);
+//            Intent intent = new Intent(MapActivity.ACTION_MAP);
+//            intent.addCategory(MapActivity.CATEGORY_MAP);
+//            startActivity(intent);
         }else if(taskStatus == Constants.SERVER_FORBIDDEN){
             Toast.makeText(this, "Permissão para download negada.", Toast.LENGTH_SHORT).show();
         }
