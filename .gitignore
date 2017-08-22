@@ -44,6 +44,7 @@ captures/
 
 # Keystore files
 *.jks
+/keystore.properties
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
@@ -60,3 +61,6 @@ freeline_project_description.json
 ## Node files ##
 
 node_modules/
+server-files/nodejs/public/
+server-files/nodejs/src/
+server-files/nodejs/tests/

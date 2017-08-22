@@ -27,6 +27,7 @@ import com.example.kaeuc.smartufpa.BuildConfig;
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.customviews.CustomMapView;
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.models.PlaceFactory;
 import com.example.kaeuc.smartufpa.utils.Constants.MarkerStatuses;
 import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
 import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
@@ -80,6 +81,12 @@ public class MapFragment extends Fragment implements LocationListener{
 
 
     private Location myCurrentLocation;
+
+    public Place getUserLocation() {
+        return userLocation;
+    }
+
+    private Place userLocation;
     private LocationManager locationManager;
 
       /* CLICK LISTENERS */
@@ -112,6 +119,7 @@ public class MapFragment extends Fragment implements LocationListener{
 
     public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
+
         return fragment;
     }
 
@@ -120,6 +128,7 @@ public class MapFragment extends Fragment implements LocationListener{
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate()");
         parentContext = getContext();
+
         /* Configura o caminho do armazenamento em cache do mapa, se o device não possui cartão SD,
          * ele deve ser configurado para o caminho de arquivos do device
          */
@@ -161,8 +170,9 @@ public class MapFragment extends Fragment implements LocationListener{
 
     private void enableMyLocationOverlay(){
         // Camada de posição do usuário
-        if(myCurrentLocation == null)
+        if(myCurrentLocation == null){
             myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(parentContext),mapView);
+        }
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
         myLocationOverlay.setOptionsMenuEnabled(true);
@@ -293,6 +303,7 @@ public class MapFragment extends Fragment implements LocationListener{
         MapUtils mapUtils = new MapUtils(getContext());
         final HashMap<MarkerStatuses, Drawable> markerDrawables = mapUtils.getMarkerDrawable(markersType);
 
+
         // Cria um marcador para cada local encontrado
         for (final Place place : places) {
             Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
@@ -305,7 +316,7 @@ public class MapFragment extends Fragment implements LocationListener{
                     BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
                     behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place);
+                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place,userLocation);
                     fragmentManager.beginTransaction()
                             .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
                             .commit();
@@ -334,10 +345,20 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
 
-
+    public CustomMapView getMapView() {
+        return mapView;
+    }
 
     @Override
-    public void onLocationChanged(Location location) {  myCurrentLocation = location; }
+    public void onLocationChanged(Location location) {
+        myCurrentLocation = location;
+        final PlaceDetailsFragment mapFragment = (PlaceDetailsFragment) getActivity().getSupportFragmentManager().findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
+        if(mapFragment != null){
+            mapFragment.updateUserLocation(new Place(location.getLatitude(),location.getLongitude(),"user_location"));
+        }
+
+
+    }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras){}

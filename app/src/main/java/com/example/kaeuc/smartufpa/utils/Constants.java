@@ -100,7 +100,7 @@ public final class Constants {
 
 
     // Chave para a utilização do Graphhopper como provedor de busca de rotas
-    public static final String GRAPHHOPPER_KEY = "9931dfa3-e158-4c74-b907-e808313ef176";
+    public static final String GRAPHHOPPER_KEY = "db9a74eb-397e-4d8e-a919-9f2c9a3fc9ae";
 
 
     // Constantes de Erro

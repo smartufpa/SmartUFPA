@@ -1,11 +1,11 @@
 package com.example.kaeuc.smartufpa.fragments;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +13,22 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kaeuc.smartufpa.BuildConfig;
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
+
+import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
+import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Polyline;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,17 +42,24 @@ public class PlaceDetailsFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_CURRENT_PLACE = "current_place";
-
+    private static final String ARG_USER_LOCATION = "user_location";
+    private static final String TAG = PlaceDetailsFragment.class.getSimpleName();
     // VIEWS
     private TextView txtDetPlaceName;
+
     private TextView txtDetPlaceDesc;
     private TextView txtDetLocName;
     private Button btnDetFootRoute;
 
+    private ArrayList<Integer> routeLinecolors = new ArrayList<>(3);
+    private int routesCounter = 0;
     // TODO: CARREGAR IMAGEM
 
-
     private Place currentPlace;
+
+
+
+    private Place userLocation;
 
     public PlaceDetailsFragment() {
         // Required empty public constructor
@@ -52,20 +72,27 @@ public class PlaceDetailsFragment extends Fragment {
      * @param currentPlace Place which the user has chosen to see details.
      * @return A new instance of fragment PlaceDetailsFragment.
      */
-    public static PlaceDetailsFragment newInstance(Parcelable currentPlace) {
+    public static PlaceDetailsFragment newInstance(Place currentPlace, Place userLocation) {
         PlaceDetailsFragment fragment = new PlaceDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CURRENT_PLACE, currentPlace);
+        args.putParcelable(ARG_USER_LOCATION,userLocation);
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             currentPlace = getArguments().getParcelable(ARG_CURRENT_PLACE);
+            userLocation = getArguments().getParcelable(ARG_USER_LOCATION);
         }
+        // TODO
+        routeLinecolors.add(Color.BLUE);
+        routeLinecolors.add(Color.GREEN);
+        routeLinecolors.add(Color.RED);
     }
 
     @Override
@@ -90,11 +117,53 @@ public class PlaceDetailsFragment extends Fragment {
         btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Função de calcular rota", Toast.LENGTH_SHORT).show();
+                if(SystemServicesManager.isNetworkEnabled(getContext()) && userLocation != null)
+                    searchRouteToPlace();
+                else if(userLocation == null){
+                    Toast.makeText(getContext(), getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
+                }else if(routesCounter > routeLinecolors.size()){
+                    Toast.makeText(getContext(), R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
+                }else
+                    Toast.makeText(getContext(), getString(R.string.msg_check_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
 
         return view;
+    }
+
+
+    private void searchRouteToPlace(){
+        // TODO: API KEY
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                final MapFragment mapFragment = (MapFragment) fragmentManager
+                        .findFragmentByTag(MapFragment.FRAGMENT_TAG);
+                RoadManager roadManager = new GraphHopperRoadManager(Constants.GRAPHHOPPER_KEY,true);
+                roadManager.addRequestOption("vehicle=foot");
+                ArrayList<GeoPoint> waypoints = new ArrayList<>();
+                try {
+                    waypoints.add(new GeoPoint(userLocation.getLatitude(), userLocation.getLongitude()));
+                }catch (NullPointerException e){
+                    Log.e(TAG, " Erro ao adquirir posição do usuário: ",e);
+                    return;
+                }
+                waypoints.add(new GeoPoint(currentPlace.getLatitude(),currentPlace.getLongitude()));
+                Road road = roadManager.getRoad(waypoints);
+                Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+                roadOverlay.setWidth(13);
+                roadOverlay.setColor(routeLinecolors.get(routesCounter));
+                mapFragment.getMapView().addTileOverlay(roadOverlay, Constants.OverlayTags.ROUTE);
+                mapFragment.getMapView().postInvalidate();
+                routesCounter++;
+            }
+        }).start();
+    }
+
+    public void updateUserLocation(Place userLocation) {
+        this.userLocation = userLocation;
     }
 
 

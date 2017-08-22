@@ -14,6 +14,9 @@ public class Place implements Parcelable {
     private String amenity;
     private String description;
     private long id;
+
+
+
     private double latitude;
     private String locName;
     private double longitude;
@@ -90,6 +93,14 @@ public class Place implements Parcelable {
 
     public GeoPoint getGeoPoint(){return  new GeoPoint(latitude,longitude);}
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     @Override
     public String toString() {
         return String.format("[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,shop=%s,amenity=%s,loc_name=%s,description=%s]",
@@ -114,4 +125,6 @@ public class Place implements Parcelable {
         dest.writeString(shop);
         dest.writeString(shortName);
     }
+
+
 }

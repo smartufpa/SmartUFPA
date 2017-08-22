@@ -33,7 +33,6 @@ public class SearchResultFragment extends Fragment {
     public final static String FRAGMENT_TAG = SearchResultFragment.class.getName();
     private final static String TAG = SearchResultFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PLACES = "PLACES_LIST";
 
     private ArrayList<Place> places;
@@ -51,7 +50,6 @@ public class SearchResultFragment extends Fragment {
      * @param places List of places to be shown on the recycler view.
      * @return A new instance of fragment SearchResultFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SearchResultFragment newInstance(ArrayList<Place> places) {
         SearchResultFragment fragment = new SearchResultFragment();
         Bundle args = new Bundle();
@@ -85,11 +83,12 @@ public class SearchResultFragment extends Fragment {
                 final Place currentPlace = places.get(position);
                 // On click, create a PlaceDetailFragment
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                // Instantiate the fragment with the current place
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace);
+                // Instantiate the fragment with the current place and user's location
+                final MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentByTag(MapFragment.FRAGMENT_TAG);
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace,mapFragment.getUserLocation());
                 // Start Transaction
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                // TODO: CREATE A TRANSTION
+                // TODO: CREATE A TRANSITION
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.replace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
                 ft.addToBackStack(SearchResultFragment.FRAGMENT_TAG);

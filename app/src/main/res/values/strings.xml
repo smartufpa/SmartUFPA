@@ -44,6 +44,7 @@
     <string name="msg_out_of_covered_region">Você está fora da região coberta pelo nosso mapa!</string>
     <string name="msg_drag_marker">Segure o marcador para arrastá-lo ao local desejado.</string>
     <string name="msg_turn_on_gps">Por favor, ligar o GPS novamente.</string>
+    <string name="msg_check_internet_connection">Por favor, cheque sua conexão com a internet.</string>
 
 
     <string name="nav_auditorium">Auditórios</string>
@@ -81,7 +82,7 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dui tellus, lacinia non ipsum vel, interdum varius nulla. Curabitur ultrices ipsum at porta placerat.</string>
     <string name="btn_login_visitante">Visitante</string>
     <string name="btn_login_login">Realizar Login</string>
-
+    <string name="msg_routes_limit">Limpe o mapa antes de calcular uma nova rota.</string>
 
 
 </resources>

@@ -292,9 +292,10 @@ public class MainActivity extends AppCompatActivity
     public void onOverpassResponse(ArrayList<Place> places, int taskStatus) {
         progressBar.setVisibility(View.GONE);
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
             MenuItemCompat.collapseActionView(searchItem);
             if(places.size() > 1){
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 // Open SearchResultFragment
                 SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
                 // TODO: CREATE A TRANSITION
@@ -303,13 +304,19 @@ public class MainActivity extends AppCompatActivity
                         .replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG)
                         .commit();
             }else{
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 // Open PlaceDetailsFragment
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(places.get(0));
+                final MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
+                final Place place = places.get(0);
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place,mapFragment.getUserLocation());
                 // TODO: CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
                         .commit();
+                mapFragment.getMapView().getController().setZoom(18);
+                mapFragment.getMapView().getController().animateTo(place.getGeoPoint());
+                mapFragment.getMapView().getController().setCenter(place.getGeoPoint());
                 mapFragment.addLayerToMap(places, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
             }
 
