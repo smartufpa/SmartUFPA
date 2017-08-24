@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity
                         }
                         break;
                     case R.id.nav_bus_route:
-                        filter = OverpassFilters.BUS_ROUTE;
                         if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE)) {
                             mapFragment.enableBusOverlay();
                         }
@@ -225,9 +224,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-
-
     }
 
 
@@ -298,6 +294,7 @@ public class MainActivity extends AppCompatActivity
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 // Open SearchResultFragment
                 SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
+                mapFragment.addLayerToMap(places,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
                 // TODO: CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

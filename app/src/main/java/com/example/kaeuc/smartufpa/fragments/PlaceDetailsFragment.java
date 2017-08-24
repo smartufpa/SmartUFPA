@@ -20,14 +20,11 @@ import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
-import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -44,6 +41,7 @@ public class PlaceDetailsFragment extends Fragment {
     private static final String ARG_CURRENT_PLACE = "current_place";
     private static final String ARG_USER_LOCATION = "user_location";
     private static final String TAG = PlaceDetailsFragment.class.getSimpleName();
+    private static final int MAX_ROUTES = 3;
     // VIEWS
     private TextView txtDetPlaceName;
 
@@ -52,7 +50,7 @@ public class PlaceDetailsFragment extends Fragment {
     private Button btnDetFootRoute;
 
     private ArrayList<Integer> routeLinecolors = new ArrayList<>(3);
-    private int routesCounter = 0;
+    private static int ROUTES_COUNTER = 0;
     // TODO: CARREGAR IMAGEM
 
     private Place currentPlace;
@@ -89,10 +87,10 @@ public class PlaceDetailsFragment extends Fragment {
             currentPlace = getArguments().getParcelable(ARG_CURRENT_PLACE);
             userLocation = getArguments().getParcelable(ARG_USER_LOCATION);
         }
-        // TODO
-        routeLinecolors.add(Color.BLUE);
-        routeLinecolors.add(Color.GREEN);
-        routeLinecolors.add(Color.RED);
+        routeLinecolors.add(Color.rgb(26, 26, 255)); // Translucent blue
+        routeLinecolors.add(Color.rgb(255, 26, 26)); // Translucent red
+        routeLinecolors.add(Color.rgb(26, 255, 26)); // Translucent green
+
     }
 
     @Override
@@ -113,7 +111,6 @@ public class PlaceDetailsFragment extends Fragment {
         txtDetPlaceDesc.setText(currentPlace.getDescription());
         txtDetLocName.setText("Nome local: " + currentPlace.getLocName());
 
-        // TODO: COLOCAR UM MARCADOR NA POSIÇÃO DO LOCAL ESCOLHIDO
         btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,8 +118,6 @@ public class PlaceDetailsFragment extends Fragment {
                     searchRouteToPlace();
                 else if(userLocation == null){
                     Toast.makeText(getContext(), getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
-                }else if(routesCounter > routeLinecolors.size()){
-                    Toast.makeText(getContext(), R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
                 }else
                     Toast.makeText(getContext(), getString(R.string.msg_check_internet_connection), Toast.LENGTH_SHORT).show();
             }
@@ -133,7 +128,12 @@ public class PlaceDetailsFragment extends Fragment {
 
 
     private void searchRouteToPlace(){
-        // TODO: API KEY
+
+        if(ROUTES_COUNTER == MAX_ROUTES) {
+            ROUTES_COUNTER = 0;
+            Toast.makeText(getContext(), R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -141,8 +141,10 @@ public class PlaceDetailsFragment extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 final MapFragment mapFragment = (MapFragment) fragmentManager
                         .findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                RoadManager roadManager = new GraphHopperRoadManager(Constants.GRAPHHOPPER_KEY,true);
+
+                RoadManager roadManager = new GraphHopperRoadManager(BuildConfig.GRAPHHOPPER_KEY,true);
                 roadManager.addRequestOption("vehicle=foot");
+
                 ArrayList<GeoPoint> waypoints = new ArrayList<>();
                 try {
                     waypoints.add(new GeoPoint(userLocation.getLatitude(), userLocation.getLongitude()));
@@ -150,14 +152,19 @@ public class PlaceDetailsFragment extends Fragment {
                     Log.e(TAG, " Erro ao adquirir posição do usuário: ",e);
                     return;
                 }
+
                 waypoints.add(new GeoPoint(currentPlace.getLatitude(),currentPlace.getLongitude()));
+
                 Road road = roadManager.getRoad(waypoints);
+
                 Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-                roadOverlay.setWidth(13);
-                roadOverlay.setColor(routeLinecolors.get(routesCounter));
+                roadOverlay.setWidth(10);
+                roadOverlay.setColor(routeLinecolors.get(ROUTES_COUNTER));
+
                 mapFragment.getMapView().addTileOverlay(roadOverlay, Constants.OverlayTags.ROUTE);
                 mapFragment.getMapView().postInvalidate();
-                routesCounter++;
+
+                ROUTES_COUNTER++;
             }
         }).start();
     }

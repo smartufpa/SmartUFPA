@@ -11,6 +11,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -100,10 +102,30 @@ public class MapUtils {
 
     }
 
+    public String getBusRouteURL(){
+        StringBuilder s = new StringBuilder();
+        s.append("http://overpass-api.de/api/interpreter?data=");
+
+        String data ="[out:json][timeout:30];(node[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957);"
+                + "way[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957););" +
+                "out qt geom tags 500;relation[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957);" +
+                "out qt geom body 500;";
+
+        try {
+            s.append(URLEncoder.encode(data,"UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return s.toString();
+    }
+
 
     private class NullMarkerDrawableException extends RuntimeException{
         public NullMarkerDrawableException(String message) { super(message); }
     }
+
+
 
 
 }

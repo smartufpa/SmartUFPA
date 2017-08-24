@@ -1,10 +1,17 @@
 package com.example.kaeuc.smartufpa.utils;
 
+import android.util.Log;
+
+import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.util.BoundingBox;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * Created by kaeuc on 10/22/2016.
  * Classe para manter constantes que serão usado diretamente no código.
  *
- * TODO: Transformar essa classe em um ou mais arquivos de resource
  */
 
 public final class Constants {
@@ -85,22 +92,13 @@ public final class Constants {
             ");" +
             "out center;";
 
-
-
-
-
-
     // Usado na factory para places, apresentado nos detalhes sobre o local
     // caso um nome não tenha sido definido
     public static final String NO_NAME = "Sem nome identificado";
     public static final String NO_LOCAL_NAME = "Sem nome local identificado";
     public static final String NO_SHORT_NAME = "Sem abreviação";
     public static final String NO_DESCRIPTION = "Sem descrição";
-
-
-
-    // Chave para a utilização do Graphhopper como provedor de busca de rotas
-    public static final String GRAPHHOPPER_KEY = "db9a74eb-397e-4d8e-a919-9f2c9a3fc9ae";
+    
 
 
     // Constantes de Erro

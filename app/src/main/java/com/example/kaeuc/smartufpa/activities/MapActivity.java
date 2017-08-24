@@ -813,7 +813,7 @@ public class MapActivity extends AppCompatActivity
         new Thread(new Runnable() {
             @Override
             public void run() {
-                RoadManager roadManager = new GraphHopperRoadManager(Constants.GRAPHHOPPER_KEY,true);
+                RoadManager roadManager = new GraphHopperRoadManager(BuildConfig.GRAPHHOPPER_KEY,true);
                 // RoadManager roadManager = new GoogleRoadManager(); // bom para carros
                 roadManager.addRequestOption("vehicle=foot");
                 ArrayList<GeoPoint> wayPoints = new ArrayList<>();

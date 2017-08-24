@@ -4,6 +4,7 @@ package com.example.kaeuc.smartufpa.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -28,6 +29,7 @@ import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.customviews.CustomMapView;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.models.PlaceFactory;
+import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.Constants.MarkerStatuses;
 import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
 import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
@@ -35,6 +37,9 @@ import com.example.kaeuc.smartufpa.utils.MapUtils;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.kml.KmlDocument;
+import org.osmdroid.bonuspack.kml.Style;
+import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
@@ -80,13 +85,9 @@ public class MapFragment extends Fragment implements LocationListener{
     private final BoundingBox mapBoundaries = new BoundingBox(-1.457886, -48.437957, -1.479967, -48.459779);
 
 
-    private Location myCurrentLocation;
-
-    public Place getUserLocation() {
-        return userLocation;
-    }
-
     private Place userLocation;
+
+
     private LocationManager locationManager;
 
       /* CLICK LISTENERS */
@@ -154,7 +155,9 @@ public class MapFragment extends Fragment implements LocationListener{
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
 
         //  Atribui o mapa offline em mapView
+//        if (checar configurações para saber se o download do mapa foi realizado){
 //        mapView.setTileSource(MAPA_UFPA);
+//        }
 
         /* Desabilita o uso da internet (opcional, mas uma boa forma de previnir que o mapa
          * seja carregado via rede e de testar se o zip está carregando
@@ -170,7 +173,7 @@ public class MapFragment extends Fragment implements LocationListener{
 
     private void enableMyLocationOverlay(){
         // Camada de posição do usuário
-        if(myCurrentLocation == null){
+        if(userLocation == null){
             myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(parentContext),mapView);
         }
         myLocationOverlay.enableMyLocation();
@@ -180,17 +183,36 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
     public void enableBusOverlay(){
-        mapView.setTileSource(MAPA_UFPA_TRANSPORTE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // TODO : SALVAR ESSE OVERLAY OU REQUISIÇÃO PARA NÃO REFAZER A REQUISIÇÃO EVERY TIME
+                OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
+                MapUtils mapUtils = new MapUtils(getContext());
+                String url = mapUtils.getBusRouteURL();
+                KmlDocument kmlDocument = new KmlDocument();
+                boolean ok = overpassProvider.addInKmlFolder(kmlDocument.mKmlRoot, url);
+                Style style = new Style(null, Color.rgb(50,50,255),10,Color.rgb(50,50,255));
+                FolderOverlay kmlOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(mapView,style, null, kmlDocument);
+                mapView.addTileOverlay(kmlOverlay,OverlayTags.BUS_ROUTE);
+            }
+        }).start();
         mapView.postInvalidate();
         Log.i(TAG, "Bus Overlay Enabled.");
         isBusOverlayEnabled = true;
         btnClearMap.setVisibility(View.VISIBLE);
     }
 
+    private boolean areMapsInStorage(){
+
+        return false;
+    }
+
     private void clearMap(){
         mapView.clearMap();
         if(isBusOverlayEnabled){
-            mapView.setTileSource(MAPA_UFPA);
+//            mapView.setTileSource(MAPA_UFPA);
+            mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
             isBusOverlayEnabled = false;
         }
         if(btnClearMap.getVisibility() == View.VISIBLE) btnClearMap.setVisibility(View.GONE);
@@ -254,7 +276,7 @@ public class MapFragment extends Fragment implements LocationListener{
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
-        myCurrentLocation = null;
+        userLocation = null;
         myLocationOverlay = null;
         mapView = null;
         mapCamera = null;
@@ -268,8 +290,8 @@ public class MapFragment extends Fragment implements LocationListener{
 
     private void moveCameraToMyLocation(){
         try {
-            double latitude = myCurrentLocation.getLatitude(),
-                    longitude = myCurrentLocation.getLongitude();
+            double latitude = userLocation.getLatitude(),
+                    longitude = userLocation.getLongitude();
 
             // Checa se o usuário se encontra dentro da area do mapa
             if(!mapBoundaries.contains(latitude,longitude)) Toast.makeText(parentContext,
@@ -340,8 +362,6 @@ public class MapFragment extends Fragment implements LocationListener{
         mapView.addTileOverlay(poiMarkers,overlayTag);
         btnClearMap.setVisibility(View.VISIBLE);
 
-
-
     }
 
 
@@ -351,10 +371,16 @@ public class MapFragment extends Fragment implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-        myCurrentLocation = location;
+        Log.i(TAG, "onLocationChanged");
+        if(userLocation == null)
+            userLocation = new Place(location.getLatitude(),location.getLongitude(),"user_location");
+        else {
+            userLocation.setLongitude(location.getLongitude());
+            userLocation.setLatitude(location.getLatitude());
+        }
         final PlaceDetailsFragment mapFragment = (PlaceDetailsFragment) getActivity().getSupportFragmentManager().findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
         if(mapFragment != null){
-            mapFragment.updateUserLocation(new Place(location.getLatitude(),location.getLongitude(),"user_location"));
+            mapFragment.updateUserLocation(userLocation);
         }
 
 
@@ -368,4 +394,8 @@ public class MapFragment extends Fragment implements LocationListener{
 
     @Override
     public void onProviderDisabled(String provider) {}
+
+    public Place getUserLocation() {
+        return userLocation;
+    }
 }
