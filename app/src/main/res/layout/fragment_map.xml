@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
             android:theme="@style/MyFAB"
+            app:rippleColor="@color/colorAccent"
 
             />
 
@@ -35,6 +36,7 @@
             android:layout_margin="@dimen/button_margin"
             android:layout_below="@id/fab_my_location"
             android:theme="@style/MyFAB"
+            app:rippleColor="@color/colorAccent"
             />
 
     </RelativeLayout>

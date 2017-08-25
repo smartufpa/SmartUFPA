@@ -9,7 +9,11 @@
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorActionBarTitle">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
-    <color name="disabledButton">#BDBDBD</color>
+    <color name="disabledButton">#e0e0e0</color>
+    <color name="disabledHighlight">@android:color/darker_gray</color>
     <color name="white">@android:color/white</color>
+    <color name="bottomSheetBackground">#f5f5f5</color>
+
+
 
 </resources>

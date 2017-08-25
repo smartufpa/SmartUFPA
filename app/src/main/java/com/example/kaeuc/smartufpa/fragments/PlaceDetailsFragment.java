@@ -87,9 +87,9 @@ public class PlaceDetailsFragment extends Fragment {
             currentPlace = getArguments().getParcelable(ARG_CURRENT_PLACE);
             userLocation = getArguments().getParcelable(ARG_USER_LOCATION);
         }
-        routeLinecolors.add(Color.rgb(26, 26, 255)); // Translucent blue
-        routeLinecolors.add(Color.rgb(255, 26, 26)); // Translucent red
-        routeLinecolors.add(Color.rgb(26, 255, 26)); // Translucent green
+        routeLinecolors.add(Color.rgb(100, 100, 255)); // blue
+        routeLinecolors.add(Color.rgb(255, 100, 100)); // red
+        routeLinecolors.add(Color.rgb(62, 153, 62)); // green
 
     }
 
@@ -116,9 +116,9 @@ public class PlaceDetailsFragment extends Fragment {
             public void onClick(View v) {
                 if(SystemServicesManager.isNetworkEnabled(getContext()) && userLocation != null)
                     searchRouteToPlace();
-                else if(userLocation == null){
+                else if(userLocation == null)
                     Toast.makeText(getContext(), getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
-                }else
+                else
                     Toast.makeText(getContext(), getString(R.string.msg_check_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });

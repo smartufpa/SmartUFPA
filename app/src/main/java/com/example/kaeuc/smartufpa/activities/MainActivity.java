@@ -3,6 +3,7 @@ package com.example.kaeuc.smartufpa.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -35,6 +36,12 @@ import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
 import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
 import com.example.kaeuc.smartufpa.utils.Constants.OverpassFilters;
+import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
+import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
+import com.example.kaeuc.smartufpa.utils.showcaseutils.ShowcaseHolder;
+import com.example.kaeuc.smartufpa.utils.showcaseutils.ToolbarActionItemTarget;
+import com.example.kaeuc.smartufpa.utils.showcaseutils.ViewTargets;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +52,8 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
     public static final String CATEGORY_MAIN = "smartufpa.CATEGORY_MAIN";
+    private final int TUTORIAL_EXECUTED = 1;
+    private final int TUTORIAL_NOT_EXECUTED = 0;
 
     // VIEWS
     private Toolbar mapToolbar;
@@ -82,12 +91,14 @@ public class MainActivity extends AppCompatActivity
         setIntent(intent);
         handleIntent(intent);
     }
-
+    // REALIZA A BUSCA
     private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction()) && SystemServicesManager.isNetworkEnabled(this)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             new OverpassSearchRequest(this).execute(query);
             progressBar.setVisibility(View.VISIBLE);
+        }else{
+            Toast.makeText(this, getString(R.string.error_on_connection), Toast.LENGTH_LONG).show();
         }
     }
     @Override
@@ -131,58 +142,70 @@ public class MainActivity extends AppCompatActivity
         NavigationView.OnNavigationItemSelectedListener navigationItemListener = new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // Guarda a ID do botão clicado
+                // TODO: CHECK IF DATA IS IN MEMORY; IF IT'S NOT CHECK INTERNET TO DOWNLOAD
                 final int id = item.getItemId();
-                OverpassFilters filter;
-                Context context = MainActivity.this;
-                switch (id){
-                    case R.id.nav_copy_service:
-                        filter = OverpassFilters.XEROX;
-                        if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) { // Caso a camada de filtro não esteja ativa, executar a busca
-                            progressBar.setVisibility(View.VISIBLE);
-                            new OsmDataRequest(context).execute(filter);
-                        }
-                        break;
-                    case  R.id.nav_restaurant:
-                        filter = OverpassFilters.RESTAURANT;
-                        if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTAURANT)) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            new OsmDataRequest(context).execute(filter);
-                        }
-                        break;
-                    case R.id.nav_restroom:
-                        filter = OverpassFilters.RESTROOM;
-                        if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM)) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            new OsmDataRequest(context).execute(filter);
-                        }
-                        break;
-                    case R.id.nav_bus_route:
-                        if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE)) {
-                            mapFragment.enableBusOverlay();
-                        }
-                        break;
-                    case R.id.nav_auditorium:
-                        filter = OverpassFilters.AUDITORIUMS;
-                        if(!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS)){
-                            progressBar.setVisibility(View.VISIBLE);
-                            new OsmDataRequest(context).execute(filter);
-                        }
-                        break;
-                    case R.id.nav_library:
-                        filter = OverpassFilters.LIBRARIES;
-                        if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES)){
-                            progressBar.setVisibility(View.VISIBLE);
-                            new OsmDataRequest(context).execute(filter);
-                        }
-                        break;
-                    case R.id.nav_about:
-                        final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
-                        intent.addCategory(AboutActivity.CATEGORY_ABOUT);
-                        startActivity(intent);
-                        break;
-                    case R.id.nav_settings:
-                        break;
+                if(SystemServicesManager.isNetworkEnabled(getApplicationContext())) {
+                    // Guarda a ID do botão clicado
+                    OverpassFilters filter;
+                    Context context = MainActivity.this;
+                    switch (id) {
+                        case R.id.nav_copy_service:
+                            filter = OverpassFilters.XEROX;
+                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) { // Caso a camada de filtro não esteja ativa, executar a busca
+                                progressBar.setVisibility(View.VISIBLE);
+                                new OsmDataRequest(context).execute(filter);
+                            }
+                            break;
+                        case R.id.nav_restaurant:
+                            filter = OverpassFilters.RESTAURANT;
+                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTAURANT)) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                new OsmDataRequest(context).execute(filter);
+                            }
+                            break;
+                        case R.id.nav_restroom:
+                            filter = OverpassFilters.RESTROOM;
+                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM)) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                new OsmDataRequest(context).execute(filter);
+                            }
+                            break;
+                        case R.id.nav_bus_route:
+                            if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE)) {
+                                mapFragment.enableBusOverlay();
+                            }
+                            break;
+                        case R.id.nav_auditorium:
+                            filter = OverpassFilters.AUDITORIUMS;
+                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS)) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                new OsmDataRequest(context).execute(filter);
+                            }
+                            break;
+                        case R.id.nav_library:
+                            filter = OverpassFilters.LIBRARIES;
+                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES)) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                new OsmDataRequest(context).execute(filter);
+                            }
+                            break;
+                        case R.id.nav_about:
+                            final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
+                            intent.addCategory(AboutActivity.CATEGORY_ABOUT);
+                            startActivity(intent);
+                            break;
+
+
+                    }
+
+                }else if(id == R.id.nav_about) {
+                    final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
+                    intent.addCategory(AboutActivity.CATEGORY_ABOUT);
+                    startActivity(intent);
+                }else if(id == R.id.nav_settings) {
+                    Toast.makeText(MainActivity.this, "ainda a implementar", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
 
                 }
                 layoutDrawer.closeDrawer(GravityCompat.START);
@@ -229,6 +252,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.i(TAG, "onCreateOptionsMenu: ");
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -237,6 +261,13 @@ public class MainActivity extends AppCompatActivity
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconified(false);
+
+        //Restaura as preferencias gravadas para executar ou não o tutorial
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        final int tutorialStatus = sharedPref.getInt(getString(R.string.tutorial_map_executed), TUTORIAL_NOT_EXECUTED);
+        if(tutorialStatus == TUTORIAL_NOT_EXECUTED)
+            runMapTutorial();
+
 
         return true;
     }
@@ -274,7 +305,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOsmDataResponse(final List<Place> places, MarkerTypes markersType, OverlayTags overlayTag, int taskStatus) {
+    public void onOsmDataResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, int taskStatus) {
         if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
             mapFragment.addLayerToMap(places,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
@@ -322,5 +353,40 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+    private void runMapTutorial(){
+        ArrayList<ShowcaseHolder> holders = new ArrayList<>();
+
+        try {
+//            holders.add(new ShowcaseHolder(new ToolbarActionItemTarget(toolbar,R.id.action_add_location),
+//                    getString(R.string.tutorial_msg_add_location)));
+//            holders.add(new ShowcaseHolder(new ViewTarget(findViewById(R.id.fab_bus_location)),
+//                    getString(R.string.tutorial_msg_bus_location),
+//                    Constants.TUTORIAL_BTN_LEFT));
+
+            final ShowcaseHolder toolbarHolder = new ShowcaseHolder(new ToolbarActionItemTarget(mapToolbar, R.id.action_search),
+                    getString(R.string.tutorial_msg_search));
+            final ShowcaseHolder drawerMenuHolder = new ShowcaseHolder(ViewTargets.navigationButtonViewTarget(mapToolbar),
+                    getString(R.string.tutorial_msg_menu));
+            final ShowcaseHolder fabMyLocationHolder = new ShowcaseHolder(new ViewTarget(findViewById(R.id.fab_my_location)),
+                    getString(R.string.tutorial_msg_current_location),
+                    Constants.TUTORIAL_BTN_LEFT);
+            holders.add(toolbarHolder);
+            holders.add(drawerMenuHolder);
+            holders.add(fabMyLocationHolder);
+
+            new AppTutorial(holders,MainActivity.this);
+        } catch (ViewTargets.MissingViewException e) {
+            e.printStackTrace();
+        }
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(getString(R.string.tutorial_map_executed),TUTORIAL_EXECUTED);
+        final boolean commit = editor.commit();
+        Log.i(TAG + ".tutorial()", String.valueOf(commit));
+
+    }
+
 
 }

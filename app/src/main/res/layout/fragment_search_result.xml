@@ -16,6 +16,7 @@
         android:id="@+id/txt_results"
         android:textStyle="bold"
         android:textSize="14sp"
+        android:textColor="@color/colorPrimaryText"
         />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_search_result"

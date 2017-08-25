@@ -11,6 +11,7 @@ import com.example.kaeuc.smartufpa.utils.JsonParser;
 import com.example.kaeuc.smartufpa.models.Place;
 
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class OsmDataRequest extends AsyncTask<OverpassFilters,Void,String> {
     }
 
     public interface OnOsmDataListener {
-        void onOsmDataResponse(final List<Place> places, MarkerTypes markersType, OverlayTags overlayTag, int taskStatus);
+        void onOsmDataResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, int taskStatus);
     }
 
 
@@ -98,7 +99,7 @@ public class OsmDataRequest extends AsyncTask<OverpassFilters,Void,String> {
         // TODO TREAT TIMEOUT
         super.onPostExecute(jsonResponse);
         //Recebe a resposta em json e processa os lugares em uma lista
-        final List<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
+        final ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
         // Retorna os valores para a activity que chamou a ASyncTask
         callBack.onOsmDataResponse(places, markersType, overlayTag, taskStatus);
 

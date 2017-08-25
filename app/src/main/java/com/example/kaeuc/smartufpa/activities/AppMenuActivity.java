@@ -24,12 +24,12 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
     public static final String ACTION_APP_MENU = "smartufpa.ACTION_APP_MENU";
     public static final String CATEGORY_APP_MENU = "smartufpa.CATEGORY_APP_MENU";
     public static final String TAG = "AppMenu";
+
     private final int MAP_DOWNLOAD_NOT_EXECUTED = 0;
     private final int MAP_DOWNLOAD_EXECUTED = 1;
 
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +52,10 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
 //                        final int tutorialStatus = sharedPref.getInt(getString(R.string.map_download_executed), MAP_DOWNLOAD_NOT_EXECUTED);
 //                        if(tutorialStatus == MAP_DOWNLOAD_NOT_EXECUTED) downloadMap();
 //                        else{
-//                            Intent intent = new Intent(MapActivity.ACTION_MAP);
-//                            intent.addCategory(MapActivity.CATEGORY_MAP);
-//                            startActivity(intent);
+
 //                        }
 
-//                         TODO: CÓDIGO PROVISÓRIO ATÉ RESOLVER PROBLEMA NO CERTIFICADO
-//                        Intent intent = new Intent(MapActivity.ACTION_MAP);
-//                        intent.addCategory(MapActivity.CATEGORY_MAP);
-//                        startActivity(intent);
+
 
 
 
@@ -112,9 +107,7 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putInt(getString(R.string.map_download_executed),MAP_DOWNLOAD_EXECUTED);
             editor.commit();
-//            Intent intent = new Intent(MapActivity.ACTION_MAP);
-//            intent.addCategory(MapActivity.CATEGORY_MAP);
-//            startActivity(intent);
+            // INICIAR A MAIN ACTIVITY
         }else if(taskStatus == Constants.SERVER_FORBIDDEN){
             Toast.makeText(this, "Permissão para download negada.", Toast.LENGTH_SHORT).show();
         }

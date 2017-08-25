@@ -11,6 +11,25 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <!-- android:textColorPrimary is the color of the title text in the Toolbar  -->
+    <item name="android:textColorPrimary">@color/white</item>
+    <!-- actionMenuTextColor is the color of the text of action (menu) items  -->
+    <item name="actionMenuTextColor">@color/white</item>
+    <!-- Tints the input fields like checkboxes and text fields -->
+    <item name="colorAccent">@color/colorAccent</item>
+    <!-- Applies to views in their normal state. -->
+    <item name="colorControlNormal">@color/white</item>
+    <!-- Applies to views in their activated state (i.e checked or switches) -->
+    <item name="colorControlActivated">@color/colorAccent</item>
+    <!-- Applied to framework control highlights (i.e ripples or list selectors) -->
+    <item name="colorControlHighlight">@color/colorAccent</item>
+
+    <!-- Enable these below if you want clicking icons to trigger a ripple effect -->
+    <item name="selectableItemBackground">?android:selectableItemBackground</item>
+    <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
+
+    </style>
 
 
 
@@ -33,12 +52,26 @@
     </style>
 
     <style name="RaisedButton" parent="Theme.AppCompat">
-        <item name="colorControlHighlight">@color/colorAccent</item>
-        <item name="colorButtonNormal">@color/colorPrimary</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
+    </style>
+
+
+    <style name="RaisedButtonDisabled" parent="Theme.AppCompat">
+        <item name="colorControlHighlight">@color/disabledHighlight</item>
+        <item name="colorButtonNormal">@color/disabledButton</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="MyFAB" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+
     </style>
 
 </resources>

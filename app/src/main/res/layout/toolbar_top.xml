@@ -8,7 +8,7 @@
     android:paddingRight="8dp"
     android:paddingTop="8dp"
     android:orientation="vertical"
-    tools:callback="com.example.kaeuc.smartufpa.activities.MapActivity">
+    tools:callback="com.example.kaeuc.smartufpa.activities.MainActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/tb_main"
@@ -16,7 +16,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:theme="@style/ToolbarTheme"/>
+
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="match_parent"

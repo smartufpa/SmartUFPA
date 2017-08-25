@@ -112,7 +112,7 @@ public class MapFragment extends Fragment implements LocationListener{
             clearMap();
         }
     };
-    private boolean isBusOverlayEnabled = false;
+
 
 
     // Required empty public constructor
@@ -182,25 +182,26 @@ public class MapFragment extends Fragment implements LocationListener{
         mapView.addTileOverlay(myLocationOverlay, OverlayTags.MY_LOCATION);
     }
 
-    public void enableBusOverlay(){
+    public boolean enableBusOverlay(){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 // TODO : SALVAR ESSE OVERLAY OU REQUISIÇÃO PARA NÃO REFAZER A REQUISIÇÃO EVERY TIME
+                // TODO: TRATAR RESPOSTA INVÁLIDA
+                // TODO: https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
                 OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
                 MapUtils mapUtils = new MapUtils(getContext());
                 String url = mapUtils.getBusRouteURL();
                 KmlDocument kmlDocument = new KmlDocument();
                 boolean ok = overpassProvider.addInKmlFolder(kmlDocument.mKmlRoot, url);
-                Style style = new Style(null, Color.rgb(50,50,255),10,Color.rgb(50,50,255));
+                Style style = new Style(null, Color.argb(150,50,50,255),10,Color.argb(150,50,50,255));
                 FolderOverlay kmlOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(mapView,style, null, kmlDocument);
                 mapView.addTileOverlay(kmlOverlay,OverlayTags.BUS_ROUTE);
             }
         }).start();
         mapView.postInvalidate();
-        Log.i(TAG, "Bus Overlay Enabled.");
-        isBusOverlayEnabled = true;
         btnClearMap.setVisibility(View.VISIBLE);
+        return true;
     }
 
     private boolean areMapsInStorage(){
@@ -210,11 +211,6 @@ public class MapFragment extends Fragment implements LocationListener{
 
     private void clearMap(){
         mapView.clearMap();
-        if(isBusOverlayEnabled){
-//            mapView.setTileSource(MAPA_UFPA);
-            mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-            isBusOverlayEnabled = false;
-        }
         if(btnClearMap.getVisibility() == View.VISIBLE) btnClearMap.setVisibility(View.GONE);
     }
 

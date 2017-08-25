@@ -54,22 +54,6 @@
         </activity>
 
         <activity
-            android:name=".activities.MapActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <action android:name="smartufpa.ACTION_MAP" />
-
-                <category android:name="smartufpa.CATEGORY_MAP" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-
-        <activity
             android:name=".activities.NoGpsActivity">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_NO_GPS" />

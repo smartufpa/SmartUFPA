@@ -29,12 +29,9 @@ public class LoginScreenActivity extends AppCompatActivity {
     public static final String ACTION_LOGIN = "smartufpa.ACTION_LOGIN";
     public static final String TAG = LoginScreenActivity.class.getSimpleName();
 
-    /*private EditText edtUsername;
-    private EditText edtPassword;
-    private Button btnCreateProfile;*/
     private Button btnLogin;
     private Button btnVisitante;
-    //private LoginDAO loginDAO;
+
 
 
     @Override
@@ -43,42 +40,8 @@ public class LoginScreenActivity extends AppCompatActivity {
         Log.i(TAG,"onCreate()");
         setContentView(R.layout.login_screen_activity);
 
-        // Views
-        /*edtUsername = (EditText) findViewById(R.id.edt_username);
-        edtPassword = (EditText) findViewById(R.id.edt_password);
-        btnCreateProfile = (Button) findViewById(R.id.btn_signup);*/
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnVisitante = (Button) findViewById(R.id.btn_visitante);
-
-
-        // Inicializa o banco de dados dos usuários em um thread para não comprometer a performance
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    loginDAO = new LoginDAO(LoginScreenActivity.this);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            SQLiteDatabase db = SQLiteDatabase.create(new SQLiteDatabase.CursorFactory() {
-                                @Override
-                                public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable, SQLiteQuery query) {
-                                    return null;
-                                }
-                            });
-                            loginDAO.onCreate(db);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();*/
-
-
-
-
 
     }
 
@@ -98,35 +61,6 @@ public class LoginScreenActivity extends AppCompatActivity {
                 if(v.getId() == btnLogin.getId()){
                     Toast.makeText(LoginScreenActivity.this, "Em breve essa função será adicionada.", Toast.LENGTH_SHORT).show();
 
-
-                    // Código de login
-                   /* String username = edtUsername.getText().toString();
-                    String password = edtPassword.getText().toString();
-                    final int checkLogin = loginDAO.checkLogin(username, password);
-                    if (checkLogin == 1){
-                        Intent intent = new Intent(MapActivity.ACTION_MAP);
-                        intent.addCategory(MapActivity.CATEGORY_MAP);
-                        intent.putExtra("username", username);
-                        startActivity(intent);
-                    }else if(checkLogin == -1){
-                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_user, Toast.LENGTH_LONG).show();
-                    }else {
-                        Toast.makeText(LoginScreenActivity.this, R.string.login_error_noprofile, Toast.LENGTH_LONG).show();
-                    }
-                }else if(v.getId() == btnCreateProfile.getId()){
-                    Intent intent = new Intent(CreateProfileActivity.ACTION_CREATEPROFILE);
-                    intent.addCategory(CreateProfileActivity.CATEGORY_CREATEPROFILE);
-                    startActivity(intent);*/
-                }else if (v.getId() == btnVisitante.getId()) {
-                    Intent intent = new Intent(AppMenuActivity.ACTION_APP_MENU);
-                    intent.addCategory(AppMenuActivity.CATEGORY_APP_MENU);
-                    startActivity(intent);
-
-
-                }
-            }
-        };
-        //btnCreateProfile.setOnClickListener(clickListener);
         btnLogin.setOnClickListener(clickListener);
         btnVisitante.setOnClickListener(clickListener);
 

@@ -16,6 +16,7 @@
         android:id="@+id/txt_results"
         android:textStyle="bold"
         android:textSize="14sp"
+        android:textColor="@color/colorPrimaryText"
         />
 
     <ImageView
@@ -31,7 +32,9 @@
         android:textStyle="bold"
         android:text="@string/lbl_placeholder"
         android:textSize="16sp"
-        android:textAllCaps="true"/>
+        android:textAllCaps="true"
+        />
+
 
     <TextView
         android:layout_width="match_parent"
@@ -51,10 +54,22 @@
         android:id="@+id/btn_det_foot_route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/RaisedButton"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:text="@string/btn_foot_route"
         android:layout_gravity="bottom|end"
-        />
+        android:drawableRight="@drawable/ic_directions_walk"
+        android:drawableTint="@color/colorAccent"
+        tools:targetApi="m" />
+
+    <Button
+        android:id="@+id/btn_det_rate_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:text="@string/btn_rate_info"
+        android:layout_gravity="bottom|end"
+        android:drawableTint="@color/colorAccent"
+        tools:targetApi="m" />
 
 </LinearLayout>
 
