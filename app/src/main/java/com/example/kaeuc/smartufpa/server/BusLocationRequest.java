@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.HttpRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ public class BusLocationRequest extends AsyncTask<String, Void, String> {
         this.parentContext = parentContext;
         this.callback = (OnBusLocationListener) parentContext;
         this.progressBar = progressBar;
-        this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
+//        this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
     }
 
     public interface OnBusLocationListener {
@@ -52,41 +53,41 @@ public class BusLocationRequest extends AsyncTask<String, Void, String> {
             Log.i(TAG,response);
         }catch (NullPointerException | SocketTimeoutException e){
             e.printStackTrace();
-            this.taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
+//            this.taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
         }
         return response;
     }
 
     @Override
     protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        if(this.taskStatus == Constants.SERVER_RESPONSE_TIMEOUT) {
-            callback.onBusLocationResponse(null,taskStatus);
-            progressBar.setVisibility(View.GONE);
-            return;
-        }
-        JSONObject jsonObject;
-        double latitude;
-        double longitude;
-
-        try {
-            jsonObject = new JSONObject(s);
-            if (jsonObject.getInt("status") == Constants.SERVER_RESPONSE_SUCCESS){
-                latitude = jsonObject.getJSONObject("currentLocation").getDouble("latitude");
-                longitude = jsonObject.getJSONObject("currentLocation").getDouble("longitude");
-                this.taskStatus = jsonObject.getInt("status");
-            }else{
-                JSONObject lastLocation = jsonObject.getJSONObject("lastLocation");
-                latitude = lastLocation.getDouble("latitude");
-                longitude = lastLocation.getDouble("longitude");
-                this.taskStatus = jsonObject.getInt("status");
-            }
-            GeoPoint busLocation = new GeoPoint(latitude,longitude);
-            progressBar.setVisibility(View.GONE);
-            callback.onBusLocationResponse(busLocation,taskStatus);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        super.onPostExecute(s);
+//        if(this.taskStatus == Constants.SERVER_RESPONSE_TIMEOUT) {
+//            callback.onBusLocationResponse(null,taskStatus);
+//            progressBar.setVisibility(View.GONE);
+//            return;
+//        }
+//        JSONObject jsonObject;
+//        double latitude;
+//        double longitude;
+//
+//        try {
+//            jsonObject = new JSONObject(s);
+//            if (jsonObject.getInt("status") == Constants.SERVER_RESPONSE_SUCCESS){
+//                latitude = jsonObject.getJSONObject("currentLocation").getDouble("latitude");
+//                longitude = jsonObject.getJSONObject("currentLocation").getDouble("longitude");
+//                this.taskStatus = jsonObject.getInt("status");
+//            }else{
+//                JSONObject lastLocation = jsonObject.getJSONObject("lastLocation");
+//                latitude = lastLocation.getDouble("latitude");
+//                longitude = lastLocation.getDouble("longitude");
+//                this.taskStatus = jsonObject.getInt("status");
+//            }
+//            GeoPoint busLocation = new GeoPoint(latitude,longitude);
+//            progressBar.setVisibility(View.GONE);
+//            callback.onBusLocationResponse(busLocation,taskStatus);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
     }
 }

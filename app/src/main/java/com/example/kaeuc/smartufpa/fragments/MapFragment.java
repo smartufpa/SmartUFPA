@@ -28,11 +28,9 @@ import com.example.kaeuc.smartufpa.BuildConfig;
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.customviews.CustomMapView;
 import com.example.kaeuc.smartufpa.models.Place;
-import com.example.kaeuc.smartufpa.models.PlaceFactory;
-import com.example.kaeuc.smartufpa.utils.Constants;
-import com.example.kaeuc.smartufpa.utils.Constants.MarkerStatuses;
-import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
-import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
+import com.example.kaeuc.smartufpa.utils.enums.MarkerStatuses;
+import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
+import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
 import com.example.kaeuc.smartufpa.utils.MapUtils;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
@@ -79,7 +77,7 @@ public class MapFragment extends Fragment implements LocationListener{
 
     private Context parentContext;
 
-    // TODO: BUSCAR ESSES VALORES A PARTIR DA CONFIGURAÇÃO
+    // TODO (STABLE VERSION): BUSCAR ESSES VALORES A PARTIR DA CONFIGURAÇÃO
     private final Place defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
     // Restrição da região mostrada do mapa usando coordenadas
     private final BoundingBox mapBoundaries = new BoundingBox(-1.457886, -48.437957, -1.479967, -48.459779);
@@ -133,13 +131,13 @@ public class MapFragment extends Fragment implements LocationListener{
         /* Configura o caminho do armazenamento em cache do mapa, se o device não possui cartão SD,
          * ele deve ser configurado para o caminho de arquivos do device
          */
-        OpenStreetMapTileProviderConstants.setCachePath(getActivity().getFilesDir().getAbsolutePath());
+//        OpenStreetMapTileProviderConstants.setCachePath(getActivity().getFilesDir().getAbsolutePath());
 
         /* Importante! Configure o user agent para previnir ser banido dos servidores do OSM
          * O user agent deve ser uma identificação única do seu aplicativo
          * Um exemplo mostra a utilização de "BuildConfig.APPLICATION_ID"
          */
-        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+//        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
     }
 
@@ -172,6 +170,7 @@ public class MapFragment extends Fragment implements LocationListener{
     }
 
     private void enableMyLocationOverlay(){
+        // TODO (STABLE VERSION): CHECAR, TÁ ADICIONANDO MAIS DE UMA CAMADA
         // Camada de posição do usuário
         if(userLocation == null){
             myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(parentContext),mapView);
@@ -186,9 +185,11 @@ public class MapFragment extends Fragment implements LocationListener{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // TODO : SALVAR ESSE OVERLAY OU REQUISIÇÃO PARA NÃO REFAZER A REQUISIÇÃO EVERY TIME
-                // TODO: TRATAR RESPOSTA INVÁLIDA
-                // TODO: https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
+                /* TODO (OFFLINE FUNCTIONS) : SALVAR ESSE OVERLAY OU REQUISIÇÃO PARA NÃO REFAZER A REQUISIÇÃO EVERY TIME
+                 * TRATAR RESPOSTA INVÁLIDA
+                 * https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
+                 */
+
                 OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
                 MapUtils mapUtils = new MapUtils(getContext());
                 String url = mapUtils.getBusRouteURL();
@@ -252,7 +253,7 @@ public class MapFragment extends Fragment implements LocationListener{
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
         }
         // Adiciona a camada de localização do usuário
-        // TODO: ERRO COM BITMAP!!!!! AAAAAAAAH
+        // TODO (STABLE VERSION): RESOLVE BITMAP ERROR
         enableMyLocationOverlay();
 
     }
@@ -278,7 +279,7 @@ public class MapFragment extends Fragment implements LocationListener{
         mapCamera = null;
     }
 
-    // TODO: Implementar onSavedInstance
+    // TODO (STABLE VERSION): IMPLEMENT THIS METHOD
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

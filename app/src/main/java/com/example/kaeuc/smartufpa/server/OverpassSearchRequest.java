@@ -2,15 +2,22 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.HttpRequest;
 import com.example.kaeuc.smartufpa.utils.JsonParser;
+import com.example.kaeuc.smartufpa.utils.JsonParser.EmptyResponseException;
+import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
 
 import java.net.SocketTimeoutException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by kaeuc on 02/03/2017.
@@ -20,46 +27,18 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
     public final String TAG = OverpassSearchRequest.class.getSimpleName();
     private OnOverpassListener callBack;
     private Context parentContext;
-    private int taskStatus;
+    private ServerResponse taskStatus;
 
+
+    // TODO (STABLE VERSION): INCLUDE POIS ONLY WITHIN GIVEN COORDINATES
     public OverpassSearchRequest(Context parentContext) {
         this.parentContext = parentContext;
         this.callBack = (OnOverpassListener) parentContext;
-        this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
+        this.taskStatus = ServerResponse.SUCCESS ;
     }
 
     public interface OnOverpassListener {
-        void onOverpassResponse(ArrayList<Place> places, int taskStatus);
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-
-    @Override
-    protected String doInBackground(String... params) {
-        String jsonResponse = null;
-        try {
-            jsonResponse = HttpRequest.makeGetRequest(Constants.URL_OVERPASS_SERVER, buildSearchQuery(params[0]));
-        } catch (SocketTimeoutException e) {
-            e.printStackTrace();
-            taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
-        }
-        return jsonResponse;
-    }
-
-    @Override
-    protected void onPostExecute(String jsonResponse) {
-        super.onPostExecute(jsonResponse);
-        ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
-        if(places.isEmpty()){
-            taskStatus = Constants.SERVER_RESPONSE_NO_CONTENT;
-            callBack.onOverpassResponse(places,taskStatus);
-        }else{
-            callBack.onOverpassResponse(places,taskStatus);
-        }
+        void onOverpassResponse(final ArrayList<Place> places, ServerResponse taskStatus);
     }
 
     private String buildSearchQuery(String userQuery){
@@ -71,4 +50,39 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
         return String.format(Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,
                 userQuery,userQuery,userQuery,userQuery);
     }
+
+    @Override
+    protected String doInBackground(String... params) {
+        String jsonResponse = null;
+        try {
+            jsonResponse = HttpRequest.makeGetRequest(Constants.URL_OVERPASS_SERVER, buildSearchQuery(params[0]));
+        } catch (SocketTimeoutException e) {
+            taskStatus = ServerResponse.TIMEOUT;
+            Log.e(TAG, "Request response took too long.", e);
+        }
+        return jsonResponse;
+    }
+
+    @Override
+    protected void onPostExecute(String jsonResponse) {
+        super.onPostExecute(jsonResponse);
+
+      if(taskStatus.equals(ServerResponse.TIMEOUT)){
+            taskStatus = ServerResponse.TIMEOUT;
+            callBack.onOverpassResponse(null,taskStatus);
+        }else if(taskStatus.equals(ServerResponse.SUCCESS)){
+          try{
+              ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
+              callBack.onOverpassResponse(places,taskStatus);
+          }catch (EmptyResponseException e){
+              Log.e(TAG,"", e);
+              taskStatus = ServerResponse.EMPTY_BODY;
+              callBack.onOverpassResponse(null,taskStatus);
+          }
+
+      }
+    }
+
+
+
 }

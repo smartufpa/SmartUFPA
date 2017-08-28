@@ -54,7 +54,7 @@ public class LoginDAO extends SQLiteOpenHelper {
 
     public void addUser(String username, String password,String profile, Context context){
         if(username.isEmpty()){
-            // TODO: 1. Transferir essa checagem para o formulário
+            // TODO (POSTPONED): 1. Transferir essa checagem para o formulário
             Toast.makeText(context, "Campo de usuário em branco, tente novamente.", Toast.LENGTH_LONG).show();
         }else{
             // Recupera o banco para poder inserir a o conteúdo
@@ -74,7 +74,7 @@ public class LoginDAO extends SQLiteOpenHelper {
             values.put(PROFILE_COLUMN,profile);
             long insert = db.insert(DB_NAME, null, values);
 
-            // TODO: 2. Tratar resultados vindo do SQL
+            // TODO POSTPONED): 2. Tratar resultados vindo do SQL
             if(insert != -1){
                 Toast.makeText(context, "Usuário Criado com Sucesso!", Toast.LENGTH_SHORT).show();
             }else{

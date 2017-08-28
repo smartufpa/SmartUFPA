@@ -31,8 +31,8 @@ public class InputParser {
         else if(inputEditText.getText().length() > maxLength)   throw new ExtenseInputException();
 
         else if(inputEditText.getText().length() < minLength)   throw new ShortInputException();
-
-        else if (!inputEditText.getText().toString().matches("[a-zA-Z0-9\\s]+")) throw new InvalidCharacterException(); //TODO aceitar acentos
+        //TODO (POSTPONED): ACCEPT ACCENT MARKS
+        else if (!inputEditText.getText().toString().matches("[a-zA-Z0-9\\s]+")) throw new InvalidCharacterException();
 
         return true;
     }

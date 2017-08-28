@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.kaeuc.smartufpa.models.Place;
-import com.example.kaeuc.smartufpa.server.HttpRequest;
+import com.example.kaeuc.smartufpa.utils.HttpRequest;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.google.gson.Gson;
 
@@ -56,7 +56,7 @@ public class PlaceDAO {
         return false;
     }
 
-    //TODO
+    // TODO (POSTPONED): IMPLEMENT METHOD
     public String getPlaceByName(String placeName) {
 
 

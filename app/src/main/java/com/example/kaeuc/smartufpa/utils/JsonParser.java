@@ -1,5 +1,8 @@
 package com.example.kaeuc.smartufpa.utils;
 
+import android.util.Log;
+
+import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.overpass.Element;
 import com.example.kaeuc.smartufpa.models.overpass.OverpassJsonModel;
 import com.example.kaeuc.smartufpa.models.Place;
@@ -23,11 +26,15 @@ public class JsonParser {
         return null;
     }
 
-    public static ArrayList<Place> parseOverpassResponse(String jsonInput){
+    public static ArrayList<Place> parseOverpassResponse(String jsonInput) throws EmptyResponseException{
         Gson gson = new Gson();
         OverpassJsonModel overpassJsonModel = gson.fromJson(jsonInput, OverpassJsonModel.class);
         PlaceFactory factory = PlaceFactory.getInstance();
         ArrayList<Place> places = new ArrayList<>();
+
+        if(overpassJsonModel.getElements().isEmpty()){
+            throw new EmptyResponseException("Empty response for the current query.");
+        }
         for (Element element :
                 overpassJsonModel.getElements()) {
             try {
@@ -43,4 +50,10 @@ public class JsonParser {
         }
         return places;
     }
+
+    public static class EmptyResponseException extends RuntimeException{
+        private EmptyResponseException(String message) { super(message); }
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.server;
+package com.example.kaeuc.smartufpa.utils;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -14,7 +14,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -31,7 +33,7 @@ public class HttpRequest {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         OutputStream os = null;
-        String response = "Resposta em branco";
+        String response = "empty_response";
         /*Server URL*/
         URL finalUrl;
         try{
@@ -90,7 +92,11 @@ public class HttpRequest {
 
             return response;
         }catch (IOException e){
-            e.printStackTrace();
+            if (e instanceof SocketTimeoutException){
+                throw new SocketTimeoutException();
+            }else{
+                e.printStackTrace();
+            }
         }finally {
             if(connection != null){
                 connection.disconnect();
@@ -161,8 +167,13 @@ public class HttpRequest {
             response = buffer.toString();
 
             return response;
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (IOException e){
+            if (e instanceof SocketTimeoutException){
+                throw new SocketTimeoutException();
+            }else{
+                e.printStackTrace();
+            }
         } finally {
             if(connection != null){
                 connection.disconnect();

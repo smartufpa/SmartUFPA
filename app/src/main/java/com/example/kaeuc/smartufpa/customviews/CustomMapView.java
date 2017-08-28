@@ -3,7 +3,7 @@ package com.example.kaeuc.smartufpa.customviews;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
+import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;

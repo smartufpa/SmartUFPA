@@ -24,24 +24,14 @@ public final class Constants {
     public static final String TAG_FOOD_COURT = "food_court";
 
 
-    public enum MarkerTypes {
-        DEFAULT, RESTAURANT, RESTROOM, AUDITORIUM, LIBRARY, XEROX
-    }
 
-    public enum MarkerStatuses {
-        CLICKED, NOT_CLICKED
-    }
 
-    // Usados no controle de camadas plotadas no mapa
-    public enum OverlayTags {
-        ROUTE, SEARCH, BUS_ROUTE, MY_LOCATION, BUS_LOCATION, NEW_LOCATION,
-        FILTER_XEROX, FILTER_RESTAURANT, FILTER_RESTROOM, FILTER_AUDITORIUMS, FILTER_LIBRARIES
 
-    }
 
-    public enum OverpassFilters  {
-        XEROX, RESTAURANT, RESTROOM, AUDITORIUMS, BUS_ROUTE, LIBRARIES
-    }
+
+
+
+
 
     //URLS
     public static final String URL_LOCAL_HOST = "http://177.194.168.159:80/";
@@ -99,14 +89,8 @@ public final class Constants {
     public static final String NO_SHORT_NAME = "Sem abreviação";
     public static final String NO_DESCRIPTION = "Sem descrição";
     
-
-
-    // Constantes de Erro
-    public static final int SERVER_RESPONSE_TIMEOUT = 408;
-    public static final int SERVER_RESPONSE_NO_CONTENT = 204;
-    public static final int SERVER_RESPONSE_SUCCESS = 200;
-    public static final int SERVER_INTERNAL_ERROR = 500;
-    public static final int SERVER_FORBIDDEN = 403;
+    public static final int TUTORIAL_EXECUTED = 1;
+    public static final int TUTORIAL_NOT_EXECUTED = 0;
 
 
     public static final int TUTORIAL_BTN_LEFT = 1;

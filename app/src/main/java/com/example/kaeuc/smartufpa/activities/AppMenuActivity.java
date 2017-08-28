@@ -1,26 +1,20 @@
 package com.example.kaeuc.smartufpa.activities;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.LocationManager;
-import android.os.Build;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.R;
-import com.example.kaeuc.smartufpa.server.MapDownloadFragment;
-import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 
-public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFragment.OnMapDownloadFragmentListener{
+public class AppMenuActivity extends AppCompatActivity{
+//        implements MapDownloadFragment.OnMapDownloadFragmentListener{
     public static final String ACTION_APP_MENU = "smartufpa.ACTION_APP_MENU";
     public static final String CATEGORY_APP_MENU = "smartufpa.CATEGORY_APP_MENU";
     public static final String TAG = "AppMenu";
@@ -89,27 +83,27 @@ public class AppMenuActivity extends AppCompatActivity  implements MapDownloadFr
         Log.i(TAG,"onDestroy()");
     }
 
-    private void downloadMap(){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager()
-                .findFragmentByTag(MapDownloadFragment.FRAGMENT_TAG);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        final MapDownloadFragment mapDownloadFragment = MapDownloadFragment.newInstance();
-        mapDownloadFragment.show(ft,MapDownloadFragment.FRAGMENT_TAG);
-    }
-
-    @Override
-    public void onDownloadFinished(int taskStatus) {
-        if (taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt(getString(R.string.map_download_executed),MAP_DOWNLOAD_EXECUTED);
-            editor.commit();
-            // INICIAR A MAIN ACTIVITY
-        }else if(taskStatus == Constants.SERVER_FORBIDDEN){
-            Toast.makeText(this, "Permissão para download negada.", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void downloadMap(){
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        Fragment prev = getSupportFragmentManager()
+//                .findFragmentByTag(MapDownloadFragment.FRAGMENT_TAG);
+//        if (prev != null) {
+//            ft.remove(prev);
+//        }
+//        final MapDownloadFragment mapDownloadFragment = MapDownloadFragment.newInstance();
+//        mapDownloadFragment.show(ft,MapDownloadFragment.FRAGMENT_TAG);
+//    }
+//
+//    @Override
+//    public void onDownloadFinished(ServerResponse taskStatus) {
+//        if (taskStatus.equals(ServerResponse.SUCCESS)){
+//            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedPref.edit();
+//            editor.putInt(getString(R.string.map_download_executed),MAP_DOWNLOAD_EXECUTED);
+//            editor.commit();
+//            // INICIAR A MAIN ACTIVITY
+//        }else if(taskStatus.equals(ServerResponse.SERVER_FORBIDDEN)){
+//            Toast.makeText(this, "Permissão para download negada.", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 }

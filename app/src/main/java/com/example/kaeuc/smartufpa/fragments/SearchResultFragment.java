@@ -88,7 +88,7 @@ public class SearchResultFragment extends Fragment {
                 PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace,mapFragment.getUserLocation());
                 // Start Transaction
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                // TODO: CREATE A TRANSITION
+                // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.replace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
                 ft.addToBackStack(SearchResultFragment.FRAGMENT_TAG);

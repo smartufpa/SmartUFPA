@@ -30,30 +30,34 @@ import com.example.kaeuc.smartufpa.fragments.MapFragment;
 import com.example.kaeuc.smartufpa.fragments.PlaceDetailsFragment;
 import com.example.kaeuc.smartufpa.fragments.SearchResultFragment;
 import com.example.kaeuc.smartufpa.models.Place;
-import com.example.kaeuc.smartufpa.server.OsmDataRequest;
+import com.example.kaeuc.smartufpa.server.FilterSearchRequest;
 import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
 import com.example.kaeuc.smartufpa.utils.Constants;
-import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
-import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
-import com.example.kaeuc.smartufpa.utils.Constants.OverpassFilters;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
+import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
+import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
+import com.example.kaeuc.smartufpa.utils.enums.OverpassFilters;
+import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ShowcaseHolder;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ToolbarActionItemTarget;
 import com.example.kaeuc.smartufpa.utils.showcaseutils.ViewTargets;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.util.ArrayList;
-import java.util.List;
+
+
+
 
 public class MainActivity extends AppCompatActivity
-        implements OsmDataRequest.OnOsmDataListener,OverpassSearchRequest.OnOverpassListener {
+        implements FilterSearchRequest.OnFilterSearchListener,OverpassSearchRequest.OnOverpassListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
     public static final String CATEGORY_MAIN = "smartufpa.CATEGORY_MAIN";
-    private final int TUTORIAL_EXECUTED = 1;
-    private final int TUTORIAL_NOT_EXECUTED = 0;
+
 
     // VIEWS
     private Toolbar mapToolbar;
@@ -75,11 +79,11 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG,"onCreate()");
 
         // Encontra as views
-        layoutDrawer = (DrawerLayout) findViewById(R.id.layout_drawer);
-        mapToolbar = (Toolbar) findViewById(R.id.tb_main);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        bottomSheetContainer = (FrameLayout) findViewById(R.id.bottom_sheet_container);
+        layoutDrawer =  findViewById(R.id.layout_drawer);
+        mapToolbar =  findViewById(R.id.tb_main);
+        navigationView =  findViewById(R.id.nav_view);
+        progressBar =  findViewById(R.id.progress_bar);
+        bottomSheetContainer = findViewById(R.id.bottom_sheet_container);
 
         setupToolbar();
         setupDrawer();
@@ -142,7 +146,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView.OnNavigationItemSelectedListener navigationItemListener = new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // TODO: CHECK IF DATA IS IN MEMORY; IF IT'S NOT CHECK INTERNET TO DOWNLOAD
+                // TODO (OFFLINE FUNCTIONS): CHECK IF DATA IS IN MEMORY; IF IT'S NOT CHECK INTERNET TO DOWNLOAD
                 final int id = item.getItemId();
                 if(SystemServicesManager.isNetworkEnabled(getApplicationContext())) {
                     // Guarda a ID do botão clicado
@@ -153,21 +157,21 @@ public class MainActivity extends AppCompatActivity
                             filter = OverpassFilters.XEROX;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) { // Caso a camada de filtro não esteja ativa, executar a busca
                                 progressBar.setVisibility(View.VISIBLE);
-                                new OsmDataRequest(context).execute(filter);
+                                new FilterSearchRequest(context).execute(filter);
                             }
                             break;
                         case R.id.nav_restaurant:
                             filter = OverpassFilters.RESTAURANT;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTAURANT)) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                new OsmDataRequest(context).execute(filter);
+                                new FilterSearchRequest(context).execute(filter);
                             }
                             break;
                         case R.id.nav_restroom:
                             filter = OverpassFilters.RESTROOM;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM)) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                new OsmDataRequest(context).execute(filter);
+                                new FilterSearchRequest(context).execute(filter);
                             }
                             break;
                         case R.id.nav_bus_route:
@@ -179,14 +183,14 @@ public class MainActivity extends AppCompatActivity
                             filter = OverpassFilters.AUDITORIUMS;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS)) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                new OsmDataRequest(context).execute(filter);
+                                new FilterSearchRequest(context).execute(filter);
                             }
                             break;
                         case R.id.nav_library:
                             filter = OverpassFilters.LIBRARIES;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES)) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                new OsmDataRequest(context).execute(filter);
+                                new FilterSearchRequest(context).execute(filter);
                             }
                             break;
                         case R.id.nav_about:
@@ -253,6 +257,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.i(TAG, "onCreateOptionsMenu: ");
+
+        // TODO (STABLE VERSION): SEARCH BAR BEHAVIOR
+        // TODO (VISUAL ADJUSTMENTS): ROUNDED CORNERS FOR THE TOOLBAR
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -264,8 +271,8 @@ public class MainActivity extends AppCompatActivity
 
         //Restaura as preferencias gravadas para executar ou não o tutorial
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        final int tutorialStatus = sharedPref.getInt(getString(R.string.tutorial_map_executed), TUTORIAL_NOT_EXECUTED);
-        if(tutorialStatus == TUTORIAL_NOT_EXECUTED)
+        final int tutorialStatus = sharedPref.getInt(getString(R.string.tutorial_map_executed), Constants.TUTORIAL_NOT_EXECUTED);
+        if(tutorialStatus == Constants.TUTORIAL_NOT_EXECUTED)
             runMapTutorial();
 
 
@@ -305,28 +312,28 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOsmDataResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, int taskStatus) {
-        if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
+    public void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, ServerResponse taskStatus) {
+        if(taskStatus == ServerResponse.SUCCESS){
             mapFragment.addLayerToMap(places,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
-        }else if(taskStatus == Constants.SERVER_RESPONSE_TIMEOUT){
+        }else if(taskStatus == ServerResponse.TIMEOUT){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
         }
         progressBar.setVisibility(View.GONE);
     }
 
     @Override
-    public void onOverpassResponse(ArrayList<Place> places, int taskStatus) {
+    public void onOverpassResponse(final ArrayList<Place> PLACES, final ServerResponse TASK_STATUS) {
         progressBar.setVisibility(View.GONE);
-        if(taskStatus == Constants.SERVER_RESPONSE_SUCCESS){
+        if(TASK_STATUS == ServerResponse.SUCCESS){
 
             MenuItemCompat.collapseActionView(searchItem);
-            if(places.size() > 1){
+            if(PLACES.size() > 1){
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 // Open SearchResultFragment
-                SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
-                mapFragment.addLayerToMap(places,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
-                // TODO: CREATE A TRANSITION
+                SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(PLACES);
+                mapFragment.addLayerToMap(PLACES,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
+                // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG)
@@ -335,9 +342,9 @@ public class MainActivity extends AppCompatActivity
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 // Open PlaceDetailsFragment
                 final MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                final Place place = places.get(0);
+                final Place place = PLACES.get(0);
                 PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place,mapFragment.getUserLocation());
-                // TODO: CREATE A TRANSITION
+                // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
@@ -345,11 +352,18 @@ public class MainActivity extends AppCompatActivity
                 mapFragment.getMapView().getController().setZoom(18);
                 mapFragment.getMapView().getController().animateTo(place.getGeoPoint());
                 mapFragment.getMapView().getController().setCenter(place.getGeoPoint());
-                mapFragment.addLayerToMap(places, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
+                mapFragment.addLayerToMap(PLACES, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
             }
 
-        }else{
-            Toast.makeText(this, "PLACES IS EMPTY", Toast.LENGTH_SHORT).show();
+        }else if(TASK_STATUS.equals(ServerResponse.EMPTY_BODY)){
+
+            new MaterialDialog.Builder(this)
+                    .title(getString(R.string.dialog_title))
+                    .content(R.string.msg_no_results_found)
+                    .positiveText("OK")
+                    .show();
+        }else if(TASK_STATUS.equals(ServerResponse.TIMEOUT)){
+            Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_LONG).show();
         }
 
     }
@@ -382,7 +396,7 @@ public class MainActivity extends AppCompatActivity
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(getString(R.string.tutorial_map_executed),TUTORIAL_EXECUTED);
+        editor.putInt(getString(R.string.tutorial_map_executed),Constants.TUTORIAL_EXECUTED);
         final boolean commit = editor.commit();
         Log.i(TAG + ".tutorial()", String.valueOf(commit));
 

@@ -36,7 +36,7 @@
     <string name="error_fragment_create_other">Adicione um tipo novo.</string>
     <string name="error_fragment_invalid_character">A entrada deve conter apenas letras e números.</string>
 
-    <string name="msg_no_results">Sua busca não retornou nenhum resultado válido.</string>
+
     <string name="msg_click_marker">Clique no marcador para rotas.</string>
     <string name="msg_bus_last_known_location">Última localização conhecida. Pode não estar atualizada.</string>
     <string name="msg_bus_updated_location">Localização atualizada.</string>
@@ -45,6 +45,7 @@
     <string name="msg_drag_marker">Segure o marcador para arrastá-lo ao local desejado.</string>
     <string name="msg_turn_on_gps">Por favor, ligar o GPS novamente.</string>
     <string name="msg_check_internet_connection">Por favor, cheque sua conexão com a internet.</string>
+    <string name="msg_no_results_found">Sua busca não retornou nenhum resultado. Cheque a ortografia e tente de novo.</string>
 
 
     <string name="nav_auditorium">Auditórios</string>
@@ -108,6 +109,9 @@
     <string name="about_lbl_more">Mais informações:</string>
     <string name="about_txt_site">http://www.smartufpa.ufpa.br</string>
 
+
+
+    <string name="dialog_title">Ops…</string>
 
 
 </resources>

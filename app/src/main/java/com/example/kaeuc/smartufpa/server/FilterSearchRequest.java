@@ -2,47 +2,55 @@ package com.example.kaeuc.smartufpa.server;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
-import com.example.kaeuc.smartufpa.utils.Constants;
-import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
-import com.example.kaeuc.smartufpa.utils.Constants.OverlayTags;
-import com.example.kaeuc.smartufpa.utils.Constants.OverpassFilters;
-import com.example.kaeuc.smartufpa.utils.JsonParser;
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
+import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
+import com.example.kaeuc.smartufpa.utils.enums.OverpassFilters;
+import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
+import com.example.kaeuc.smartufpa.utils.HttpRequest;
+import com.example.kaeuc.smartufpa.utils.JsonParser;
 
 import java.net.SocketTimeoutException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Locale;
+
+
 
 /**
  * Created by kaeuc on 10/22/2016.
- * Classe responsável por executar busca de Pontos de Interesse Específicos baseado na busca do usuário
+ * Classe responsável por executar busca de Pontos de Interesse Específicos baseado em filtros
  * utilizando a Overpass query language de maneira assíncrona
  * Referência: http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL
- * Recebe um {@link OverpassFilters} contendo qual informação/searchFilter deseja ser buscado e retorna uma lista com os locais encontrados
+ * Recebe um {@link OverpassFilters} contendo qual searchFilter deseja ser buscado e retorna uma lista com os locais encontrados
  */
 
-public class OsmDataRequest extends AsyncTask<OverpassFilters,Void,String> {
+public class FilterSearchRequest extends AsyncTask<OverpassFilters,Void,String> {
 
-    private static final String TAG = OsmDataRequest.class.getSimpleName() ;
+    private static final String TAG = FilterSearchRequest.class.getSimpleName() ;
     // interface resposável por devolver o resultado da task pra atividade principal
-    private OnOsmDataListener callBack;
+    private OnFilterSearchListener callBack;
 
     private OverpassFilters searchFilter;
-    private int taskStatus;
+    private ServerResponse taskStatus;
     private Context parentContext;
 
     private OverlayTags overlayTag;
     private MarkerTypes markersType;
 
-    public OsmDataRequest(Context parentContext) {
+    public FilterSearchRequest(Context parentContext) {
         this.parentContext = parentContext;
-        this.callBack = (OnOsmDataListener) parentContext;
-        this.taskStatus = Constants.SERVER_RESPONSE_SUCCESS;
+        this.callBack = (OnFilterSearchListener) parentContext;
+        this.taskStatus = ServerResponse.SUCCESS;
     }
 
-    public interface OnOsmDataListener {
-        void onOsmDataResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, int taskStatus);
+    public interface OnFilterSearchListener {
+        void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, ServerResponse taskStatus);
     }
 
 
@@ -84,10 +92,11 @@ public class OsmDataRequest extends AsyncTask<OverpassFilters,Void,String> {
         }
 
         try {
+
             jsonResponse = HttpRequest.makeGetRequest(Constants.URL_OVERPASS_SERVER,query);
         } catch (SocketTimeoutException e) {
-            e.printStackTrace();
-            taskStatus = Constants.SERVER_RESPONSE_TIMEOUT;
+            taskStatus = ServerResponse.TIMEOUT;
+            Log.e(TAG, "Request response took too long.", e);
         }
 
         return jsonResponse;
@@ -96,12 +105,18 @@ public class OsmDataRequest extends AsyncTask<OverpassFilters,Void,String> {
     // executa após a operação ser finalizada
     @Override
     protected void onPostExecute(String jsonResponse) {
-        // TODO TREAT TIMEOUT
+
         super.onPostExecute(jsonResponse);
-        //Recebe a resposta em json e processa os lugares em uma lista
-        final ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
-        // Retorna os valores para a activity que chamou a ASyncTask
-        callBack.onOsmDataResponse(places, markersType, overlayTag, taskStatus);
+        if(taskStatus.equals(ServerResponse.TIMEOUT)){
+            callBack.onFilterSearchResponse(null, null, null, taskStatus);
+
+        }else if(taskStatus.equals(ServerResponse.SUCCESS)){
+            //Recebe a resposta em json e processa os lugares em uma lista
+            final ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
+            // Retorna os valores para a activity que chamou a ASyncTask
+            callBack.onFilterSearchResponse(places, markersType, overlayTag, taskStatus);
+        }
+
 
     }
 

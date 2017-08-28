@@ -18,6 +18,7 @@ import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
+import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
 
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
@@ -51,7 +52,7 @@ public class PlaceDetailsFragment extends Fragment {
 
     private ArrayList<Integer> routeLinecolors = new ArrayList<>(3);
     private static int ROUTES_COUNTER = 0;
-    // TODO: CARREGAR IMAGEM
+    // TODO (POSTPONED): LOAD IMAGE OF PLACE AND IMPLEMENT RATING FUNCTIONS
 
     private Place currentPlace;
 
@@ -161,7 +162,7 @@ public class PlaceDetailsFragment extends Fragment {
                 roadOverlay.setWidth(10);
                 roadOverlay.setColor(routeLinecolors.get(ROUTES_COUNTER));
 
-                mapFragment.getMapView().addTileOverlay(roadOverlay, Constants.OverlayTags.ROUTE);
+                mapFragment.getMapView().addTileOverlay(roadOverlay, OverlayTags.ROUTE);
                 mapFragment.getMapView().postInvalidate();
 
                 ROUTES_COUNTER++;

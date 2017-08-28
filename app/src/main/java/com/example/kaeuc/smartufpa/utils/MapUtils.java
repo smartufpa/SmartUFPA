@@ -15,14 +15,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
+import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
+import com.example.kaeuc.smartufpa.utils.enums.MarkerStatuses;
+
 /**
  * Created by kaeuc on 09/08/2017.
  */
 
-import com.example.kaeuc.smartufpa.utils.Constants.MarkerTypes;
-import com.example.kaeuc.smartufpa.utils.Constants.MarkerStatuses;
 
-// TODO: MAKE THIS CLASS A SINGLETON
+// TODO (STABLE VERSION): MAKE THIS CLASS A SINGLETON
 public class MapUtils {
     
     private Context parentContext;
@@ -36,7 +37,7 @@ public class MapUtils {
         final HashMap<MarkerStatuses, Drawable> markerIcons = new HashMap<>(2);
 
 
-        // TODO: CHANGE ICONS FOR CLICKED
+        // TODO (VISUAL ADJUSTMENTS): CHANGE ICONS FOR CLICKED
         if (markerType.equals(MarkerTypes.XEROX)) {
 
             markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
@@ -122,7 +123,7 @@ public class MapUtils {
 
 
     private class NullMarkerDrawableException extends RuntimeException{
-        public NullMarkerDrawableException(String message) { super(message); }
+        private NullMarkerDrawableException(String message) { super(message); }
     }
 
 

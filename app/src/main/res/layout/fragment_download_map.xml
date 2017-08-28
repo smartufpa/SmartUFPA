@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin"
-    tools:context="com.example.kaeuc.smartufpa.server.MapDownloadFragment">
+    tools:context="com.example.kaeuc.smartufpa.fragments.MapDownloadFragment">
 
     <TextView
         android:layout_width="match_parent"
