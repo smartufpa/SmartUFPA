@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.kaeuc.smartufpa.utils.showcaseutils;
+package com.example.kaeuc.smartufpa.utils.apptutorial;
 
 import android.graphics.Point;
 import android.support.annotation.IdRes;

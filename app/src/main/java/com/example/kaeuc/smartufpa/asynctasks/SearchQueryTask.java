@@ -1,10 +1,11 @@
-package com.example.kaeuc.smartufpa.server;
+package com.example.kaeuc.smartufpa.asynctasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 
+import com.example.kaeuc.smartufpa.interfaces.OnSearchQueryListener;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.HttpRequest;
@@ -13,36 +14,32 @@ import com.example.kaeuc.smartufpa.utils.JsonParser.EmptyResponseException;
 import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
 
 import java.net.SocketTimeoutException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * Created by kaeuc on 02/03/2017.
  */
 
-public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
-    public final String TAG = OverpassSearchRequest.class.getSimpleName();
-    private OnOverpassListener callBack;
+public class SearchQueryTask extends AsyncTask<String,Void,String> {
+
+    public final String TAG = SearchQueryTask.class.getSimpleName();
+
+    private OnSearchQueryListener callBack;
     private Context parentContext;
+
     private ServerResponse taskStatus;
 
 
-    // TODO (STABLE VERSION): INCLUDE POIS ONLY WITHIN GIVEN COORDINATES
-    public OverpassSearchRequest(Context parentContext) {
+    // TODO (STABLE VERSION): INCLUDE POIs ONLY WITHIN GIVEN COORDINATES
+    public SearchQueryTask(Context parentContext) {
         this.parentContext = parentContext;
-        this.callBack = (OnOverpassListener) parentContext;
+        this.callBack = (OnSearchQueryListener) parentContext;
         this.taskStatus = ServerResponse.SUCCESS ;
     }
 
-    public interface OnOverpassListener {
-        void onOverpassResponse(final ArrayList<Place> places, ServerResponse taskStatus);
-    }
 
     private String buildSearchQuery(String userQuery){
-        // Tratamento da query para eliminar espaços extras e espaço no final da string
+        // Cleans all the white spaces on the query
         userQuery = userQuery.replaceAll("\\s+", " ");
         if (Character.isWhitespace(userQuery.charAt(userQuery.length()-1))){
             userQuery = userQuery.substring(0,userQuery.length()-1);
@@ -69,15 +66,15 @@ public class OverpassSearchRequest extends AsyncTask<String,Void,String> {
 
       if(taskStatus.equals(ServerResponse.TIMEOUT)){
             taskStatus = ServerResponse.TIMEOUT;
-            callBack.onOverpassResponse(null,taskStatus);
+            callBack.onSearchQueryResponse(null,taskStatus);
         }else if(taskStatus.equals(ServerResponse.SUCCESS)){
           try{
               ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
-              callBack.onOverpassResponse(places,taskStatus);
+              callBack.onSearchQueryResponse(places,taskStatus);
           }catch (EmptyResponseException e){
               Log.e(TAG,"", e);
               taskStatus = ServerResponse.EMPTY_BODY;
-              callBack.onOverpassResponse(null,taskStatus);
+              callBack.onSearchQueryResponse(null,taskStatus);
           }
 
       }

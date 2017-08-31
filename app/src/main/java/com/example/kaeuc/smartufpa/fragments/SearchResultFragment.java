@@ -5,17 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.R;
-import com.example.kaeuc.smartufpa.activities.MainActivity;
 import com.example.kaeuc.smartufpa.adapters.SearchResultAdapter;
 import com.example.kaeuc.smartufpa.models.Place;
 
@@ -29,14 +25,16 @@ import java.util.ArrayList;
  */
 public class SearchResultFragment extends Fragment {
 
-
+    // TAG TO IDENTIFY THE FRAGMENT ON FINDFRAGMENTBYTAG CALLS
     public final static String FRAGMENT_TAG = SearchResultFragment.class.getName();
+
+    // TAG FOR LOGGING PURPOSES
     private final static String TAG = SearchResultFragment.class.getSimpleName();
 
+    // KEY TO IDENTIFY THE ARGUMENT CONTAINING A LIST OF PLACES
     private static final String ARG_PLACES = "PLACES_LIST";
 
     private ArrayList<Place> places;
-
     private RecyclerView rvSearchResult;
 
     public SearchResultFragment() {
@@ -73,26 +71,28 @@ public class SearchResultFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search_result, container, false);
 
         // Find RecyclerView
-        rvSearchResult = (RecyclerView) view.findViewById(R.id.list_search_result);
+        rvSearchResult = view.findViewById(R.id.list_search_result);
 
         // Create the adapter to the RecyclerView
         SearchResultAdapter searchResultAdapter = new SearchResultAdapter(places, getContext());
         searchResultAdapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                final Place currentPlace = places.get(position);
-                // On click, create a PlaceDetailFragment
+            public void onItemClick(View view, int position) { // On click, create a PlaceDetailFragment
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                // Instantiate the fragment with the current place and user's location
+
+                final Place currentPlace = places.get(position);
                 final MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace,mapFragment.getUserLocation());
+                final Place userLocation = mapFragment.getUserLocation();
+
+                // Instantiate the fragment with the current place and user's location
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace,userLocation);
                 // Start Transaction
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.replace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
-                ft.addToBackStack(SearchResultFragment.FRAGMENT_TAG);
-                ft.commit();
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG)
+                    .addToBackStack(SearchResultFragment.FRAGMENT_TAG)
+                    .commit();
             }
         });
 
@@ -103,8 +103,6 @@ public class SearchResultFragment extends Fragment {
         LinearLayoutManager llm =
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rvSearchResult.setLayoutManager(llm);
-
-
 
         return view;
     }

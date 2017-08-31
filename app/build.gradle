@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '25.0.2'
     defaultConfig {
-        applicationId "com.example.kaeuc.osmapp"
+        applicationId "com.example.kaeuc.smartufpa"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1

@@ -42,7 +42,7 @@ public class PlaceDetailsFragment extends Fragment {
     private static final String ARG_CURRENT_PLACE = "current_place";
     private static final String ARG_USER_LOCATION = "user_location";
     private static final String TAG = PlaceDetailsFragment.class.getSimpleName();
-    private static final int MAX_ROUTES = 3;
+
     // VIEWS
     private TextView txtDetPlaceName;
 
@@ -50,8 +50,7 @@ public class PlaceDetailsFragment extends Fragment {
     private TextView txtDetLocName;
     private Button btnDetFootRoute;
 
-    private ArrayList<Integer> routeLinecolors = new ArrayList<>(3);
-    private static int ROUTES_COUNTER = 0;
+
     // TODO (POSTPONED): LOAD IMAGE OF PLACE AND IMPLEMENT RATING FUNCTIONS
 
     private Place currentPlace;
@@ -88,9 +87,6 @@ public class PlaceDetailsFragment extends Fragment {
             currentPlace = getArguments().getParcelable(ARG_CURRENT_PLACE);
             userLocation = getArguments().getParcelable(ARG_USER_LOCATION);
         }
-        routeLinecolors.add(Color.rgb(100, 100, 255)); // blue
-        routeLinecolors.add(Color.rgb(255, 100, 100)); // red
-        routeLinecolors.add(Color.rgb(62, 153, 62)); // green
 
     }
 
@@ -100,79 +96,32 @@ public class PlaceDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_place_details, container, false);
 
-        txtDetPlaceName = (TextView) view.findViewById(R.id.txt_det_placename);
-        txtDetPlaceDesc = (TextView) view.findViewById(R.id.txt_det_place_desc);
-        txtDetLocName = (TextView) view.findViewById(R.id.txt_det_place_loc_name);
-        btnDetFootRoute = (Button) view.findViewById(R.id.btn_det_foot_route);
+        txtDetPlaceName = view.findViewById(R.id.txt_det_placename);
+        txtDetPlaceDesc = view.findViewById(R.id.txt_det_place_desc);
+        txtDetLocName = view.findViewById(R.id.txt_det_place_loc_name);
+        btnDetFootRoute = view.findViewById(R.id.btn_det_foot_route);
 
         if(currentPlace.getShortName().equals(Constants.NO_SHORT_NAME))
             txtDetPlaceName.setText(currentPlace.getName());
         else
             txtDetPlaceName.setText(currentPlace.getName() + " (" + currentPlace.getShortName()+ ")");
         txtDetPlaceDesc.setText(currentPlace.getDescription());
-        txtDetLocName.setText("Nome local: " + currentPlace.getLocName());
+        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), currentPlace.getLocName()));
 
         btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SystemServicesManager.isNetworkEnabled(getContext()) && userLocation != null)
-                    searchRouteToPlace();
-                else if(userLocation == null)
-                    Toast.makeText(getContext(), getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getContext(), getString(R.string.msg_check_internet_connection), Toast.LENGTH_SHORT).show();
+                if(SystemServicesManager.isNetworkEnabled(getContext())) {
+                    final MapFragment mapFragment = (MapFragment) getActivity().getSupportFragmentManager()
+                            .findFragmentByTag(MapFragment.FRAGMENT_TAG);
+                    mapFragment.showRouteToPlace(currentPlace);
+                }
             }
         });
 
         return view;
     }
 
-
-    private void searchRouteToPlace(){
-
-        if(ROUTES_COUNTER == MAX_ROUTES) {
-            ROUTES_COUNTER = 0;
-            Toast.makeText(getContext(), R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                final MapFragment mapFragment = (MapFragment) fragmentManager
-                        .findFragmentByTag(MapFragment.FRAGMENT_TAG);
-
-                RoadManager roadManager = new GraphHopperRoadManager(BuildConfig.GRAPHHOPPER_KEY,true);
-                roadManager.addRequestOption("vehicle=foot");
-
-                ArrayList<GeoPoint> waypoints = new ArrayList<>();
-                try {
-                    waypoints.add(new GeoPoint(userLocation.getLatitude(), userLocation.getLongitude()));
-                }catch (NullPointerException e){
-                    Log.e(TAG, " Erro ao adquirir posição do usuário: ",e);
-                    return;
-                }
-
-                waypoints.add(new GeoPoint(currentPlace.getLatitude(),currentPlace.getLongitude()));
-
-                Road road = roadManager.getRoad(waypoints);
-
-                Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-                roadOverlay.setWidth(10);
-                roadOverlay.setColor(routeLinecolors.get(ROUTES_COUNTER));
-
-                mapFragment.getMapView().addTileOverlay(roadOverlay, OverlayTags.ROUTE);
-                mapFragment.getMapView().postInvalidate();
-
-                ROUTES_COUNTER++;
-            }
-        }).start();
-    }
-
-    public void updateUserLocation(Place userLocation) {
-        this.userLocation = userLocation;
-    }
 
 
 }

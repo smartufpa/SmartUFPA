@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.utils.showcaseutils;
+package com.example.kaeuc.smartufpa.utils.apptutorial;
 
 import android.support.v7.widget.Toolbar;
 import android.view.View;

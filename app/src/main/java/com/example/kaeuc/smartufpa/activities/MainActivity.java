@@ -11,16 +11,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -29,19 +28,21 @@ import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.fragments.MapFragment;
 import com.example.kaeuc.smartufpa.fragments.PlaceDetailsFragment;
 import com.example.kaeuc.smartufpa.fragments.SearchResultFragment;
+import com.example.kaeuc.smartufpa.interfaces.OnFilterSearchListener;
+import com.example.kaeuc.smartufpa.interfaces.OnSearchQueryListener;
 import com.example.kaeuc.smartufpa.models.Place;
-import com.example.kaeuc.smartufpa.server.FilterSearchRequest;
-import com.example.kaeuc.smartufpa.server.OverpassSearchRequest;
+import com.example.kaeuc.smartufpa.asynctasks.FilterSearchTask;
+import com.example.kaeuc.smartufpa.asynctasks.SearchQueryTask;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
 import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
 import com.example.kaeuc.smartufpa.utils.enums.OverpassFilters;
 import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
-import com.example.kaeuc.smartufpa.utils.showcaseutils.AppTutorial;
-import com.example.kaeuc.smartufpa.utils.showcaseutils.ShowcaseHolder;
-import com.example.kaeuc.smartufpa.utils.showcaseutils.ToolbarActionItemTarget;
-import com.example.kaeuc.smartufpa.utils.showcaseutils.ViewTargets;
+import com.example.kaeuc.smartufpa.utils.apptutorial.AppTutorial;
+import com.example.kaeuc.smartufpa.utils.apptutorial.ShowcaseHolder;
+import com.example.kaeuc.smartufpa.utils.apptutorial.ToolbarActionItemTarget;
+import com.example.kaeuc.smartufpa.utils.apptutorial.ViewTargets;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity
-        implements FilterSearchRequest.OnFilterSearchListener,OverpassSearchRequest.OnOverpassListener {
+        implements OnFilterSearchListener,OnSearchQueryListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
@@ -76,7 +77,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i(TAG,"onCreate()");
 
         // Encontra as views
         layoutDrawer =  findViewById(R.id.layout_drawer);
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction()) && SystemServicesManager.isNetworkEnabled(this)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            new OverpassSearchRequest(this).execute(query);
+            new SearchQueryTask(this).execute(query);
             progressBar.setVisibility(View.VISIBLE);
         }else{
             Toast.makeText(this, getString(R.string.error_on_connection), Toast.LENGTH_LONG).show();
@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume()");
         setupBottomSheetContainer();
     }
 
@@ -157,25 +156,26 @@ public class MainActivity extends AppCompatActivity
                             filter = OverpassFilters.XEROX;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) { // Caso a camada de filtro não esteja ativa, executar a busca
                                 progressBar.setVisibility(View.VISIBLE);
-                                new FilterSearchRequest(context).execute(filter);
+                                new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_restaurant:
                             filter = OverpassFilters.RESTAURANT;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTAURANT)) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                new FilterSearchRequest(context).execute(filter);
+                                new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_restroom:
                             filter = OverpassFilters.RESTROOM;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM)) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                new FilterSearchRequest(context).execute(filter);
+                                new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_bus_route:
                             if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE)) {
+                                progressBar.setVisibility(View.VISIBLE);
                                 mapFragment.enableBusOverlay();
                             }
                             break;
@@ -183,14 +183,14 @@ public class MainActivity extends AppCompatActivity
                             filter = OverpassFilters.AUDITORIUMS;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS)) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                new FilterSearchRequest(context).execute(filter);
+                                new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_library:
                             filter = OverpassFilters.LIBRARIES;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES)) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                new FilterSearchRequest(context).execute(filter);
+                                new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_about:
@@ -224,25 +224,33 @@ public class MainActivity extends AppCompatActivity
     private void setupBottomSheetContainer(){
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        final Button btnClear = findViewById(R.id.btn_clear_map);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState){
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        Fragment searchFrag = getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
-                        if(searchFrag != null){
+                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
+                        if(fragment != null){
+                            btnClear.setVisibility(View.VISIBLE);
                             getSupportFragmentManager().beginTransaction()
-                                    .remove(searchFrag)
+                                    .remove(fragment)
                                     .commit();
                         }else{
-                            searchFrag = getSupportFragmentManager().findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
-                            if(searchFrag != null){
+                            fragment = getSupportFragmentManager().findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
+                            if(fragment != null){
+                                btnClear.setVisibility(View.VISIBLE);
                                 getSupportFragmentManager().beginTransaction()
-                                        .remove(searchFrag)
+                                        .remove(fragment)
                                         .commit();
                             }
                         }
-
+                        break;
+                    case (BottomSheetBehavior.STATE_EXPANDED):
+                        if(btnClear.getVisibility() == View.VISIBLE){
+                            btnClear.setVisibility(View.GONE);
+                        }
+                        break;
                 }
             }
 
@@ -256,15 +264,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "onCreateOptionsMenu: ");
 
         // TODO (STABLE VERSION): SEARCH BAR BEHAVIOR
         // TODO (VISUAL ADJUSTMENTS): ROUNDED CORNERS FOR THE TOOLBAR
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView)
-                MenuItemCompat.getActionView(searchItem);
+        SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconified(false);
@@ -281,7 +287,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        layoutDrawer = (DrawerLayout) findViewById(R.id.layout_drawer);
+        layoutDrawer = findViewById(R.id.layout_drawer);
         if (layoutDrawer.isDrawerOpen(GravityCompat.START))
             layoutDrawer.closeDrawer(GravityCompat.START);
 
@@ -307,14 +313,12 @@ public class MainActivity extends AppCompatActivity
         if(!layoutDrawer.isDrawerOpen(GravityCompat.START) && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN)
             super.onBackPressed();
 
-
-
     }
 
     @Override
     public void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, ServerResponse taskStatus) {
         if(taskStatus == ServerResponse.SUCCESS){
-            mapFragment.addLayerToMap(places,markersType,overlayTag);
+            mapFragment.createLayerToMap(places,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
         }else if(taskStatus == ServerResponse.TIMEOUT){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
@@ -323,36 +327,43 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOverpassResponse(final ArrayList<Place> PLACES, final ServerResponse TASK_STATUS) {
+    public void onSearchQueryResponse(final ArrayList<Place> PLACES, final ServerResponse TASK_STATUS) {
         progressBar.setVisibility(View.GONE);
-        if(TASK_STATUS == ServerResponse.SUCCESS){
 
-            MenuItemCompat.collapseActionView(searchItem);
+        if(TASK_STATUS == ServerResponse.SUCCESS){
+            searchItem.collapseActionView();
+            // The query returned multiple results
             if(PLACES.size() > 1){
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
                 // Open SearchResultFragment
                 SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(PLACES);
-                mapFragment.addLayerToMap(PLACES,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
+                mapFragment.createLayerToMap(PLACES,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.bottom_sheet_container,searchResultFrag,SearchResultFragment.FRAGMENT_TAG)
                         .commit();
+            // The query return a single result
             }else{
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                // Places to pass over PlaceDetailsFragment to present the data
+                final Place CURRENT_PLACE = PLACES.get(0);
+                final Place USER_LOCATION = mapFragment.getUserLocation();
+
                 // Open PlaceDetailsFragment
-                final MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                final Place place = PLACES.get(0);
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place,mapFragment.getUserLocation());
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(CURRENT_PLACE, USER_LOCATION);
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
                         .commit();
-                mapFragment.getMapView().getController().setZoom(18);
-                mapFragment.getMapView().getController().animateTo(place.getGeoPoint());
-                mapFragment.getMapView().getController().setCenter(place.getGeoPoint());
-                mapFragment.addLayerToMap(PLACES, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
+
+                // Uses mapFragment methods to utilize map functions
+                final MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
+                mapFragment.zoomToGeoPoint(CURRENT_PLACE.getGeoPoint(),18);
+                mapFragment.createLayerToMap(PLACES, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
             }
 
         }else if(TASK_STATUS.equals(ServerResponse.EMPTY_BODY)){
@@ -367,6 +378,8 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+
 
     private void runMapTutorial(){
         ArrayList<ShowcaseHolder> holders = new ArrayList<>();
@@ -398,9 +411,9 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(getString(R.string.tutorial_map_executed),Constants.TUTORIAL_EXECUTED);
         final boolean commit = editor.commit();
-        Log.i(TAG + ".tutorial()", String.valueOf(commit));
 
     }
+
 
 
 }

@@ -1,9 +1,10 @@
-package com.example.kaeuc.smartufpa.server;
+package com.example.kaeuc.smartufpa.asynctasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.kaeuc.smartufpa.interfaces.OnFilterSearchListener;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
@@ -14,12 +15,7 @@ import com.example.kaeuc.smartufpa.utils.HttpRequest;
 import com.example.kaeuc.smartufpa.utils.JsonParser;
 
 import java.net.SocketTimeoutException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
-
 
 
 /**
@@ -30,29 +26,23 @@ import java.util.Locale;
  * Recebe um {@link OverpassFilters} contendo qual searchFilter deseja ser buscado e retorna uma lista com os locais encontrados
  */
 
-public class FilterSearchRequest extends AsyncTask<OverpassFilters,Void,String> {
+public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
 
-    private static final String TAG = FilterSearchRequest.class.getSimpleName() ;
+    private static final String TAG = FilterSearchTask.class.getSimpleName() ;
     // interface resposável por devolver o resultado da task pra atividade principal
     private OnFilterSearchListener callBack;
+    private Context parentContext;
 
     private OverpassFilters searchFilter;
     private ServerResponse taskStatus;
-    private Context parentContext;
-
     private OverlayTags overlayTag;
     private MarkerTypes markersType;
 
-    public FilterSearchRequest(Context parentContext) {
+    public FilterSearchTask(Context parentContext) {
         this.parentContext = parentContext;
         this.callBack = (OnFilterSearchListener) parentContext;
         this.taskStatus = ServerResponse.SUCCESS;
     }
-
-    public interface OnFilterSearchListener {
-        void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, ServerResponse taskStatus);
-    }
-
 
     @Override
     protected String doInBackground(OverpassFilters... params) {

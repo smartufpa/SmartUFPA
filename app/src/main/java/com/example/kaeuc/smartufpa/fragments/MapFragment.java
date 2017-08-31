@@ -22,23 +22,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
+import com.example.kaeuc.smartufpa.MapBundle;
 import com.example.kaeuc.smartufpa.R;
+import com.example.kaeuc.smartufpa.activities.MainActivity;
+import com.example.kaeuc.smartufpa.asynctasks.BusRouteTask;
+import com.example.kaeuc.smartufpa.asynctasks.FilterSearchTask;
+import com.example.kaeuc.smartufpa.asynctasks.SearchRouteTask;
 import com.example.kaeuc.smartufpa.customviews.CustomMapView;
+import com.example.kaeuc.smartufpa.interfaces.OnBusRouteListener;
+import com.example.kaeuc.smartufpa.interfaces.OnSearchRouteListener;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerStatuses;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
 import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
 import com.example.kaeuc.smartufpa.utils.MapUtils;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
+import com.example.kaeuc.smartufpa.utils.enums.OverpassFilters;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.kml.KmlDocument;
 import org.osmdroid.bonuspack.kml.Style;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
-import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
+import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
@@ -46,14 +55,19 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class MapFragment extends Fragment implements LocationListener{
+public class MapFragment extends Fragment implements LocationListener, OnSearchRouteListener,
+        OnBusRouteListener {
 
     private static final String TAG = MapFragment.class.getSimpleName() ;
     public static String FRAGMENT_TAG = MapFragment.class.getName();
@@ -64,8 +78,12 @@ public class MapFragment extends Fragment implements LocationListener{
     private static final int DEFAULT_ZOOM = 16;
     private static final int MIN_ZOOM = 15;
     private static final int MAX_ZOOM = 18;
-    private final XYTileSource MAPA_UFPA = new XYTileSource("ufpa_mapa", 15, 18, 256, ".png", new String[] {});
 
+    private final ArrayList<Integer> ROUTE_LINE_COLORS = new ArrayList<>(3);
+    private static int ROUTES_COUNTER = 0;
+    private static final int MAX_ROUTES = 3;
+
+    private final XYTileSource MAPA_UFPA = new XYTileSource("ufpa_mapa", 15, 18, 256, ".png", new String[] {});
     private final XYTileSource MAPA_UFPA_TRANSPORTE = new XYTileSource("ufpa_transporte", 15, 18, 256, ".png", new String[] {});
 
     // VIEWS
@@ -125,21 +143,102 @@ public class MapFragment extends Fragment implements LocationListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate()");
         parentContext = getContext();
-
-        /* Configura o caminho do armazenamento em cache do mapa, se o device não possui cartão SD,
-         * ele deve ser configurado para o caminho de arquivos do device
-         */
-//        OpenStreetMapTileProviderConstants.setCachePath(getActivity().getFilesDir().getAbsolutePath());
 
         /* Importante! Configure o user agent para previnir ser banido dos servidores do OSM
          * O user agent deve ser uma identificação única do seu aplicativo
          * Um exemplo mostra a utilização de "BuildConfig.APPLICATION_ID"
          */
-//        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+
+        ROUTE_LINE_COLORS.add(Color.rgb(100, 100, 255)); // blue
+        ROUTE_LINE_COLORS.add(Color.rgb(255, 100, 100)); // red
+        ROUTE_LINE_COLORS.add(Color.rgb(62, 153, 62)); // green
 
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view =  inflater.inflate(R.layout.fragment_map, container, false);
+
+        // Adiciona a CustomMapView ao layout na posição 0 por conta do eixo Z do CoordinatorLayout
+        mapView = new CustomMapView(parentContext);
+        final CoordinatorLayout cl = view.findViewById(R.id.coordinator_layout);
+        cl.addView(mapView,0);
+
+        // Encontra as views
+        fabMyLocation = view.findViewById(R.id.fab_my_location);
+        fabBusLocation = view.findViewById(R.id.fab_bus_location);
+        btnClearMap = view.findViewById(R.id.btn_clear_map);
+
+
+        // Atrela os listerners aos botões
+        fabMyLocation.setOnClickListener(myLocationListener);
+        fabBusLocation.setOnClickListener(busLocationListener);
+        // TODO: MAKE IT VISIBLE WHEN THE BUS LOCATION FUNCTION IS IMPLEMENTED
+        fabBusLocation.setVisibility(View.GONE);
+        btnClearMap.setOnClickListener(clearMapListener);
+
+        initializeMap();
+
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        locationManager = (LocationManager) parentContext.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
+        }
+        // Adiciona a camada de localização do usuário
+        // TODO (STABLE VERSION): RESOLVE BITMAP ERROR
+        enableMyLocationOverlay();
+
+        Log.i(TAG, "onResume: " + mapView.getLayersTagsNames());
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this);
+        }
+        myLocationOverlay.disableMyLocation();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: " + mapView.getLayersTagsNames());
+    }
+
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        userLocation = null;
+        myLocationOverlay = null;
+        mapView = null;
+        mapCamera = null;
+    }
+
+    // TODO (STABLE VERSION): IMPLEMENT THIS METHOD
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+
+    }
+
 
     private void initializeMap(){
         // Configuração da câmera do mapa
@@ -178,33 +277,16 @@ public class MapFragment extends Fragment implements LocationListener{
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
         myLocationOverlay.setOptionsMenuEnabled(true);
-        mapView.addTileOverlay(myLocationOverlay, OverlayTags.MY_LOCATION);
+        if(!mapView.containsOverlay(OverlayTags.MY_LOCATION))
+            mapView.addTileOverlay(myLocationOverlay, OverlayTags.MY_LOCATION);
     }
 
-    public boolean enableBusOverlay(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                /* TODO (OFFLINE FUNCTIONS) : SALVAR ESSE OVERLAY OU REQUISIÇÃO PARA NÃO REFAZER A REQUISIÇÃO EVERY TIME
-                 * TRATAR RESPOSTA INVÁLIDA
-                 * https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
-                 */
-
-                OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
-                MapUtils mapUtils = new MapUtils(getContext());
-                String url = mapUtils.getBusRouteURL();
-                KmlDocument kmlDocument = new KmlDocument();
-                boolean ok = overpassProvider.addInKmlFolder(kmlDocument.mKmlRoot, url);
-                Style style = new Style(null, Color.argb(150,50,50,255),10,Color.argb(150,50,50,255));
-                FolderOverlay kmlOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(mapView,style, null, kmlDocument);
-                mapView.addTileOverlay(kmlOverlay,OverlayTags.BUS_ROUTE);
-            }
-        }).start();
-        mapView.postInvalidate();
-        btnClearMap.setVisibility(View.VISIBLE);
-        return true;
+    public void enableBusOverlay(){
+        new BusRouteTask(this,mapView).execute();
     }
 
+    // TODO (OFFLINE FUNCTIONS): USE KMLFOLDER TO SAVE IT
+    // https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
     private boolean areMapsInStorage(){
 
         return false;
@@ -215,75 +297,8 @@ public class MapFragment extends Fragment implements LocationListener{
         if(btnClearMap.getVisibility() == View.VISIBLE) btnClearMap.setVisibility(View.GONE);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView()");
-        View view =  inflater.inflate(R.layout.fragment_map, container, false);
-
-        // Adiciona a CustomMapView ao layout na posição 0 por conta do eixo Z do CoordinatorLayout
-        mapView = new CustomMapView(parentContext);
-        final CoordinatorLayout cl = (CoordinatorLayout) view.findViewById(R.id.coordinator_layout);
-        cl.addView(mapView,0);
-
-        // Encontra as views
-        fabMyLocation = (FloatingActionButton) view.findViewById(R.id.fab_my_location);
-        fabBusLocation = (FloatingActionButton) view.findViewById(R.id.fab_bus_location);
-        btnClearMap = (Button) view.findViewById(R.id.btn_clear_map);
 
 
-        // Atrela os listerners aos botões
-        fabMyLocation.setOnClickListener(myLocationListener);
-        fabBusLocation.setOnClickListener(busLocationListener);
-        btnClearMap.setOnClickListener(clearMapListener);
-
-        initializeMap();
-
-
-          return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume()");
-        locationManager = (LocationManager) parentContext.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
-        }
-        // Adiciona a camada de localização do usuário
-        // TODO (STABLE VERSION): RESOLVE BITMAP ERROR
-        enableMyLocationOverlay();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(TAG,"onPause()");
-        if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.removeUpdates(this);
-        }
-        myLocationOverlay.disableMyLocation();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onDestroy()");
-        userLocation = null;
-        myLocationOverlay = null;
-        mapView = null;
-        mapCamera = null;
-    }
-
-    // TODO (STABLE VERSION): IMPLEMENT THIS METHOD
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
 
     private void moveCameraToMyLocation(){
         try {
@@ -314,27 +329,31 @@ public class MapFragment extends Fragment implements LocationListener{
         return mapView.containsOverlay(layerTag);
     }
 
-
-    public void addLayerToMap(final List<Place> places, MarkerTypes markersType, OverlayTags overlayTag){
-        // Cria e adiciona a camada de marcadores ao mapa
+    /**
+     * Creates and add an overlay to the map.
+     * @param PLACES - List of places to plot on the map.
+     * @param markersType - Identify what icon should be used for markers.
+     * @param overlayTag - Identify the overlay to be added on the OverlayManager.
+     */
+    public void createLayerToMap(final List<Place> PLACES, MarkerTypes markersType, OverlayTags overlayTag){
         final FolderOverlay poiMarkers = new FolderOverlay();
 
         MapUtils mapUtils = new MapUtils(getContext());
         final HashMap<MarkerStatuses, Drawable> markerDrawables = mapUtils.getMarkerDrawable(markersType);
 
 
-        // Cria um marcador para cada local encontrado
-        for (final Place place : places) {
-            Marker.OnMarkerClickListener markerClick = new Marker.OnMarkerClickListener() {
+        // Creates a marker for each place found
+        for (final Place place : PLACES) {
+            Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    // Sets up a PlaceDetailsFragment to show specific information about the selected Place
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FrameLayout bottomSheetContainer = (FrameLayout) getActivity().findViewById(R.id.bottom_sheet_container);
-
+                    // Finds the container in which the fragment will be inflated
+                    FrameLayout bottomSheetContainer = getActivity().findViewById(R.id.bottom_sheet_container);
                     BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
                     behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
+                    // Sets up a PlaceDetailsFragment to show specific information about the selected Place
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place,userLocation);
                     fragmentManager.beginTransaction()
                             .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
@@ -347,10 +366,9 @@ public class MapFragment extends Fragment implements LocationListener{
                 }
             };
 
-            final Marker customMarker = mapUtils.createCustomMarker(mapView,
-                    markerDrawables.get(MarkerStatuses.NOT_CLICKED),
-                    new GeoPoint(place.getLatitude(), place.getLongitude()),
-                    markerClick);
+            final Marker customMarker = mapUtils
+                    .createCustomMarker(mapView, markerDrawables.get(MarkerStatuses.NOT_CLICKED),
+                    new GeoPoint(place.getLatitude(), place.getLongitude()), onMarkerClickListener);
 
             poiMarkers.add(customMarker);
 
@@ -361,26 +379,46 @@ public class MapFragment extends Fragment implements LocationListener{
 
     }
 
-
-    public CustomMapView getMapView() {
-        return mapView;
+    public void zoomToGeoPoint(GeoPoint geoPoint, int zoomLevel){
+        mapView.getController().setZoom(zoomLevel);
+        mapView.getController().animateTo(geoPoint);
+        mapView.getController().setCenter(geoPoint);
     }
 
+    public void showRouteToPlace(final Place destination) {
+
+        getActivity().findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
+        if (userLocation == null){
+            Toast.makeText(parentContext, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
+        }else if(ROUTES_COUNTER == MAX_ROUTES) {
+            ROUTES_COUNTER = 0;
+            Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
+        } else {
+            new SearchRouteTask(this)
+                    .execute(userLocation.getGeoPoint(), destination.getGeoPoint());
+        }
+    }
+
+    public void showRouteToPlace(final Place origin, final Place destination){
+        getActivity().findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
+        if (userLocation == null){
+            Toast.makeText(parentContext, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
+        }else if(ROUTES_COUNTER == MAX_ROUTES) {
+            ROUTES_COUNTER = 0;
+            Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
+        } else {
+            new SearchRouteTask(this)
+                    .execute(origin.getGeoPoint(), destination.getGeoPoint());
+        }
+    }
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged");
         if(userLocation == null)
             userLocation = new Place(location.getLatitude(),location.getLongitude(),"user_location");
         else {
             userLocation.setLongitude(location.getLongitude());
             userLocation.setLatitude(location.getLatitude());
         }
-        final PlaceDetailsFragment mapFragment = (PlaceDetailsFragment) getActivity().getSupportFragmentManager().findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
-        if(mapFragment != null){
-            mapFragment.updateUserLocation(userLocation);
-        }
-
-
     }
 
     @Override
@@ -394,5 +432,25 @@ public class MapFragment extends Fragment implements LocationListener{
 
     public Place getUserLocation() {
         return userLocation;
+    }
+
+    @Override
+    public void onSearchRouteResponse(final Overlay ROUTE_OVERLAY) {
+        Polyline roadOverlay = (Polyline) ROUTE_OVERLAY;
+        roadOverlay.setColor(ROUTE_LINE_COLORS.get(ROUTES_COUNTER));
+        roadOverlay.setWidth(10);
+
+        mapView.addTileOverlay(roadOverlay, OverlayTags.ROUTE);
+        mapView.postInvalidate();
+
+        getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        ROUTES_COUNTER++;
+    }
+
+    @Override
+    public void onBusRouteResponse(Overlay overlay) {
+        mapView.addTileOverlay(overlay, OverlayTags.BUS_ROUTE);
+        getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        btnClearMap.setVisibility(View.VISIBLE);
     }
 }

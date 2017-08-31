@@ -112,6 +112,7 @@
 
 
     <string name="dialog_title">Ops…</string>
+    <string name="lbl_local_name">Nome local:</string>
 
 
 </resources>

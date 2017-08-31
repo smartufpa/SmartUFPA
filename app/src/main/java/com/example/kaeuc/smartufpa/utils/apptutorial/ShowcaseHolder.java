@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.utils.showcaseutils;
+package com.example.kaeuc.smartufpa.utils.apptutorial;
 
 import com.github.amlcurran.showcaseview.targets.Target;
 

@@ -1,7 +1,6 @@
-package com.example.kaeuc.smartufpa.utils.showcaseutils;
+package com.example.kaeuc.smartufpa.utils.apptutorial;
 
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -10,7 +9,6 @@ import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.Target;
 
 import java.util.ArrayList;
 

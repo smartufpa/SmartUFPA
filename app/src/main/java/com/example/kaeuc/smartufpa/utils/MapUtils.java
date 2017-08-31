@@ -23,7 +23,7 @@ import com.example.kaeuc.smartufpa.utils.enums.MarkerStatuses;
  */
 
 
-// TODO (STABLE VERSION): MAKE THIS CLASS A SINGLETON
+
 public class MapUtils {
     
     private Context parentContext;
@@ -80,6 +80,11 @@ public class MapUtils {
             markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
+        } else if(markerType.equals(MarkerTypes.BUS_STOP)){
+            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_bus_stop));
+            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_marker_details));
         }
         
         return markerIcons;
@@ -101,24 +106,6 @@ public class MapUtils {
         }
         return poiMarker;
 
-    }
-
-    public String getBusRouteURL(){
-        StringBuilder s = new StringBuilder();
-        s.append("http://overpass-api.de/api/interpreter?data=");
-
-        String data ="[out:json][timeout:30];(node[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957);"
-                + "way[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957););" +
-                "out qt geom tags 500;relation[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957);" +
-                "out qt geom body 500;";
-
-        try {
-            s.append(URLEncoder.encode(data,"UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return s.toString();
     }
 
 

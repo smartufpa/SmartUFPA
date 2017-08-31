@@ -23,16 +23,6 @@ public final class Constants {
     public static final String TAG_RESTAURANT = "restaurant";
     public static final String TAG_FOOD_COURT = "food_court";
 
-
-
-
-
-
-
-
-
-
-
     //URLS
     public static final String URL_LOCAL_HOST = "http://177.194.168.159:80/";
     public static final String URL_BUS_LOCATION = "http://104.41.62.111:8080/bus-location";
@@ -82,17 +72,23 @@ public final class Constants {
             ");" +
             "out center;";
 
+    public static final String QUERY_OVERPASS_BUS_ROUTE = "[out:json][timeout:30];" +
+            "(relation[name=\"circular\"][highway=bus_stop]);" + "out qt body 500;" +
+            "(node[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957);" +
+            "way[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957););" +
+            "out qt geom tags 500;relation[route=bus][name=\"circular\"]" +
+            "(-1.479967,-48.459779,-1.457886,-48.437957);out qt geom body 500;";
+
     // Usado na factory para places, apresentado nos detalhes sobre o local
     // caso um nome não tenha sido definido
     public static final String NO_NAME = "Sem nome identificado";
     public static final String NO_LOCAL_NAME = "Sem nome local identificado";
     public static final String NO_SHORT_NAME = "Sem abreviação";
     public static final String NO_DESCRIPTION = "Sem descrição";
-    
+
+    // App tutorial constants
     public static final int TUTORIAL_EXECUTED = 1;
     public static final int TUTORIAL_NOT_EXECUTED = 0;
-
-
     public static final int TUTORIAL_BTN_LEFT = 1;
 
 

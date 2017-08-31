@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.server;
+package com.example.kaeuc.smartufpa.asynctasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -6,11 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.HttpRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 import java.net.SocketTimeoutException;
@@ -19,14 +16,14 @@ import java.net.SocketTimeoutException;
  * Created by kaeuc on 2/11/2017.
  */
 
-public class BusLocationRequest extends AsyncTask<String, Void, String> {
-    private final String TAG = "BusLocationRequest";
+public class BusLocationTask extends AsyncTask<String, Void, String> {
+    private final String TAG = "BusLocationTask";
     private OnBusLocationListener callback;
     private Context parentContext;
     private ProgressBar progressBar;
     private int taskStatus;
 
-    public BusLocationRequest(Context parentContext, ProgressBar progressBar) {
+    public BusLocationTask(Context parentContext, ProgressBar progressBar) {
         this.parentContext = parentContext;
         this.callback = (OnBusLocationListener) parentContext;
         this.progressBar = progressBar;
