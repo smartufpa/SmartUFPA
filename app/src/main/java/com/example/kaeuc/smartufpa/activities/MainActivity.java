@@ -28,8 +28,8 @@ import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.fragments.MapFragment;
 import com.example.kaeuc.smartufpa.fragments.PlaceDetailsFragment;
 import com.example.kaeuc.smartufpa.fragments.SearchResultFragment;
-import com.example.kaeuc.smartufpa.interfaces.OnFilterSearchListener;
-import com.example.kaeuc.smartufpa.interfaces.OnSearchQueryListener;
+import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnFilterSearchListener;
+import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.asynctasks.FilterSearchTask;
 import com.example.kaeuc.smartufpa.asynctasks.SearchQueryTask;
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity
             new SearchQueryTask(this).execute(query);
             progressBar.setVisibility(View.VISIBLE);
         }else{
-            Toast.makeText(this, getString(R.string.error_on_connection), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
         }
     }
     @Override
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity
                 }else if(id == R.id.nav_settings) {
                     Toast.makeText(MainActivity.this, "ainda a implementar", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(getApplicationContext(), getString(R.string.error_on_connection), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_SHORT).show();
 
                 }
                 layoutDrawer.closeDrawer(GravityCompat.START);
@@ -316,12 +316,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, ServerResponse taskStatus) {
-        if(taskStatus == ServerResponse.SUCCESS){
+    public void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, final ServerResponse TASK_STATUS) {
+        if(TASK_STATUS == ServerResponse.SUCCESS){
             mapFragment.createLayerToMap(places,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
-        }else if(taskStatus == ServerResponse.TIMEOUT){
+        }else if(TASK_STATUS == ServerResponse.TIMEOUT){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
+        }else if (TASK_STATUS == ServerResponse.CONNECTION_FAILED){
+            Toast.makeText(this, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }
         progressBar.setVisibility(View.GONE);
     }
@@ -366,7 +368,7 @@ public class MainActivity extends AppCompatActivity
                 mapFragment.createLayerToMap(PLACES, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
             }
 
-        }else if(TASK_STATUS.equals(ServerResponse.EMPTY_BODY)){
+        }else if(TASK_STATUS.equals(ServerResponse.EMPTY_RESPONSE)){
 
             new MaterialDialog.Builder(this)
                     .title(getString(R.string.dialog_title))
@@ -375,6 +377,8 @@ public class MainActivity extends AppCompatActivity
                     .show();
         }else if(TASK_STATUS.equals(ServerResponse.TIMEOUT)){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_LONG).show();
+        } else if (TASK_STATUS == ServerResponse.CONNECTION_FAILED){
+            Toast.makeText(this, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }
 
     }

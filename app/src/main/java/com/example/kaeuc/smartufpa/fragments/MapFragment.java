@@ -22,31 +22,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
-import com.example.kaeuc.smartufpa.MapBundle;
 import com.example.kaeuc.smartufpa.R;
-import com.example.kaeuc.smartufpa.activities.MainActivity;
 import com.example.kaeuc.smartufpa.asynctasks.BusRouteTask;
-import com.example.kaeuc.smartufpa.asynctasks.FilterSearchTask;
 import com.example.kaeuc.smartufpa.asynctasks.SearchRouteTask;
 import com.example.kaeuc.smartufpa.customviews.CustomMapView;
-import com.example.kaeuc.smartufpa.interfaces.OnBusRouteListener;
-import com.example.kaeuc.smartufpa.interfaces.OnSearchRouteListener;
+import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnBusRouteListener;
+import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.MapUtils;
+import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerStatuses;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
 import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
-import com.example.kaeuc.smartufpa.utils.MapUtils;
-import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
-import com.example.kaeuc.smartufpa.utils.enums.OverpassFilters;
+import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.kml.KmlDocument;
-import org.osmdroid.bonuspack.kml.Style;
-import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
@@ -60,7 +53,6 @@ import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -295,6 +287,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private void clearMap(){
         mapView.clearMap();
         if(btnClearMap.getVisibility() == View.VISIBLE) btnClearMap.setVisibility(View.GONE);
+        if(ROUTES_COUNTER == MAX_ROUTES)
+            ROUTES_COUNTER = 0;
     }
 
 
@@ -391,7 +385,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         if (userLocation == null){
             Toast.makeText(parentContext, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
         }else if(ROUTES_COUNTER == MAX_ROUTES) {
-            ROUTES_COUNTER = 0;
             Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         } else {
             new SearchRouteTask(this)
@@ -404,7 +397,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         if (userLocation == null){
             Toast.makeText(parentContext, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
         }else if(ROUTES_COUNTER == MAX_ROUTES) {
-            ROUTES_COUNTER = 0;
             Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         } else {
             new SearchRouteTask(this)
@@ -435,22 +427,34 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
     @Override
-    public void onSearchRouteResponse(final Overlay ROUTE_OVERLAY) {
-        Polyline roadOverlay = (Polyline) ROUTE_OVERLAY;
-        roadOverlay.setColor(ROUTE_LINE_COLORS.get(ROUTES_COUNTER));
-        roadOverlay.setWidth(10);
-
-        mapView.addTileOverlay(roadOverlay, OverlayTags.ROUTE);
-        mapView.postInvalidate();
-
+    public void onSearchRouteResponse(final Overlay ROUTE_OVERLAY, ServerResponse taskStatus) {
+        if(taskStatus == ServerResponse.SUCCESS){
+            Polyline roadOverlay = (Polyline) ROUTE_OVERLAY;
+            roadOverlay.setColor(ROUTE_LINE_COLORS.get(ROUTES_COUNTER));
+            roadOverlay.setWidth(10);
+            mapView.addTileOverlay(roadOverlay, OverlayTags.ROUTE);
+            ROUTES_COUNTER++;
+        }else if(taskStatus == ServerResponse.TIMEOUT){
+            Toast.makeText(parentContext, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
+        }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
+            Toast.makeText(parentContext, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
+        }else if(ROUTES_COUNTER == MAX_ROUTES){
+            Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
+        }
         getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
-        ROUTES_COUNTER++;
     }
 
     @Override
-    public void onBusRouteResponse(Overlay overlay) {
-        mapView.addTileOverlay(overlay, OverlayTags.BUS_ROUTE);
+    public void onBusRouteResponse(Overlay overlay, ServerResponse taskStatus) {
+        if(taskStatus == ServerResponse.SUCCESS){
+            mapView.addTileOverlay(overlay, OverlayTags.BUS_ROUTE);
+            btnClearMap.setVisibility(View.VISIBLE);
+        }else if(taskStatus == ServerResponse.TIMEOUT){
+            Toast.makeText(parentContext, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
+        }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
+            Toast.makeText(parentContext, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
+        }
         getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
-        btnClearMap.setVisibility(View.VISIBLE);
+
     }
 }

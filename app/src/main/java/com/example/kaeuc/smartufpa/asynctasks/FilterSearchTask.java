@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.kaeuc.smartufpa.interfaces.OnFilterSearchListener;
+import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnFilterSearchListener;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
@@ -95,9 +95,11 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
     // executa após a operação ser finalizada
     @Override
     protected void onPostExecute(String jsonResponse) {
-
         super.onPostExecute(jsonResponse);
-        if(taskStatus.equals(ServerResponse.TIMEOUT)){
+        if (jsonResponse == null){
+            taskStatus = ServerResponse.CONNECTION_FAILED;
+            callBack.onFilterSearchResponse(null,null,null,taskStatus);
+        }else if(taskStatus.equals(ServerResponse.TIMEOUT)){
             callBack.onFilterSearchResponse(null, null, null, taskStatus);
 
         }else if(taskStatus.equals(ServerResponse.SUCCESS)){

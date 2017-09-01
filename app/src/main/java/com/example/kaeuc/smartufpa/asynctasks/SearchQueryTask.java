@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 
-import com.example.kaeuc.smartufpa.interfaces.OnSearchQueryListener;
+import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.HttpRequest;
@@ -64,7 +64,10 @@ public class SearchQueryTask extends AsyncTask<String,Void,String> {
     protected void onPostExecute(String jsonResponse) {
         super.onPostExecute(jsonResponse);
 
-      if(taskStatus.equals(ServerResponse.TIMEOUT)){
+        if(jsonResponse == null) {
+            taskStatus = ServerResponse.CONNECTION_FAILED;
+            callBack.onSearchQueryResponse(null,taskStatus);
+        }else if(taskStatus.equals(ServerResponse.TIMEOUT)){
             taskStatus = ServerResponse.TIMEOUT;
             callBack.onSearchQueryResponse(null,taskStatus);
         }else if(taskStatus.equals(ServerResponse.SUCCESS)){
@@ -73,11 +76,11 @@ public class SearchQueryTask extends AsyncTask<String,Void,String> {
               callBack.onSearchQueryResponse(places,taskStatus);
           }catch (EmptyResponseException e){
               Log.e(TAG,"", e);
-              taskStatus = ServerResponse.EMPTY_BODY;
+              taskStatus = ServerResponse.EMPTY_RESPONSE;
               callBack.onSearchQueryResponse(null,taskStatus);
           }
 
-      }
+        }
     }
 
 

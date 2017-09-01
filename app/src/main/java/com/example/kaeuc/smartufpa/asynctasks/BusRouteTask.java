@@ -3,9 +3,10 @@ package com.example.kaeuc.smartufpa.asynctasks;
 import android.os.AsyncTask;
 
 import com.example.kaeuc.smartufpa.fragments.MapFragment;
-import com.example.kaeuc.smartufpa.interfaces.OnBusRouteListener;
+import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import com.example.kaeuc.smartufpa.utils.BusRouteKmlStyler;
 import com.example.kaeuc.smartufpa.utils.Constants;
+import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
 
 import org.osmdroid.bonuspack.kml.KmlDocument;
 import org.osmdroid.bonuspack.kml.KmlFeature;
@@ -26,6 +27,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
 
     private final MapView mapView;
     private MapFragment mapFragment;
+    private ServerResponse taskStatus;
 
     private OnBusRouteListener callback;
 
@@ -33,6 +35,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
         this.mapFragment = mapFragment;
         this.callback = mapFragment;
         this.mapView = mapView;
+        this.taskStatus = ServerResponse.SUCCESS;
     }
 
 
@@ -52,13 +55,12 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
 
         KmlDocument kmlDocument = new KmlDocument();
         // true if ok, false if technical error.
-        // TODO: TRATAR ERRO DE PERDA DE CONEXÃO DURANTE O REQUEST
         if(overpassProvider.addInKmlFolder(kmlDocument.mKmlRoot, finalUrl)){
             KmlFeature.Styler busRouteStyler = new BusRouteKmlStyler(mapFragment.getContext());
             FolderOverlay kmlOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(mapView,null, busRouteStyler, kmlDocument);
             return kmlOverlay;
-
         }
+        taskStatus = ServerResponse.CONNECTION_FAILED;
         return null;
     }
 
@@ -66,6 +68,10 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
     @Override
     protected void onPostExecute(Overlay overlay) {
         super.onPostExecute(overlay);
-        callback.onBusRouteResponse(overlay);
+        if(overlay == null){
+            callback.onBusRouteResponse(null,taskStatus);
+        }else{
+            callback.onBusRouteResponse(overlay,taskStatus);
+        }
     }
 }

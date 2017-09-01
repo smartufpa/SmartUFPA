@@ -1,12 +1,12 @@
 package com.example.kaeuc.smartufpa.asynctasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.kaeuc.smartufpa.BuildConfig;
 import com.example.kaeuc.smartufpa.fragments.MapFragment;
-import com.example.kaeuc.smartufpa.interfaces.OnSearchRouteListener;
+import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
+import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
 
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
@@ -27,9 +27,11 @@ public class SearchRouteTask extends AsyncTask<GeoPoint,Void,Polyline> {
 
 
     private OnSearchRouteListener callback;
+    private ServerResponse taskStatus;
 
     public SearchRouteTask(MapFragment parentFragment) {
         this.callback = parentFragment;
+        this.taskStatus = ServerResponse.SUCCESS;
     }
 
     @Override
@@ -41,16 +43,21 @@ public class SearchRouteTask extends AsyncTask<GeoPoint,Void,Polyline> {
         Collections.addAll(wayPoints, places);
         // Calculates the route
         Road road = roadManager.getRoad(wayPoints);
-        return RoadManager.buildRoadOverlay(road);
+        if( road.mStatus == 0) // succeed
+            return RoadManager.buildRoadOverlay(road);
+
+        taskStatus = ServerResponse.CONNECTION_FAILED;
+        return null;
     }
 
     @Override
     protected void onPostExecute(Polyline routeOverlay) {
         super.onPostExecute(routeOverlay);
         if(routeOverlay != null){
-            callback.onSearchRouteResponse(routeOverlay);
-        }else{
-            Log.e(TAG, "onPostExecute: Error" );
+            callback.onSearchRouteResponse(routeOverlay,taskStatus);
+        }else if(taskStatus.equals(ServerResponse.CONNECTION_FAILED)){
+            callback.onSearchRouteResponse(null,taskStatus);
+
         }
     }
 }

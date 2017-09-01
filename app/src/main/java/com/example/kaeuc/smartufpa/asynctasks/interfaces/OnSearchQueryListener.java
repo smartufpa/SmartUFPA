@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.interfaces;
+package com.example.kaeuc.smartufpa.asynctasks.interfaces;
 
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
@@ -10,5 +10,5 @@ import java.util.ArrayList;
  */
 
 public interface OnSearchQueryListener {
-    void onSearchQueryResponse(final ArrayList<Place> PLACES, final ServerResponse TASK_STATUS);
+    void onSearchQueryResponse(ArrayList<Place> places, ServerResponse taskStatus);
 }

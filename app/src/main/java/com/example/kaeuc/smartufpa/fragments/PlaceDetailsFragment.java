@@ -1,11 +1,8 @@
 package com.example.kaeuc.smartufpa.fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +10,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.kaeuc.smartufpa.BuildConfig;
 import com.example.kaeuc.smartufpa.R;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
-import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
-
-import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Polyline;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -115,6 +102,8 @@ public class PlaceDetailsFragment extends Fragment {
                     final MapFragment mapFragment = (MapFragment) getActivity().getSupportFragmentManager()
                             .findFragmentByTag(MapFragment.FRAGMENT_TAG);
                     mapFragment.showRouteToPlace(currentPlace);
+                }else{
+                    Toast.makeText(getContext(), R.string.error_no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
             }
         });

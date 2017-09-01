@@ -1,4 +1,4 @@
-package com.example.kaeuc.smartufpa.interfaces;
+package com.example.kaeuc.smartufpa.asynctasks.interfaces;
 
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
@@ -12,5 +12,5 @@ import java.util.ArrayList;
  */
 
 public interface OnFilterSearchListener {
-    void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, ServerResponse taskStatus);
+    void onFilterSearchResponse(ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, ServerResponse taskStatus);
 }

@@ -24,7 +24,7 @@
     <string name="tutorial_msg_add_location">Clique aqui para criar um registro a um local não cadastrado no mapa.</string>
 
 
-    <string name="error_on_connection">Houve um erro na requisição. Cheque sua conexão com a internet.</string>
+    <string name="error_no_internet_connection">Cheque sua conexão com a internet antes de tentar novamente.</string>
     <string name="error_server_internal_error">Não foi possível completar a operação. Tente novamente.</string>
     <string name="error_server_timeout">Tempo de requisição esgotado. Tente novamente em alguns segundos.</string>
     <string name="error_no_gps">O GPS deve estar ligado para iniciar o aplicativo.</string>
@@ -113,6 +113,7 @@
 
     <string name="dialog_title">Ops…</string>
     <string name="lbl_local_name">Nome local:</string>
+    <string name="error_connection_failed">Erro na conexão durante a requisição. Tente novamente.</string>
 
 
 </resources>
