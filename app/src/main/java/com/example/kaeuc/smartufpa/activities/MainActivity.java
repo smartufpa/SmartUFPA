@@ -265,7 +265,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        // TODO (STABLE VERSION): SEARCH BAR BEHAVIOR
         // TODO (VISUAL ADJUSTMENTS): ROUNDED CORNERS FOR THE TOOLBAR
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         searchItem = menu.findItem(R.id.action_search);
@@ -325,12 +324,12 @@ public class MainActivity extends AppCompatActivity
         }else if (TASK_STATUS == ServerResponse.CONNECTION_FAILED){
             Toast.makeText(this, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onSearchQueryResponse(final ArrayList<Place> PLACES, final ServerResponse TASK_STATUS) {
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
 
         if(TASK_STATUS == ServerResponse.SUCCESS){
             searchItem.collapseActionView();

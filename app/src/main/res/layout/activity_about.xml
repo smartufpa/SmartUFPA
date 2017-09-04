@@ -109,15 +109,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/about_txt_labvis"
             />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_txt_ufpa"
-            />
-
+        
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -161,9 +153,6 @@
             android:text="@string/about_txt_site"
             android:autoLink="web"
             />
-
-
-
 
     </LinearLayout>
 

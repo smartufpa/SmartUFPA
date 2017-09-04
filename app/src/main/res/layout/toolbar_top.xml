@@ -16,7 +16,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            app:theme="@style/ToolbarTheme"/>
+            app:theme="@style/ToolbarTheme"
+            tools:targetApi="lollipop" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -26,7 +27,7 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:theme="@style/ProgressBarTheme"
             android:indeterminate="true"
-            android:visibility="gone"
+            android:visibility="invisible"
             />
 
 </LinearLayout>

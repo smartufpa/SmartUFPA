@@ -114,6 +114,7 @@
     <string name="dialog_title">Ops…</string>
     <string name="lbl_local_name">Nome local:</string>
     <string name="error_connection_failed">Erro na conexão durante a requisição. Tente novamente.</string>
+    <string name="btn_login_entrar">Entrar</string>
 
 
 </resources>

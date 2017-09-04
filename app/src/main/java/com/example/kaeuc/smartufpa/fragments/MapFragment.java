@@ -441,7 +441,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         }else if(ROUTES_COUNTER == MAX_ROUTES){
             Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         }
-        getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -454,7 +454,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
             Toast.makeText(parentContext, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }
-        getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
 
     }
 }
