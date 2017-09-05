@@ -188,7 +188,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
         }
         // Adiciona a camada de localização do usuário
-        // TODO (STABLE VERSION): RESOLVE BITMAP ERROR
         enableMyLocationOverlay();
 
         Log.i(TAG, "onResume: " + mapView.getLayersTagsNames());
