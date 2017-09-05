@@ -84,14 +84,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.SQLTestActivity">
-            <intent-filter>
-                <action android:name="smartufpa.SQL_ACTION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
 
     </application>
 

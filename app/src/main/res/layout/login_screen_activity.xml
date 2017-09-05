@@ -18,10 +18,10 @@
             android:src="@drawable/logo_final" />
 
         <Button
-            android:text="@string/btn_login_visitante"
+            android:text="@string/btn_login_entrar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_visitante"
+            android:id="@+id/btn_entrar"
             android:theme="@style/RaisedButton"
             />
 
@@ -32,6 +32,7 @@
             android:text="@string/btn_login_login"
             android:theme="@style/RaisedButtonDisabled"
             android:enabled="false"
+            android:visibility="invisible"
             />
         <Button
             android:layout_width="match_parent"

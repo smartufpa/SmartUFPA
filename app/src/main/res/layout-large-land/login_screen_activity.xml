@@ -3,12 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
+    android:padding="16dp"
     >
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="80dp"
-        >
+
         <ImageView
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -17,20 +14,18 @@
             />
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_toRightOf="@+id/img_logo"
-            android:layout_toEndOf="@+id/img_logo"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="80dp"
             android:layout_marginStart="80dp"
-            android:layout_centerVertical="true">
+            android:layout_gravity="center_vertical">
             <Button
-                android:text="Visitante"
-                android:layout_width="450dp"
-                android:layout_height="60dp"
-                android:id="@+id/btn_visitante"
-                android:textColor="@android:color/white"
-                android:background="@color/colorPrimaryDark"
+                android:text="@string/btn_login_entrar"
+                android:layout_width="420dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_entrar"
+                android:theme="@style/RaisedButton"
+                android:layout_gravity="center_horizontal"
                 />
-
             <Button
                 android:layout_width="450dp"
                 android:layout_height="60dp"
@@ -38,9 +33,10 @@
                 android:id="@+id/btn_login"
                 android:text="Realizar Login"
                 android:textColor="@android:color/white"
-                android:layout_below="@+id/btn_visitante"
+                android:layout_below="@+id/btn_entrar"
+                android:visibility="gone"
                 />
         </RelativeLayout>
-    </RelativeLayout>
+
 </LinearLayout>
 
