@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -33,6 +34,7 @@ import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.asynctasks.FilterSearchTask;
 import com.example.kaeuc.smartufpa.asynctasks.SearchQueryTask;
+import com.example.kaeuc.smartufpa.utils.ConfigHelper;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.SystemServicesManager;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
@@ -46,6 +48,8 @@ import com.example.kaeuc.smartufpa.utils.apptutorial.ViewTargets;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+
+import org.osmdroid.util.BoundingBox;
 
 import java.util.ArrayList;
 
@@ -113,6 +117,9 @@ public class MainActivity extends AppCompatActivity
 
     private void setupToolbar(){
         mapToolbar.setTitle(getString(R.string.app_name));
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            mapToolbar.setBackgroundResource(R.drawable.toolbar_shape);
+        }
         setSupportActionBar(mapToolbar);
 
     }
@@ -120,10 +127,35 @@ public class MainActivity extends AppCompatActivity
     private void setupMapFragment(){
        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
         if(mapFragment == null){
-            mapFragment = MapFragment.newInstance();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frame_map_container,mapFragment,MapFragment.FRAGMENT_TAG);
-            ft.commit();
+            try {
+                // Get location configs from file
+                final String[] defaultPlaceCoord = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_COORDINATES).split(",");
+                final String[] mapRegionBounds = ConfigHelper.getConfigValue(this, Constants.MAP_REGION_BOUNDS).split(",");
+                final String defaultPlaceName = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_NAME);
+                // Parse information about place
+                double lat = Double.valueOf(defaultPlaceCoord[0]);
+                double longtd = Double.valueOf(defaultPlaceCoord[1]);
+                // Parse information about map bounds
+                double north = Double.valueOf(mapRegionBounds[0]);
+                double east = Double.valueOf(mapRegionBounds[1]);
+                double south = Double.valueOf(mapRegionBounds[2]);
+                double west = Double.valueOf(mapRegionBounds[3]);
+
+                // define variables to pass to the MapFragment
+                final BoundingBox mapBounds = new BoundingBox(north,east,south,west);
+                final Place chosenLocation = new Place(lat,longtd,defaultPlaceName);
+                mapFragment = MapFragment.newInstance(chosenLocation,mapBounds);
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frame_map_container,mapFragment,MapFragment.FRAGMENT_TAG);
+                ft.commit();
+
+
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+
+
         }
     }
 
@@ -198,16 +230,12 @@ public class MainActivity extends AppCompatActivity
                             intent.addCategory(AboutActivity.CATEGORY_ABOUT);
                             startActivity(intent);
                             break;
-
-
                     }
 
                 }else if(id == R.id.nav_about) {
                     final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
                     intent.addCategory(AboutActivity.CATEGORY_ABOUT);
                     startActivity(intent);
-                }else if(id == R.id.nav_settings) {
-                    Toast.makeText(MainActivity.this, "ainda a implementar", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_SHORT).show();
 
@@ -265,7 +293,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        // TODO (VISUAL ADJUSTMENTS): ROUNDED CORNERS FOR THE TOOLBAR
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -315,31 +342,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, final ServerResponse TASK_STATUS) {
-        if(TASK_STATUS == ServerResponse.SUCCESS){
+    public void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, final ServerResponse taskStatus) {
+        if(taskStatus == ServerResponse.SUCCESS){
             mapFragment.createLayerToMap(places,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
-        }else if(TASK_STATUS == ServerResponse.TIMEOUT){
+        }else if(taskStatus == ServerResponse.TIMEOUT){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
-        }else if (TASK_STATUS == ServerResponse.CONNECTION_FAILED){
+        }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
             Toast.makeText(this, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }
         progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void onSearchQueryResponse(final ArrayList<Place> PLACES, final ServerResponse TASK_STATUS) {
+    public void onSearchQueryResponse(final ArrayList<Place> places, final ServerResponse taskStatus) {
         progressBar.setVisibility(View.INVISIBLE);
 
-        if(TASK_STATUS == ServerResponse.SUCCESS){
+        if(taskStatus == ServerResponse.SUCCESS){
             searchItem.collapseActionView();
             // The query returned multiple results
-            if(PLACES.size() > 1){
+            if(places.size() > 1){
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
                 // Open SearchResultFragment
-                SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(PLACES);
-                mapFragment.createLayerToMap(PLACES,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
+                SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
+                mapFragment.createLayerToMap(places,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -350,7 +377,7 @@ public class MainActivity extends AppCompatActivity
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                 // Places to pass over PlaceDetailsFragment to present the data
-                final Place CURRENT_PLACE = PLACES.get(0);
+                final Place CURRENT_PLACE = places.get(0);
                 final Place USER_LOCATION = mapFragment.getUserLocation();
 
                 // Open PlaceDetailsFragment
@@ -364,19 +391,18 @@ public class MainActivity extends AppCompatActivity
                 // Uses mapFragment methods to utilize map functions
                 final MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
                 mapFragment.zoomToGeoPoint(CURRENT_PLACE.getGeoPoint(),18);
-                mapFragment.createLayerToMap(PLACES, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
+                mapFragment.createLayerToMap(places, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
             }
 
-        }else if(TASK_STATUS.equals(ServerResponse.EMPTY_RESPONSE)){
-
+        }else if(taskStatus.equals(ServerResponse.EMPTY_RESPONSE)){
             new MaterialDialog.Builder(this)
                     .title(getString(R.string.dialog_title))
                     .content(R.string.msg_no_results_found)
                     .positiveText("OK")
                     .show();
-        }else if(TASK_STATUS.equals(ServerResponse.TIMEOUT)){
+        }else if(taskStatus.equals(ServerResponse.TIMEOUT)){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_LONG).show();
-        } else if (TASK_STATUS == ServerResponse.CONNECTION_FAILED){
+        } else if (taskStatus == ServerResponse.CONNECTION_FAILED){
             Toast.makeText(this, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }
 
@@ -413,7 +439,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(getString(R.string.tutorial_map_executed),Constants.TUTORIAL_EXECUTED);
-        final boolean commit = editor.commit();
+        editor.apply();
 
     }
 

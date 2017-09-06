@@ -29,7 +29,7 @@ public class AppMenuActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_menu);
 
-        Button btnMobility = (Button) findViewById(R.id.btn_mobilidade);
+        Button btnMobility = findViewById(R.id.btn_mobilidade);
 
 
         btnMobility.setOnClickListener(new Button.OnClickListener() {
@@ -48,11 +48,6 @@ public class AppMenuActivity extends AppCompatActivity{
 //                        else{
 
 //                        }
-
-
-
-
-
                         Intent intent = new Intent(MainActivity.ACTION_MAIN);
                         intent.addCategory(MainActivity.CATEGORY_MAIN);
                         startActivity(intent);

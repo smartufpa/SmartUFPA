@@ -79,7 +79,7 @@ public class SearchResultFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) { // On click, create a PlaceDetailFragment
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
+                // TODO: RETORNAR SOMENTE OS LUGARES DENTRO DA REGIÃO
                 final Place currentPlace = places.get(position);
                 final MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentByTag(MapFragment.FRAGMENT_TAG);
                 final Place userLocation = mapFragment.getUserLocation();

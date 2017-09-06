@@ -91,6 +91,10 @@ public final class Constants {
     public static final int TUTORIAL_NOT_EXECUTED = 0;
     public static final int TUTORIAL_BTN_LEFT = 1;
 
+    // Config file constants
+    public static final String DEFAULT_PLACE_COORDINATES = "default_place_coordinates";
+    public static final String DEFAULT_PLACE_NAME = "default_place_name" ;
+    public static final String MAP_REGION_BOUNDS = "map_region_bounds";
 
 
     ;

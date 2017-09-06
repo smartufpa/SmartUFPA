@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:mapFragment="com.example.kaeuc.smartufpa.fragments.PlaceDetailsFragment">
-
+    <!--TODO: layouts para tela pequenas e grandes-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,6 +69,7 @@
         android:text="@string/btn_rate_info"
         android:layout_gravity="bottom|end"
         android:drawableTint="@color/colorAccent"
+        android:visibility="invisible"
         tools:targetApi="m" />
 
 </LinearLayout>

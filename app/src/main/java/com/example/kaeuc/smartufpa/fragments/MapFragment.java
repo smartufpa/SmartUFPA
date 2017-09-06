@@ -87,10 +87,9 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     private Context parentContext;
 
-    // TODO (STABLE VERSION): BUSCAR ESSES VALORES A PARTIR DA CONFIGURAÇÃO
-    private final Place defaultLocation = new Place(-1.47485, -48.45651, "UFPA");
+    private static Place defaultPlace;
     // Restrição da região mostrada do mapa usando coordenadas
-    private final BoundingBox mapBoundaries = new BoundingBox(-1.457886, -48.437957, -1.479967, -48.459779);
+    private static BoundingBox mapRegion;
 
 
     private Place userLocation;
@@ -126,9 +125,11 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     // Required empty public constructor
     public MapFragment() {}
 
-    public static MapFragment newInstance() {
-        MapFragment fragment = new MapFragment();
 
+    public static MapFragment newInstance(final Place chosenPlace, final BoundingBox mapBoundaries) {
+        MapFragment fragment = new MapFragment();
+        defaultPlace = chosenPlace;
+        mapRegion = mapBoundaries;
         return fragment;
     }
 
@@ -169,6 +170,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         // Atrela os listerners aos botões
         fabMyLocation.setOnClickListener(myLocationListener);
         fabBusLocation.setOnClickListener(busLocationListener);
+
         // TODO: MAKE IT VISIBLE WHEN THE BUS LOCATION FUNCTION IS IMPLEMENTED
         fabBusLocation.setVisibility(View.GONE);
         btnClearMap.setOnClickListener(clearMapListener);
@@ -222,7 +224,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mapCamera = null;
     }
 
-    // TODO (STABLE VERSION): IMPLEMENT THIS METHOD
+    // TODO: IMPLEMENT THIS METHOD
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -234,7 +236,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private void initializeMap(){
         // Configuração da câmera do mapa
         GeoPoint startCameraPoint = new GeoPoint
-                (defaultLocation.getLatitude(),defaultLocation.getLongitude());
+                (defaultPlace.getLatitude(), defaultPlace.getLongitude());
         mapCamera = mapView.getController();
         mapCamera.setZoom(DEFAULT_ZOOM);
         mapCamera.animateTo(startCameraPoint);
@@ -256,7 +258,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mapView.setMaxZoomLevel(MAX_ZOOM);
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
-        mapView.setScrollableAreaLimitDouble(mapBoundaries); // Restringe a área do mapa à região escolhida
+        mapView.setScrollableAreaLimitDouble(mapRegion); // Restringe a área do mapa à região escolhida
     }
 
     private void enableMyLocationOverlay(){
@@ -299,7 +301,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
                     longitude = userLocation.getLongitude();
 
             // Checa se o usuário se encontra dentro da area do mapa
-            if(!mapBoundaries.contains(latitude,longitude)) Toast.makeText(parentContext,
+            if(!mapRegion.contains(latitude,longitude)) Toast.makeText(parentContext,
                     R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
             else{
                 Log.i(TAG,"Current Location: (" + latitude + "," + longitude + ")" );
@@ -324,11 +326,11 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     /**
      * Creates and add an overlay to the map.
-     * @param PLACES - List of places to plot on the map.
+     * @param places - List of places to plot on the map.
      * @param markersType - Identify what icon should be used for markers.
      * @param overlayTag - Identify the overlay to be added on the OverlayManager.
      */
-    public void createLayerToMap(final List<Place> PLACES, MarkerTypes markersType, OverlayTags overlayTag){
+    public void createLayerToMap(final List<Place> places, MarkerTypes markersType, OverlayTags overlayTag){
         final FolderOverlay poiMarkers = new FolderOverlay();
 
         MapUtils mapUtils = new MapUtils(getContext());
@@ -336,7 +338,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
 
         // Creates a marker for each place found
-        for (final Place place : PLACES) {
+        for (final Place place : places) {
             Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
