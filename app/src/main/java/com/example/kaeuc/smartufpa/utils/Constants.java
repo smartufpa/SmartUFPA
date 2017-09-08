@@ -20,7 +20,7 @@ public final class Constants {
     public static final String TAG_TOILETS = "toilets";
     public static final String TAG_EXHIBITION_CENTRE = "exhibition_centre";
     public static final String TAG_LIBRARY = "library";
-    public static final String TAG_RESTAURANT = "restaurant";
+    public static final String TAG_FOOD = "food";
     public static final String TAG_FOOD_COURT = "food_court";
 
     //URLS
@@ -31,33 +31,35 @@ public final class Constants {
     // Overpass API url
     
     // Queries compactadas para url
-    public static final String QUERY_OVERPASS_TOILETS = "[out:json][timeout:30];" +
-            "area[\"name\"=\"Universidade Federal do Pará\"]->.a;" +
-            "(way(area.a)[\"toilets\"=\"yes\"];way(area.a)[\"amenity\"=\"toilets\"];" +
-            "node(area.a)[\"amenity\"=\"toilets\"];);" +
+    public static final String QUERY_OVERPASS_RESTROOM = "[out:json][timeout:30];" +
+            "(way[\"toilets\"=\"yes\"](%f,%f,%f,%f);" +
+            "way[\"amenity\"=\"toilets\"](%f,%f,%f,%f);" +
+            "node[\"amenity\"=\"toilets\"](%f,%f,%f,%f););" +
             "out body center;";
-    public static final String QUERY_OVERPASS_RESTAURANT = "[out:json][timeout:30];" +
-            "area[\"name\"=\"Universidade Federal do Pará\"]->.a;" +
-            "(way(area.a)[\"amenity\"=\"restaurant\"];" +
-            "way(area.a)[\"amenity\"=\"food_court\"];" +
-            "node(area.a)[\"amenity\"=\"restaurant\"];);" +
+
+
+    public static final String QUERY_OVERPASS_FOOD =  "[out:json][timeout:30];" +
+            "(way[\"amenity\"=\"restaurant\"](%f,%f,%f,%f);" +
+            "way[\"amenity\"=\"food_court\"](%f,%f,%f,%f);" +
+            "node[\"amenity\"=\"restaurant\"](%f,%f,%f,%f););" +
             "out body center;";
+
     public static final String QUERY_OVERPASS_XEROX = "[out:json][timeout:30];" +
-            "area[\"name\"=\"Universidade Federal do Pará\"]->.a;" +
-            "(way(area.a)[\"shop\"=\"copyshop\"];" +
-            "node(area.a)[\"shop\"=\"copyshop\"];);" +
-            "out body center;\n";
-    public static final String QUERY_OVERPASS_AUDITORIUMS = "[out:json][timeout:30];" +
-            "area[\"name\"=\"Universidade Federal do Pará\"]->.a;" +
-            "(way(area.a)[\"amenity\"=\"exhibition_centre\"];" +
-            "way(area.a)[\"amenity\"=\"exhibition_centre\"];" +
-            "node(area.a)[\"amenity\"=\"exhibition_centre\"];);" +
+            "(way[\"shop\"=\"copyshop\"](%f,%f,%f,%f);" +
+            "way[\"shop\"=\"copyshop\"](%f,%f,%f,%f);" +
+            "node[\"shop\"=\"copyshop\"](%f,%f,%f,%f););" +
             "out body center;";
+
+    public static final String QUERY_OVERPASS_AUDITORIUMS = "[out:json][timeout:30];" +
+            "(way[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f);" +
+            "way[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f);" +
+            "node[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f););" +
+            "out body center;";
+
     public static final String QUERY_OVERPASS_LIBRARIES = "[out:json][timeout:30];" +
-            "area[\"name\"=\"Universidade Federal do Pará\"]->.a;" +
-            "(way(area.a)[\"amenity\"=\"library\"];" +
-            "way(area.a)[\"amenity\"=\"library\"];" +
-            "node(area.a)[\"amenity\"=\"library\"];);" +
+            "(way[\"amenity\"=\"library\"](%f,%f,%f,%f);" +
+            "way[\"amenity\"=\"library\"](%f,%f,%f,%f);" +
+            "node[\"amenity\"=\"library\"](%f,%f,%f,%f););" +
             "out body center;";
 
 
@@ -74,10 +76,10 @@ public final class Constants {
 
     public static final String QUERY_OVERPASS_BUS_ROUTE = "[out:json][timeout:30];" +
             "(relation[name=\"circular\"][highway=bus_stop]);" + "out qt body 500;" +
-            "(node[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957);" +
-            "way[route=bus][name=\"circular\"](-1.479967,-48.459779,-1.457886,-48.437957););" +
+            "(node[route=bus][name=\"circular\"](%f,%f,%f,%f);" +
+            "way[route=bus][name=\"circular\"](%f,%f,%f,%f););" +
             "out qt geom tags 500;relation[route=bus][name=\"circular\"]" +
-            "(-1.479967,-48.459779,-1.457886,-48.437957);out qt geom body 500;";
+            "(%f,%f,%f,%f);out qt geom body 500;";
 
     // Usado na factory para places, apresentado nos detalhes sobre o local
     // caso um nome não tenha sido definido
@@ -95,7 +97,4 @@ public final class Constants {
     public static final String DEFAULT_PLACE_COORDINATES = "default_place_coordinates";
     public static final String DEFAULT_PLACE_NAME = "default_place_name" ;
     public static final String MAP_REGION_BOUNDS = "map_region_bounds";
-
-
-    ;
 }

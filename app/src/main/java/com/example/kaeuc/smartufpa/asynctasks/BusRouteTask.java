@@ -1,10 +1,12 @@
 package com.example.kaeuc.smartufpa.asynctasks;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 import com.example.kaeuc.smartufpa.fragments.MapFragment;
 import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import com.example.kaeuc.smartufpa.utils.BusRouteKmlStyler;
+import com.example.kaeuc.smartufpa.utils.ConfigHelper;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.enums.ServerResponse;
 
@@ -42,12 +44,22 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
     @Override
     protected Overlay doInBackground(Void... voids) {
         OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
+        // For overpass queries, use the following order of coordinates: (south,west,north,east)
+        final String[] mapRegionBounds = ConfigHelper.getConfigValue(mapFragment.getContext(), Constants.MAP_REGION_BOUNDS).split(",");
+        double north = Double.valueOf(mapRegionBounds[0]);
+        double east = Double.valueOf(mapRegionBounds[1]);
+        double south = Double.valueOf(mapRegionBounds[2]);
+        double west = Double.valueOf(mapRegionBounds[3]);
 
         // Build the query
         StringBuilder builder = new StringBuilder();
         builder.append(Constants.URL_OVERPASS_SERVER);
+        @SuppressLint("DefaultLocale") final String query = String.format(Constants.QUERY_OVERPASS_BUS_ROUTE,
+                south,west,north,east,
+                south,west,north,east,
+                south,west,north,east);
         try {
-            builder.append(URLEncoder.encode(Constants.QUERY_OVERPASS_BUS_ROUTE,"UTF-8"));
+            builder.append(URLEncoder.encode(query,"UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -57,8 +69,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
         // true if ok, false if technical error.
         if(overpassProvider.addInKmlFolder(kmlDocument.mKmlRoot, finalUrl)){
             KmlFeature.Styler busRouteStyler = new BusRouteKmlStyler(mapFragment.getContext());
-            FolderOverlay kmlOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(mapView,null, busRouteStyler, kmlDocument);
-            return kmlOverlay;
+            return kmlDocument.mKmlRoot.buildOverlay(mapView,null, busRouteStyler, kmlDocument);
         }
         taskStatus = ServerResponse.CONNECTION_FAILED;
         return null;

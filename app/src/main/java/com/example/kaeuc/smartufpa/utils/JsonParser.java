@@ -8,6 +8,7 @@ import com.example.kaeuc.smartufpa.models.overpass.OverpassJsonModel;
 import com.example.kaeuc.smartufpa.models.Place;
 import com.example.kaeuc.smartufpa.models.PlaceFactory;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,12 @@ public class JsonParser {
 
     public static ArrayList<Place> parseOverpassResponse(String jsonInput) throws EmptyResponseException{
         Gson gson = new Gson();
-        OverpassJsonModel overpassJsonModel = gson.fromJson(jsonInput, OverpassJsonModel.class);
+        OverpassJsonModel overpassJsonModel = null;
+        try{
+            overpassJsonModel = gson.fromJson(jsonInput, OverpassJsonModel.class);
+        }catch (JsonSyntaxException e){
+            e.printStackTrace();
+        }
         PlaceFactory factory = PlaceFactory.getInstance();
         ArrayList<Place> places = new ArrayList<>();
 

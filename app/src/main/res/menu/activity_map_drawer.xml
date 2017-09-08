@@ -19,9 +19,9 @@
                 android:title="@string/nav_libraries"/>
 
             <item
-                android:id="@+id/nav_restaurant"
-                android:icon="@drawable/ic_restaurant"
-                android:title="@string/nav_restaurants"
+                android:id="@+id/nav_food"
+                android:icon="@drawable/ic_food"
+                android:title="@string/nav_food"
                 />
             <item
                 android:id="@+id/nav_bus_route"

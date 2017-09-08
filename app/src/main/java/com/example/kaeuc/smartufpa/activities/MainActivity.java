@@ -132,6 +132,8 @@ public class MainActivity extends AppCompatActivity
                 final String[] defaultPlaceCoord = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_COORDINATES).split(",");
                 final String[] mapRegionBounds = ConfigHelper.getConfigValue(this, Constants.MAP_REGION_BOUNDS).split(",");
                 final String defaultPlaceName = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_NAME);
+
+
                 // Parse information about place
                 double lat = Double.valueOf(defaultPlaceCoord[0]);
                 double longtd = Double.valueOf(defaultPlaceCoord[1]);
@@ -191,9 +193,9 @@ public class MainActivity extends AppCompatActivity
                                 new FilterSearchTask(context).execute(filter);
                             }
                             break;
-                        case R.id.nav_restaurant:
-                            filter = OverpassFilters.RESTAURANT;
-                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTAURANT)) {
+                        case R.id.nav_food:
+                            filter = OverpassFilters.FOOD;
+                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_FOOD)) {
                                 progressBar.setVisibility(View.VISIBLE);
                                 new FilterSearchTask(context).execute(filter);
                             }
@@ -297,15 +299,16 @@ public class MainActivity extends AppCompatActivity
         searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconified(false);
 
-        //Restaura as preferencias gravadas para executar ou não o tutorial
+        // Restore the preferes stored and decide on executing or not the app tutorial
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         final int tutorialStatus = sharedPref.getInt(getString(R.string.tutorial_map_executed), Constants.TUTORIAL_NOT_EXECUTED);
         if(tutorialStatus == Constants.TUTORIAL_NOT_EXECUTED)
-            runMapTutorial();
+            runAppTutorial();
 
 
         return true;
@@ -342,7 +345,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFilterSearchResponse(final ArrayList<Place> places, MarkerTypes markersType, OverlayTags overlayTag, final ServerResponse taskStatus) {
+    public void onFilterSearchResponse(final ArrayList<Place> places, final MarkerTypes markersType, final OverlayTags overlayTag, final ServerResponse taskStatus) {
         if(taskStatus == ServerResponse.SUCCESS){
             mapFragment.createLayerToMap(places,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
@@ -350,12 +353,18 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
         }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
             Toast.makeText(this, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
+        }else if(taskStatus.equals(ServerResponse.EMPTY_RESPONSE)) {
+            new MaterialDialog.Builder(this)
+                    .title(getString(R.string.dialog_title))
+                    .content(R.string.msg_no_filter_results)
+                    .positiveText("OK")
+                    .show();
         }
         progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void onSearchQueryResponse(final ArrayList<Place> places, final ServerResponse taskStatus) {
+    public void onSearchQueryResponse(ArrayList<Place> places, final ServerResponse taskStatus) {
         progressBar.setVisibility(View.INVISIBLE);
 
         if(taskStatus == ServerResponse.SUCCESS){
@@ -377,11 +386,11 @@ public class MainActivity extends AppCompatActivity
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                 // Places to pass over PlaceDetailsFragment to present the data
-                final Place CURRENT_PLACE = places.get(0);
-                final Place USER_LOCATION = mapFragment.getUserLocation();
+                final Place currentPlace = places.get(0);
+                final Place userLocation = mapFragment.getUserLocation();
 
                 // Open PlaceDetailsFragment
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(CURRENT_PLACE, USER_LOCATION);
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace, userLocation);
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -390,7 +399,7 @@ public class MainActivity extends AppCompatActivity
 
                 // Uses mapFragment methods to utilize map functions
                 final MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                mapFragment.zoomToGeoPoint(CURRENT_PLACE.getGeoPoint(),18);
+                mapFragment.zoomToGeoPoint(currentPlace.getGeoPoint(),18);
                 mapFragment.createLayerToMap(places, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
             }
 
@@ -410,7 +419,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    private void runMapTutorial(){
+    private void runAppTutorial(){
         ArrayList<ShowcaseHolder> holders = new ArrayList<>();
 
         try {

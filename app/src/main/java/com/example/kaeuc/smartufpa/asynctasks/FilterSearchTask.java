@@ -1,11 +1,13 @@
 package com.example.kaeuc.smartufpa.asynctasks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnFilterSearchListener;
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.ConfigHelper;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
 import com.example.kaeuc.smartufpa.utils.enums.OverlayTags;
@@ -44,45 +46,68 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
         this.taskStatus = ServerResponse.SUCCESS;
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     protected String doInBackground(OverpassFilters... params) {
         searchFilter = params[0];
         String query = null;
         String jsonResponse = null;
 
-        if(searchFilter.equals(OverpassFilters.RESTAURANT)) {
+        // For overpass queries, use the following order of coordinates: (south,west,north,east)
+        final String[] mapRegionBounds = ConfigHelper.getConfigValue(parentContext, Constants.MAP_REGION_BOUNDS).split(",");
+        double north = Double.valueOf(mapRegionBounds[0]);
+        double east = Double.valueOf(mapRegionBounds[1]);
+        double south = Double.valueOf(mapRegionBounds[2]);
+        double west = Double.valueOf(mapRegionBounds[3]);
 
-            query = Constants.QUERY_OVERPASS_RESTAURANT;
-            overlayTag = OverlayTags.FILTER_RESTAURANT;
-            markersType = MarkerTypes.RESTAURANT;
+
+        if(searchFilter.equals(OverpassFilters.FOOD)) {
+
+            query = String.format(Constants.QUERY_OVERPASS_FOOD,
+                    south,west,north,east,
+                    south,west,north,east,
+                    south,west,north,east);
+            overlayTag = OverlayTags.FILTER_FOOD;
+            markersType = MarkerTypes.FOOD;
 
         }else if(searchFilter.equals(OverpassFilters.RESTROOM)) {
 
-            query = Constants.QUERY_OVERPASS_TOILETS;
+            query = String.format(Constants.QUERY_OVERPASS_RESTROOM,
+                    south,west,north,east,
+                    south,west,north,east,
+                    south,west,north,east);
             overlayTag = OverlayTags.FILTER_RESTROOM;
             markersType = MarkerTypes.RESTROOM;
 
         }else if(searchFilter.equals(OverpassFilters.XEROX)) {
 
-            query = Constants.QUERY_OVERPASS_XEROX;
+            query = String.format(Constants.QUERY_OVERPASS_XEROX,
+                    south,west,north,east,
+                    south,west,north,east,
+                    south,west,north,east);
             overlayTag = OverlayTags.FILTER_XEROX;
             markersType = MarkerTypes.XEROX;
 
         }else if(searchFilter.equals(OverpassFilters.AUDITORIUMS)) {
 
-            query = Constants.QUERY_OVERPASS_AUDITORIUMS;
+            query = String.format(Constants.QUERY_OVERPASS_AUDITORIUMS,
+                    south,west,north,east,
+                    south,west,north,east,
+                    south,west,north,east);
             overlayTag = OverlayTags.FILTER_AUDITORIUMS;
             markersType = MarkerTypes.AUDITORIUM;
 
         }else if(searchFilter.equals(OverpassFilters.LIBRARIES)) {
 
-            query = Constants.QUERY_OVERPASS_LIBRARIES;
+            query = String.format(Constants.QUERY_OVERPASS_LIBRARIES,
+                    south,west,north,east,
+                    south,west,north,east,
+                    south,west,north,east);
             overlayTag = OverlayTags.FILTER_LIBRARIES;
             markersType = MarkerTypes.LIBRARY;
         }
 
         try {
-
             jsonResponse = HttpRequest.makeGetRequest(Constants.URL_OVERPASS_SERVER,query);
         } catch (SocketTimeoutException e) {
             taskStatus = ServerResponse.TIMEOUT;
@@ -104,9 +129,14 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
 
         }else if(taskStatus.equals(ServerResponse.SUCCESS)){
             //Recebe a resposta em json e processa os lugares em uma lista
-            final ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
+            try{
+                final ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
+                callBack.onFilterSearchResponse(places, markersType, overlayTag, taskStatus);
+            }catch (JsonParser.EmptyResponseException e){
+                taskStatus = ServerResponse.EMPTY_RESPONSE;
+                callBack.onFilterSearchResponse(null, null, null, taskStatus);
+            }
             // Retorna os valores para a activity que chamou a ASyncTask
-            callBack.onFilterSearchResponse(places, markersType, overlayTag, taskStatus);
         }
 
 

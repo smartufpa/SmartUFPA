@@ -5,5 +5,5 @@ package com.example.kaeuc.smartufpa.utils.enums;
  */
 
 public enum MarkerTypes {
-    DEFAULT, RESTAURANT, RESTROOM, AUDITORIUM, LIBRARY, BUS_STOP, XEROX
+    DEFAULT, FOOD, RESTROOM, AUDITORIUM, LIBRARY, BUS_STOP, XEROX
 }

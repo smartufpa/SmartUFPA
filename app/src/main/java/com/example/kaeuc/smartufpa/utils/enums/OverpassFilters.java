@@ -5,5 +5,5 @@ package com.example.kaeuc.smartufpa.utils.enums;
  */
 
 public enum OverpassFilters  {
-    XEROX, RESTAURANT, RESTROOM, AUDITORIUMS, BUS_ROUTE, LIBRARIES
+    XEROX, FOOD, RESTROOM, AUDITORIUMS, BUS_ROUTE, LIBRARIES
 }

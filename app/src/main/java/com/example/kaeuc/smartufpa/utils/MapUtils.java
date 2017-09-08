@@ -11,8 +11,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 import com.example.kaeuc.smartufpa.utils.enums.MarkerTypes;
@@ -45,7 +43,7 @@ public class MapUtils {
             markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
-        }else if (markerType.equals(MarkerTypes.RESTAURANT)){
+        }else if (markerType.equals(MarkerTypes.FOOD)){
 
             markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_restaurant));

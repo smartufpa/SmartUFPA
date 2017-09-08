@@ -7,16 +7,15 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:mapFragment="com.example.kaeuc.smartufpa.fragments.PlaceDetailsFragment">
     <TextView
+        android:id="@+id/txt_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:textAllCaps="true"
         android:text="@string/lbl_place_details"
-        android:id="@+id/txt_results"
-        android:textStyle="bold"
-        android:textSize="16sp"
+        android:textAllCaps="true"
         android:textColor="@color/colorPrimaryText"
-        />
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -25,39 +24,39 @@
         android:src="@drawable/horizontal_img_place_holder"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/txt_det_placename"
-        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/lbl_placeholder"
-        android:textSize="16sp"
         android:textAllCaps="true"
-        />
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_placeholder"
         android:id="@+id/txt_det_place_loc_name"
-        android:layout_marginTop="5dp"/>
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/lbl_placeholder"
+        android:textSize="11sp" />
+
+    <TextView
         android:id="@+id/txt_det_place_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/lorem_ipsum"
-        android:textSize="14sp"/>
+        android:textSize="11sp" />
 
     <Button
         android:id="@+id/btn_det_foot_route"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:text="@string/btn_foot_route"
         android:layout_gravity="bottom|end"
         android:drawableRight="@drawable/ic_directions_walk"
-    />
+        android:text="@string/btn_foot_route"
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/btn_det_rate_info"

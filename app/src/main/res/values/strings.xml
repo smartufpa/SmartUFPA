@@ -50,7 +50,7 @@
 
     <string name="nav_auditorium">Auditórios</string>
     <string name="nav_restrooms">Banheiros</string>
-    <string name="nav_restaurants">Restaurantes</string>
+    <string name="nav_food">Refeições</string>
     <string name="nav_bus_route">Rota do Circular</string>
     <string name="nav_copy_service">Xerox</string>
     <string name="nav_libraries">Bibliotecas</string>
@@ -115,6 +115,7 @@
     <string name="lbl_local_name">Nome local:</string>
     <string name="error_connection_failed">Erro na conexão durante a requisição. Tente novamente.</string>
     <string name="btn_login_entrar">Entrar</string>
+    <string name="msg_no_filter_results">Nenhum local foi encontrado nessa categoria.</string>
 
 
 </resources>

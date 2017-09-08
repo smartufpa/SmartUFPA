@@ -276,7 +276,7 @@ public class AddPlaceFragment extends DialogFragment {
                 tags.setAmenity(Constants.TAG_LIBRARY);
                 break;
             case 4: // Restaurantes
-                tags.setAmenity(Constants.TAG_RESTAURANT);
+                tags.setAmenity(Constants.TAG_FOOD);
                 break;
             case 5: // Xerox
                 tags.setAmenity(Constants.TAG_COPYSHOP);

@@ -1,12 +1,15 @@
 package com.example.kaeuc.smartufpa.asynctasks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 
 import com.example.kaeuc.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
+import com.example.kaeuc.smartufpa.fragments.MapFragment;
 import com.example.kaeuc.smartufpa.models.Place;
+import com.example.kaeuc.smartufpa.utils.ConfigHelper;
 import com.example.kaeuc.smartufpa.utils.Constants;
 import com.example.kaeuc.smartufpa.utils.HttpRequest;
 import com.example.kaeuc.smartufpa.utils.JsonParser;
@@ -29,8 +32,6 @@ public class SearchQueryTask extends AsyncTask<String,Void,String> {
 
     private ServerResponse taskStatus;
 
-
-    // TODO (STABLE VERSION): INCLUDE POIs ONLY WITHIN GIVEN COORDINATES
     public SearchQueryTask(Context parentContext) {
         this.parentContext = parentContext;
         this.callBack = (OnSearchQueryListener) parentContext;
@@ -38,9 +39,11 @@ public class SearchQueryTask extends AsyncTask<String,Void,String> {
     }
 
 
+    @SuppressLint("DefaultLocale")
     private String buildSearchQuery(String userQuery){
         // Cleans all the white spaces on the query
         userQuery = userQuery.replaceAll("\\s+", " ");
+
         if (Character.isWhitespace(userQuery.charAt(userQuery.length()-1))){
             userQuery = userQuery.substring(0,userQuery.length()-1);
         }

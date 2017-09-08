@@ -224,7 +224,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mapCamera = null;
     }
 
-    // TODO: IMPLEMENT THIS METHOD
+    // TODO (POSTPONED): IMPLEMENT THIS METHOD
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -262,7 +262,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
     private void enableMyLocationOverlay(){
-        // TODO (STABLE VERSION): CHECAR, TÁ ADICIONANDO MAIS DE UMA CAMADA
         // Camada de posição do usuário
         if(userLocation == null){
             myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(parentContext),mapView);
@@ -330,7 +329,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
      * @param markersType - Identify what icon should be used for markers.
      * @param overlayTag - Identify the overlay to be added on the OverlayManager.
      */
-    public void createLayerToMap(final List<Place> places, MarkerTypes markersType, OverlayTags overlayTag){
+    public void createLayerToMap(List<Place> places, MarkerTypes markersType, OverlayTags overlayTag){
         final FolderOverlay poiMarkers = new FolderOverlay();
 
         MapUtils mapUtils = new MapUtils(getContext());
@@ -338,7 +337,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
 
         // Creates a marker for each place found
-        for (final Place place : places) {
+        for (int i = 0; i < places.size(); i++) {
+            Place checkPlace = places.get(i);
+            if (!mapRegion.contains(checkPlace.getLatitude(),checkPlace.getLongitude()))
+                places.remove(checkPlace);
+
+            final Place rightPlace =  places.get(i);
             Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
@@ -349,7 +353,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
                     // Sets up a PlaceDetailsFragment to show specific information about the selected Place
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(place,userLocation);
+                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(rightPlace,userLocation);
                     fragmentManager.beginTransaction()
                             .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
                             .commit();
@@ -363,7 +367,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
             final Marker customMarker = mapUtils
                     .createCustomMarker(mapView, markerDrawables.get(MarkerStatuses.NOT_CLICKED),
-                    new GeoPoint(place.getLatitude(), place.getLongitude()), onMarkerClickListener);
+                    new GeoPoint(rightPlace.getLatitude(), rightPlace.getLongitude()), onMarkerClickListener);
 
             poiMarkers.add(customMarker);
 
@@ -382,12 +386,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     public void showRouteToPlace(final Place destination) {
 
-        getActivity().findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
         if (userLocation == null){
             Toast.makeText(parentContext, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
         }else if(ROUTES_COUNTER == MAX_ROUTES) {
             Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         } else {
+            getActivity().findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
             new SearchRouteTask(this)
                     .execute(userLocation.getGeoPoint(), destination.getGeoPoint());
         }
