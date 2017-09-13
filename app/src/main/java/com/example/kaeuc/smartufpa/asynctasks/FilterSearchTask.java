@@ -121,12 +121,8 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
     @Override
     protected void onPostExecute(String jsonResponse) {
         super.onPostExecute(jsonResponse);
-        if (jsonResponse == null){
-            taskStatus = ServerResponse.CONNECTION_FAILED;
-            callBack.onFilterSearchResponse(null,null,null,taskStatus);
-        }else if(taskStatus.equals(ServerResponse.TIMEOUT)){
+        if(taskStatus.equals(ServerResponse.TIMEOUT)){
             callBack.onFilterSearchResponse(null, null, null, taskStatus);
-
         }else if(taskStatus.equals(ServerResponse.SUCCESS)){
             //Recebe a resposta em json e processa os lugares em uma lista
             try{
@@ -135,6 +131,9 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
             }catch (JsonParser.EmptyResponseException e){
                 taskStatus = ServerResponse.EMPTY_RESPONSE;
                 callBack.onFilterSearchResponse(null, null, null, taskStatus);
+            } catch (JsonParser.IrregularQueryException e ){
+                taskStatus = ServerResponse.INTERNAL_ERROR;
+                callBack.onFilterSearchResponse(null,null,null,taskStatus);
             }
             // Retorna os valores para a activity que chamou a ASyncTask
         }

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class JsonParser {
     // TAG para logs
-    private static final String TAG = "JsonParser";
+    private static final String TAG = JsonParser.class.getSimpleName();
 
     public static List<Place> parseLocalResponse(String jsonResponse){
         return null;
@@ -29,36 +29,44 @@ public class JsonParser {
 
     public static ArrayList<Place> parseOverpassResponse(String jsonInput) throws EmptyResponseException{
         Gson gson = new Gson();
-        OverpassJsonModel overpassJsonModel = null;
+        OverpassJsonModel overpassJsonModel;
         try{
             overpassJsonModel = gson.fromJson(jsonInput, OverpassJsonModel.class);
         }catch (JsonSyntaxException e){
             e.printStackTrace();
+            throw new IrregularQueryException("Your query presents an syntax error.");
         }
-        PlaceFactory factory = PlaceFactory.getInstance();
-        ArrayList<Place> places = new ArrayList<>();
 
         if(overpassJsonModel.getElements().isEmpty()){
-            throw new EmptyResponseException("Empty response for the current query.");
+            throw new EmptyResponseException("The response for your query is empty");
         }
-        for (Element element :
+
+        PlaceFactory factory = PlaceFactory.getInstance();
+        ArrayList<Place> places = new ArrayList<>();
+        try {
+            for (Element element :
                 overpassJsonModel.getElements()) {
-            try {
                 if (element.isCenterEmpty())
                     places.add(factory.createPlace(element.getId(),
                             element.getLat(), element.getLon(), element.getTags()));
                 else
                     places.add(factory.createPlace(element.getId(),
                             element.getCenter().getLat(), element.getCenter().getLon(), element.getTags()));
-            }catch (NullPointerException e){
-                e.printStackTrace();
+
             }
+        }catch (NullPointerException e){
+            e.printStackTrace();
+
         }
         return places;
     }
 
     public static class EmptyResponseException extends RuntimeException{
         private EmptyResponseException(String message) { super(message); }
+    }
+
+    public static class IrregularQueryException extends RuntimeException{
+        private IrregularQueryException(String message) { super(message); }
     }
 
 

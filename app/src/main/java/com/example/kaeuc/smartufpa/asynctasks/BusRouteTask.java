@@ -22,7 +22,7 @@ import java.net.URLEncoder;
 
 /**
  * Created by kaeuc on 31/08/2017.
- * https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
+ * reference: https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
  */
 
 public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {

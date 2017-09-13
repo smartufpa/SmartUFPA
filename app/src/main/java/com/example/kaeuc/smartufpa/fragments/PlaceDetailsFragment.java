@@ -42,8 +42,6 @@ public class PlaceDetailsFragment extends Fragment {
 
     private Place currentPlace;
 
-
-
     private Place userLocation;
 
     public PlaceDetailsFragment() {

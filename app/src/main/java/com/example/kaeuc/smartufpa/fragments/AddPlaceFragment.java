@@ -125,14 +125,14 @@ public class AddPlaceFragment extends DialogFragment {
         final View view = inflater.inflate(R.layout.fragment_add_place, container, false);
 
         // Encontra todas as Views do layout
-        btnCancel = (Button) view.findViewById(R.id.btn_fragment_cancel);
-        btnConfirm = (Button) view.findViewById(R.id.btn_fragment_confirm);
-        edtName = (TextInputEditText) view.findViewById(R.id.edt_name);
-        edtShortName = (TextInputEditText) view.findViewById(R.id.edt_short_name);
-        edtLocalName = (TextInputEditText) view.findViewById(R.id.edt_local_name);
-        edtDescription = (TextInputEditText) view.findViewById(R.id.edt_description);
-        edtOther = (TextInputEditText) view.findViewById(R.id.edt_other);
-        spinnerDefaultMarkers = (Spinner) view.findViewById(R.id.spinner);
+        btnCancel = view.findViewById(R.id.btn_fragment_cancel);
+        btnConfirm = view.findViewById(R.id.btn_fragment_confirm);
+        edtName = view.findViewById(R.id.edt_name);
+        edtShortName = view.findViewById(R.id.edt_short_name);
+        edtLocalName = view.findViewById(R.id.edt_local_name);
+        edtDescription = view.findViewById(R.id.edt_description);
+        edtOther = view.findViewById(R.id.edt_other);
+        spinnerDefaultMarkers = view.findViewById(R.id.spinner);
 
         edtName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

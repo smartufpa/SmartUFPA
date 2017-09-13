@@ -7,5 +7,5 @@ package com.example.kaeuc.smartufpa.utils.enums;
 
 
 public enum ServerResponse {
-    TIMEOUT, EMPTY_RESPONSE, SUCCESS, CONNECTION_FAILED
+    TIMEOUT, EMPTY_RESPONSE, SUCCESS, CONNECTION_FAILED, INTERNAL_ERROR;
 }

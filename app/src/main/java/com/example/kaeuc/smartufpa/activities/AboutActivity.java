@@ -1,8 +1,7 @@
 package com.example.kaeuc.smartufpa.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.kaeuc.smartufpa.R;
 
@@ -14,23 +13,5 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG,"onStop()");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG,"onPause()");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG,"onDestroy()");
     }
 }

@@ -35,8 +35,8 @@ public class AddPlaceInfoWindow extends InfoWindow{
 
     @Override
     public void onOpen(Object o) {
-        btnAddPlaceFrag = (ImageButton) getView().findViewById(R.id.img_add_info);
-        btnCloseWindow = (ImageButton) getView().findViewById(R.id.img_close);
+        btnAddPlaceFrag = getView().findViewById(R.id.img_add_info);
+        btnCloseWindow = getView().findViewById(R.id.img_close);
         btnCloseWindow.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {

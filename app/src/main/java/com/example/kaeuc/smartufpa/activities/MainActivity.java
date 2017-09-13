@@ -81,8 +81,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Encontra as views
+        // views
         layoutDrawer =  findViewById(R.id.layout_drawer);
         mapToolbar =  findViewById(R.id.tb_main);
         navigationView =  findViewById(R.id.nav_view);
@@ -99,7 +98,8 @@ public class MainActivity extends AppCompatActivity
         setIntent(intent);
         handleIntent(intent);
     }
-    // REALIZA A BUSCA
+
+    // Actually does the search
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction()) && SystemServicesManager.isNetworkEnabled(this)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -133,7 +134,6 @@ public class MainActivity extends AppCompatActivity
                 final String[] mapRegionBounds = ConfigHelper.getConfigValue(this, Constants.MAP_REGION_BOUNDS).split(",");
                 final String defaultPlaceName = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_NAME);
 
-
                 // Parse information about place
                 double lat = Double.valueOf(defaultPlaceCoord[0]);
                 double longtd = Double.valueOf(defaultPlaceCoord[1]);
@@ -152,7 +152,6 @@ public class MainActivity extends AppCompatActivity
                 ft.replace(R.id.frame_map_container,mapFragment,MapFragment.FRAGMENT_TAG);
                 ft.commit();
 
-
             }catch (NullPointerException e){
                 e.printStackTrace();
             }
@@ -162,17 +161,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupDrawer(){
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-                this, layoutDrawer, mapToolbar,R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close){
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                final int state = bottomSheetBehavior.getState();
-                if(state  == BottomSheetBehavior.STATE_EXPANDED || state == BottomSheetBehavior.STATE_COLLAPSED){
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, layoutDrawer, mapToolbar,
+                R.string.navigation_drawer_open,R.string.navigation_drawer_close){
+            // Called when a drawer has settled in a completely open state.
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    final int state = bottomSheetBehavior.getState();
+                    if(state  == BottomSheetBehavior.STATE_EXPANDED || state == BottomSheetBehavior.STATE_COLLAPSED){
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
                 }
-            }
         };
         layoutDrawer.addDrawerListener(drawerToggle);
 
@@ -182,13 +180,13 @@ public class MainActivity extends AppCompatActivity
                 // TODO (OFFLINE FUNCTIONS): CHECK IF DATA IS IN MEMORY; IF IT'S NOT CHECK INTERNET TO DOWNLOAD
                 final int id = item.getItemId();
                 if(SystemServicesManager.isNetworkEnabled(getApplicationContext())) {
-                    // Guarda a ID do botão clicado
                     OverpassFilters filter;
                     Context context = MainActivity.this;
                     switch (id) {
                         case R.id.nav_copy_service:
                             filter = OverpassFilters.XEROX;
-                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) { // Caso a camada de filtro não esteja ativa, executar a busca
+                            // If the layer is enabled it means the search was performed and there is no need to do it again
+                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) {
                                 progressBar.setVisibility(View.VISIBLE);
                                 new FilterSearchTask(context).execute(filter);
                             }
@@ -286,7 +284,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
+                // Nothing to do here
             }
         });
     }
@@ -296,6 +294,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+
         searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -326,7 +325,7 @@ public class MainActivity extends AppCompatActivity
         SearchResultFragment searchResultFragment = (SearchResultFragment) getSupportFragmentManager()
                 .findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
 
-        // Defines bottomshet behavior
+        // Defines bottomshet behavior when back button is pressed
         if(placeDetailsFragment != null && (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED))
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         else if((placeDetailsFragment != null && searchResultFragment == null ) && (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED))
@@ -338,7 +337,7 @@ public class MainActivity extends AppCompatActivity
         else if (searchResultFragment != null && (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED))
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-
+        // Defines bottomshet behavior when the drawer is open
         if(!layoutDrawer.isDrawerOpen(GravityCompat.START) && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN)
             super.onBackPressed();
 
@@ -346,6 +345,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFilterSearchResponse(final ArrayList<Place> places, final MarkerTypes markersType, final OverlayTags overlayTag, final ServerResponse taskStatus) {
+        progressBar.setVisibility(View.INVISIBLE);
         if(taskStatus == ServerResponse.SUCCESS){
             mapFragment.createLayerToMap(places,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity
                     .positiveText("OK")
                     .show();
         }
-        progressBar.setVisibility(View.INVISIBLE);
+
     }
 
     @Override

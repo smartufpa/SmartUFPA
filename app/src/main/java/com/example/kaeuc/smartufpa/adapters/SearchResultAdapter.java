@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Created by kaeuc on 11/14/2016.
- * ArrayAdapter para ser utilizado na lista de resultados da Busca
+ * ArrayAdapter used for listing the results on searches with multiple POIs
  */
 
 public class SearchResultAdapter extends RecyclerView.Adapter{
@@ -80,8 +80,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
         private SearchResultViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            txtPlaceName = (TextView) itemView.findViewById(R.id.list_txt_place_name);
-            txtLocName = (TextView) itemView.findViewById(R.id.list_txt_place_loc_name);
+            txtPlaceName = itemView.findViewById(R.id.list_txt_place_name);
+            txtLocName = itemView.findViewById(R.id.list_txt_place_loc_name);
 
         }
 

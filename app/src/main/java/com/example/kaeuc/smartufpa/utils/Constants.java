@@ -56,6 +56,8 @@ public final class Constants {
             "node[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f););" +
             "out body center;";
 
+
+
     public static final String QUERY_OVERPASS_LIBRARIES = "[out:json][timeout:30];" +
             "(way[\"amenity\"=\"library\"](%f,%f,%f,%f);" +
             "way[\"amenity\"=\"library\"](%f,%f,%f,%f);" +
