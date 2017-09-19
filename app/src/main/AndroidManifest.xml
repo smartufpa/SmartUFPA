@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kaeuc.smartufpa">
+    package="br.ufpa.smartufpa">
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="26" />
@@ -27,7 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.LoginScreenActivity"
+            android:name="br.ufpa.smartufpa.activities.LoginScreenActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_LOGIN" />
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.MainActivity"
+        <activity android:name="br.ufpa.smartufpa.activities.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_MAIN" />
@@ -54,7 +54,7 @@
         </activity>
 
         <activity
-            android:name=".activities.NoGpsActivity">
+            android:name="br.ufpa.smartufpa.activities.NoGpsActivity">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_NO_GPS" />
 
@@ -64,7 +64,7 @@
         </activity>
 
         <activity
-            android:name=".activities.AppMenuActivity">
+            android:name="br.ufpa.smartufpa.activities.MenuActivity">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_APP_MENU" />
 
@@ -74,7 +74,7 @@
         </activity>
 
         <activity
-            android:name=".activities.AboutActivity"
+            android:name="br.ufpa.smartufpa.activities.AboutActivity"
             android:label="Sobre">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_ABOUT" />

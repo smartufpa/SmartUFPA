@@ -5,7 +5,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:orientation="vertical"
-    tools:mapFragment="com.example.kaeuc.smartufpa.fragments.SearchResultFragment">
+    tools:mapFragment="br.ufpa.smartufpa.fragments.SearchResultFragment">
 
     <TextView
         android:layout_width="wrap_content"

@@ -8,7 +8,7 @@
     android:paddingRight="8dp"
     android:paddingTop="8dp"
     android:orientation="vertical"
-    tools:callback="com.example.kaeuc.smartufpa.activities.MainActivity">
+    tools:callback="br.ufpa.smartufpa.activities.MainActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/tb_main"
