@@ -1,3 +1,4 @@
+<!--Stable Commit (20/09)-->
 <resources>
 
     <style name="AppTheme.NoActionBar">
@@ -9,7 +10,29 @@
 
     <style name="ProgressBarTheme" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:progressBackgroundTint">@color/white</item>
+        <item name="android:progressBackgroundTint">@android:color/white</item>
 
     </style>
+
+    <style name="RaisedButton" parent="Theme.AppCompat">
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="RaisedButtonDisabled" parent="Theme.AppCompat">
+        <item name="colorControlHighlight">@color/disabledHighlight</item>
+        <item name="colorButtonNormal">@color/disabledButton</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+
+
 </resources>

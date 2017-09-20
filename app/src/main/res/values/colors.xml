@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Stable Commit (20/09)-->
 <resources>
-    <color name="colorPrimary">#5774b6</color>
-    <color name="colorPrimaryDark">#004b82</color>
-    <color name="colorAccent">#fdd835</color>
-    <color name="disabledButton">#cccccc</color>
-    <color name="enabledButton">#e10a0a</color>
-    <color name="loginBackground">#ffffff</color>
-    <color name="white">#ffff</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryLight">#C5CAE9</color>
+    <color name="colorAccent">#448AFF</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorIcons">#FFFFFF</color>
+    <color name="colorActionBarTitle">#FFFFFF</color>
+    <color name="colorDivider">#BDBDBD</color>
+    <color name="disabledButton">#e0e0e0</color>
+    <color name="disabledHighlight">@android:color/darker_gray</color>
+    <color name="white">@android:color/white</color>
+    <color name="bottomSheetBackground">#f5f5f5</color>
+
+
+
 </resources>

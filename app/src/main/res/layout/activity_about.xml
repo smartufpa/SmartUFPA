@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Stable Commit (20/09)-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_about"
@@ -8,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:callback="com.example.kaeuc.smartufpa.AboutActivity">
+    tools:callback="br.ufpa.smartufpa.activities.AboutActivity">
     
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:id="@+id/logo_ufpa_about"
-        android:src="@drawable/ic_ufpa"
+        android:src="@drawable/logo_ufpa"
         />
 
         <ImageView
@@ -31,116 +32,130 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:id="@+id/logo_labvis"
-            android:src="@drawable/ic_labvis"
+            android:src="@drawable/logo_labvis"
             android:layout_toRightOf="@+id/logo_ufpa_about"
             android:layout_toEndOf="@+id/logo_ufpa_about"
             />
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logos"
         android:layout_centerHorizontal="true"
+        android:orientation="vertical"
         >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_coordenadores"
             android:textSize="16sp"
             android:layout_marginTop="20dp"
-            android:text="Coordenadores do projeto:"
-            android:layout_centerHorizontal="true"
+            android:text="@string/about_lbl_coord"
+            android:layout_gravity="center_horizontal"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_ana"
             android:textSize="15sp"
-            android:layout_below="@+id/txt_coordenadores"
-            android:text="Ana Régia de Mendonça Neves"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_lbl_ana"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_bianchi"
             android:textSize="15sp"
-            android:layout_below="@+id/txt_ana"
-            android:text="Bianchi Serique Meiguins"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_lbl_bianchi"
+
             />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_desenvolvedores"
             android:textSize="16sp"
             android:layout_marginTop="20dp"
-            android:layout_below="@+id/txt_bianchi"
-            android:text="Desenvolvedores:"
-            android:layout_centerHorizontal="true"
-            />
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_lbl_desenv"
 
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_francisco"
             android:textSize="15sp"
-            android:layout_below="@+id/txt_desenvolvedores"
-            android:text="Francisco Carrera Nascimento Júnior"
-            android:layout_centerHorizontal="true"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_kae"
-            android:textSize="15sp"
-            android:layout_below="@+id/txt_francisco"
-            android:text="Kaê Uchôa Sarmanho"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_kae"
             />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_nomeapp"
             android:textSize="15sp"
             android:layout_marginTop="20dp"
-            android:layout_below="@+id/txt_kae"
-            android:text="Smart UFPA Versão 1.0"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_version"
+
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_labvis"
             android:textSize="15sp"
-            android:layout_below="@+id/txt_nomeapp"
-            android:text="Laboratório de Visualização (LABVIS)"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_labvis"
             />
-
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_lbl_logo"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_ufpa"
             android:textSize="15sp"
-            android:layout_below="@+id/txt_labvis"
-            android:text="Universidade Federal do Pará"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_giordana"
             />
-    </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_port_gio"
+            android:autoLink="web"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_lbl_more"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_site"
+            android:autoLink="web"
+            />
+
+    </LinearLayout>
 
 
 </RelativeLayout>

@@ -1,0 +1,60 @@
+<!--Stable Commit (20/09)-->
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/coordinator_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+    tools:mapFragment="br.ufpa.smartufpa.fragments.MapFragment">
+
+    <!-- MAP VIEW WILL BE INSERTED HERE PROGRAMMATICALLY -->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        >
+        <android.support.design.widget.FloatingActionButton
+            android:src="@drawable/ic_my_location"
+            android:id="@+id/fab_my_location"
+            app:fabSize="normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:theme="@style/MyFAB"
+            app:rippleColor="@color/colorAccent"
+
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:src="@drawable/ic_bus_location"
+            android:id="@+id/fab_bus_location"
+            app:fabSize="normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:layout_below="@id/fab_my_location"
+            android:theme="@style/MyFAB"
+            app:rippleColor="@color/colorAccent"
+            />
+
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_clear_map"
+        android:text="@string/btn_fragment_clear"
+        android:theme="@style/RaisedButton"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="@dimen/button_margin"
+        android:visibility="gone"
+        />
+
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+

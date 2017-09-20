@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--Stable Commit (20/09)-->
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/inside_layout"
+    android:padding="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:orientation="vertical"
         >
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:id="@+id/img_logo"
-            android:src="@drawable/logo_final"
+            android:src="@drawable/logo_smartufpa_main"
             />
         <Button
-            android:text="Visitante"
+            android:text="@string/btn_login_entrar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/btn_visitante"
-            android:textColor="@android:color/white"
-            android:background="@color/colorPrimaryDark"
-            android:layout_below="@id/img_logo"
-            android:layout_margin="20dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_entrar"
+            android:theme="@style/RaisedButton"
+            android:layout_gravity="center_horizontal"
             />
         <Button
             android:layout_width="match_parent"
@@ -37,9 +37,10 @@
             android:textColor="@android:color/white"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_below="@id/btn_visitante"
+            android:layout_below="@id/btn_entrar"
+            android:visibility="invisible"
             />
-    </RelativeLayout>
+    </LinearLayout>
 
 
 

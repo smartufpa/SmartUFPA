@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kaeuc.smartufpa">
-
+    package="br.ufpa.smartufpa">
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="25" />
+        android:targetSdkVersion="26" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -28,74 +27,64 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginScreenActivity"
-            android:launchMode="singleTop"
+            android:name="br.ufpa.smartufpa.activities.LoginScreenActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
-                <action android:name="osmapp.ACTION_LOGIN" />
+                <action android:name="smartufpa.ACTION_LOGIN" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="osmapp.CATEGORY_LOGIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MapActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <action android:name="osmapp.ACTION_MAP" />
-
-                <category android:name="osmapp.CATEGORY_MAP" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-        <activity
-            android:name=".NoGpsActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="osmapp.ACTION_NO_GPS" />
-
-                <category android:name="osmapp.CATEGORY_NO_GPS" />
+                <category android:name="smartufpa.CATEGORY_LOGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AppMenuActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="osmapp.ACTION_APP_MENU" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="osmapp.CATEGORY_APP_MENU" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".SQLTestActivity">
-            <intent-filter>
-                <action android:name="osmapp.SQL_ACTION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".AboutActivity"
-            android:label="Sobre"
+        <activity android:name="br.ufpa.smartufpa.activities.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="osmapp.ACTION_ABOUT" />
+                <action android:name="smartufpa.ACTION_MAIN" />
+                <action android:name="android.intent.action.SEARCH"/>
 
+
+                <category android:name="smartufpa.CATEGORY_MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="osmapp.CATEGORY_ABOUT" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
+
+        <activity
+            android:name="br.ufpa.smartufpa.activities.NoGpsActivity">
+            <intent-filter>
+                <action android:name="smartufpa.ACTION_NO_GPS" />
+
+                <category android:name="smartufpa.CATEGORY_NO_GPS" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="br.ufpa.smartufpa.activities.MenuActivity">
+            <intent-filter>
+                <action android:name="smartufpa.ACTION_APP_MENU" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="smartufpa.CATEGORY_APP_MENU" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="br.ufpa.smartufpa.activities.AboutActivity"
+            android:label="Sobre">
+            <intent-filter>
+                <action android:name="smartufpa.ACTION_ABOUT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="smartufpa.CATEGORY_ABOUT" />
+            </intent-filter>
+        </activity>
+
+
     </application>
 
 </manifest>
