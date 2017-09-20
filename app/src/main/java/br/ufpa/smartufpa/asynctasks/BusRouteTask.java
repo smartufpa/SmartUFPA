@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
+ * Stable Commit (20/09)
  * AsyncTask responsible for querying the route of internal buses.
  * Uses KML and OverpassAPI.
  * Search query is pre-stored on Constants helper class and the appended with the bus route query.

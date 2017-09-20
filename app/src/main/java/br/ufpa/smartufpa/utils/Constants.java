@@ -1,6 +1,7 @@
 package br.ufpa.smartufpa.utils;
 
 /**
+ * Stable Commit (20/09)
  * Class to keep constants that will be directly used on the code.
  * Reference: http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL
  * @author kaeuchoa

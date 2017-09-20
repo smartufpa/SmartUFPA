@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Stable Commit (20/09)
  * Class responsible for processing the JSON response from Overpass servers and return the places
  * to the activity in list.
  * @author kaeuchoa

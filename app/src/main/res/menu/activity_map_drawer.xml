@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Stable Commit (20/09)-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Filtros de Busca">
+    <item android:title="@string/search_filters">
         <menu>
             <item
                 android:id="@+id/nav_auditorium"

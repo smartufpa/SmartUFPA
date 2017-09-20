@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 
 /**
+ * Stable Commit (20/09)
  * AsyncTask responsible for executing searches for specific Points of Interest based on
  * filters. Utilizes Overpass Query Language.
  * The base query is pre-stored on Constants helper class then appended with the filter chosen.

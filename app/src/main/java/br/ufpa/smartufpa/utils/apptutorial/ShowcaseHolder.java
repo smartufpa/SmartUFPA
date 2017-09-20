@@ -3,6 +3,7 @@ package br.ufpa.smartufpa.utils.apptutorial;
 import com.github.amlcurran.showcaseview.targets.Target;
 
 /**
+ * Stable Commit (20/09)
  * @author kaeuchoa
  */
 

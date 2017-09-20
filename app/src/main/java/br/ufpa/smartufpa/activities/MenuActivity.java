@@ -14,6 +14,7 @@ import br.ufpa.smartufpa.utils.SystemServicesManager;
 
 
 /**
+ * Stable Commit (20/09)
  * Simple activity to show the options menu to users
  * @author kaeuchoa
  */

@@ -16,6 +16,7 @@ import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 
 /**
+ * Stable Commit (20/09)
  * Fragment to show details about an specific place selected by the user.
  * Must follow the Place model.
  * @author kaeuchoa

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Stable Commit (20/09)
  * Custom MapView to adapt methods to the app necessity.
  * @author kaeuchoa
  */

@@ -24,6 +24,7 @@ import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 /**
+ * Stable Commit (20/09)
  * Represents an Action item to showcase (e.g., one of the buttons on an ActionBar).
  * To showcase specific action views such as the home button, use {@link ToolbarActionItemTarget}
  *

@@ -16,6 +16,7 @@ import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.MarkerStatuses;
 
 /**
+ * Stable Commit (20/09)
  * Auxiliary functions for map
  * @author kaeuchoa
  */

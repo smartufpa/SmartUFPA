@@ -17,6 +17,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 /**
+ * Stable Commit (20/09)
  * AsyncTask responsible for executing searches for specific Points of Interest based on
  * user's queries. Utilizes Overpass Query Language.
  * Search query is pre-stored on Constants helper class and the appended with the user query.

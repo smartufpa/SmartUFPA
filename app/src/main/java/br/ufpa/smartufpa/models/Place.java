@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import org.osmdroid.util.GeoPoint;
 
 /**
+ * Stable Commit (20/09)
  * @author kaeuchoa
  */
 

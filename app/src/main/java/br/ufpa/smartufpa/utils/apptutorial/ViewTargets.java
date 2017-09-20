@@ -8,6 +8,7 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import java.lang.reflect.Field;
 
 /**
+ * Stable Commit (20/09)
  * A collection of not-officially supported ViewTargets. Use them at your own risk!
  */
 public class ViewTargets {

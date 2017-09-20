@@ -7,6 +7,7 @@ import br.ufpa.smartufpa.models.Place;
 import java.util.ArrayList;
 
 /**
+ * Stable Commit (20/09)
  * Interface to listen for query searching.
  * Task is launched by the search widget on the Main Activity
  * @author kaeuchoa

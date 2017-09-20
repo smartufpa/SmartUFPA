@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
+ * Stable Commit (20/09)
  * Class to reuse of code and treatment of HTTP requests.
  * @author kaeuchoa
  */

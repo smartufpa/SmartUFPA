@@ -12,6 +12,7 @@ import br.ufpa.smartufpa.utils.SystemServicesManager;
 
 
 /**
+ * Stable Commit (20/09)
  * Activity launched when the user tries to initialize the
  * Main Activity without GPS signal
  */

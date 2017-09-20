@@ -14,6 +14,7 @@ import com.github.amlcurran.showcaseview.ShowcaseView;
 import java.util.ArrayList;
 
 /**
+ * Stable Commit (20/09)
  * Class responsible to create the tutorial that runs at the first use of the app
  * @author kaeuchoa
  */

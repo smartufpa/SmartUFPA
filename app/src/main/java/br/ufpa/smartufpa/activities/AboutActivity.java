@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import br.ufpa.smartufpa.R;
 
 /**
+ * Stable Commit (20/09)
  * Simple Activity to show pertinent information about the app
  * @author kaeuchoa
  */

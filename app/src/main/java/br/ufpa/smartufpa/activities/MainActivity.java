@@ -56,6 +56,7 @@ import java.util.ArrayList;
 
 
 /**
+ * Stable Commit (20/09)
  * Main Activity that holds core functions of the app
  * @author kaeuchoa
  */

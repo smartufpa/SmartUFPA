@@ -59,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Stable Commit (20/09)
  * Fragment that holds the map view and all the tasks related to the map.
  * @author kaeuchoa
  */

@@ -3,6 +3,7 @@ package br.ufpa.smartufpa.utils;
 import android.support.design.widget.TextInputEditText;
 
 /**
+ * Stable Commit (20/09)
  * Created by kaeuc on 16/03/2017.
  */
 

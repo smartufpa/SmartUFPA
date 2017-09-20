@@ -1,6 +1,7 @@
 package br.ufpa.smartufpa.utils.enums;
 
 /**
+ * Stable Commit (20/09)
  * Used to indicate the servers response and tasks results
  * @author kaeuchoa
  */

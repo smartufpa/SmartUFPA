@@ -6,6 +6,7 @@ import br.ufpa.smartufpa.models.overpass.Tags;
 import br.ufpa.smartufpa.utils.Constants;
 
 /**
+ * Stable Commit (20/09)
  * @author kaeuchoa
  * todo: check the need of this class
  */

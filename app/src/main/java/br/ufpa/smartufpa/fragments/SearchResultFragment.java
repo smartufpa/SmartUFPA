@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 
 /**
+ * Stable Commit (20/09)
  * Fragment that can show a list of places that is return for a search query.
  * @author kaeuchoa
  */

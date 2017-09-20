@@ -15,6 +15,7 @@ import br.ufpa.smartufpa.models.Place;
 import java.util.List;
 
 /**
+ * Stable Commit (20/09)
  * ArrayAdapter used for listing the results on searches with multiple POIs
  * @author kaeuchoa
  *

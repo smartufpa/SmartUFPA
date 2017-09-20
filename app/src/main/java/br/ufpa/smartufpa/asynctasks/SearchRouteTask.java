@@ -17,6 +17,7 @@ import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 /**
+ * Stable Commit (20/09)
  * AsyncTask responsible for executing searches for routes between two specific points on map.
  * At this version (1.0) only works with the current user location and his/her final destination.
  * Utilizes GraphHopperRoadManager.

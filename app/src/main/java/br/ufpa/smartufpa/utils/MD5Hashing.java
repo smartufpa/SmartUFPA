@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * Stable Commit (20/09)
  * Created by kaeuc on 10/5/2016.
  */
 

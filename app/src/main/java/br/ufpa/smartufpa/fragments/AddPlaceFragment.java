@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
+ * Stable Commit (20/09)
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link AddPlaceFragment.OnAddPlaceListener} interface

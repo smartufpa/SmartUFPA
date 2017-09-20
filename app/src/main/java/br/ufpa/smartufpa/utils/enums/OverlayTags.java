@@ -2,6 +2,7 @@ package br.ufpa.smartufpa.utils.enums;
 
 
 /**
+ * Stable Commit (20/09)
  * Used on the control of plotted layers on map
  * @author kaeuchoa
  */

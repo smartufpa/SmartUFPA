@@ -1,3 +1,4 @@
+<!--Stable Commit (20/09)-->
 <resources>
     <string name="app_name">Smart UFPA</string>
 
@@ -119,6 +120,7 @@
     <string name="msg_request_storage_permission">A permissão de armazenamento é necessária para armazenar porções do mapa para reduzir consumo de dados e para uso offline.</string>
     <string name="msg_request_location_permission">A permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="msg_request_both_permissions">A permissão de armazenamento é necessária para armazenar porções do mapa para reduzir consumo de dados e para uso offline.   E a permissão de localização é necessária para mostrar a sua localização no mapa.</string>
+    <string name="search_filters">Filtros de Busca</string>
 
 
 </resources>

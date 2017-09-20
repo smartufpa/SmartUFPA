@@ -5,6 +5,7 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
 import org.osmdroid.views.overlay.Overlay;
 
 /**
+ * Stable Commit (20/09)
  * Interface to listen for Route queries.
  * Task is launched when user query the route between his/her current location until a place of chosen
  * on PlaceDetailsFragment.

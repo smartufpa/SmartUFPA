@@ -24,6 +24,7 @@ import br.ufpa.smartufpa.R;
 
 
 /**
+ * Stable Commit (20/09)
  * First activity on app and ask for permissions
  * (login interface to be implemented);
  * Permission code:

@@ -8,6 +8,7 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
 import java.util.ArrayList;
 
 /**
+ * Stable Commit (20/09)
  * Interface to listen for filter searching.
  * Task is launched by the items on the left drawer on Main Activity
  * @author kaeuchoa
