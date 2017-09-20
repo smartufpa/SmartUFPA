@@ -1,7 +1,8 @@
 package br.ufpa.smartufpa.utils.enums;
 
 /**
- * Created by kaeuc on 28/08/2017.
+ * Used to indicate the which state resource must be used on the marker
+ * @author kaeuchoa
  */
 
 public enum MarkerStatuses {

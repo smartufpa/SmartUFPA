@@ -6,7 +6,8 @@ import br.ufpa.smartufpa.models.overpass.Tags;
 import br.ufpa.smartufpa.utils.Constants;
 
 /**
- * Created by kaeuc on 3/6/2017.
+ * @author kaeuchoa
+ * todo: check the need of this class
  */
 
 public class PlaceFactory {

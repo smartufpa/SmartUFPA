@@ -7,7 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * Created by kaeuc on 26/01/2017.
+ * Helper class to check devices services such as internet connection and GPS signal.
+ * @author kaeuchoa
  */
 
 public class SystemServicesManager {

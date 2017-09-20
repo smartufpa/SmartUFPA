@@ -21,7 +21,9 @@ import org.osmdroid.views.overlay.Polyline;
 import java.util.HashMap;
 
 /**
- * Created by kaeuc on 31/08/2017.
+ * Helper class to define styles for kml layers. On this case is used style the bus route
+ * layer style.
+ * @author kaeuchoa
  */
 
 public class BusRouteKmlStyler implements KmlFeature.Styler {

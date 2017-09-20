@@ -1,7 +1,9 @@
 package br.ufpa.smartufpa.utils.enums;
 
+
 /**
- * Created by kaeuc on 28/08/2017.
+ * Specifies a marker type to be used for filters and resource retrieving
+ * @author kaeuchoa
  */
 
 public enum MarkerTypes {

@@ -1,8 +1,8 @@
 package br.ufpa.smartufpa.utils.enums;
 
 /**
- * Created by kaeuc on 28/08/2017.
- * Constantes de respostas do servidor
+ * Used to indicate the servers response and tasks results
+ * @author kaeuchoa
  */
 
 

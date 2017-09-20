@@ -1,9 +1,10 @@
 package br.ufpa.smartufpa.utils.enums;
 
 /**
- * Created by kaeuc on 28/08/2017.
+ * Used to keep track of what Overpass filters can be used
+ * @author kaeuchoa
  */
 
 public enum OverpassFilters  {
-    XEROX, FOOD, RESTROOM, AUDITORIUMS, BUS_ROUTE, LIBRARIES
+    XEROX, FOOD, RESTROOM, AUDITORIUMS, LIBRARIES
 }

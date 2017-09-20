@@ -16,18 +16,16 @@ import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link PlaceDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment to show details about an specific place selected by the user.
+ * Must follow the Place model.
+ * @author kaeuchoa
  */
 public class PlaceDetailsFragment extends Fragment {
 
 
     public static final String FRAGMENT_TAG = PlaceDetailsFragment.class.getName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_CURRENT_PLACE = "current_place";
-    private static final String ARG_USER_LOCATION = "user_location";
+    private static final String ARG_SELECTED_PLACE = "selected_place";
     private static final String TAG = PlaceDetailsFragment.class.getSimpleName();
 
     // VIEWS
@@ -40,9 +38,7 @@ public class PlaceDetailsFragment extends Fragment {
 
     // TODO (POSTPONED): LOAD IMAGE OF PLACE AND IMPLEMENT RATING FUNCTIONS
 
-    private Place currentPlace;
-
-    private Place userLocation;
+    private Place selectedPlace;
 
     public PlaceDetailsFragment() {
         // Required empty public constructor
@@ -52,14 +48,13 @@ public class PlaceDetailsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param currentPlace Place which the user has chosen to see details.
+     * @param selectedPlace Place which the user has chosen to see details.
      * @return A new instance of fragment PlaceDetailsFragment.
      */
-    public static PlaceDetailsFragment newInstance(Place currentPlace, Place userLocation) {
+    public static PlaceDetailsFragment newInstance(Place selectedPlace) {
         PlaceDetailsFragment fragment = new PlaceDetailsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_CURRENT_PLACE, currentPlace);
-        args.putParcelable(ARG_USER_LOCATION,userLocation);
+        args.putParcelable(ARG_SELECTED_PLACE, selectedPlace);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +64,7 @@ public class PlaceDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            currentPlace = getArguments().getParcelable(ARG_CURRENT_PLACE);
-            userLocation = getArguments().getParcelable(ARG_USER_LOCATION);
+            selectedPlace = getArguments().getParcelable(ARG_SELECTED_PLACE);
         }
 
     }
@@ -86,12 +80,13 @@ public class PlaceDetailsFragment extends Fragment {
         txtDetLocName = view.findViewById(R.id.txt_det_place_loc_name);
         btnDetFootRoute = view.findViewById(R.id.btn_det_foot_route);
 
-        if(currentPlace.getShortName().equals(Constants.NO_SHORT_NAME))
-            txtDetPlaceName.setText(currentPlace.getName());
+        if(selectedPlace.getShortName().equals(Constants.NO_SHORT_NAME))
+            txtDetPlaceName.setText(selectedPlace.getName());
         else
-            txtDetPlaceName.setText(currentPlace.getName() + " (" + currentPlace.getShortName()+ ")");
-        txtDetPlaceDesc.setText(currentPlace.getDescription());
-        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), currentPlace.getLocName()));
+            txtDetPlaceName.setText(selectedPlace.getName() + " (" + selectedPlace.getShortName()+ ")");
+
+        txtDetPlaceDesc.setText(selectedPlace.getDescription());
+        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), selectedPlace.getLocName()));
 
         btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +94,7 @@ public class PlaceDetailsFragment extends Fragment {
                 if(SystemServicesManager.isNetworkEnabled(getContext())) {
                     final MapFragment mapFragment = (MapFragment) getActivity().getSupportFragmentManager()
                             .findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                    mapFragment.showRouteToPlace(currentPlace);
+                    mapFragment.findRouteToPlace(selectedPlace);
                 }else{
                     Toast.makeText(getContext(), R.string.error_no_internet_connection, Toast.LENGTH_SHORT).show();
                 }

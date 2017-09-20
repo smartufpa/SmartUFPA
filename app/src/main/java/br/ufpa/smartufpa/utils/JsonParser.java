@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by kaeuch on 09/01/2017.
- * Classe responsável por processar a resposta JSON do servidor Overpass e retornar os locais
- * á atividade principal em forma de ArrayList<Place>
+ * Class responsible for processing the JSON response from Overpass servers and return the places
+ * to the activity in list.
+ * @author kaeuchoa
  */
 
 public class JsonParser {
-    // TAG para logs
+
     private static final String TAG = JsonParser.class.getSimpleName();
 
     public static List<Place> parseLocalResponse(String jsonResponse){

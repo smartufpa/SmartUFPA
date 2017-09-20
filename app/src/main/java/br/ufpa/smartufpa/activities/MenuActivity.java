@@ -33,7 +33,7 @@ public class MenuActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_menu);
 
-        btnMobility = findViewById(R.id.btn_mobilidade);
+        btnMobility = findViewById(R.id.btn_mobility);
 
         btnMobility.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {

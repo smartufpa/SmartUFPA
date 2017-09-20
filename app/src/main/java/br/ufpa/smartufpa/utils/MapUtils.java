@@ -16,7 +16,8 @@ import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.MarkerStatuses;
 
 /**
- * Created by kaeuc on 09/08/2017.
+ * Auxiliary functions for map
+ * @author kaeuchoa
  */
 
 

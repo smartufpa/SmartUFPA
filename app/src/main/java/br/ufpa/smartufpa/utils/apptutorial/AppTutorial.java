@@ -14,7 +14,8 @@ import com.github.amlcurran.showcaseview.ShowcaseView;
 import java.util.ArrayList;
 
 /**
- * Created by kaeuch on 20/02/2017.
+ * Class responsible to create the tutorial that runs at the first use of the app
+ * @author kaeuchoa
  */
 
 public class AppTutorial implements OnShowcaseEventListener {

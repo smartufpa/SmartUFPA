@@ -71,6 +71,7 @@ public class CustomMapView extends MapView {
     }
 
     /**
+     *
      * @return a String containg all the layers currently on the MapView.
      */
     public String getLayersTagsNames() {

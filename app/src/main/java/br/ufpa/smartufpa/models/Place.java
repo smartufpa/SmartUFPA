@@ -1,5 +1,6 @@
 package br.ufpa.smartufpa.models;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -7,16 +8,14 @@ import android.support.annotation.Nullable;
 import org.osmdroid.util.GeoPoint;
 
 /**
- * Created by kaeuc on 9/29/2016.
+ * @author kaeuchoa
  */
 
 public class Place implements Parcelable {
+
     private String amenity;
     private String description;
     private long id;
-
-
-
     private double latitude;
     private String locName;
     private double longitude;
@@ -101,6 +100,7 @@ public class Place implements Parcelable {
         this.longitude = longitude;
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
         return String.format("[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,shop=%s,amenity=%s,loc_name=%s,description=%s]",

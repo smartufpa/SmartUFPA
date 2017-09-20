@@ -1,10 +1,9 @@
 package br.ufpa.smartufpa.utils;
 
 /**
- * Created by kaeuc on 10/22/2016.
- * Classe para manter constantes que serão usado diretamente no código.
+ * Class to keep constants that will be directly used on the code.
  * Reference: http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL
- *
+ * @author kaeuchoa
  */
 
 public final class Constants {
@@ -14,16 +13,16 @@ public final class Constants {
     public static final String TAG_EXHIBITION_CENTRE = "exhibition_centre";
     public static final String TAG_LIBRARY = "library";
     public static final String TAG_FOOD = "food";
-    public static final String TAG_FOOD_COURT = "food_court";
 
     //URLS
     public static final String URL_LOCAL_HOST = "http://177.194.168.159:80/";
     public static final String URL_BUS_LOCATION = "http://104.41.62.111:8080/bus-location";
     public static final String URL_OVERPASS_SERVER = "http://overpass-api.de/api/interpreter?data=";
 
-    // Overpass API url
-    
-    // Queries compactadas para url
+    /* Overpass API urls
+     * test on https://overpass-turbo.eu/
+     * reference: http://wiki.openstreetmap.org/wiki/Overpass_API
+     */
     public static final String QUERY_OVERPASS_RESTROOM = "[out:json][timeout:30];" +
             "(way[\"toilets\"=\"yes\"](%f,%f,%f,%f);" +
             "way[\"amenity\"=\"toilets\"](%f,%f,%f,%f);" +
@@ -57,7 +56,7 @@ public final class Constants {
             "node[\"amenity\"=\"library\"](%f,%f,%f,%f););" +
             "out body center;";
 
-
+    // TODO: change the name for the name on config file
     public static final String QUERY_OVERPASS_SEARCH = "[out:json][timeout:30];" +
             "area[\"name\" = \"Universidade Federal do Pará\"]->.a;" +
             "(way(area.a)[\"name\"~\"%s\",i];" +
@@ -76,8 +75,6 @@ public final class Constants {
             "out qt geom tags 500;relation[route=bus][name=\"circular\"]" +
             "(%f,%f,%f,%f);out qt geom body 500;";
 
-    // Usado na factory para places, apresentado nos detalhes sobre o local
-    // caso um nome não tenha sido definido
     public static final String NO_NAME = "Sem nome identificado";
     public static final String NO_LOCAL_NAME = "Sem nome local identificado";
     public static final String NO_SHORT_NAME = "Sem abreviação";

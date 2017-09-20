@@ -1,6 +1,7 @@
 package br.ufpa.smartufpa.utils;
 
 /**
+ * Helper to get configuration values from a .properties file
  * Code reference: https://stackoverflow.com/questions/5140539/android-config-file
  * by grim
  */

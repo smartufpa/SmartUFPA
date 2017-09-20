@@ -15,12 +15,12 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * Created by kaeuc on 1/14/2017.
- * Classe para reutilização de código e tratamento de requisições http.
+ * Class to reuse of code and treatment of HTTP requests.
+ * @author kaeuchoa
  */
 
 public class HttpRequest {
-    private static final String TAG = "HttpRequest";
+    private static final String TAG = HttpRequest.class.getSimpleName();
 
     public static String makePostRequest(final String url,final String query, String jsonBody) throws SocketTimeoutException {
         HttpURLConnection connection = null;
@@ -57,7 +57,7 @@ public class HttpRequest {
             connection.connect();
 
 
-            // recebe a resposta da requisição
+            // Receives the request response
             InputStream inputStream;
 
             int status = connection.getResponseCode();
@@ -69,7 +69,7 @@ public class HttpRequest {
                 inputStream = connection.getInputStream();
 
             StringBuffer buffer = new StringBuffer();
-            // se a resposta for vazia
+            // if the response is empty
             if(inputStream == null){
                 return null;
             }
@@ -112,7 +112,7 @@ public class HttpRequest {
     public static String makeGetRequest(final String url, final String query) throws SocketTimeoutException{
         HttpURLConnection connection = null;
         BufferedReader reader = null;
-        String response = "Resposta em branco";
+        String response = "empty response";
         /*Server URL*/
         URL finalUrl;
         try{
@@ -133,7 +133,7 @@ public class HttpRequest {
             connection.connect();
 
 
-            // recebe a resposta da requisição
+            // Receives the request response
             InputStream inputStream;
 
             int status = connection.getResponseCode();
@@ -145,7 +145,7 @@ public class HttpRequest {
                 inputStream = connection.getInputStream();
 
             StringBuffer buffer = new StringBuffer();
-            // se a resposta for vazia
+            // if the response is empty
             if(inputStream == null){
                 return null;
             }

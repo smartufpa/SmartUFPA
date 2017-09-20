@@ -418,10 +418,9 @@ public class MainActivity extends AppCompatActivity
 
                 // Places to pass over PlaceDetailsFragment to present the data
                 final Place currentPlace = places.get(0);
-                final Place userLocation = mapFragment.getUserLocation();
 
                 // Open PlaceDetailsFragment
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace, userLocation);
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace);
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

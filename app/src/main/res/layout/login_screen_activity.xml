@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:id="@+id/img_logo"
-            android:src="@drawable/logo_final" />
+            android:src="@drawable/logo_smartufpa_main" />
 
         <Button
             android:text="@string/btn_login_entrar"

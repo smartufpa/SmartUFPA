@@ -19,9 +19,8 @@ import java.util.ArrayList;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchResultFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment that can show a list of places that is return for a search query.
+ * @author kaeuchoa
  */
 public class SearchResultFragment extends Fragment {
 
@@ -80,11 +79,9 @@ public class SearchResultFragment extends Fragment {
             public void onItemClick(View view, int position) { // On click, create a PlaceDetailFragment
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 final Place currentPlace = places.get(position);
-                final MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                final Place userLocation = mapFragment.getUserLocation();
 
-                // Instantiate the fragment with the current place and user's location
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace,userLocation);
+                // Instantiate the fragment with the current place
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace);
                 // Start Transaction
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION

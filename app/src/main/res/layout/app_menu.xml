@@ -13,7 +13,7 @@
         android:id="@+id/layout_left">
 
         <Button
-            android:id="@+id/btn_mobilidade"
+            android:id="@+id/btn_mobility"
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="@string/btn_mobility"
@@ -22,24 +22,24 @@
             />
 
         <Button
-            android:id="@+id/btn_oportunidades"
+            android:id="@+id/btn_oportunities"
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="@string/btn_oportunities"
             android:theme="@style/RaisedButtonDisabled"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/btn_mobilidade"
+            android:layout_below="@+id/btn_mobility"
             android:enabled="false"
             />
 
         <Button
-            android:id="@+id/btn_seguranca"
+            android:id="@+id/btn_security"
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="@string/btn_safety"
             android:theme="@style/RaisedButtonDisabled"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/btn_oportunidades"
+            android:layout_below="@+id/btn_oportunities"
             android:enabled="false"
             />
 
@@ -52,7 +52,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/layout_left"
         android:layout_above="@+id/layout_right"
-        android:src="@drawable/ic_logo_completo"
+        android:src="@drawable/logo_smartufpa_full"
         android:id="@+id/imageView2"
         android:layout_centerVertical="true"
         />
@@ -66,7 +66,7 @@
        >
 
         <Button
-            android:id="@+id/btn_alimentacao"
+            android:id="@+id/btn_alimentation"
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="@string/btn_alimentation"
@@ -76,24 +76,24 @@
             />
 
         <Button
-            android:id="@+id/btn_eventos"
+            android:id="@+id/btn_events"
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="@string/btn_events"
             android:theme="@style/RaisedButtonDisabled"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/btn_alimentacao"
+            android:layout_below="@+id/btn_alimentation"
             android:enabled="false"
             />
 
         <Button
-            android:id="@+id/btn_acessibilidade"
+            android:id="@+id/btn_acessibility"
             android:layout_width="280dp"
             android:layout_height="48dp"
             android:text="@string/btn_accessibility"
             android:theme="@style/RaisedButtonDisabled"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/btn_eventos"
+            android:layout_below="@+id/btn_events"
             android:enabled="false"
             />
 

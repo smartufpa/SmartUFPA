@@ -3,7 +3,7 @@ package br.ufpa.smartufpa.utils.apptutorial;
 import com.github.amlcurran.showcaseview.targets.Target;
 
 /**
- * Created by kaeuch on 20/02/2017.
+ * @author kaeuchoa
  */
 
 public class ShowcaseHolder {

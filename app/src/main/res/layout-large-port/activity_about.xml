@@ -24,7 +24,7 @@
             android:minWidth="200dp"
             android:layout_margin="10dp"
             android:id="@+id/logo_ufpa_about"
-            android:src="@drawable/ic_ufpa"
+            android:src="@drawable/logo_ufpa"
             />
 
         <ImageView
@@ -34,7 +34,7 @@
             android:minWidth="200dp"
             android:layout_margin="10dp"
             android:id="@+id/logo_labvis"
-            android:src="@drawable/ic_labvis"
+            android:src="@drawable/logo_labvis"
             android:layout_toRightOf="@+id/logo_ufpa_about"
             android:layout_toEndOf="@+id/logo_ufpa_about"
             />

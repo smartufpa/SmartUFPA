@@ -58,7 +58,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+/**
+ * Fragment that holds the map view and all the tasks related to the map.
+ * @author kaeuchoa
+ */
 public class MapFragment extends Fragment implements LocationListener, OnSearchRouteListener,
         OnBusRouteListener {
 
@@ -72,12 +75,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private static final int MIN_ZOOM = 15;
     private static final int MAX_ZOOM = 18;
 
-    private final ArrayList<Integer> ROUTE_LINE_COLORS = new ArrayList<>(3);
-    private static int ROUTES_COUNTER = 0;
+    // Maximum number of routes that can be shown simultaneously
     private static final int MAX_ROUTES = 3;
-
-    private final XYTileSource MAPA_UFPA = new XYTileSource("ufpa_mapa", 15, 18, 256, ".png", new String[] {});
-    private final XYTileSource MAPA_UFPA_TRANSPORTE = new XYTileSource("ufpa_transporte", 15, 18, 256, ".png", new String[] {});
+    // Keeps the colors that will be used on the lines for routes
+    private final ArrayList<Integer> ROUTE_LINE_COLORS = new ArrayList<>(MAX_ROUTES);
+    // Number of routes already plotted on the map
+    private static int ROUTES_COUNTER = 0;
 
     // VIEWS
     private CustomMapView mapView;
@@ -85,17 +88,13 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private FloatingActionButton fabBusLocation;
     private Button btnClearMap;
 
+    private Context context;
 
-    private Context parentContext;
-
+    // Default region of interest for the map. Must be set based on location_config file
     private static Place defaultPlace;
-    // Restrição da região mostrada do mapa usando coordenadas
+    // Map boundaries that must be set based on location_config file
     private static BoundingBox mapRegion;
-
-
     private Place userLocation;
-
-
     private LocationManager locationManager;
 
       /* CLICK LISTENERS */
@@ -110,7 +109,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private Button.OnClickListener busLocationListener = new Button.OnClickListener(){
         @Override
         public void onClick(View v) {
-            Toast.makeText(parentContext, "Adicionar lógica da função de localizar o circular", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Adicionar lógica da função de localizar o circular", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -126,7 +125,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     // Required empty public constructor
     public MapFragment() {}
 
-
+    /**
+     * Initialize a MapFragment based on an specifc location
+     * @param chosenPlace Place containing name and coordinates
+     * @param mapBoundaries Coordinates of the box to limit the map
+     * @return MapFragment Instance
+     */
     public static MapFragment newInstance(final Place chosenPlace, final BoundingBox mapBoundaries) {
         MapFragment fragment = new MapFragment();
         defaultPlace = chosenPlace;
@@ -137,11 +141,11 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parentContext = getContext();
+        context = getContext();
 
-        /* Importante! Configure o user agent para previnir ser banido dos servidores do OSM
-         * O user agent deve ser uma identificação única do seu aplicativo
-         * Um exemplo mostra a utilização de "BuildConfig.APPLICATION_ID"
+        /* Important! Configure the user agent so you don't get banned from OSM servers.
+         * The user agent must be a unique ID of you app.
+         * For example, BuildConfig.APPLICATION_ID
          */
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
@@ -157,18 +161,15 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
         View view =  inflater.inflate(R.layout.fragment_map, container, false);
 
-        // Adiciona a CustomMapView ao layout na posição 0 por conta do eixo Z do CoordinatorLayout
-        mapView = new CustomMapView(parentContext);
+        // Must add the CustomMapView to the layout on index 0 because of the axis Z used on CoordinatorLayouts
+        mapView = new CustomMapView(context);
         final CoordinatorLayout cl = view.findViewById(R.id.coordinator_layout);
         cl.addView(mapView,0);
 
-        // Encontra as views
         fabMyLocation = view.findViewById(R.id.fab_my_location);
         fabBusLocation = view.findViewById(R.id.fab_bus_location);
         btnClearMap = view.findViewById(R.id.btn_clear_map);
 
-
-        // Atrela os listerners aos botões
         fabMyLocation.setOnClickListener(myLocationListener);
         fabBusLocation.setOnClickListener(busLocationListener);
 
@@ -178,30 +179,25 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
         initializeMap();
 
-
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        locationManager = (LocationManager) parentContext.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
         }
-        // Adiciona a camada de localização do usuário
         enableMyLocationOverlay();
-
-        Log.i(TAG, "onResume: " + mapView.getLayersTagsNames());
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(parentContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.removeUpdates(this);
         }
         myLocationOverlay.disableMyLocation();
@@ -211,7 +207,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop: " + mapView.getLayersTagsNames());
     }
 
 
@@ -229,43 +224,39 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-
     }
 
-
+    /**
+     * Initialize the map configurations such as MapCamera, zoom values
+     * and interface aspects.
+     */
     private void initializeMap(){
-        // Configuração da câmera do mapa
+        // Map camera configuration
         GeoPoint startCameraPoint = new GeoPoint
                 (defaultPlace.getLatitude(), defaultPlace.getLongitude());
         mapCamera = mapView.getController();
         mapCamera.setZoom(DEFAULT_ZOOM);
         mapCamera.animateTo(startCameraPoint);
-        // Configuração do Mapa
+
+        // Map configuration
         mapView.setTilesScaledToDpi(true);
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-
-        //  Atribui o mapa offline em mapView
-//        if (checar configurações para saber se o download do mapa foi realizado){
-//        mapView.setTileSource(MAPA_UFPA);
-//        }
-
-        /* Desabilita o uso da internet (opcional, mas uma boa forma de previnir que o mapa
-         * seja carregado via rede e de testar se o zip está carregando
-         */
-//        mapView.setUseDataConnection(false);
         mapView.setBuiltInZoomControls(false);
         mapView.setMinZoomLevel(MIN_ZOOM);
         mapView.setMaxZoomLevel(MAX_ZOOM);
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
-        mapView.setScrollableAreaLimitDouble(mapRegion); // Restringe a área do mapa à região escolhida
+        // Limits the map area to the region set
+        mapView.setScrollableAreaLimitDouble(mapRegion);
     }
 
+    /**
+     * Initialize the map layer and feature to show user's location
+     * on the map.
+     */
     private void enableMyLocationOverlay(){
-        // Camada de posição do usuário
         if(userLocation == null){
-            myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(parentContext),mapView);
+            myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
         }
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
@@ -274,6 +265,9 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
             mapView.addOverlay(myLocationOverlay, OverlayTags.MY_LOCATION);
     }
 
+    /**
+     * Enables the layer to show the internal bus route with its bus stops
+     */
     public void enableBusOverlay(){
         new BusRouteTask(this,mapView).execute();
     }
@@ -293,29 +287,25 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
 
-
-
     private void moveCameraToMyLocation(){
         try {
             double latitude = userLocation.getLatitude(),
                     longitude = userLocation.getLongitude();
 
-            // Checa se o usuário se encontra dentro da area do mapa
-            if(!mapRegion.contains(latitude,longitude)) Toast.makeText(parentContext,
-                    R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
-            else{
-                Log.i(TAG,"Current Location: (" + latitude + "," + longitude + ")" );
+            // Check if the user is inside the map region and just moves the camera if he/she is
+            if(!mapRegion.contains(latitude,longitude))
+                Toast.makeText(context, R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
+            else
                 mapCamera.animateTo(new GeoPoint(latitude,longitude));
-            }
-        // Se capturar a exception, o sistema não pôde recuperar as informações do GPS
+
         }catch (NullPointerException e){
             Log.e(TAG,"Could not get current location.",e);
-            // Checa se o GPS está ligado
-            if(!SystemServicesManager.isGPSEnabled(parentContext)) {
-                Toast.makeText(parentContext, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
+            if(!SystemServicesManager.isGPSEnabled(context)) {
+                Toast.makeText(context, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
                 return;
             }
-            Toast.makeText(parentContext, R.string.msg_loading_current_position, Toast.LENGTH_SHORT).show();
+            // Can be still loading
+            Toast.makeText(context, R.string.msg_loading_current_position, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -354,7 +344,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
                     // Sets up a PlaceDetailsFragment to show specific information about the selected Place
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(rightPlace,userLocation);
+                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(rightPlace);
                     fragmentManager.beginTransaction()
                             .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
                             .commit();
@@ -379,18 +369,27 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     }
 
-    public void zoomToGeoPoint(GeoPoint geoPoint, int zoomLevel){
+    /**
+     * Moves and zoom in or out the camera to an specific geopoint.
+     * @param geoPoint Point to move the camera
+     * @param zoomLevel Value to zoom in or out - default zoom is 16
+     */
+    public void zoomToGeoPoint(final GeoPoint geoPoint, final int zoomLevel){
         mapView.getController().setZoom(zoomLevel);
         mapView.getController().animateTo(geoPoint);
         mapView.getController().setCenter(geoPoint);
     }
 
-    public void showRouteToPlace(final Place destination) {
-
+    /**
+     * Calls the task that will calculate the route between user's current location and
+     * a destination and limits the number of routes that can be shown simultaneously.
+     * @param destination the final place to calculate the route
+     */
+    public void findRouteToPlace(final Place destination) {
         if (userLocation == null){
-            Toast.makeText(parentContext, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
         }else if(ROUTES_COUNTER == MAX_ROUTES) {
-            Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         } else {
             getActivity().findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
             new SearchRouteTask(this)
@@ -398,12 +397,16 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         }
     }
 
-    public void showRouteToPlace(final Place origin, final Place destination){
-        getActivity().findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
+    /**
+     * Calls the task that will calculate the route between two different locations
+     * and limits the number of routes that can be shown simultaneously.
+     * @param destination the final place to calculate the route
+     */
+    public void findRouteToPlace(final Place origin, final Place destination){
         if (userLocation == null){
-            Toast.makeText(parentContext, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
         }else if(ROUTES_COUNTER == MAX_ROUTES) {
-            Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         } else {
             new SearchRouteTask(this)
                     .execute(origin.getGeoPoint(), destination.getGeoPoint());
@@ -433,7 +436,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
     @Override
-    public void onSearchRouteResponse(final Overlay overlay, ServerResponse taskStatus) {
+    public void onSearchRouteResponse(final Overlay overlay, final ServerResponse taskStatus) {
+        // actually plots the route on the map
         if(taskStatus == ServerResponse.SUCCESS){
             Polyline roadOverlay = (Polyline) overlay;
             roadOverlay.setColor(ROUTE_LINE_COLORS.get(ROUTES_COUNTER));
@@ -441,26 +445,27 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
             mapView.addOverlay(roadOverlay, OverlayTags.ROUTE);
             ROUTES_COUNTER++;
         }else if(taskStatus == ServerResponse.TIMEOUT){
-            Toast.makeText(parentContext, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
         }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
-            Toast.makeText(parentContext, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }else if(ROUTES_COUNTER == MAX_ROUTES){
-            Toast.makeText(parentContext, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         }
-        getActivity().findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
+        (getActivity().findViewById(R.id.progress_bar)).setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void onBusRouteResponse(Overlay overlay, ServerResponse taskStatus) {
+    public void onBusRouteResponse(final Overlay overlay,final ServerResponse taskStatus) {
+        // actually plots the bus route on the map
         if(taskStatus == ServerResponse.SUCCESS){
             mapView.addOverlay(overlay, OverlayTags.BUS_ROUTE);
             btnClearMap.setVisibility(View.VISIBLE);
         }else if(taskStatus == ServerResponse.TIMEOUT){
-            Toast.makeText(parentContext, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
         }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
-            Toast.makeText(parentContext, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }
-        getActivity().findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
+        (getActivity().findViewById(R.id.progress_bar)).setVisibility(View.INVISIBLE);
 
     }
 }
