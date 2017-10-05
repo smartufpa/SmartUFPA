@@ -41,6 +41,7 @@ public class LoginScreenActivity extends AppCompatActivity {
 
     // Views
     private Button btnLogin;
+    private Button btnMqtt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class LoginScreenActivity extends AppCompatActivity {
         setContentView(R.layout.login_screen_activity);
 
         btnLogin = findViewById(R.id.btn_entrar);
+        btnMqtt = findViewById(R.id.btn_mqtt);
 
         final View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
@@ -56,10 +58,14 @@ public class LoginScreenActivity extends AppCompatActivity {
                     Intent intent = new Intent(MenuActivity.ACTION_APP_MENU);
                     intent.addCategory(MenuActivity.CATEGORY_APP_MENU);
                     startActivity(intent);
+                }else if(v.getId() == btnMqtt.getId()){
+                    Intent intent = new Intent(v.getContext(),MqttActivity.class);
+                    startActivity(intent);
                 }
             }
         };
         btnLogin.setOnClickListener(clickListener);
+        btnMqtt.setOnClickListener(clickListener);
     }
 
     @Override

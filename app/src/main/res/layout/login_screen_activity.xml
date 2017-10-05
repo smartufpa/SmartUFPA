@@ -38,9 +38,8 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_sqltest"
-            android:text="Teste MYSQL"
-            android:visibility="invisible"
+            android:id="@+id/btn_mqtt"
+            android:text="Teste MQTT"
             style="@style/RaisedButton"/>
     </LinearLayout>
 
