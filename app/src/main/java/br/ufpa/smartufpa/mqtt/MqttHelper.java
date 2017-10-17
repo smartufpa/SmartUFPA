@@ -19,16 +19,25 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MqttHelper {
 
-    public MqttAndroidClient mqttAndroidClient;
+    private MqttAndroidClient mqttAndroidClient;
 
+    public static final String TAG = MqttHelper.class.getSimpleName();
+
+
+    // LASSE server
+    //final String serverUri = "tcp://iot.eclipse.org:1883";
+    // LASSE CREDENTIALS
+    // final String username = "alberto";
+    // final String password = "null";
+//    final String subscriptionTopic = "/ufpa/circular/loc/";
+
+    // Test server
     final String serverUri = "tcp://m13.cloudmqtt.com:13687";
+    final String clientId = "ExampleAndroid";
+    final String subscriptionTopic = "/ufpa/circular/loc/+";
 
-    final String clientId = "ExampleAndroidClient";
-    final String subscriptionTopic = "GPS/location2";
-
-    final String username = "rrlampnt";
-    final String password = "2ZBKsPgOJxdp";
-
+     final String username = "rrlampnt";
+     final String password = "2ZBKsPgOJxdp";
     public MqttHelper(Context context){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
@@ -44,7 +53,15 @@ public class MqttHelper {
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                Log.w("Mqtt", mqttMessage.toString());
+                //Data structure:
+                // +CGNSINF: <GNSS run status>,<Fix status>,
+                // <UTC date & Time>,<Latitude>,<Longitude>,
+                // <MSL Altitude>,<Speed Over Ground>,<Course Over Ground>,
+                // <Fix Mode>,<Reserved1>,<HDOP>,
+                // <PDOP>,<VDOP>,<Reserved2>,
+                // <GNSS Satellites in View>,<GNSS Satellites Used>,<GLONASS Satellites Used>,
+                // <Reserved3>,<C/N0 max>,<HPA>,<VPA>
+                Log.w(TAG + "Message Received: ",  mqttMessage.toString());
             }
 
             @Override

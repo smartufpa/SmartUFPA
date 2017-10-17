@@ -10,6 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txt_mqtt"
-        android:text="teste"/>
+        android:text="@string/teste_mqtt"/>
 
 </android.support.constraint.ConstraintLayout>
