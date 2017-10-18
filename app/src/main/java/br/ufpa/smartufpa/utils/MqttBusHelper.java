@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.mqtt;
+package br.ufpa.smartufpa.utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,77 +6,43 @@ import android.util.Log;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /**
- * code from: https://wildanmsyah.wordpress.com/2017/05/11/mqtt-android-client-tutorial/
+ * code based on: https://wildanmsyah.wordpress.com/2017/05/11/mqtt-android-client-tutorial/
  */
 
-public class MqttHelper {
+public class MqttBusHelper {
 
     private MqttAndroidClient mqttAndroidClient;
 
-    public static final String TAG = MqttHelper.class.getSimpleName();
+    public static final String TAG = MqttBusHelper.class.getSimpleName();
 
 
-    // LASSE server
+    // TODO: ADD LASSE server credentials
     //final String serverUri = "tcp://iot.eclipse.org:1883";
-    // LASSE CREDENTIALS
-    // final String username = "alberto";
-    // final String password = "null";
-//    final String subscriptionTopic = "/ufpa/circular/loc/";
 
+    // TODO: transfer strings to Constants
     // Test server
-    final String serverUri = "tcp://m13.cloudmqtt.com:13687";
-    final String clientId = "ExampleAndroid";
-    final String subscriptionTopic = "/ufpa/circular/loc/+";
+    private final String serverUri = "tcp://m13.cloudmqtt.com:13687";
+    private final String clientId = "ExampleAndroid";
+    private final String subscriptionTopic = "/ufpa/circular/loc/+";
 
      final String username = "rrlampnt";
      final String password = "2ZBKsPgOJxdp";
-    public MqttHelper(Context context){
+
+    public MqttBusHelper(Context context){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
-        mqttAndroidClient.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean b, String s) {
-                Log.w("mqtt", s);
-            }
-
-            @Override
-            public void connectionLost(Throwable throwable) {
-
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                //Data structure:
-                // +CGNSINF: <GNSS run status>,<Fix status>,
-                // <UTC date & Time>,<Latitude>,<Longitude>,
-                // <MSL Altitude>,<Speed Over Ground>,<Course Over Ground>,
-                // <Fix Mode>,<Reserved1>,<HDOP>,
-                // <PDOP>,<VDOP>,<Reserved2>,
-                // <GNSS Satellites in View>,<GNSS Satellites Used>,<GLONASS Satellites Used>,
-                // <Reserved3>,<C/N0 max>,<HPA>,<VPA>
-                Log.w(TAG + "Message Received: ",  mqttMessage.toString());
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
-            }
-        });
-        connect();
     }
 
     public void setCallback(MqttCallbackExtended callback) {
         mqttAndroidClient.setCallback(callback);
     }
 
-    private void connect(){
+    public void connect(){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
@@ -96,11 +62,12 @@ public class MqttHelper {
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
                     subscribeToTopic();
+                    Log.w(TAG, "MqttClient Connected to : " + serverUri);
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.w("Mqtt", "Failed to connect to: " + serverUri + exception.toString());
+                    Log.w(TAG, "Failed to connect to: " + serverUri + exception.toString());
                 }
             });
 
@@ -110,18 +77,32 @@ public class MqttHelper {
         }
     }
 
+    public void disconnect(){
+        try {
+            mqttAndroidClient.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+            Log.e(TAG, "failed to disconnect from server. ", e);
+        }finally {
+            Log.e(TAG, "MqttClient Disconnected from server. ");
+        }
+    }
+
+    public boolean isConnected(){
+        return mqttAndroidClient.isConnected();
+    }
 
     private void subscribeToTopic() {
         try {
             mqttAndroidClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Log.w("Mqtt","Subscribed!");
+                    Log.w(TAG,"Mqtt Client Subscribed to " + subscriptionTopic + " Successfully");
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.w("Mqtt", "Subscribed fail!");
+                    Log.w(TAG, "Subscribed fail!");
                 }
             });
 

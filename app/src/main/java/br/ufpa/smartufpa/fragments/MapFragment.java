@@ -29,7 +29,7 @@ import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.asynctasks.SearchRouteTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 
-import br.ufpa.smartufpa.mqtt.MqttHelper;
+import br.ufpa.smartufpa.utils.MqttBusHelper;
 import br.ufpa.smartufpa.utils.MapUtils;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
@@ -47,7 +47,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -102,7 +101,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private Place userLocation;
     private LocationManager locationManager;
 
-    private boolean busTracking = false;
+    // MqttHelper which holds an mqtt client that will listen to bus location updates
+    private MqttBusHelper mqttBusHelper;
 
       /* CLICK LISTENERS */
 
@@ -116,56 +116,22 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private Button.OnClickListener busLocationListener = new Button.OnClickListener(){
         @Override
         public void onClick(View v) {
-            if(busTracking){
-                // turn off
-                Toast.makeText(context, "turn off ", Toast.LENGTH_SHORT).show();
-            }else {
-                MqttHelper mqttHelper;
-                mqttHelper = new MqttHelper(v.getContext());
-                mqttHelper.setCallback(new MqttCallbackExtended() {
-                    @Override
-                    public void connectComplete(boolean reconnect, String serverURI) {
-                        if (!isLayerEnabled(OverlayTags.BUS_ROUTE)) {
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                                Drawable cancelIcon = getActivity().getResources().getDrawable((R.drawable.ic_cancel_white), null);
-                                fabBusLocation.setImageDrawable(cancelIcon);
-                            }
-                            enableBusOverlay();
-                            busTracking = true;
-                        }
-
-                    }
-
-                    @Override
-                    public void connectionLost(Throwable cause) {
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                            Drawable cancelIcon = getActivity().getResources().getDrawable((R.drawable.ic_bus_location), null);
-                            fabBusLocation.setImageDrawable(cancelIcon);
-                        }
-                        busTracking = false;
-                    }
-
-                    @Override
-                    public void messageArrived(String topic, MqttMessage message) throws Exception {
-                        Log.w("Debug", message.toString());
-                        final String[] splitMessage = message.toString().split(",");
-                        double longitude = Double.parseDouble(splitMessage[3]);
-                        double latitude = Double.parseDouble(splitMessage[4]);
-                        final List<Place> bus_location = new ArrayList<>();
-                        bus_location.add(new Place(latitude, longitude, "bus_location"));
-                        if (isLayerEnabled(OverlayTags.BUS_LOCATION)) {
-                            mapView.removeOverlay(OverlayTags.BUS_LOCATION);
-                            createOverlay(bus_location, MarkerTypes.DEFAULT, OverlayTags.BUS_LOCATION);
-                        } else {
-                            createOverlay(bus_location, MarkerTypes.DEFAULT, OverlayTags.BUS_LOCATION);
-                        }
-                    }
-
-                    @Override
-                    public void deliveryComplete(IMqttDeliveryToken token) {
-
-                    }
-                });
+            if(mqttBusHelper.isConnected()){
+                mqttBusHelper.disconnect();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    Drawable bus_location = getActivity().getResources().getDrawable((R.drawable.ic_bus_location), null);
+                    fabBusLocation.setImageDrawable(bus_location);
+                }
+                if(isLayerEnabled(OverlayTags.BUS_LOCATION))
+                    mapView.removeOverlay(OverlayTags.BUS_LOCATION);
+                if(isLayerEnabled(OverlayTags.BUS_ROUTE))
+                    mapView.removeOverlay(OverlayTags.BUS_ROUTE);
+                if(mapView.getOverlays().size() ==  1){
+                    btnClearMap.setVisibility(View.GONE);
+                }
+            }else{
+                mqttBusHelper.connect();
+                Toast.makeText(context, R.string.msg_bus_location_activated, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -211,6 +177,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         ROUTE_LINE_COLORS.add(Color.rgb(255, 100, 100)); // red
         ROUTE_LINE_COLORS.add(Color.rgb(62, 153, 62)); // green
 
+        initializeBusTrackingService();
+
     }
 
     @Override
@@ -234,6 +202,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         btnClearMap.setOnClickListener(clearMapListener);
 
         initializeMap();
+
 
         return view;
     }
@@ -306,6 +275,53 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mapView.setScrollableAreaLimitDouble(mapRegion);
     }
 
+    private void initializeBusTrackingService(){
+        mqttBusHelper = new MqttBusHelper(context);
+        mqttBusHelper.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+                if (!isLayerEnabled(OverlayTags.BUS_ROUTE)) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        Drawable cancelIcon = getActivity().getResources().getDrawable((R.drawable.ic_cancel_white), null);
+                        fabBusLocation.setImageDrawable(cancelIcon);
+                    }
+                    enableBusOverlay();
+                }
+
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {}
+
+            @Override
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                //Data structure:
+                // +CGNSINF: <GNSS run status>,<Fix status>, <UTC date & Time>,<Latitude>,<Longitude>,
+                // <MSL Altitude>,<Speed Over Ground>,<Course Over Ground>,<Fix Mode>,<Reserved1>,<HDOP>,
+                // <PDOP>,<VDOP>,<Reserved2>, <GNSS Satellites in View>,<GNSS Satellites Used>,<GLONASS Satellites Used>,
+                // <Reserved3>,<C/N0 max>,<HPA>,<VPA>
+                Log.w(TAG + "Message Received: ",  mqttMessage.toString());
+                final String[] splitMessage = mqttMessage.toString().split(",");
+                double longitude = Double.parseDouble(splitMessage[3]);
+                double latitude = Double.parseDouble(splitMessage[4]);
+                final List<Place> bus_location = new ArrayList<>();
+                bus_location.add(new Place(latitude, longitude, "bus_location"));
+                if (isLayerEnabled(OverlayTags.BUS_LOCATION)) {
+                    // TODO: Change to bus marker
+                    mapView.removeOverlay(OverlayTags.BUS_LOCATION);
+                    createOverlay(bus_location, MarkerTypes.DEFAULT, OverlayTags.BUS_LOCATION);
+                } else {
+                    createOverlay(bus_location, MarkerTypes.DEFAULT, OverlayTags.BUS_LOCATION);
+                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+    }
+
     /**
      * Initialize the map layer and feature to show user's location
      * on the map.
@@ -338,12 +354,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private void clearMap(){
         mapView.removeAllOverlays();
         if(btnClearMap.getVisibility() == View.VISIBLE) btnClearMap.setVisibility(View.GONE);
-        if(busTracking) {
+        if(mqttBusHelper.isConnected()) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Drawable cancelIcon = getActivity().getResources().getDrawable((R.drawable.ic_bus_location), null);
                 fabBusLocation.setImageDrawable(cancelIcon);
             }
-            busTracking = false;
+            mqttBusHelper.disconnect();
         }
         if(ROUTES_COUNTER == MAX_ROUTES)
             ROUTES_COUNTER = 0;

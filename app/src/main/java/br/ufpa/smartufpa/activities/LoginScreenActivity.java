@@ -58,9 +58,6 @@ public class LoginScreenActivity extends AppCompatActivity {
                     Intent intent = new Intent(MenuActivity.ACTION_APP_MENU);
                     intent.addCategory(MenuActivity.CATEGORY_APP_MENU);
                     startActivity(intent);
-                }else if(v.getId() == btnMqtt.getId()){
-                    Intent intent = new Intent(v.getContext(),MqttActivity.class);
-                    startActivity(intent);
                 }
             }
         };

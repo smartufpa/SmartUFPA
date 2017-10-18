@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_mqtt"
             android:text="Teste MQTT"
+            android:visibility="gone"
             style="@style/RaisedButton"/>
     </LinearLayout>
 
