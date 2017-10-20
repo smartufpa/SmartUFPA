@@ -8,5 +8,5 @@ package br.ufpa.smartufpa.utils.enums;
  */
 
 public enum MarkerTypes {
-    DEFAULT, FOOD, RESTROOM, AUDITORIUM, LIBRARY, BUS_STOP, XEROX
+    DEFAULT, FOOD, RESTROOM, AUDITORIUM, LIBRARY, BUS_STOP, XEROX, BUS_LOCATION
 }

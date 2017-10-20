@@ -117,7 +117,7 @@ public class MqttBusHelper {
         final String[] splitMessage = mqttMessage.toString().split(",");
         double latitude = Double.parseDouble(splitMessage[3]);
         double longitude = Double.parseDouble(splitMessage[4]);
-
+        Log.w(TAG, "readBusMessage: (" + latitude + "," + longitude + ")");
         return new GeoPoint(latitude,longitude);
 
     }
