@@ -131,7 +131,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
                 }
             }else{
                 mqttBusHelper.connect();
-                Toast.makeText(context, R.string.msg_bus_location_activated, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.msg_enabling_bus_location, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -280,6 +280,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mqttBusHelper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
+                Toast.makeText(context, R.string.msg_bus_location_activated, Toast.LENGTH_SHORT).show();
                 if (!isLayerEnabled(OverlayTags.BUS_ROUTE)) {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                         Drawable cancelIcon = getActivity().getResources().getDrawable((R.drawable.ic_cancel_white), null);
@@ -295,17 +296,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                //Data structure:
-                // +CGNSINF: <GNSS run status>,<Fix status>, <UTC date & Time>,<Latitude>,<Longitude>,
-                // <MSL Altitude>,<Speed Over Ground>,<Course Over Ground>,<Fix Mode>,<Reserved1>,<HDOP>,
-                // <PDOP>,<VDOP>,<Reserved2>, <GNSS Satellites in View>,<GNSS Satellites Used>,<GLONASS Satellites Used>,
-                // <Reserved3>,<C/N0 max>,<HPA>,<VPA>
-                Log.w(TAG + "Message Received: ",  mqttMessage.toString());
-                final String[] splitMessage = mqttMessage.toString().split(",");
-                double longitude = Double.parseDouble(splitMessage[3]);
-                double latitude = Double.parseDouble(splitMessage[4]);
+
+                Log.w(TAG ,"Message Received " +  mqttMessage.toString());
+                final GeoPoint geoPoint = mqttBusHelper.readBusMessage(mqttMessage);
                 final List<Place> bus_location = new ArrayList<>();
-                bus_location.add(new Place(latitude, longitude, "bus_location"));
+                Toast.makeText(context, "lat(-1..): " +  bus_location.get(0).getLatitude() + "long(-48...)" + bus_location.get(0).getLatitude(), Toast.LENGTH_LONG).show();
+                bus_location.add(new Place(geoPoint.getLatitude(), geoPoint.getLongitude(), "bus_location"));
                 if (isLayerEnabled(OverlayTags.BUS_LOCATION)) {
                     // TODO: Change to bus marker
                     mapView.removeOverlay(OverlayTags.BUS_LOCATION);

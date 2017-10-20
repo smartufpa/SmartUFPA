@@ -90,4 +90,7 @@ public final class Constants {
     public static final String DEFAULT_PLACE_COORDINATES = "default_place_coordinates";
     public static final String DEFAULT_PLACE_NAME = "default_place_name" ;
     public static final String MAP_REGION_BOUNDS = "map_region_bounds";
+    public static final String MQTT_CLIENT_ID = "bus_location";
+    public static final String MQTT_SUBSCRIPTION_TOPIC = "/ufpa/circular/loc/";
+    public static final String MQTT_SERVER_URI = "tcp://iot.eclipse.org:1883";
 }
