@@ -15,6 +15,7 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Stable Commit (20/09)
@@ -43,7 +44,7 @@ public class SearchQueryTask extends AsyncTask<String,Void,String> {
     }
 
 
-    @SuppressLint("DefaultLocale")
+
     private String buildSearchQuery(String userQuery){
         // Cleans all the white spaces on the query
         userQuery = userQuery.replaceAll("\\s+", " ");
@@ -51,7 +52,7 @@ public class SearchQueryTask extends AsyncTask<String,Void,String> {
         if (Character.isWhitespace(userQuery.charAt(userQuery.length()-1))){
             userQuery = userQuery.substring(0,userQuery.length()-1);
         }
-        return String.format(Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,
+        return String.format(Locale.US,Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,
                 userQuery,userQuery,userQuery,userQuery);
     }
 
