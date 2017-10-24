@@ -18,6 +18,7 @@ import br.ufpa.smartufpa.utils.JsonParser;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 /**
@@ -65,7 +66,7 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
 
         if(searchFilter.equals(OverpassFilters.FOOD)) {
 
-            query = String.format(Constants.QUERY_OVERPASS_FOOD,
+            query = String.format(Locale.US,Constants.QUERY_OVERPASS_FOOD,
                     south,west,north,east,
                     south,west,north,east,
                     south,west,north,east);
@@ -74,7 +75,7 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
 
         }else if(searchFilter.equals(OverpassFilters.RESTROOM)) {
 
-            query = String.format(Constants.QUERY_OVERPASS_RESTROOM,
+            query = String.format(Locale.US,Constants.QUERY_OVERPASS_RESTROOM,
                     south,west,north,east,
                     south,west,north,east,
                     south,west,north,east);
@@ -83,7 +84,7 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
 
         }else if(searchFilter.equals(OverpassFilters.XEROX)) {
 
-            query = String.format(Constants.QUERY_OVERPASS_XEROX,
+            query = String.format(Locale.US,Constants.QUERY_OVERPASS_XEROX,
                     south,west,north,east,
                     south,west,north,east,
                     south,west,north,east);
@@ -92,7 +93,7 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
 
         }else if(searchFilter.equals(OverpassFilters.AUDITORIUMS)) {
 
-            query = String.format(Constants.QUERY_OVERPASS_AUDITORIUMS,
+            query = String.format(Locale.US,Constants.QUERY_OVERPASS_AUDITORIUMS,
                     south,west,north,east,
                     south,west,north,east,
                     south,west,north,east);
@@ -101,7 +102,7 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
 
         }else if(searchFilter.equals(OverpassFilters.LIBRARIES)) {
 
-            query = String.format(Constants.QUERY_OVERPASS_LIBRARIES,
+            query = String.format(Locale.US,Constants.QUERY_OVERPASS_LIBRARIES,
                     south,west,north,east,
                     south,west,north,east,
                     south,west,north,east);

@@ -18,6 +18,7 @@ import org.osmdroid.views.overlay.Overlay;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 /**
  * Stable Commit (20/09)
@@ -60,7 +61,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
         // Build the query
         StringBuilder builder = new StringBuilder();
         builder.append(Constants.URL_OVERPASS_SERVER);
-        @SuppressLint("DefaultLocale") final String query = String.format(Constants.QUERY_OVERPASS_BUS_ROUTE,
+        final String query = String.format(Locale.US,Constants.QUERY_OVERPASS_BUS_ROUTE,
                 south,west,north,east,
                 south,west,north,east,
                 south,west,north,east);
