@@ -26,7 +26,7 @@ Em sua atual versão <b>(1.0 em 25/09/2017)</b>, o aplicativo contempla parcialm
 com os mapas dentro da universidade. Portanto, inclui as seguintes funcionalidades:
 <ul>
   <li>Cartografia básica para navegação dentro dos Campi do Guamá da UFPA em Belém;</li>
-  <li>Filtros de Localização (Pontos Importates): Auditórios, Banheiros, Bibliotecas, Refeições e Xerox;</li>
+  <li>Filtros de Localização (Pontos Importantes): Auditórios, Banheiros, Bibliotecas, Refeições e Xerox;</li>
   <li>Trajeto e pontos de parada do ônibus circular;</li>
   <li>Cálculo simples de rotas a pé entre a localização atual do usuário e seu destino escolhido;</li>
   <li>Ferramenta de Busca por nome.</li>
@@ -63,7 +63,7 @@ Projeto desenvolvido pelo estudante Kaê Uchôa sob orientação dos professores
 Contatos:
 <ul>
  <li>Equipe Smart UFPA: <a href="mailto:smart.ufpa@gmail.com">smart.ufpa@gmail.com</a></li>
- <li>Prof. Ana Régia: <a href="mailto:regianeves@gmail.com">regianeves@gmail.com</a></li>
+ <li>Prof. Ana Régia Neves: <a href="mailto:regianeves@gmail.com">regianeves@gmail.com</a></li>
  <li>Prof. Bianchi Serique: <a href="mailto:bianchi.serique@gmail.com">bianchi.serique@gmail.com</a></li>
  <li>Kaê Uchôa: <a href="mailto:kaeuchoas@gmail.com">kaeuchoas@gmail.com</a></li>
 </ul> 
