@@ -1,5 +1,9 @@
 # Smart Campus UFPA
+<br>
+<a style="margin-bottom: 0;" href='https://play.google.com/store/apps/details?id=br.ufpa.smartufpa'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="60px"/></a>
+<br>
 <i>Desenvolvendo um Smart Campus na Universidade Federal do Pará.</i>
+
 <p align="center">
   <img src="https://github.com/smartufpa/SmartCampusUFPA/blob/master/imgs/logo_smartufpa.png" width="420" height="250" alt="Logo do Projeto"/>
 </p>
