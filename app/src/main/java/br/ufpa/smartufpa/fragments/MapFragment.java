@@ -36,14 +36,13 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
 import br.ufpa.smartufpa.asynctasks.BusRouteTask;
 import br.ufpa.smartufpa.customviews.CustomMapView;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.enums.MarkerStatuses;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;

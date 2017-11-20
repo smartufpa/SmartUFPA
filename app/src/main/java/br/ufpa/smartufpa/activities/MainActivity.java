@@ -40,7 +40,7 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
 import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.fragments.SearchResultFragment;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;

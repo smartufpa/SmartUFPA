@@ -5,7 +5,7 @@ import android.util.Log;
 
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.HttpRequest;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 
 import com.google.gson.Gson;
 

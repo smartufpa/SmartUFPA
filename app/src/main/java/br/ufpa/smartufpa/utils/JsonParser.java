@@ -3,7 +3,7 @@ package br.ufpa.smartufpa.utils;
 import br.ufpa.smartufpa.models.PlaceTranslator;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.models.overpass.OverpassModel;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

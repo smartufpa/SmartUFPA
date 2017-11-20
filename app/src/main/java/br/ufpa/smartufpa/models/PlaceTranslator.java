@@ -1,9 +1,8 @@
 package br.ufpa.smartufpa.models;
 
-import android.support.annotation.Nullable;
-
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.models.overpass.Tags;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.Constants;
 
 /**
@@ -23,7 +22,7 @@ public class PlaceTranslator {
             return new PlaceTranslator();
         return instance;
     }
-    // @Nullable final Long id, double latitude, double longitude, Tags tags
+
     public Place elementToPlace(Element element){
         // Initial values in case there is none coming from JSON parsing
         String name = Constants.NO_NAME;
@@ -57,6 +56,11 @@ public class PlaceTranslator {
         }
 
         return place;
+    }
+
+    public Element placeToElement(Place place){
+
+        return null;
     }
 
 }

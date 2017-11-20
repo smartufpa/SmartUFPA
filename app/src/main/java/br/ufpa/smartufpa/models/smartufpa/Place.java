@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.models;
+package br.ufpa.smartufpa.models.smartufpa;
 
 import android.annotation.SuppressLint;
 import android.os.Parcel;
@@ -7,20 +7,27 @@ import android.support.annotation.Nullable;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.util.Locale;
+
 /**
  * Stable Commit (20/09)
  * @author kaeuchoa
  */
 
-public class Place implements Parcelable {
+public abstract class Place implements Parcelable {
 
+    // TODO: move attributes to specific classes
+
+    // TODO: amenity to be replaced by different classes
     private String amenity;
     private String description;
     private long id;
+    // TODO: latitude and longitute to be merged into a Geopoint
     private double latitude;
-    private String locName;
     private double longitude;
+    private String locName;
     private String name;
+    // to move for copyshop
     private String shop;
     private String shortName;
 
@@ -53,18 +60,6 @@ public class Place implements Parcelable {
         shop = in.readString();
         shortName = in.readString();
     }
-
-    public static final Creator<Place> CREATOR = new Creator<Place>() {
-        @Override
-        public Place createFromParcel(Parcel in) {
-            return new Place(in);
-        }
-
-        @Override
-        public Place[] newArray(int size) {
-            return new Place[size];
-        }
-    };
 
     public double getLatitude() {
         return latitude;
@@ -101,13 +96,11 @@ public class Place implements Parcelable {
         this.longitude = longitude;
     }
 
-    @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
-        return String.format("[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,shop=%s,amenity=%s,loc_name=%s,description=%s]",
+        return String.format(Locale.ENGLISH,"[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,shop=%s,amenity=%s,loc_name=%s,description=%s]",
                 id,latitude,longitude,name,shortName,shop,amenity,locName,description);
     }
-
 
     @Override
     public int describeContents() {

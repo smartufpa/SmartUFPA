@@ -34,6 +34,10 @@ public class Tags {
     @Expose
     private String description;
 
+    @SerializedName("website")
+    @Expose
+    private String website;
+
 
     public String getName() {
         return name;
@@ -89,4 +93,6 @@ public class Tags {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getWebsite(){ return this.website;  }
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 

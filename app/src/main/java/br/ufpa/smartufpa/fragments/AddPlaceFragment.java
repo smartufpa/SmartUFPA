@@ -23,7 +23,6 @@ import br.ufpa.smartufpa.models.PlaceTranslator;
 import br.ufpa.smartufpa.models.overpass.Tags;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.InputParser;
-import br.ufpa.smartufpa.models.Place;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

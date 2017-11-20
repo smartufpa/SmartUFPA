@@ -1,6 +1,6 @@
 package br.ufpa.smartufpa.asynctasks.interfaces;
 
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
