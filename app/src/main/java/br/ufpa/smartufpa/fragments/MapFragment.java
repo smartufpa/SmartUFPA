@@ -116,6 +116,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private Button.OnClickListener busLocationListener = new Button.OnClickListener(){
         @Override
         public void onClick(View v) {
+            // TODO: CHECK CONNECTION
             if(mqttBusHelper.isConnected()){
                 mqttBusHelper.disconnect();
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -296,28 +297,22 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-
-//                Log.w(TAG ,"Message Received " +  mqttMessage.toString());
+                Log.w(TAG ,"Message Received " +  mqttMessage.toString());
                 final GeoPoint geoPoint = mqttBusHelper.readBusMessage(mqttMessage);
-                final List<Place> bus_location = new ArrayList<>();
-                Log.e(TAG, ": " + bus_location.get(0).toString() );
-                Log.e(TAG, "AQUI: " + bus_location.get(0).toString() );
-                Toast.makeText(context, "lat(-1..): " +  bus_location.get(0).getLatitude() + "long(-48...)" + bus_location.get(0).getLatitude(), Toast.LENGTH_LONG).show();
+                final List<Place> bus_location = new ArrayList<>(1);
                 bus_location.add(new Place(geoPoint.getLatitude(), geoPoint.getLongitude(), "bus_location"));
                 if (isLayerEnabled(OverlayTags.BUS_LOCATION)) {
-                    // TODO: Change to bus marker
+                    // TODO: TREAT CLICKS ON MARKERS
                     mapView.removeOverlay(OverlayTags.BUS_LOCATION);
-                    createOverlay(bus_location, MarkerTypes.DEFAULT, OverlayTags.BUS_LOCATION);
-                    Log.e(TAG, "AQUI2: " + bus_location.get(0).toString() );
+                    createOverlay(bus_location, MarkerTypes.BUS_LOCATION, OverlayTags.BUS_LOCATION);
                 } else {
-                    createOverlay(bus_location, MarkerTypes.DEFAULT, OverlayTags.BUS_LOCATION);
-                    Log.e(TAG, "AQUI3: " + bus_location.get(0).toString() );
+                    createOverlay(bus_location, MarkerTypes.BUS_LOCATION, OverlayTags.BUS_LOCATION);
                 }
+                mapCamera.animateTo(bus_location.get(0).getGeoPoint());
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-
             }
         });
     }
@@ -413,6 +408,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
                 places.remove(checkPlace);
 
             final Place rightPlace =  places.get(i);
+            // TODO: SET CLICK LISTENERS BASED ON MARKER TYPES
             Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
@@ -509,10 +505,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     @Override
     public void onProviderDisabled(String provider) {}
-
-    public Place getUserLocation() {
-        return userLocation;
-    }
 
     @Override
     public void onSearchRouteResponse(final Overlay overlay, final ServerResponse taskStatus) {

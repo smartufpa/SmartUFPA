@@ -80,10 +80,16 @@ public class MapUtils {
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
         } else if(markerType.equals(MarkerTypes.BUS_STOP)){
+            // TODO (VISUAL ADJUSTMENTS): RESIZE BUS STOP MARKER
             markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_bus_stop));
             markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
+        }else if(markerType.equals(MarkerTypes.BUS_LOCATION)){
+            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_bus_location_marker));
+            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+                    .getDrawable(parentContext, R.drawable.ic_bus_location_marker));
         }
         
         return markerIcons;
