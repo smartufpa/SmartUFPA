@@ -89,4 +89,8 @@ public final class Constants {
     public static final String DEFAULT_PLACE_COORDINATES = "default_place_coordinates";
     public static final String DEFAULT_PLACE_NAME = "default_place_name" ;
     public static final String MAP_REGION_BOUNDS = "map_region_bounds";
+
+    // JSON Parse
+    public static final String JSON_ELEMENT_NODE = "node";
+    public static final String JSON_ELEMENT_WAY = "way";
 }

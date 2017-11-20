@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.database.PlaceDAO;
-import br.ufpa.smartufpa.models.PlaceFactory;
+import br.ufpa.smartufpa.models.PlaceTranslator;
 import br.ufpa.smartufpa.models.overpass.Tags;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.InputParser;
@@ -290,12 +290,13 @@ public class AddPlaceFragment extends DialogFragment {
         }
 
 
-        PlaceFactory placeFactory = PlaceFactory.getInstance();
-        Place place = placeFactory.createPlace(null, latitude, longitude, tags);
+        PlaceTranslator placeTranslator = PlaceTranslator.getInstance();
+//        Place place = placeTranslator.elementToPlace(null, latitude, longitude, tags);
         tags = null;
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.toJson(place);
+//        return gson.toJson(place);
+        return null;
     }
 
 
