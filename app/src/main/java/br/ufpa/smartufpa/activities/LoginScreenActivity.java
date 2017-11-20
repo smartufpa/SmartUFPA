@@ -49,7 +49,7 @@ public class LoginScreenActivity extends AppCompatActivity {
         setContentView(R.layout.login_screen_activity);
 
         btnLogin = findViewById(R.id.btn_entrar);
-        
+
 
         final View.OnClickListener clickListener = new View.OnClickListener() {
             @Override

@@ -36,6 +36,7 @@ public class MqttBusHelper {
 
     public MqttBusHelper(Context context){
         mqttAndroidClient = new MqttAndroidClient(context, SERVER_URI, CLIENT_ID);
+
     }
 
     public void setCallback(MqttCallbackExtended callback) {

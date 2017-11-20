@@ -297,17 +297,21 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
 
-                Log.w(TAG ,"Message Received " +  mqttMessage.toString());
+//                Log.w(TAG ,"Message Received " +  mqttMessage.toString());
                 final GeoPoint geoPoint = mqttBusHelper.readBusMessage(mqttMessage);
                 final List<Place> bus_location = new ArrayList<>();
+                Log.e(TAG, ": " + bus_location.get(0).toString() );
+                Log.e(TAG, "AQUI: " + bus_location.get(0).toString() );
                 Toast.makeText(context, "lat(-1..): " +  bus_location.get(0).getLatitude() + "long(-48...)" + bus_location.get(0).getLatitude(), Toast.LENGTH_LONG).show();
                 bus_location.add(new Place(geoPoint.getLatitude(), geoPoint.getLongitude(), "bus_location"));
                 if (isLayerEnabled(OverlayTags.BUS_LOCATION)) {
                     // TODO: Change to bus marker
                     mapView.removeOverlay(OverlayTags.BUS_LOCATION);
                     createOverlay(bus_location, MarkerTypes.DEFAULT, OverlayTags.BUS_LOCATION);
+                    Log.e(TAG, "AQUI2: " + bus_location.get(0).toString() );
                 } else {
                     createOverlay(bus_location, MarkerTypes.DEFAULT, OverlayTags.BUS_LOCATION);
+                    Log.e(TAG, "AQUI3: " + bus_location.get(0).toString() );
                 }
             }
 
