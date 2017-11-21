@@ -10,8 +10,8 @@ import android.support.annotation.Nullable;
 public class Department extends Place {
 
     public Department(@Nullable Long id, double latitude, double longitude, String name,
-                      String shortName, String locName, String shop, String amenity, String description) {
-        super(id, latitude, longitude, name, shortName, locName, shop, amenity, description);
+                      String shortName, String locName, String description) {
+        super(id, latitude, longitude, name, shortName, locName, description);
     }
 
     public Department(double latitude, double longitude, String name) {
@@ -33,4 +33,9 @@ public class Department extends Place {
             return new Department[size];
         }
     };
+
+    @Override
+    public void rate() {
+
+    }
 }

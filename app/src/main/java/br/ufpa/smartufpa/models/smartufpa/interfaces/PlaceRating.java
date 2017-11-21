@@ -5,4 +5,7 @@ package br.ufpa.smartufpa.models.smartufpa.interfaces;
  */
 
 public interface PlaceRating {
+
+    void rate();
+
 }
