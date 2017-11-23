@@ -14,8 +14,8 @@ public class Department extends Place {
         super(id, latitude, longitude, name, shortName, locName, description);
     }
 
-    public Department(double latitude, double longitude, String name) {
-        super(latitude, longitude, name);
+    public Department(Long id,double latitude, double longitude, String name) {
+        super(id,latitude, longitude, name);
     }
 
     protected Department(Parcel in) {

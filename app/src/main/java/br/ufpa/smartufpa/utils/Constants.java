@@ -12,7 +12,9 @@ public final class Constants {
     public static final String TAG_TOILETS = "toilets";
     public static final String TAG_EXHIBITION_CENTRE = "exhibition_centre";
     public static final String TAG_LIBRARY = "library";
-    public static final String TAG_FOOD = "food";
+    public static final String TAG_RESTAURANT = "restaurant";
+    public static final String TAG_FOOD_COURT = "food_court";
+    public static final String TAG_BUILDING = "university";
 
     //URLS
     public static final String URL_LOCAL_HOST = "http://177.194.168.159:80/";

@@ -11,8 +11,8 @@ public class Library extends Place {
         super(id, latitude, longitude, name, shortName, locName, description);
     }
 
-    public Library(double latitude, double longitude, String name) {
-        super(latitude, longitude, name);
+    public Library(Long id,double latitude, double longitude, String name) {
+        super(id,latitude, longitude, name);
     }
 
     protected Library(Parcel in) {

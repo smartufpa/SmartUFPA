@@ -23,6 +23,11 @@ public class Tags {
     private String shop;
 
 
+    @SerializedName("toilets")
+    @Expose
+    private String toilets;
+
+
     @SerializedName("amenity")
     @Expose
     /*
@@ -37,6 +42,11 @@ public class Tags {
     @SerializedName("website")
     @Expose
     private String website;
+
+
+    @SerializedName("building")
+    @Expose
+    private String building;
 
 
     public String getName() {
@@ -95,4 +105,14 @@ public class Tags {
     }
 
     public String getWebsite(){ return this.website;  }
+
+
+    public String getBuilding() {
+        return building;
+    }
+
+
+    public String getToilets() {
+        return toilets;
+    }
 }

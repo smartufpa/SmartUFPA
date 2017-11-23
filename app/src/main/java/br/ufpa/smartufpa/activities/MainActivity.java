@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 
                 // Define variables to pass to the MapFragment
                 final BoundingBox mapBounds = new BoundingBox(north,east,south,west);
-                final Place chosenLocation = new Place(lat,longtd,defaultPlaceName);
+                final Place chosenLocation = new Place((long)265732584,lat,longtd,defaultPlaceName);
                 mapFragment = MapFragment.newInstance(chosenLocation,mapBounds);
 
                 // Loads the fragment
@@ -404,7 +405,7 @@ public class MainActivity extends AppCompatActivity
             // The query returned multiple results
             if(places.size() > 1){
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
+                Log.i(TAG,places.toString());
                 // Open SearchResultFragment
                 SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
                 mapFragment.createOverlay(places,MarkerTypes.DEFAULT,OverlayTags.SEARCH);

@@ -14,8 +14,8 @@ public class Auditorium extends Place {
         super(id, latitude, longitude, name, shortName, locName, description);
     }
 
-    public Auditorium(double latitude, double longitude, String name) {
-        super(latitude, longitude, name);
+    public Auditorium(Long id,double latitude, double longitude, String name) {
+        super(id,latitude, longitude, name);
     }
 
     protected Auditorium(Parcel in) {

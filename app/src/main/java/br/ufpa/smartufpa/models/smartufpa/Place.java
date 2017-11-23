@@ -8,25 +8,20 @@ import org.osmdroid.util.GeoPoint;
 import java.util.Locale;
 
 import br.ufpa.smartufpa.models.smartufpa.interfaces.PlaceRating;
+import br.ufpa.smartufpa.utils.Constants;
 
 /**
  * Stable Commit (20/09)
  * @author kaeuchoa
  */
 
-public abstract class Place implements Parcelable,PlaceRating {
+public class Place implements Parcelable,PlaceRating {
 
-    // TODO: move attributes to specific classes
-
-    // TODO: amenity to be replaced by different classes
-//    private String amenity;
     private String description;
     private long id;
     private GeoPoint latLong;
     private String locName;
     private String name;
-    // to move for copyshop
-//    private String shop;
     private String shortName;
 
     public Place(Long id, double latitude, double longitude, String name, String shortName,
@@ -38,9 +33,13 @@ public abstract class Place implements Parcelable,PlaceRating {
         this.description = description;
         this.name = name;
     }
-    public Place(double latitude, double longitude, String name) {
+    public Place(Long id, double latitude, double longitude, String name) {
+        this.id = id;
         this.latLong = new GeoPoint(latitude,longitude);
         this.name = name;
+        this.shortName = Constants.NO_SHORT_NAME;
+        this.locName = Constants.NO_LOCAL_NAME;
+        this.description = Constants.NO_DESCRIPTION;
     }
 
     protected Place(Parcel in) {
@@ -84,7 +83,7 @@ public abstract class Place implements Parcelable,PlaceRating {
 
     @Override
     public String toString() {
-        return String.format(Locale.ENGLISH,"[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,loc_name=%s,description=%s]",
+        return String.format(Locale.US,"[id=%s,lat=%f,lon=%f,name=%s,short_name=%s,loc_name=%s,description=%s]",
                 id,latLong.getLatitude(),latLong.getLongitude(),name,shortName,locName,description);
     }
 
@@ -101,6 +100,20 @@ public abstract class Place implements Parcelable,PlaceRating {
         dest.writeString(name);
         dest.writeString(shortName);
     }
+    public static final Creator<Place> CREATOR = new Creator<Place>() {
+        @Override
+        public Place createFromParcel(Parcel in) {
+            return new Place(in);
+        }
 
+        @Override
+        public Place[] newArray(int size) {
+            return new Place[size];
+        }
+    };
 
+    @Override
+    public void rate() {
+
+    }
 }

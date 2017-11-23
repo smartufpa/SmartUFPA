@@ -18,8 +18,8 @@ public class FoodPlace extends Place {
         super(id, latitude, longitude, name, shortName, locName, description);
     }
 
-    public FoodPlace(double latitude, double longitude, String name) {
-        super(latitude, longitude, name);
+    public FoodPlace(Long id,double latitude, double longitude, String name) {
+        super(id,latitude, longitude, name);
     }
 
     protected FoodPlace(Parcel in) {

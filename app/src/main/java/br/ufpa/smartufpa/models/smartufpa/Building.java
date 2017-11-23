@@ -24,8 +24,8 @@ public class Building extends Place {
         super(id, latitude, longitude, name, shortName, locName,description);
     }
 
-    public Building(double latitude, double longitude, String name) {
-        super(latitude, longitude, name);
+    public Building(Long id,double latitude, double longitude, String name) {
+        super(id,latitude, longitude, name);
     }
 
     public Building(Parcel in) {

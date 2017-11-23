@@ -415,7 +415,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onLocationChanged(Location location) {
         if(userLocation == null)
-            userLocation = new Place(location.getLatitude(),location.getLongitude(),"user_location");
+            userLocation = new Place((long)0,location.getLatitude(),location.getLongitude(),"user_location");
         else {
             userLocation.setLongitude(location.getLongitude());
             userLocation.setLatitude(location.getLatitude());

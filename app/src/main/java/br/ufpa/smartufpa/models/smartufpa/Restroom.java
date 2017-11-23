@@ -8,8 +8,8 @@ import android.os.Parcel;
 
 public class Restroom extends Place {
 
-    public Restroom(double latitude, double longitude, String name) {
-        super(latitude, longitude, name);
+    public Restroom(Long id,double latitude, double longitude, String name) {
+        super(id,latitude, longitude, name);
     }
 
     public Restroom(Parcel in) {

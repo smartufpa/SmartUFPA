@@ -13,13 +13,8 @@ public class Copyshop extends Place {
     // TODO: ADD catalog
     private boolean hasServices;
 
-
-    public Copyshop(Long id, double latitude, double longitude, String name, String shortName, String locName, String description) {
-        super(id, latitude, longitude, name, shortName, locName, description);
-    }
-
-    public Copyshop(double latitude, double longitude, String name) {
-        super(latitude, longitude, name);
+    public Copyshop(Long id,double latitude, double longitude, String name) {
+        super(id,latitude, longitude, name);
     }
 
     public Copyshop(Parcel in) {
