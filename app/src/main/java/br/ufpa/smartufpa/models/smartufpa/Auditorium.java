@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.models;
+package br.ufpa.smartufpa.models.smartufpa;
 
 import android.os.Parcel;
 
