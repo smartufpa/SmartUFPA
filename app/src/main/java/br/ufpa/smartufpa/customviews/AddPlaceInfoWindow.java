@@ -18,7 +18,7 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow;
  * Created by kaeuc on 07/03/2017.
  */
 
-public class AddPlaceInfoWindow extends InfoWindow{
+public class AddPlaceInfoWindow extends InfoWindow {
 
 
     private ImageButton btnAddPlaceFrag;
@@ -44,10 +44,11 @@ public class AddPlaceInfoWindow extends InfoWindow{
             }
         });
 
+
         btnAddPlaceFrag.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog();
+                startAddPlaceActivity();
                 close();
             }
         });
@@ -55,21 +56,12 @@ public class AddPlaceInfoWindow extends InfoWindow{
 
     @Override
     public void onClose() {
-
     }
 
+    private void startAddPlaceActivity() {
+        double latitude = locationMarker.getPosition().getLatitude();
+        double longitude = locationMarker.getPosition().getLongitude();
 
-    private void showDialog(){
-        FragmentTransaction ft = parentActivity.getSupportFragmentManager().beginTransaction();
-        Fragment prev = parentActivity.getSupportFragmentManager()
-                .findFragmentByTag(AddPlaceFragment.FRAGMENT_TAG);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        final AddPlaceFragment addPlaceFragment = AddPlaceFragment.newInstance(
-                locationMarker.getPosition().getLatitude(),
-                locationMarker.getPosition().getLongitude());
-        addPlaceFragment.show(ft,AddPlaceFragment.FRAGMENT_TAG);
+//        parentActivity.startActivity();
     }
-
 }

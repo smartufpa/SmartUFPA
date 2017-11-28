@@ -345,6 +345,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add_location:
+                mapFragment.addLocationToMap();
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
     public void onBackPressed() {
         // Defines left drawer behavior when back button is pressed
         layoutDrawer = findViewById(R.id.layout_drawer);

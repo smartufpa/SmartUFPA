@@ -31,6 +31,7 @@ public class PlaceTranslator {
         return instance;
     }
 
+    // TODO: Split ifs in separate functions
     public Place elementToPlace(Element element) {
         // Initial values in case there is none coming from JSON parsing
         String name = Constants.NO_NAME;

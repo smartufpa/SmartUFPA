@@ -110,7 +110,6 @@
     <string name="about_txt_site">https://github.com/smartufpa/SmartCampusUFPA</string>
 
 
-
     <string name="dialog_title">Ops…</string>
     <string name="lbl_local_name">Nome local:</string>
     <string name="error_connection_failed">Erro na conexão durante a requisição. Tente novamente.</string>
