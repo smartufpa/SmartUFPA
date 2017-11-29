@@ -80,7 +80,9 @@
                 <category android:name="smartufpa.CATEGORY_ABOUT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AddPlaceActivity"></activity>
+        <activity android:name=".activities.AddPlaceActivity">
+
+        </activity>
     </application>
 
 </manifest>

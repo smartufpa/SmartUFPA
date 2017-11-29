@@ -77,6 +77,7 @@ public final class Constants {
             "out qt geom tags 500;relation[route=bus][name=\"circular\"]" +
             "(%f,%f,%f,%f);out qt geom body 500;";
 
+    // TODO: TRANSFER TO STRING XML
     public static final String NO_NAME = "Sem nome identificado";
     public static final String NO_LOCAL_NAME = "Sem nome local identificado";
     public static final String NO_SHORT_NAME = "Sem abreviação";
@@ -95,4 +96,6 @@ public final class Constants {
     // JSON Parse
     public static final String JSON_ELEMENT_NODE = "node";
     public static final String JSON_ELEMENT_WAY = "way";
+
+
 }

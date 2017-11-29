@@ -11,8 +11,8 @@
         <item name="nav_libraries">Bibliotecas</item>
     </string-array>
 
+    <!--These two list should be equivalent (the icons must have the same order than this list)-->
     <string-array name="default_places">
-        <item>Tipo do Local</item>
         <item>Auditório</item>
         <item>Banheiro</item>
         <item>Biblioteca</item>
@@ -20,4 +20,13 @@
         <item>Xerox</item>
         <item>Outro</item>
     </string-array>
+
+    <integer-array name="default_places_drawables">
+        <item>@drawable/ic_marker_auditorium</item>
+        <item>@drawable/ic_marker_restroom</item>
+        <item>@drawable/ic_marker_library</item>
+        <item>@drawable/ic_marker_restaurant</item>
+        <item>@drawable/ic_marker_xerox</item>
+        <item>@drawable/ic_about</item>
+    </integer-array>-array>
 </resources>
