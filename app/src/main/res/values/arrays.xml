@@ -21,12 +21,5 @@
         <item>Outro</item>
     </string-array>
 
-    <integer-array name="default_places_drawables">
-        <item>@drawable/ic_marker_auditorium</item>
-        <item>@drawable/ic_marker_restroom</item>
-        <item>@drawable/ic_marker_library</item>
-        <item>@drawable/ic_marker_restaurant</item>
-        <item>@drawable/ic_marker_xerox</item>
-        <item>@drawable/ic_about</item>
-    </integer-array>-array>
+
 </resources>

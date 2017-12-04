@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import br.ufpa.smartufpa.R;
 
+
 /**
  * Created by kaeuchoa on 29/11/2017.
  */
@@ -19,15 +20,16 @@ import br.ufpa.smartufpa.R;
 public class AddPlaceOptionAdapter extends RecyclerView.Adapter {
 
     private Context parentContext;
+
+    public static final String TAG = AddPlaceOptionAdapter.class.getSimpleName();
+
     private String[] placeCategories;
-    private int[] placeCategoriesIcons;
     private AddPlaceOptionAdapter.OnItemClickListener onItemClickListener;
 
     public AddPlaceOptionAdapter(Context parentContext) {
         this.parentContext = parentContext;
         // List of categories defined on values>array.xml
         placeCategories = parentContext.getResources().getStringArray(R.array.default_places);
-        placeCategoriesIcons = parentContext.getResources().getIntArray(R.array.default_places_drawables);
     }
 
     /**
@@ -59,14 +61,40 @@ public class AddPlaceOptionAdapter extends RecyclerView.Adapter {
         viewHolder.txtAddPlaceCategory.setText(placeCategories[position]);
 
         // Sets the image for the card
-        Drawable currentDrawable = ContextCompat.getDrawable(parentContext,placeCategoriesIcons[position]);
+        Drawable currentDrawable = null;
+        switch (position){
+            case 0:
+                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_auditorium);
+                break;
+            case 1:
+                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restroom);
+                break;
+            case 2:
+                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_library);
+                break;
+            case 3:
+                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restaurant);
+                break;
+            case 4:
+                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_xerox);
+                break;
+            default:
+                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_about);
+                break;
+        }
         viewHolder.imgAddPlaceCategory.setImageDrawable(currentDrawable);
+
+
     }
 
 
     @Override
     public int getItemCount() {
         return placeCategories.length;
+    }
+
+    public String[] getPlaceCategories() {
+        return placeCategories;
     }
 
 

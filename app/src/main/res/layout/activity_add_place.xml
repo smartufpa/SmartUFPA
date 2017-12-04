@@ -6,24 +6,33 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin"
     tools:context="br.ufpa.smartufpa.activities.AddPlaceActivity">
 
 
-    <TextView
-        android:id="@+id/txt_add_title"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        />
+        android:background="@color/colorAccent"
+        >
+        <TextView
+            android:id="@+id/txt_add_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Escolha uma Categoria"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="15dp"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            />
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_add_place_options"
-        android:paddingTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
         />
 
 </LinearLayout>

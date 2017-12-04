@@ -1,6 +1,7 @@
 package br.ufpa.smartufpa.customviews;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.activities.AddPlaceActivity;
 import br.ufpa.smartufpa.fragments.AddPlaceFragment;
+import br.ufpa.smartufpa.utils.Constants;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -25,6 +28,8 @@ public class AddPlaceInfoWindow extends InfoWindow {
     private ImageButton btnCloseWindow;
     private final Marker locationMarker;
     private final AppCompatActivity parentActivity;
+
+
 
     public AddPlaceInfoWindow(int layoutResId, MapView mapView, Marker marker, Context parentContext) {
         super(layoutResId, mapView);
@@ -61,7 +66,9 @@ public class AddPlaceInfoWindow extends InfoWindow {
     private void startAddPlaceActivity() {
         double latitude = locationMarker.getPosition().getLatitude();
         double longitude = locationMarker.getPosition().getLongitude();
-
-//        parentActivity.startActivity();
+        Intent intent = new Intent(parentActivity, AddPlaceActivity.class);
+        intent.putExtra(AddPlaceActivity.LABEL_LATITUDE,latitude);
+        intent.putExtra(AddPlaceActivity.LABEL_LONGITUDE,longitude);
+        parentActivity.startActivity(intent);
     }
 }
