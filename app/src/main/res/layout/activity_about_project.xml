@@ -16,13 +16,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/logos"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
         >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="65dp"
-            android:maxWidth="65dp"
+            android:layout_margin="10dp"
             android:id="@+id/logo_ufpa_about"
             android:src="@drawable/logo_ufpa"
             />
@@ -30,8 +30,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="65dp"
-            android:maxWidth="65dp"
+            android:layout_margin="10dp"
             android:id="@+id/logo_labvis"
             android:src="@drawable/logo_labvis"
             android:layout_toRightOf="@+id/logo_ufpa_about"
@@ -42,7 +41,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/logos"
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
@@ -51,8 +50,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
             android:text="@string/about_lbl_coord"
             android:layout_gravity="center_horizontal"
             />
@@ -60,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_ana"
             />
@@ -68,7 +67,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_bianchi"
 
@@ -78,8 +77,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_desenv"
 
@@ -88,35 +87,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_txt_kae"
             />
-
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_txt_version"
-
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_txt_labvis"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_logo"
             />
@@ -124,7 +103,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_txt_giordana"
             />
@@ -132,7 +111,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_txt_port_gio"
             android:autoLink="web"
@@ -141,8 +120,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_more"
             />
@@ -150,8 +129,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_gravity="center_horizontal"
+            android:textSize="15sp"
+            android:textAlignment="center"
             android:text="@string/about_txt_site"
             android:autoLink="web"
             />

@@ -17,7 +17,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/btn_add_info"
+        android:icon="@drawable/btn_add_info"
         android:id="@+id/img_add_info"
         android:layout_gravity="center"
         android:layout_margin="@dimen/fab_margin"
@@ -27,7 +27,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/btn_close"
+        android:icon="@drawable/btn_close"
         android:id="@+id/img_close"
         android:layout_gravity="center"
         android:background="@android:color/transparent"

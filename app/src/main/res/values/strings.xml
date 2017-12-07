@@ -85,6 +85,7 @@
     <string name="lbl_search_result_title">Resultados</string>
     <string name="lbl_place_details">Detalhes</string>
     <string name="lbl_placeholder">PlaceHolder Text</string>
+    <string name="lbl_about_title">Sobre Nós</string>
 
     <string name="tutorial_map_executed">tutorial_executed</string>
     <string name="search_hint">Busque na UFPA</string>
@@ -94,7 +95,7 @@
     <string name="msg_routes_limit">Limpe o mapa antes de calcular uma nova rota.</string>
     <string name="btn_rate_info">Avalie Estas Informações</string>
 
-
+    <!--Activity about project-->
     <string name="about_lbl_coord">Coordenadores do projeto:</string>
     <string name="about_lbl_ana">Ana Régia de Mendonça Neves</string>
     <string name="about_lbl_bianchi">Bianchi Serique Meiguins</string>
@@ -105,10 +106,15 @@
     <string name="about_txt_ufpa">Universidade Federal do Pará</string>
     <string name="about_lbl_logo">Logo feita por:</string>
     <string name="about_txt_giordana">Giordanna De Gregoriis</string>
-    <string name="about_txt_port_gio">( http://gior.hol.es/ )</string>
+    <string name="about_txt_port_gio">http://gior.hol.es/</string>
     <string name="about_lbl_more">Mais informações:</string>
-    <string name="about_txt_site">https://github.com/smartufpa/SmartCampusUFPA</string>
+    <string name="about_txt_site">http://facebook.com/smart.campus.ufpa</string>
 
+    <!--About menu option cards-->
+    <string name="about_opt_title_project">Sobre o Projeto</string>
+    <string name="about_opt_subtitle_project">Detalhes sobre a Equipe e mais</string>
+    <string name="about_opt_title_code">Sobre o Código</string>
+    <string name="about_opt_subtitle_code">Detalhes sobre as tecnologias usadas</string>
 
 
     <string name="dialog_title">Ops…</string>
@@ -121,6 +127,9 @@
     <string name="msg_request_location_permission">A permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="msg_request_both_permissions">A permissão de armazenamento é necessária para armazenar porções do mapa para reduzir consumo de dados e para uso offline.   E a permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="search_filters">Filtros de Busca</string>
+
+
+    <string name="title_activity_about_project">AboutProjectActivity</string>
 
 
 </resources>

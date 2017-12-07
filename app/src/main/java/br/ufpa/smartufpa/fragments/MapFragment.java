@@ -43,10 +43,10 @@ import br.ufpa.smartufpa.utils.enums.MarkerStatuses;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.CopyrightOverlay;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
@@ -71,6 +71,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     // MAP
     private MyLocationNewOverlay myLocationOverlay;
+    private CopyrightOverlay mCopyrightOverlay;
     private IMapController mapCamera;
     private static final int DEFAULT_ZOOM = 16;
     private static final int MIN_ZOOM = 15;
@@ -178,7 +179,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         fabBusLocation.setVisibility(View.GONE);
         btnClearMap.setOnClickListener(clearMapListener);
 
-        initializeMap();
+        initMap();
 
         return view;
     }
@@ -231,7 +232,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
      * Initialize the map configurations such as MapCamera, zoom values
      * and interface aspects.
      */
-    private void initializeMap(){
+    private void initMap(){
         // Map camera configuration
         GeoPoint startCameraPoint = new GeoPoint
                 (defaultPlace.getLatitude(), defaultPlace.getLongitude());
@@ -249,6 +250,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mapView.setUseDataConnection(true);
         // Limits the map area to the region set
         mapView.setScrollableAreaLimitDouble(mapRegion);
+        mCopyrightOverlay = new CopyrightOverlay(context);
+        mapView.addOverlay(mCopyrightOverlay, OverlayTags.COPYRIGHT);
     }
 
     /**

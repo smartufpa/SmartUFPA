@@ -6,6 +6,7 @@ import android.util.Log;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
 
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.CopyrightOverlay;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -45,7 +46,7 @@ public class CustomMapView extends MapView {
     }
 
     /**
-     * Removes an specif layer from the MapView.
+     * Removes a specif layer from the MapView.
      * @param layerTag Tag of the layer to be removed
      */
     public void removeOverlay(final OverlayTags layerTag){
@@ -63,7 +64,7 @@ public class CustomMapView extends MapView {
         int size = layersTags.size()- 1;
         for (int i = size; i > 0 ; i--) {
             Overlay currentOverlay = this.getOverlays().get(i);
-            if(!(currentOverlay instanceof MyLocationNewOverlay))
+            if(!(currentOverlay instanceof MyLocationNewOverlay || currentOverlay instanceof CopyrightOverlay))
                 this.removeOverlay(layersTags.get(i));
         }
         Log.i(TAG, "Map Cleared.");

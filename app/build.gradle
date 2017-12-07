@@ -19,7 +19,7 @@ android {
         }
     }
 
-    buildTypes.each{
+    buildTypes.each {
         it.buildConfigField 'String', 'GRAPHHOPPER_KEY', GraphHopperKey
     }
 
