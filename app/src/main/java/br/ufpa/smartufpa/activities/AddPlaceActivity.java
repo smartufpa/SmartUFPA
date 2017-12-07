@@ -2,51 +2,41 @@ package br.ufpa.smartufpa.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
+
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
+import br.ufpa.smartufpa.fragments.AddPlaceFragment;
 
 public class AddPlaceActivity extends AppCompatActivity {
 
-    private RecyclerView rvOptions;
-
+    private AddPlaceFragment addPlaceFragment;
     public static final String LABEL_LATITUDE = "lat";
     public static final String LABEL_LONGITUDE = "long";
 
+    private Toolbar tbAddPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_add_place);
-        rvOptions = findViewById(R.id.list_add_place_options);
-
         final Intent intent = getIntent();
-        final double latitude = intent.getDoubleExtra(LABEL_LATITUDE, 0);
-        final double longitude = intent.getDoubleExtra(LABEL_LONGITUDE, 0);
+        addPlaceFragment = AddPlaceFragment.newInstance(intent.getDoubleExtra(LABEL_LATITUDE,0),
+                                                            intent.getDoubleExtra(LABEL_LONGITUDE,0));
+        tbAddPlace = findViewById(R.id.tb_add_place);
+        if(addPlaceFragment != null){
+            tbAddPlace.setTitle("Adicionar Novo Local");
+            tbAddPlace.setSubtitle("Escolha uma categoria");
+        }
 
-        // Create the adapter to the RecyclerView
-        final AddPlaceOptionAdapter addPlaceOptionAdapter = new AddPlaceOptionAdapter(this);
-        addPlaceOptionAdapter.setOnItemClickListener(new AddPlaceOptionAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                final String[] placeCategories = addPlaceOptionAdapter.getPlaceCategories();
-                Toast.makeText(AddPlaceActivity.this, placeCategories[position]+ "\n " + latitude + "\n " + longitude, Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Loads the fragment
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_add_place_container,addPlaceFragment, AddPlaceFragment.FRAGMENT_TAG);
+        ft.commit();
 
-        // Attach the adapter to the RecyclerView
-        rvOptions.setAdapter(addPlaceOptionAdapter);
-
-        // Create and attach a LayoutManager to the RecyclerView
-        RecyclerView.LayoutManager llm = new GridLayoutManager(this, 2);
-        rvOptions.setLayoutManager(llm);
-
-        //
 
     }
 

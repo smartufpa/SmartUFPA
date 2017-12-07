@@ -1,12 +1,15 @@
 package br.ufpa.smartufpa.fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +19,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.activities.AddPlaceActivity;
+import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
 import br.ufpa.smartufpa.database.PlaceDAO;
 import br.ufpa.smartufpa.models.PlaceTranslator;
 import br.ufpa.smartufpa.models.overpass.Tags;
@@ -50,25 +57,10 @@ public class AddPlaceFragment extends DialogFragment {
     public static final String FRAGMENT_TAG = AddPlaceFragment.class.getName();
     private static final String TAG = AddPlaceFragment.class.getSimpleName();
 
-
-    private final int VALIDATION_NO_SPECIAL_CHAR = 0;
-    private final int VALIDATION_REGULAR_TEXT = 1;
-
-
     private double latitude;
     private double longitude;
 
-    //Views
-    private Spinner spinnerDefaultMarkers;
-    private Button btnConfirm;
-    private Button btnCancel;
-
-    private TextInputEditText edtName;
-    private TextInputEditText edtDescription;
-    private TextInputEditText edtShortName;
-    private TextInputEditText edtLocalName;
-    private TextInputEditText edtOther;
-
+    private RecyclerView rvOptions;
 
     private OnAddPlaceListener mListener;
 
@@ -106,12 +98,6 @@ public class AddPlaceFragment extends DialogFragment {
             longitude = getArguments().getDouble(ARG_LONGITUDE);
         }
 
-        // Evita que o dialog seja fechado ao clicar fora do quadro
-        setCancelable(false);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setStyle(DialogFragment.STYLE_NO_FRAME,android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
-        }
     }
 
     @Override
@@ -126,57 +112,28 @@ public class AddPlaceFragment extends DialogFragment {
         final View view = inflater.inflate(R.layout.fragment_add_place, container, false);
 
         // Encontra todas as Views do layout
-        btnCancel = view.findViewById(R.id.btn_fragment_cancel);
-        btnConfirm = view.findViewById(R.id.btn_fragment_confirm);
-        edtName = view.findViewById(R.id.edt_name);
-        edtShortName = view.findViewById(R.id.edt_short_name);
-        edtLocalName = view.findViewById(R.id.edt_local_name);
-        edtDescription = view.findViewById(R.id.edt_description);
-        edtOther = view.findViewById(R.id.edt_other);
-        spinnerDefaultMarkers = view.findViewById(R.id.spinner);
 
-        edtName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        rvOptions = view.findViewById(R.id.list_add_place_options);
+
+
+        // Create the adapter to the RecyclerView
+        final AddPlaceOptionAdapter addPlaceOptionAdapter = new AddPlaceOptionAdapter(getContext());
+        addPlaceOptionAdapter.setOnItemClickListener(new AddPlaceOptionAdapter.OnItemClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) checkField(edtName,80,3,VALIDATION_NO_SPECIAL_CHAR);
+            public void onItemClick(View view, int position) {
+                final String[] placeCategories = addPlaceOptionAdapter.getPlaceCategories();
+                Toast.makeText(getContext(), placeCategories[position]+ "\n " + latitude + "\n " + longitude, Toast.LENGTH_SHORT).show();
             }
         });
 
-        edtShortName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) checkField(edtShortName,8,2,VALIDATION_NO_SPECIAL_CHAR);
-            }
-        });
+        // Attach the adapter to the RecyclerView
+        rvOptions.setAdapter(addPlaceOptionAdapter);
 
-        edtOther.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) checkField(edtOther,10,3,VALIDATION_NO_SPECIAL_CHAR);
-            }
-        });
+        // Create and attach a LayoutManager to the RecyclerView
+        RecyclerView.LayoutManager llm = new GridLayoutManager(getContext(), 2);
+        rvOptions.setLayoutManager(llm);
 
-
-        final Button.OnClickListener btnsClickListener = new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.btn_fragment_cancel:
-                        dismiss();
-                        break;
-                    case R.id.btn_fragment_confirm:
-                        String jsonReturn = parseFormToJson();
-                        final PlaceDAO placeDAO = PlaceDAO.getInstance();
-                        placeDAO.insertPlace(jsonReturn);
-                        dismiss();
-                        break;
-                }
-            }
-        };
-        btnConfirm.setOnClickListener(btnsClickListener);
-        btnCancel.setOnClickListener(btnsClickListener);
-
-        spinnerSetup();
+        //
 
         // Inflate the layout for this fragment
         return view;
@@ -189,114 +146,6 @@ public class AddPlaceFragment extends DialogFragment {
     }
 
 
-    private void spinnerSetup(){
-        //Preenche o spinner com a lista de lugares em Arrays.xml
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.default_places, R.layout.support_simple_spinner_dropdown_item);
-        arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
-        spinnerDefaultMarkers.setAdapter(arrayAdapter);
-
-        // Lidar com os cliques: Se a opção outros for escolhida, ativar o campo "Outros"
-        spinnerDefaultMarkers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i == spinnerDefaultMarkers.getCount()-1) {
-                    edtOther.setEnabled(true);
-                    edtOther.setError(getString(R.string.error_fragment_create_other));
-                }else {
-                    edtOther.setText("");
-                    edtOther.setEnabled(false);
-                    edtOther.setError(null);
-                    edtOther.clearFocus();
-                }
-
-                if(i == 0) { // É o item default do spinner
-                    ((TextView) view).setError("");
-                    ((TextView) view).setText(getString(R.string.error_fragment_select_valid_option));
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-    }
-
-    // FAZER PARTE DE ALGUM UTIL?
-    private boolean checkField(TextInputEditText inputField, int maxLength, int minLenght,int validationCode){
-        try {
-            if (validationCode == VALIDATION_NO_SPECIAL_CHAR)
-                InputParser.validateNoSpecialChar(inputField, maxLength, minLenght);
-            else if(validationCode == VALIDATION_REGULAR_TEXT)
-                InputParser.validateRegularText(inputField,maxLength,minLenght);
-        } catch (InputParser.EmptyInputException e) {
-            inputField.setError(getString(R.string.error_fragment_no_input));
-            return false;
-        } catch (InputParser.ExtenseInputException e) {
-            inputField.setError(getString(R.string.error_fragment_input_too_long));
-            return false;
-        } catch (InputParser.ShortInputException e) {
-            inputField.setError(getString(R.string.error_fragment_input_too_short));
-            return false;
-        } catch (InputParser.InvalidCharacterException e) {
-            inputField.setError(getString(R.string.error_fragment_invalid_character));
-            return false;
-        }
-        return true;
-    }
-    // FAZER PARTE DE ALGUM UTIL?
-    private String parseFormToJson(){
-        Tags tags = new Tags();
-        if(checkField(edtName,80,3,VALIDATION_NO_SPECIAL_CHAR)){
-            tags.setName(InputParser.parseInputString(edtName.getText().toString()));
-        }else{
-            Log.e(TAG,"Name field contains validation errors");
-            return null;
-        }
-        if(!edtShortName.getText().toString().isEmpty())
-            if(checkField(edtShortName,8,2,VALIDATION_NO_SPECIAL_CHAR)) {
-                tags.setShortName(InputParser.parseInputString(edtShortName.getText().toString().toUpperCase()));
-            }else{
-                Log.e(TAG,"Short name field contains validation errors");
-                return null;
-            }
-
-        if(!edtDescription.getText().toString().isEmpty())
-            tags.setDescription(InputParser.parseInputString(edtDescription.getText().toString()));
-
-        if(!edtLocalName.getText().toString().isEmpty())
-            tags.setLocName(InputParser.parseInputString(edtLocalName.getText().toString()));
-        switch (spinnerDefaultMarkers.getSelectedItemPosition()){
-            case 1: // Auditórios
-                tags.setAmenity(Constants.TAG_EXHIBITION_CENTRE);
-                break;
-            case 2: // Banheiros
-                tags.setAmenity(Constants.TAG_TOILETS);
-                break;
-            case 3: // Bibliotecas
-                tags.setAmenity(Constants.TAG_LIBRARY);
-                break;
-            case 4: // Restaurantes
-//                tags.setAmenity(Constants.TAG_FOOD);
-                break;
-            case 5: // Xerox
-                tags.setAmenity(Constants.TAG_COPYSHOP);
-                break;
-            case 6:
-                if(checkField(edtOther,10,3,VALIDATION_NO_SPECIAL_CHAR))
-                    tags.setAmenity(InputParser.parseInputString(edtOther.getText().toString()));
-                break;
-        }
-
-
-        PlaceTranslator placeTranslator = PlaceTranslator.getInstance();
-//        Place place = placeTranslator.elementToPlace(null, latitude, longitude, tags);
-        tags = null;
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-//        return gson.toJson(place);
-        return null;
-    }
 
 
     @Override

@@ -3,31 +3,34 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
-    android:layout_height="130dp"
-    android:layout_width="130dp"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
     android:layout_marginTop="@dimen/activity_vertical_margin"
     android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
     card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/txt_add_place_category"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:text="Categoria"
             android:textAlignment="center"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textColor="@color/colorPrimary" />
 
         <ImageView
             android:id="@+id/img_add_place_category"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_width="55dp"
+            android:layout_gravity="center"
             android:src="@drawable/ic_marker_auditorium" />
 
     </LinearLayout>
