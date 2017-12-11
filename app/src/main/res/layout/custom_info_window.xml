@@ -15,7 +15,7 @@
 
         >
 
-        <include layout="@layout/add_place_cardview"/>
+        <include layout="@layout/cardview_add_place"/>
 
     </android.support.v7.widget.CardView>
 

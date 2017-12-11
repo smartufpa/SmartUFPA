@@ -28,7 +28,7 @@ public class NoGpsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.no_gps_activity);
+        setContentView(R.layout.activity_no_gps);
         btnGoToGpsSettings = findViewById(R.id.btn_turn_on_gps);
         btnGoToGpsSettings.setOnClickListener(new View.OnClickListener() {
             @Override

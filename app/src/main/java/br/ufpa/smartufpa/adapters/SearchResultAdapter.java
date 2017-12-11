@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import br.ufpa.smartufpa.R;
@@ -46,7 +45,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parentContext)
-                .inflate(R.layout.search_result_item,parent,false);
+                .inflate(R.layout.item_search_result,parent,false);
 
         return new SearchResultViewHolder(view);
     }

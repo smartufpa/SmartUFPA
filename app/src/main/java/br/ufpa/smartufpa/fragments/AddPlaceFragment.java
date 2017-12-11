@@ -194,7 +194,7 @@ public class AddPlaceFragment extends DialogFragment {
         //Preenche o spinner com a lista de lugares em Arrays.xml
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.default_places, R.layout.support_simple_spinner_dropdown_item);
-        arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(R.layout.item_spinner_simple);
         spinnerDefaultMarkers.setAdapter(arrayAdapter);
 
         // Lidar com os cliques: Se a opção outros for escolhida, ativar o campo "Outros"
