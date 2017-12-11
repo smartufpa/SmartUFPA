@@ -10,48 +10,43 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:callback="br.ufpa.smartufpa.activities.about.AboutActivity">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/logos"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
-        >
-
+        android:id="@+id/layout_logos"
+        android:orientation="horizontal">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:id="@+id/logo_ufpa_about"
-            android:src="@drawable/logo_ufpa"
+            android:id="@+id/logo_osm"
+            android:src="@drawable/logo_osm"
+            android:layout_gravity="center"
             />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:id="@+id/logo_labvis"
-            android:src="@drawable/logo_labvis"
-            android:layout_toRightOf="@+id/logo_ufpa_about"
-            android:layout_toEndOf="@+id/logo_ufpa_about"
+            android:id="@+id/logo_github"
+            android:src="@drawable/logo_github"
+            android:layout_gravity="center"
             />
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/logos"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:orientation="vertical"
-        >
-
+        android:layout_below="@+id/layout_logos"   >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:layout_marginTop="20dp"
-            android:text="@string/about_lbl_coord"
+            android:text="@string/about_lbl_map"
             android:layout_gravity="center_horizontal"
             />
 
@@ -60,60 +55,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/about_lbl_ana"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_lbl_bianchi"
-
-            />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_lbl_desenv"
-
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_txt_kae"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_lbl_logo"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_txt_giordana"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/about_txt_port_gio"
-            android:autoLink="web"
+            android:text="@string/about_txt_map"
             />
 
         <TextView
@@ -122,18 +64,57 @@
             android:textSize="16sp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/about_lbl_more"
+            android:text="@string/about_lbl_libs"
+
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
+            android:id="@+id/txt_about_osmdroid"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_osmdroid"
             android:textAlignment="center"
-            android:text="@string/about_txt_site"
-            android:autoLink="web"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:id="@+id/about_txt_osmbonuspack"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_osmbonuspack"
+            android:textAlignment="center"
             />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:id="@+id/about_txt_showcaseview"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_showcaseview"
+            android:textAlignment="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:id="@+id/about_txt_gson"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_gson"
+            android:textAlignment="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:id="@+id/about_txt_materialdialogs"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_txt_materialdialogs"
+            android:textAlignment="center"
+            />
     </LinearLayout>
 
 

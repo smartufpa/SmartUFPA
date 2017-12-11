@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.activities.about.AboutActivity;
 import br.ufpa.smartufpa.asynctasks.FilterSearchTask;
 import br.ufpa.smartufpa.asynctasks.SearchQueryTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnFilterSearchListener;

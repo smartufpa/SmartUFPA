@@ -71,19 +71,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.AboutActivity"
+            android:name=".activities.about.AboutActivity"
             android:label="Sobre">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_ABOUT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="smartufpa.CATEGORY_ABOUT" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activities.AboutProjectActivity"
+            android:name=".activities.about.AboutProjectActivity"
             android:label="@string/title_activity_about_project"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".activities.about.AboutCodeActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

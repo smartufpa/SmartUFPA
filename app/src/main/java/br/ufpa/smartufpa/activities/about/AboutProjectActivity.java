@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.activities;
+package br.ufpa.smartufpa.activities.about;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

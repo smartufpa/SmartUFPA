@@ -17,7 +17,7 @@
         android:text="@string/lbl_about_title"
         android:id="@+id/txt_about"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textColor="@color/colorPrimaryText"
         />
 

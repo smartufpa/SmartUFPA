@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Stable Commit (20/09)-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_about"
@@ -15,12 +16,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/logos"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
         >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="200dp"
+            android:minWidth="200dp"
             android:layout_margin="10dp"
             android:id="@+id/logo_ufpa_about"
             android:src="@drawable/logo_ufpa"
@@ -29,6 +31,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="200dp"
+            android:minWidth="200dp"
             android:layout_margin="10dp"
             android:id="@+id/logo_labvis"
             android:src="@drawable/logo_labvis"
@@ -40,7 +44,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/logos"
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
@@ -49,7 +53,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="28sp"
             android:layout_marginTop="20dp"
             android:text="@string/about_lbl_coord"
             android:layout_gravity="center_horizontal"
@@ -58,7 +62,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="25sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_ana"
             />
@@ -66,7 +70,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="25sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_bianchi"
 
@@ -76,7 +80,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="28sp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_desenv"
@@ -86,14 +90,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="25sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_txt_kae"
             />
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="28sp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_logo"
@@ -102,7 +108,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="25sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_txt_giordana"
             />
@@ -110,7 +116,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="25sp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_txt_port_gio"
             android:autoLink="web"
@@ -119,7 +125,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="28sp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/about_lbl_more"
@@ -128,13 +134,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textAlignment="center"
+            android:textSize="25sp"
+            android:layout_gravity="center_horizontal"
             android:text="@string/about_txt_site"
             android:autoLink="web"
             />
 
     </LinearLayout>
+
 
 
 </RelativeLayout>

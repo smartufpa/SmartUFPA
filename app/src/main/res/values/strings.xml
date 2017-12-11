@@ -110,6 +110,16 @@
     <string name="about_lbl_more">Mais informações:</string>
     <string name="about_txt_site">http://facebook.com/smart.campus.ufpa</string>
 
+    <!--Activity About Code-->
+    <string name="about_lbl_map">Cartografia:</string>
+    <string name="about_txt_map">©contribuidores do OpenStreetMap</string>
+    <string name="about_lbl_libs">Bibliotecas usadas (Github):</string>
+    <string name="about_txt_osmdroid"><a href="https://github.com/osmdroid/osmdroid">OSMDroid</a></string>
+    <string name="about_txt_osmbonuspack"><a href="https://github.com/MKergall/osmbonuspack">OSMBonusPack</a></string>
+    <string name="about_txt_showcaseview"><a href="https://github.com/amlcurran/ShowcaseView">ShowcaseView</a></string>
+    <string name="about_txt_gson"><a href="https://github.com/google/gson">Gson</a></string>
+    <string name="about_txt_materialdialogs"><a href="https://github.com/afollestad/material-dialogs">Material Dialogs</a></string>
+
     <!--About menu option cards-->
     <string name="about_opt_title_project">Sobre o Projeto</string>
     <string name="about_opt_subtitle_project">Detalhes sobre a Equipe e mais</string>
@@ -130,6 +140,7 @@
 
 
     <string name="title_activity_about_project">AboutProjectActivity</string>
+
 
 
 </resources>

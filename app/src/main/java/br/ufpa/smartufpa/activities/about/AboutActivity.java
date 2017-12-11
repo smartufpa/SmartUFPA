@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.activities;
+package br.ufpa.smartufpa.activities.about;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -47,7 +46,7 @@ public class AboutActivity extends AppCompatActivity {
         final AboutUsOption optionProject = new AboutUsOption(titleProject, subtitleProject, iconProject);
         optionsList.add(optionProject);
 
-        // About Project
+        // About Code
         final String titleCode = getString(R.string.about_opt_title_code);
         final String subtitleCode = getString(R.string.about_opt_subtitle_code);
         final Drawable iconCode = getResources().getDrawable((R.drawable.ic_code));
@@ -59,12 +58,17 @@ public class AboutActivity extends AppCompatActivity {
         aboutUsAdapter.setOnItemClickListener(new AboutUsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Intent intent = null;
                 switch (position){
                     case 0:
-                        Intent intent = new Intent(AboutActivity.this,AboutProjectActivity.class);
-                        startActivity(intent);
+                        intent = new Intent(AboutActivity.this,AboutProjectActivity.class);
+                        break;
+                    case 1:
+                        intent = new Intent(AboutActivity.this,AboutCodeActivity.class);
                         break;
                 }
+                if(intent != null)
+                    startActivity(intent);
             }
         });
 
