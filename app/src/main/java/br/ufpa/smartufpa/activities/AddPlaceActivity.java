@@ -2,44 +2,52 @@ package br.ufpa.smartufpa.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.fragments.AddPlaceFragment;
+import br.ufpa.smartufpa.adapters.ViewPagerAdapter;
+import br.ufpa.smartufpa.fragments.AddPlaceInfoFragment;
+import br.ufpa.smartufpa.fragments.SelectCategoryFragment;
 
 public class AddPlaceActivity extends AppCompatActivity {
 
-    private AddPlaceFragment addPlaceFragment;
+    private SelectCategoryFragment selectCategoryFragment;
+    private AddPlaceInfoFragment addPlaceInfoFragment;
     public static final String LABEL_LATITUDE = "lat";
     public static final String LABEL_LONGITUDE = "long";
 
     private Toolbar tbAddPlace;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_place);
+
         final Intent intent = getIntent();
-        addPlaceFragment = AddPlaceFragment.newInstance(intent.getDoubleExtra(LABEL_LATITUDE,0),
+        selectCategoryFragment = SelectCategoryFragment.newInstance(intent.getDoubleExtra(LABEL_LATITUDE,0),
                                                             intent.getDoubleExtra(LABEL_LONGITUDE,0));
+        addPlaceInfoFragment = new AddPlaceInfoFragment();
         tbAddPlace = findViewById(R.id.tb_add_place);
-        if(addPlaceFragment != null){
-            tbAddPlace.setTitle("Adicionar Novo Local");
-            tbAddPlace.setSubtitle("Escolha uma categoria");
-        }
+        tbAddPlace.setTitle("Adicionar Novo Local");
 
-        // Loads the fragment
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_add_place_container,addPlaceFragment, AddPlaceFragment.FRAGMENT_TAG);
-        ft.commit();
+        viewPager = findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
-
+        tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
-
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(selectCategoryFragment, "Categoria");
+        adapter.addFragment(addPlaceInfoFragment, "Detalhes");
+        viewPager.setAdapter(adapter);
+    }
 
 }

@@ -2,16 +2,12 @@ package br.ufpa.smartufpa.customviews;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.AddPlaceActivity;
-import br.ufpa.smartufpa.fragments.AddPlaceFragment;
-import br.ufpa.smartufpa.utils.Constants;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;

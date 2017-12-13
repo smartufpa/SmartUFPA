@@ -1,61 +1,43 @@
 package br.ufpa.smartufpa.fragments;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+
+import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.activities.AddPlaceActivity;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
-import br.ufpa.smartufpa.database.PlaceDAO;
-import br.ufpa.smartufpa.models.PlaceTranslator;
-import br.ufpa.smartufpa.models.overpass.Tags;
-import br.ufpa.smartufpa.utils.Constants;
-import br.ufpa.smartufpa.utils.InputParser;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import br.ufpa.smartufpa.models.PlaceCategory;
 
 /**
  * Stable Commit (20/09)
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddPlaceFragment.OnAddPlaceListener} interface
+ * {@link SelectCategoryFragment.OnAddPlaceListener} interface
  * to handle interaction events.
- * Use the {@link AddPlaceFragment#newInstance} factory method to
+ * Use the {@link SelectCategoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 
 
 
 
-public class AddPlaceFragment extends DialogFragment {
+public class SelectCategoryFragment extends Fragment {
 
     // Rótulos para os argumentos passados na instanciação do fragmento
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
 
     //Tags de identificação do fragmento
-    public static final String FRAGMENT_TAG = AddPlaceFragment.class.getName();
-    private static final String TAG = AddPlaceFragment.class.getSimpleName();
+    public static final String FRAGMENT_TAG = SelectCategoryFragment.class.getName();
+    private static final String TAG = SelectCategoryFragment.class.getSimpleName();
 
     private double latitude;
     private double longitude;
@@ -64,7 +46,7 @@ public class AddPlaceFragment extends DialogFragment {
 
     private OnAddPlaceListener mListener;
 
-    public AddPlaceFragment() {
+    public SelectCategoryFragment() {
         // Required empty public constructor
     }
 
@@ -74,11 +56,11 @@ public class AddPlaceFragment extends DialogFragment {
      *
      * @param latitude Latitude do ponto sinalizado pelo marcador.
      * @param longitude Longitude do ponto sinalizado pelo marcador.
-     * @return Uma nova instância de AddPlaceFragment.
+     * @return Uma nova instância de SelectCategoryFragment.
      */
 
-    public static AddPlaceFragment newInstance(double latitude, double longitude) {
-        AddPlaceFragment fragment = new AddPlaceFragment();
+    public static SelectCategoryFragment newInstance(double latitude, double longitude) {
+        SelectCategoryFragment fragment = new SelectCategoryFragment();
         Bundle args = new Bundle();
 
         //Armazena os dados passados na instanciação em um bundle e guarda no fragmento
@@ -101,15 +83,10 @@ public class AddPlaceFragment extends DialogFragment {
     }
 
     @Override
-    public void show(FragmentManager manager, String tag) {
-        super.show(manager, tag);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Infla a o layout
-        final View view = inflater.inflate(R.layout.fragment_add_place, container, false);
+        final View view = inflater.inflate(R.layout.fragment_select_category, container, false);
 
         // Encontra todas as Views do layout
 
@@ -121,8 +98,9 @@ public class AddPlaceFragment extends DialogFragment {
         addPlaceOptionAdapter.setOnItemClickListener(new AddPlaceOptionAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                final String[] placeCategories = addPlaceOptionAdapter.getPlaceCategories();
-                Toast.makeText(getContext(), placeCategories[position]+ "\n " + latitude + "\n " + longitude, Toast.LENGTH_SHORT).show();
+                final ArrayList<PlaceCategory> placeCategories = addPlaceOptionAdapter.getPlaceCategories();
+                Toast.makeText(getContext(), placeCategories.get(position).getName()+ "\n " + latitude + "\n " + longitude, Toast.LENGTH_SHORT).show();
+//                getActivity().getSupportFragmentManager().findFragmentById()
             }
         });
 
@@ -159,13 +137,6 @@ public class AddPlaceFragment extends DialogFragment {
     public void onDetach(){
         super.onDetach();
         Log.i(TAG, "onDetach()");
-    }
-
-
-    @Override
-    public void onDismiss(DialogInterface dialog){
-        super.onDismiss(dialog);
-        Log.i(TAG, "onDismiss()");
     }
 
 

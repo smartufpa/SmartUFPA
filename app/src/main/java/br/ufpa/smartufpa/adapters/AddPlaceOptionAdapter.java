@@ -1,8 +1,6 @@
 package br.ufpa.smartufpa.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.models.PlaceCategory;
 
 
 /**
@@ -23,13 +25,17 @@ public class AddPlaceOptionAdapter extends RecyclerView.Adapter {
 
     public static final String TAG = AddPlaceOptionAdapter.class.getSimpleName();
 
-    private String[] placeCategories;
+    private ArrayList<PlaceCategory> placeCategories;
     private AddPlaceOptionAdapter.OnItemClickListener onItemClickListener;
 
     public AddPlaceOptionAdapter(Context parentContext) {
         this.parentContext = parentContext;
         // List of categories defined on values>array.xml
-        placeCategories = parentContext.getResources().getStringArray(R.array.default_places);
+        placeCategories = new ArrayList<>();
+        final int [] categoriesIDs = parentContext.getResources().getIntArray(R.array.default_categories_ids);
+        for (int categoryID : categoriesIDs) {
+            placeCategories.add(new PlaceCategory(categoryID,parentContext));
+        }
     }
 
     /**
@@ -58,31 +64,8 @@ public class AddPlaceOptionAdapter extends RecyclerView.Adapter {
         AddPlaceOptionViewHolder viewHolder = (AddPlaceOptionViewHolder) holder;
 
         // Sets the title for the card
-        viewHolder.txtAddPlaceCategory.setText(placeCategories[position]);
-
-        // Sets the image for the card
-        Drawable currentDrawable = null;
-        switch (position){
-            case 0:
-                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_auditorium);
-                break;
-            case 1:
-                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restroom);
-                break;
-            case 2:
-                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_library);
-                break;
-            case 3:
-                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restaurant);
-                break;
-            case 4:
-                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_xerox);
-                break;
-            default:
-                currentDrawable = ContextCompat.getDrawable(parentContext, R.drawable.ic_about);
-                break;
-        }
-        viewHolder.imgAddPlaceCategory.setImageDrawable(currentDrawable);
+        viewHolder.txtAddPlaceCategory.setText(placeCategories.get(position).getName());
+        viewHolder.imgAddPlaceCategory.setImageDrawable(placeCategories.get(position).getIcon());
 
 
     }
@@ -90,10 +73,10 @@ public class AddPlaceOptionAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return placeCategories.length;
+        return placeCategories.size();
     }
 
-    public String[] getPlaceCategories() {
+    public ArrayList<PlaceCategory> getPlaceCategories() {
         return placeCategories;
     }
 
