@@ -14,9 +14,10 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:minHeight="72dp"
         android:orientation="horizontal"
+
         >
         <ImageView
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:id="@+id/item_about_img"
             android:src="@mipmap/ic_launcher"
@@ -37,7 +38,7 @@
                 android:id="@+id/item_about_title"
                 android:textStyle="bold"
                 android:text="Title"
-                android:textSize="14sp"
+                android:textSize="24sp"
                 android:textColor="@color/colorPrimaryText"
                 />
 
@@ -46,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="Subtitle"
                 android:id="@+id/item_about_subtitle"
-                android:textSize="12sp"
+                android:textSize="20sp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/colorPrimaryText"
                 android:layout_below="@+id/item_about_title"

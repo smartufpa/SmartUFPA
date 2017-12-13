@@ -37,7 +37,7 @@
                 android:id="@+id/item_about_title"
                 android:textStyle="bold"
                 android:text="Title"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textColor="@color/colorPrimaryText"
                 />
 
