@@ -6,13 +6,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.fragments.AddPlaceFragment;
+import br.ufpa.smartufpa.fragments.SelectCategoryFragment;
 
 public class AddPlaceActivity extends AppCompatActivity {
 
-    private AddPlaceFragment addPlaceFragment;
+    private SelectCategoryFragment selectCategoryFragment;
     public static final String LABEL_LATITUDE = "lat";
     public static final String LABEL_LONGITUDE = "long";
 
@@ -24,17 +23,17 @@ public class AddPlaceActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_add_place);
         final Intent intent = getIntent();
-        addPlaceFragment = AddPlaceFragment.newInstance(intent.getDoubleExtra(LABEL_LATITUDE,0),
+        selectCategoryFragment = SelectCategoryFragment.newInstance(intent.getDoubleExtra(LABEL_LATITUDE,0),
                                                             intent.getDoubleExtra(LABEL_LONGITUDE,0));
         tbAddPlace = findViewById(R.id.tb_add_place);
-        if(addPlaceFragment != null){
+        if(selectCategoryFragment != null){
             tbAddPlace.setTitle("Adicionar Novo Local");
             tbAddPlace.setSubtitle("Escolha uma categoria");
         }
 
         // Loads the fragment
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_add_place_container,addPlaceFragment, AddPlaceFragment.FRAGMENT_TAG);
+        ft.replace(R.id.frame_add_place_container, selectCategoryFragment, SelectCategoryFragment.FRAGMENT_TAG);
         ft.commit();
 
 
