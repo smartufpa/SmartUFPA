@@ -85,6 +85,7 @@
     <string name="lbl_search_result_title">Resultados</string>
     <string name="lbl_place_details">Detalhes</string>
     <string name="lbl_placeholder">PlaceHolder Text</string>
+    <string name="lbl_local_name">Nome local:</string>
 
     <string name="tutorial_map_executed">tutorial_executed</string>
     <string name="search_hint">Busque na UFPA</string>
@@ -109,9 +110,11 @@
     <string name="about_lbl_more">Mais informações:</string>
     <string name="about_txt_site">https://github.com/smartufpa/SmartCampusUFPA</string>
 
+    <string name="add_place_subtitle_details">Insira os detalhes sobre o local</string>
+    <string name="add_place_subtitle_categories">Selecione uma categoria</string>
+
 
     <string name="dialog_title">Ops…</string>
-    <string name="lbl_local_name">Nome local:</string>
     <string name="error_connection_failed">Erro na conexão durante a requisição. Tente novamente.</string>
     <string name="btn_login_entrar">Entrar</string>
     <string name="msg_no_filter_results">Nenhum local foi encontrado nessa categoria.</string>

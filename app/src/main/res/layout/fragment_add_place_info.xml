@@ -1,0 +1,81 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.ufpa.smartufpa.fragments.AddPlaceInfoFragment"
+    android:padding="8dp"
+    android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layout_add_place_title">
+        <ImageView
+            android:id="@+id/img_add_info_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_marker_restaurant"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:id="@+id/txt_category"
+            android:text="Category"
+            android:layout_gravity="center_vertical"
+            android:textAllCaps="true"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.WindowTitle"
+            />
+    </LinearLayout>
+
+    <ScrollView
+        android:paddingTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/layout_add_place_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_weight="0"
+       >
+        <Button
+            android:id="@+id/btn_add_place_cancel"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Cancelar"
+            android:theme="@style/RaisedButton"
+            />
+
+        <Button
+            android:id="@+id/btn_add_place_confirm"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Confirmar"
+            android:layout_centerHorizontal="true"
+            android:theme="@style/RaisedButton"
+            />
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
