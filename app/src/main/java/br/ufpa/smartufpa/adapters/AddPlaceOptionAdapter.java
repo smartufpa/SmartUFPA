@@ -1,15 +1,12 @@
 package br.ufpa.smartufpa.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
@@ -63,11 +60,9 @@ public class AddPlaceOptionAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         AddPlaceOptionViewHolder viewHolder = (AddPlaceOptionViewHolder) holder;
-
         // Sets the title and icon for the card
         viewHolder.txtAddPlaceCategory.setText(placeCategories.get(position).getName());
         viewHolder.imgAddPlaceCategory.setImageDrawable(placeCategories.get(position).getIcon());
-
 
     }
 

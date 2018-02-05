@@ -12,7 +12,6 @@ import br.ufpa.smartufpa.models.smartufpa.Restroom;
 import br.ufpa.smartufpa.utils.Constants;
 
 /**
- * Stable Commit (20/09)
  *
  * @author kaeuchoa
  */

@@ -124,5 +124,8 @@
     <string name="msg_request_both_permissions">A permissão de armazenamento é necessária para armazenar porções do mapa para reduzir consumo de dados e para uso offline.   E a permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="search_filters">Filtros de Busca</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

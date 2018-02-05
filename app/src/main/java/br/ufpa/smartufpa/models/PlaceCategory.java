@@ -6,8 +6,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 
-import java.io.Serializable;
-
 import br.ufpa.smartufpa.R;
 
 /**

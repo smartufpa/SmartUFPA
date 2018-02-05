@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
 import br.ufpa.smartufpa.models.PlaceCategory;
+
 
 /**
  * Stable Commit (20/09)
@@ -32,9 +34,9 @@ import br.ufpa.smartufpa.models.PlaceCategory;
 
 
 public class SelectCategoryFragment extends Fragment {
-
     //Tags de identificação do fragmento
-    public static final String FRAGMENT_TAG = SelectCategoryFragment.class.getSimpleName();;
+    public static final String FRAGMENT_TAG = SelectCategoryFragment.class.getName();
+    private static final String TAG = SelectCategoryFragment.class.getSimpleName();
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
 
@@ -51,9 +53,9 @@ public class SelectCategoryFragment extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
+
+     * @param latitude Latitude do ponto sinalizado pelo marcador.
+     * @param longitude Longitude do ponto sinalizado pelo marcador.
      * @return Uma nova instância de SelectCategoryFragment.
      */
 
@@ -75,11 +77,16 @@ public class SelectCategoryFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        // Infla a o layout
         final View view = inflater.inflate(R.layout.fragment_select_category, container, false);
+
+        // Encontra todas as Views do layout
+
         rvOptions = view.findViewById(R.id.list_add_place_options);
         tbAddPlace = getActivity().findViewById(R.id.tb_add_place);
 
@@ -105,6 +112,8 @@ public class SelectCategoryFragment extends Fragment {
                             .commit();
                 }
 
+//                Toast.makeText(getContext(), placeCategories.get(position).getName()+ "\n " + latitude + "\n " + longitude, Toast.LENGTH_SHORT).show();
+//                getActivity().getSupportFragmentManager().findFragmentById()
             }
         });
 

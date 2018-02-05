@@ -11,6 +11,7 @@
         <item name="nav_libraries">Bibliotecas</item>
     </string-array>
 
+
     <integer-array name="default_categories_ids">
         <item name="departamento">0</item>
         <item name="banheiro">1</item>
@@ -19,6 +20,17 @@
         <item name="xerox">4</item>
         <item name="outro">100</item>
     </integer-array>
+
+    <!--These two list should be equivalent (the icons must have the same order than this list)-->
+    <string-array name="default_places">
+        <item>Auditório</item>
+        <item>Banheiro</item>
+        <item>Biblioteca</item>
+        <item>Restaurante</item>
+        <item>Xerox</item>
+        <item>Outro</item>
+    </string-array>
+
 
 
 </resources>

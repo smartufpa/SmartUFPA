@@ -24,7 +24,7 @@ public class AddPlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_place);
         final Intent intent = getIntent();
         selectCategoryFragment = SelectCategoryFragment.newInstance(intent.getDoubleExtra(LABEL_LATITUDE,0),
-                                                            intent.getDoubleExtra(LABEL_LONGITUDE,0));
+                intent.getDoubleExtra(LABEL_LONGITUDE,0));
         tbAddPlace = findViewById(R.id.tb_add_place);
         if(selectCategoryFragment != null){
             tbAddPlace.setTitle("Adicionar Novo Local");

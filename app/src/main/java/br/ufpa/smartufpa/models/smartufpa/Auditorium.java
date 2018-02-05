@@ -1,6 +1,7 @@
 package br.ufpa.smartufpa.models.smartufpa;
 
 import android.os.Parcel;
+import android.support.v4.content.ContextCompat;
 
 import br.ufpa.smartufpa.models.smartufpa.Library;
 import br.ufpa.smartufpa.models.smartufpa.Place;
