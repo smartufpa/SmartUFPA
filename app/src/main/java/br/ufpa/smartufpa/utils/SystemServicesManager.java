@@ -53,6 +53,6 @@ public class SystemServicesManager {
 
     public static boolean isGPSEnabled(Context parentContext){
         LocationManager locationManager = (LocationManager) parentContext.getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 }
