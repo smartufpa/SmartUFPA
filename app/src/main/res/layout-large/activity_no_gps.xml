@@ -17,13 +17,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textSize="15sp"
+            android:textSize="24sp"
             android:textColor="@color/white"
             android:text="@string/error_no_gps"
             />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/btn_turn_on_gps"
             android:text="@string/btn_turn_on_gps"

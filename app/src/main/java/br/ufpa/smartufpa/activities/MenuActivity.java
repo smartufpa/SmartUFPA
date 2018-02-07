@@ -40,7 +40,7 @@ public class MenuActivity extends AppCompatActivity{
             public void onClick(View v) {
                 // Checks if the user has a proper network and GPS connection
                 if (SystemServicesManager.isNetworkEnabled(MenuActivity.this)){
-                    if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                    if (!SystemServicesManager.isGPSEnabled(v.getContext())){
                         // Doesn't start the main activity, instead asks user to turn on the GPS
                         Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
                         intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
