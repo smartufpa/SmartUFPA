@@ -2,10 +2,12 @@ package br.ufpa.smartufpa.fragments;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,6 +32,7 @@ import br.ufpa.smartufpa.asynctasks.SearchRouteTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 
 import br.ufpa.smartufpa.utils.MapUtils;
+import br.ufpa.smartufpa.utils.PermissionChecker;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
@@ -184,13 +187,16 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         return view;
     }
 
+    @SuppressLint("MissingPermission") // Permission check done by static method
     @Override
     public void onResume() {
         super.onResume();
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0l, 0f, this);
+        if (PermissionChecker.isLocationPermissionGranted(getContext())) {
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            final String bestProvider = locationManager.getBestProvider(criteria, true);
+            locationManager.requestLocationUpdates(bestProvider, 0l, 0f, this);
         }
         enableMyLocationOverlay();
     }
@@ -198,10 +204,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onPause() {
         super.onPause();
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.removeUpdates(this);
-        }
+        locationManager.removeUpdates(this);
         myLocationOverlay.disableMyLocation();
 
     }
@@ -210,7 +213,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     public void onStop() {
         super.onStop();
     }
-
 
 
     @Override
@@ -249,7 +251,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
         // Limits the map area to the region set
-        mapView.setScrollableAreaLimitDouble(mapRegion);
+//        mapView.setScrollableAreaLimitDouble(mapRegion);
         mCopyrightOverlay = new CopyrightOverlay(context);
         mapView.addOverlay(mCopyrightOverlay, OverlayTags.COPYRIGHT);
     }
@@ -260,7 +262,9 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
      */
     private void enableMyLocationOverlay(){
         if(userLocation == null){
-            myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
+            GpsMyLocationProvider provider = new GpsMyLocationProvider(context);
+            provider.addLocationSource(LocationManager.NETWORK_PROVIDER);
+            myLocationOverlay = new MyLocationNewOverlay(provider,mapView);
         }
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
