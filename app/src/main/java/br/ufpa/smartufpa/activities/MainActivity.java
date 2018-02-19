@@ -42,7 +42,6 @@ import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.fragments.SearchResultFragment;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.models.Place;
-import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
 import br.ufpa.smartufpa.utils.enums.OverpassFilters;
@@ -50,8 +49,6 @@ import br.ufpa.smartufpa.utils.enums.OverpassFilters;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-
-import org.osmdroid.util.BoundingBox;
 
 import java.util.ArrayList;
 
@@ -147,26 +144,7 @@ public class MainActivity extends AppCompatActivity
        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
         if(mapFragment == null){
             try {
-                // Get location configs from file
-                final Context context = getApplicationContext();
-                final String[] defaultPlaceCoord = ConfigHelper.getConfigValue(context, Constants.DEFAULT_PLACE_COORDINATES).split(",");
-                final String[] mapRegionBounds = ConfigHelper.getConfigValue(context, Constants.MAP_REGION_BOUNDS).split(",");
-                final String defaultPlaceName = ConfigHelper.getConfigValue(context, Constants.MAP_REGION_NAME);
-
-                // Parse information about place
-                double lat = Double.valueOf(defaultPlaceCoord[0]);
-                double longtd = Double.valueOf(defaultPlaceCoord[1]);
-                // Parse information about map bounds
-                double north = Double.valueOf(mapRegionBounds[0]);
-                double east = Double.valueOf(mapRegionBounds[1]);
-                double south = Double.valueOf(mapRegionBounds[2]);
-                double west = Double.valueOf(mapRegionBounds[3]);
-
-                // Define variables to pass to the MapFragment
-                final BoundingBox mapBounds = new BoundingBox(north,east,south,west);
-                final Place chosenLocation = new Place(lat,longtd,defaultPlaceName);
-                mapFragment = MapFragment.newInstance(chosenLocation,mapBounds);
-
+                mapFragment = MapFragment.newInstance();
                 // Loads the fragment
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frame_map_container,mapFragment,MapFragment.FRAGMENT_TAG);
@@ -326,7 +304,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+        getMenuInflater().inflate(R.menu.toolbar,menu);
 
         // Defines what happens when the search icon is clicked
         searchItem = menu.findItem(R.id.action_search);

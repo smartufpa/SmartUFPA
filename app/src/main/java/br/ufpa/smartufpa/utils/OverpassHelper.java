@@ -26,15 +26,24 @@ public class OverpassHelper {
     private Double southCoordinate;
     private Double westCoordinate;
     private String mapRegionName;
+    private String mapBusRouteName;
 
     private OverpassHelper(Context applicationContext) {
         this.context = applicationContext;
-        String[] mapRegionBounds = ConfigHelper.getConfigValue(applicationContext,Constants.MAP_REGION_BOUNDS).split(",");
-        this.northCoordinate = Double.valueOf(mapRegionBounds[0]);
-        this.eastCoordinate = Double.valueOf(mapRegionBounds[1]);
-        this.southCoordinate = Double.valueOf(mapRegionBounds[2]);
-        this.westCoordinate = Double.valueOf(mapRegionBounds[3]);
-        this.mapRegionName = ConfigHelper.getConfigValue(applicationContext,Constants.MAP_REGION_NAME);
+
+        // Get map configuration from location_config.properties
+        final String westLimit = ConfigHelper.getConfigValue(applicationContext, Constants.CONFIG_WEST_LIMIT);
+        final String southLimit = ConfigHelper.getConfigValue(applicationContext, Constants.CONFIG_SOUTH_LIMIT);
+        final String eastLimit = ConfigHelper.getConfigValue(applicationContext, Constants.CONFIG_EAST_LIMIT);
+        final String northLimit = ConfigHelper.getConfigValue(applicationContext, Constants.CONFIG_NORTH_LIMIT);
+
+        this.westCoordinate = Double.valueOf(westLimit);
+        this.southCoordinate = Double.valueOf(southLimit);
+        this.eastCoordinate = Double.valueOf(eastLimit);
+        this.northCoordinate = Double.valueOf(northLimit);
+        this.mapRegionName = ConfigHelper.getConfigValue(applicationContext,Constants.CONFIG_MAP_REGION_NAME);
+        this.mapBusRouteName = ConfigHelper.getConfigValue(applicationContext,Constants.CONFIG_MAP_BUS_ROUTE_NAME);
+
 
     }
 
@@ -167,7 +176,7 @@ public class OverpassHelper {
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
         final String formattedQuery = String.format(Locale.US, queryBusRoute,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
+                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,mapBusRouteName);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
         URL busRouteURL = null;

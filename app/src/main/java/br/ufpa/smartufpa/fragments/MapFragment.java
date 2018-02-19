@@ -28,6 +28,8 @@ import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.asynctasks.SearchRouteTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 
+import br.ufpa.smartufpa.utils.ConfigHelper;
+import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.MapUtils;
 import br.ufpa.smartufpa.utils.PermissionChecker;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
@@ -87,13 +89,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     // VIEWS
     private CustomMapView mapView;
     private FloatingActionButton fabMyLocation;
-    private FloatingActionButton fabBusLocation;
     private Button btnClearMap;
 
     private Context context;
 
     // Default region of interest for the map. Must be set based on location_config file
-    private static Place defaultPlace;
+    private static GeoPoint startCameraPoint;
     // Map boundaries that must be set based on location_config file
     private static BoundingBox mapRegion;
     private Place userLocation;
@@ -128,22 +129,42 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     public MapFragment() {}
 
     /**
-     * Initialize a MapFragment based on an specifc location
-     * @param chosenPlace Place containing name and coordinates
-     * @param mapBoundaries Coordinates of the box to limit the map
+     * Initialize a MapFragment
      * @return MapFragment Instance
      */
-    public static MapFragment newInstance(final Place chosenPlace, final BoundingBox mapBoundaries) {
+
+
+    public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
-        defaultPlace = chosenPlace;
-        mapRegion = mapBoundaries;
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getContext();
+        context = getActivity().getApplicationContext();
+
+        // Get map configuration from location_config.properties
+        final String westLimit = ConfigHelper.getConfigValue(context, Constants.CONFIG_WEST_LIMIT);
+        final String southLimit = ConfigHelper.getConfigValue(context, Constants.CONFIG_SOUTH_LIMIT);
+        final String eastLimit = ConfigHelper.getConfigValue(context, Constants.CONFIG_EAST_LIMIT);
+        final String northLimit = ConfigHelper.getConfigValue(context, Constants.CONFIG_NORTH_LIMIT);
+
+        final String[] startCameraCoordinates = ConfigHelper.getConfigValue(
+                context, Constants.CONFIG_START_CAMERA_COORDINATES).split(",");
+
+        // Parse information about map bounds
+        double westBound = Double.valueOf(westLimit);
+        double southBound = Double.valueOf(southLimit);
+        double eastBound = Double.valueOf(eastLimit);
+        double northBound = Double.valueOf(northLimit);
+
+
+        startCameraPoint = new GeoPoint(Double.valueOf(startCameraCoordinates[0]),
+                Double.valueOf(startCameraCoordinates[1]));
+
+        mapRegion =  new BoundingBox(northBound,eastBound,southBound,westBound);
 
         /* Important! Configure the user agent so you don't get banned from OSM servers.
          * The user agent must be a unique ID of you app.
@@ -169,14 +190,10 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         cl.addView(mapView,0);
 
         fabMyLocation = view.findViewById(R.id.fab_my_location);
-        fabBusLocation = view.findViewById(R.id.fab_bus_location);
         btnClearMap = view.findViewById(R.id.btn_clear_map);
 
         fabMyLocation.setOnClickListener(myLocationListener);
-        fabBusLocation.setOnClickListener(busLocationListener);
 
-        // TODO: MAKE IT VISIBLE WHEN THE BUS LOCATION FUNCTION IS IMPLEMENTED
-        fabBusLocation.setVisibility(View.GONE);
         btnClearMap.setOnClickListener(clearMapListener);
 
         initMap();
@@ -233,8 +250,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
      */
     private void initMap(){
         // Map camera configuration
-        GeoPoint startCameraPoint = new GeoPoint
-                (defaultPlace.getLatitude(), defaultPlace.getLongitude());
         mapCamera = mapView.getController();
         mapCamera.setZoom(DEFAULT_ZOOM);
         mapCamera.animateTo(startCameraPoint);

@@ -29,7 +29,7 @@
             android:id="@+id/nav_view"
             android:layout_height="match_parent"
             app:headerLayout="@layout/drawer_header"
-            app:menu="@menu/activity_map_drawer"
+            app:menu="@menu/map_drawer"
             android:divider="@color/colorDivider"
             android:dividerHeight="8dp"
             android:layout_gravity="start"

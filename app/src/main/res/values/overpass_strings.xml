@@ -61,11 +61,11 @@
 
     <string name="query_bus_route" translatable="false">
         [out:json][timeout:30];
-        (relation[name=\"circular\"][highway=bus_stop]);
+        (relation[name=\"%5$s\"][highway=bus_stop]);
         out qt body 500;
-        (node[route=bus][name=\"circular\"](%1$f,%2$f,%3$f,%4$f);
-        way[route=bus][name=\"circular\"](%1$f,%2$f,%3$f,%4$f););
-        out qt geom tags 500;relation[route=bus][name=\"circular\"]
+        (node[route=bus][name=\"%5$s\"](%1$f,%2$f,%3$f,%4$f);
+        way[route=bus][name=\"%5$s\"](%1$f,%2$f,%3$f,%4$f););
+        out qt geom tags 500;relation[route=bus][name=\"%5$s\"]
         (%1$f,%2$f,%3$f,%4$f);out qt geom body 500;
     </string>
 
