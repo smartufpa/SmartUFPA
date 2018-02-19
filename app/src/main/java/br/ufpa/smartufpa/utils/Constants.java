@@ -14,19 +14,6 @@ public final class Constants {
     public static final String TAG_LIBRARY = "library";
     public static final String TAG_FOOD = "food";
 
-    //URLS
-    public static final String URL_LOCAL_HOST = "http://177.194.168.159:80/";
-    public static final String URL_BUS_LOCATION = "http://104.41.62.111:8080/bus-location";
-    public static final String URL_OVERPASS_SERVER = "http://overpass-api.de/api/interpreter?data=";
-
-
-    public static final String QUERY_OVERPASS_BUS_ROUTE = "[out:json][timeout:30];" +
-            "(relation[name=\"circular\"][highway=bus_stop]);" + "out qt body 500;" +
-            "(node[route=bus][name=\"circular\"](%f,%f,%f,%f);" +
-            "way[route=bus][name=\"circular\"](%f,%f,%f,%f););" +
-            "out qt geom tags 500;relation[route=bus][name=\"circular\"]" +
-            "(%f,%f,%f,%f);out qt geom body 500;";
-
     public static final String NO_NAME = "Sem nome identificado";
     public static final String NO_LOCAL_NAME = "Sem nome local identificado";
     public static final String NO_SHORT_NAME = "Sem abreviação";

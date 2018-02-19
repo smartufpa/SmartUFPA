@@ -167,8 +167,6 @@ public class AddPlaceFragment extends DialogFragment {
                         break;
                     case R.id.btn_fragment_confirm:
                         String jsonReturn = parseFormToJson();
-                        final PlaceDAO placeDAO = PlaceDAO.getInstance();
-                        placeDAO.insertPlace(jsonReturn);
                         dismiss();
                         break;
                 }

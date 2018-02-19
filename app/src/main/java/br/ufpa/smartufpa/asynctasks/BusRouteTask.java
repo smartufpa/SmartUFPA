@@ -22,11 +22,10 @@ import java.net.URLEncoder;
 import java.util.Locale;
 
 /**
- * Stable Commit (20/09)
  * AsyncTask responsible for querying the route of internal buses.
  * Uses KML and OverpassAPI.
- * Search query is pre-stored on Constants helper class and the appended with the bus route query.
- * @see Constants
+ * The query construction is made by OverpassHelper class.
+ * @see OverpassHelper
  * reference: https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
  * @author kaeuchoa
  *

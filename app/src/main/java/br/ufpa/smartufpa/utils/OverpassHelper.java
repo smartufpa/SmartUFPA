@@ -27,20 +27,20 @@ public class OverpassHelper {
     private Double westCoordinate;
     private String mapRegionName;
 
-    private OverpassHelper(Context context) {
-        this.context = context;
-        String[] mapRegionBounds = ConfigHelper.getConfigValue(context,Constants.MAP_REGION_BOUNDS).split(",");
+    private OverpassHelper(Context applicationContext) {
+        this.context = applicationContext;
+        String[] mapRegionBounds = ConfigHelper.getConfigValue(applicationContext,Constants.MAP_REGION_BOUNDS).split(",");
         this.northCoordinate = Double.valueOf(mapRegionBounds[0]);
         this.eastCoordinate = Double.valueOf(mapRegionBounds[1]);
         this.southCoordinate = Double.valueOf(mapRegionBounds[2]);
         this.westCoordinate = Double.valueOf(mapRegionBounds[3]);
-        this.mapRegionName = ConfigHelper.getConfigValue(context,Constants.MAP_REGION_NAME);
+        this.mapRegionName = ConfigHelper.getConfigValue(applicationContext,Constants.MAP_REGION_NAME);
 
     }
 
-    public static synchronized OverpassHelper getInstance(Context context){
+    public static synchronized OverpassHelper getInstance(Context applicationContext){
         if(instance == null)
-            return new OverpassHelper(context);
+            return new OverpassHelper(applicationContext);
         return instance;
     }
 
@@ -49,8 +49,6 @@ public class OverpassHelper {
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
         final String formattedQuery = String.format(Locale.US, queryXerox,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
@@ -70,8 +68,6 @@ public class OverpassHelper {
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
         final String formattedQuery = String.format(Locale.US, queryAuditoriums,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
@@ -91,8 +87,6 @@ public class OverpassHelper {
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
         final String formattedQuery = String.format(Locale.US, queryLibraries,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
@@ -112,8 +106,6 @@ public class OverpassHelper {
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
         final String formattedQuery = String.format(Locale.US, queryFood,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
@@ -133,8 +125,6 @@ public class OverpassHelper {
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
         final String formattedQuery = String.format(Locale.US, queryRestroom,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
@@ -157,8 +147,7 @@ public class OverpassHelper {
         }
 
         final String searchNameQuery = this.context.getString(R.string.query_name_search);
-        final String formattedQuery = String.format(Locale.US, searchNameQuery, mapRegionName,
-                userQuery, userQuery, userQuery, userQuery, userQuery, userQuery);
+        final String formattedQuery = String.format(Locale.US, searchNameQuery, mapRegionName,userQuery);
         final String overpassURL = this.context.getString(R.string.overpass_url);
 
         URL searchURL = null;
@@ -178,8 +167,6 @@ public class OverpassHelper {
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
         final String formattedQuery = String.format(Locale.US, queryBusRoute,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);

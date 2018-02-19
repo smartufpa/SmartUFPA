@@ -9,53 +9,53 @@
     </string>
     <string name="query_restroom" translatable="false">
         [out:json][timeout:30];
-        (way[\"toilets\"=\"yes\"](%f,%f,%f,%f);
-        way[\"amenity\"=\"toilets\"](%f,%f,%f,%f);
-        node[\"amenity\"=\"toilets\"](%f,%f,%f,%f););
+        (way[\"toilets\"=\"yes\"](%1$f,%2$f,%3$f,%4$f);
+        way[\"amenity\"=\"toilets\"](%1$f,%2$f,%3$f,%4$f);
+        node[\"amenity\"=\"toilets\"](%1$f,%2$f,%3$f,%4$f););
         out body center;
     </string>
 
     <string name="query_food" translatable="false">
         [out:json][timeout:30];
-        (way[\"amenity\"=\"restaurant\"](%f,%f,%f,%f);
-        way[\"amenity\"=\"food_court\"](%f,%f,%f,%f);
-        node[\"amenity\"=\"restaurant\"](%f,%f,%f,%f););
+        (way[\"amenity\"=\"restaurant\"](%1$f,%2$f,%3$f,%4$f);
+        way[\"amenity\"=\"food_court\"](%1$f,%2$f,%3$f,%4$f);
+        node[\"amenity\"=\"restaurant\"](%1$f,%2$f,%3$f,%4$f););
         out body center;
     </string>
 
     <string name="query_xerox" translatable="false">
         [out:json][timeout:30];
-        (way[\"shop\"=\"copyshop\"](%f,%f,%f,%f);
-        way[\"shop\"=\"copyshop\"](%f,%f,%f,%f);
-        node[\"shop\"=\"copyshop\"](%f,%f,%f,%f););
+        (way[\"shop\"=\"copyshop\"](%1$f,%2$f,%3$f,%4$f);
+        way[\"shop\"=\"copyshop\"](%1$f,%2$f,%3$f,%4$f);
+        node[\"shop\"=\"copyshop\"](%1$f,%2$f,%3$f,%4$f););
         out body center;
     </string>
 
     <string name="query_auditoriums" translatable="false">
         [out:json][timeout:30];
-        (way[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f);
-        way[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f);
-        node[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f););
+        (way[\"amenity\"=\"exhibition_centre\"](%1$f,%2$f,%3$f,%4$f);
+        way[\"amenity\"=\"exhibition_centre\"](%1$f,%2$f,%3$f,%4$f);
+        node[\"amenity\"=\"exhibition_centre\"](%1$f,%2$f,%3$f,%4$f););
         out body center;
     </string>
 
     <string name="query_libraries" translatable="false">
         [out:json][timeout:30];
-        (way[\"amenity\"=\"library\"](%f,%f,%f,%f);
-        way[\"amenity\"=\"library\"](%f,%f,%f,%f);
-        node[\"amenity\"=\"library\"](%f,%f,%f,%f););
+        (way[\"amenity\"=\"library\"](%1$f,%2$f,%3$f,%4$f);
+        way[\"amenity\"=\"library\"](%1$f,%2$f,%3$f,%4$f);
+        node[\"amenity\"=\"library\"](%1$f,%2$f,%3$f,%4$f););
         out body center;
     </string>
 
     <string name="query_name_search" translatable="false">
         [out:json][timeout:30];
-        area[\"name\" = \"%s\"]->.a;
-        (way(area.a)[\"name\"~\"%s\",i];
-        node(area.a)[\"name\"~\"%s\",i];
-        way(area.a)[\"short_name\"~\"%s\",i];
-        node(area.a)[\"short_name\"~\"%s\",i];
-        way(area.a)[\"loc_name\"~\"%s\",i];
-        node(area.a)[\"loc_name\"~\"%s\",i];);
+        area[\"name\" = \"%1$s\"]->.a;
+        (way(area.a)[\"name\"~\"%2$s\",i];
+        node(area.a)[\"name\"~\"%2$s\",i];
+        way(area.a)[\"short_name\"~\"%2$s\",i];
+        node(area.a)[\"short_name\"~\"%2$s\",i];
+        way(area.a)[\"loc_name\"~\"%2$s\",i];
+        node(area.a)[\"loc_name\"~\"%2$s\",i];);
         out center;
     </string>
 
@@ -63,10 +63,10 @@
         [out:json][timeout:30];
         (relation[name=\"circular\"][highway=bus_stop]);
         out qt body 500;
-        (node[route=bus][name=\"circular\"](%f,%f,%f,%f);
-        way[route=bus][name=\"circular\"](%f,%f,%f,%f););
+        (node[route=bus][name=\"circular\"](%1$f,%2$f,%3$f,%4$f);
+        way[route=bus][name=\"circular\"](%1$f,%2$f,%3$f,%4$f););
         out qt geom tags 500;relation[route=bus][name=\"circular\"]
-        (%f,%f,%f,%f);out qt geom body 500;
+        (%1$f,%2$f,%3$f,%4$f);out qt geom body 500;
     </string>
 
 
