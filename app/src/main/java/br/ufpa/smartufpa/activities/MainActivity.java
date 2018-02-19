@@ -141,14 +141,17 @@ public class MainActivity extends AppCompatActivity
      * Configuration method for the MapFragment.
      * It will pass up to the fragment the location where the map should be positioned.
      */
+
+    // TODO: desenvolver função universal de configuração através de um arquivo somente
     private void setupMapFragment(){
        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
         if(mapFragment == null){
             try {
                 // Get location configs from file
-                final String[] defaultPlaceCoord = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_COORDINATES).split(",");
-                final String[] mapRegionBounds = ConfigHelper.getConfigValue(this, Constants.MAP_REGION_BOUNDS).split(",");
-                final String defaultPlaceName = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_NAME);
+                final Context context = getApplicationContext();
+                final String[] defaultPlaceCoord = ConfigHelper.getConfigValue(context, Constants.DEFAULT_PLACE_COORDINATES).split(",");
+                final String[] mapRegionBounds = ConfigHelper.getConfigValue(context, Constants.MAP_REGION_BOUNDS).split(",");
+                final String defaultPlaceName = ConfigHelper.getConfigValue(context, Constants.MAP_REGION_NAME);
 
                 // Parse information about place
                 double lat = Double.valueOf(defaultPlaceCoord[0]);
@@ -455,6 +458,8 @@ public class MainActivity extends AppCompatActivity
      * Method to run a tutorial for users on the first time they open the app
      * @see AppTutorial
      */
+
+    // TODO: Adicionar botão para rodar o tutorial no drawer lateral
     private void runAppTutorial(){
         ArrayList<ShowcaseHolder> holders = new ArrayList<>();
 

@@ -109,22 +109,13 @@ public class HttpRequest {
     }
 
 
-
-    public static String makeGetRequest(final String url, final String query) throws SocketTimeoutException{
+    public static String makeGetRequest(final URL url) throws SocketTimeoutException{
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String response = "empty response";
-        /*Server URL*/
-        URL finalUrl;
         try{
-
-            if(query == null){
-                finalUrl = new URL(url);
-            }else{
-                finalUrl = new URL(url+ URLEncoder.encode(query,"UTF-8"));
-            }
-            Log.i(TAG,"Request sent to: "+ finalUrl.toString());
-            connection = (HttpURLConnection) finalUrl.openConnection();
+            Log.i(TAG,"Request sent to: "+ url.toString());
+            connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout( 15000 /*milliseconds*/ );
             connection.setConnectTimeout( 15000 /* milliseconds */ );
             connection.setDoOutput(false);

@@ -1,10 +1,8 @@
 package br.ufpa.smartufpa.fragments;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -41,7 +38,7 @@ import br.ufpa.smartufpa.customviews.CustomMapView;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
 import br.ufpa.smartufpa.models.Place;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
-import br.ufpa.smartufpa.utils.enums.MarkerStatuses;
+import br.ufpa.smartufpa.utils.enums.MarkerStatus;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -251,7 +248,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
         // Limits the map area to the region set
-//        mapView.setScrollableAreaLimitDouble(mapRegion);
+        mapView.setScrollableAreaLimitDouble(mapRegion);
         mCopyrightOverlay = new CopyrightOverlay(context);
         mapView.addOverlay(mCopyrightOverlay, OverlayTags.COPYRIGHT);
     }
@@ -332,7 +329,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         final FolderOverlay poiMarkers = new FolderOverlay();
 
         MapUtils mapUtils = new MapUtils(getContext());
-        final HashMap<MarkerStatuses, Drawable> markerDrawables = mapUtils.getMarkerDrawable(markersType);
+        final HashMap<MarkerStatus, Drawable> markerDrawables = mapUtils.getMarkerDrawable(markersType);
 
 
         // Creates a marker for each place found
@@ -358,14 +355,14 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
                             .commit();
 
                     // Will change the marker to its clicked icon
-                    marker.setIcon(markerDrawables.get(MarkerStatuses.CLICKED));
+                    marker.setIcon(markerDrawables.get(MarkerStatus.CLICKED));
                     mapView.postInvalidate();
                     return true;
                 }
             };
 
             final Marker customMarker = mapUtils
-                    .createCustomMarker(mapView, markerDrawables.get(MarkerStatuses.NOT_CLICKED),
+                    .createCustomMarker(mapView, markerDrawables.get(MarkerStatus.NOT_CLICKED),
                     new GeoPoint(rightPlace.getLatitude(), rightPlace.getLongitude()), onMarkerClickListener);
 
             poiMarkers.add(customMarker);

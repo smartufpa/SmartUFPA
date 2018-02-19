@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
-import br.ufpa.smartufpa.utils.enums.MarkerStatuses;
+import br.ufpa.smartufpa.utils.enums.MarkerStatus;
 
 /**
  * Stable Commit (20/09)
@@ -31,58 +31,58 @@ public class MapUtils {
         this.parentContext = parentContext;
     }
 
-    public HashMap<MarkerStatuses,Drawable> getMarkerDrawable(final MarkerTypes markerType){
+    public HashMap<MarkerStatus,Drawable> getMarkerDrawable(final MarkerTypes markerType){
 
-        final HashMap<MarkerStatuses, Drawable> markerIcons = new HashMap<>(2);
+        final HashMap<MarkerStatus, Drawable> markerIcons = new HashMap<>(2);
 
 
         // TODO (VISUAL ADJUSTMENTS): CHANGE ICONS FOR CLICKED
         if (markerType.equals(MarkerTypes.XEROX)) {
 
-            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_xerox));
-            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
         }else if (markerType.equals(MarkerTypes.FOOD)){
 
-            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_restaurant));
-            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
         }else if (markerType.equals(MarkerTypes.RESTROOM)) {
 
-            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_restroom));
-            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
         }else if (markerType.equals(MarkerTypes.AUDITORIUM)) {
 
-            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_auditorium));
-            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
         }else if (markerType.equals(MarkerTypes.LIBRARY)){
 
-            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_library));
-            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
         }else if(markerType.equals(MarkerTypes.DEFAULT)){
 
-            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker));
-            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
 
         } else if(markerType.equals(MarkerTypes.BUS_STOP)){
-            markerIcons.put(MarkerStatuses.NOT_CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_bus_stop));
-            markerIcons.put(MarkerStatuses.CLICKED, ContextCompat
+            markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(parentContext, R.drawable.ic_marker_details));
         }
         

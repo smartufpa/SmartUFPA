@@ -6,6 +6,6 @@ package br.ufpa.smartufpa.utils.enums;
  * @author kaeuchoa
  */
 
-public enum MarkerStatuses {
+public enum MarkerStatus {
     CLICKED, NOT_CLICKED
 }

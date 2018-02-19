@@ -27,20 +27,7 @@
             app:rippleColor="@color/colorAccent"
 
             />
-
-        <android.support.design.widget.FloatingActionButton
-            android:src="@drawable/ic_bus_location"
-            android:id="@+id/fab_bus_location"
-            app:fabSize="normal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/button_margin"
-            android:layout_below="@id/fab_my_location"
-            android:theme="@style/MyFAB"
-            app:rippleColor="@color/colorAccent"
-            />
-
-    </RelativeLayout>
+            </RelativeLayout>
 
     <Button
         android:layout_width="wrap_content"
