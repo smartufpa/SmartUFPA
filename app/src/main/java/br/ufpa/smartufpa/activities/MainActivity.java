@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity
      * Configuration method for the MapFragment.
      * It will pass up to the fragment the location where the map should be positioned.
      */
+
+    // TODO: desenvolver função universal de configuração através de um arquivo somente
     private void setupMapFragment(){
        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
         if(mapFragment == null){
@@ -456,6 +458,8 @@ public class MainActivity extends AppCompatActivity
      * Method to run a tutorial for users on the first time they open the app
      * @see AppTutorial
      */
+
+    // TODO: Adicionar botão para rodar o tutorial no drawer lateral
     private void runAppTutorial(){
         ArrayList<ShowcaseHolder> holders = new ArrayList<>();
 

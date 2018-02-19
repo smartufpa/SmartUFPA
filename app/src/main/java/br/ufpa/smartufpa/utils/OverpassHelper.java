@@ -54,15 +54,15 @@ public class OverpassHelper {
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL restroomURL = null;
+        URL xeroxURL = null;
         try {
-            restroomURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
+            xeroxURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return  restroomURL;
+        return  xeroxURL;
     }
 
     public URL getAuditoriumsURL(){
@@ -75,15 +75,15 @@ public class OverpassHelper {
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL restroomURL = null;
+        URL auditoriumsURL = null;
         try {
-            restroomURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
+            auditoriumsURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return  restroomURL;
+        return  auditoriumsURL;
     }
 
     public URL getLibrariesURL(){
@@ -96,15 +96,15 @@ public class OverpassHelper {
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL restroomURL = null;
+        URL librariesURL = null;
         try {
-            restroomURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
+            librariesURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return  restroomURL;
+        return  librariesURL;
     }
 
     public URL getFoodURL(){
@@ -117,15 +117,15 @@ public class OverpassHelper {
                 southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL restroomURL = null;
+        URL foodURL = null;
         try {
-            restroomURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
+            foodURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return  restroomURL;
+        return  foodURL;
     }
 
     public URL getRestroomURL(){
@@ -171,5 +171,26 @@ public class OverpassHelper {
         }
 
         return searchURL;
+    }
+
+    public URL getBusRouteURL(){
+        final String queryBusRoute = this.context.getString(R.string.query_bus_route);
+
+        // For overpass queries, use the following order of coordinates: (south,west,north,east)
+        final String formattedQuery = String.format(Locale.US, queryBusRoute,
+                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
+                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,
+                southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
+
+        final String overpassURL = this.context.getString(R.string.overpass_url);
+        URL busRouteURL = null;
+        try {
+            busRouteURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return  busRouteURL;
     }
 }

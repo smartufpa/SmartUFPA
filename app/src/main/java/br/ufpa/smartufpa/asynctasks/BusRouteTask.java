@@ -8,6 +8,7 @@ import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.utils.BusRouteKmlStyler;
 import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.Constants;
+import br.ufpa.smartufpa.utils.OverpassHelper;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 import org.osmdroid.bonuspack.kml.KmlDocument;
@@ -36,7 +37,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
     private final MapView mapView;
     private MapFragment mapFragment;
     private ServerResponse taskStatus;
-
+    private OverpassHelper overpassHelper;
     // Parent Context that implements OnBusRouteListener which will receive the results
     private OnBusRouteListener callback;
 
@@ -45,36 +46,19 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
         this.callback = mapFragment;
         this.mapView = mapView;
         this.taskStatus = ServerResponse.SUCCESS;
+        this.overpassHelper = OverpassHelper.getInstance(mapFragment.getContext().getApplicationContext());
     }
 
 
     @Override
     protected Overlay doInBackground(Void... voids) {
         OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
-        // For overpass queries, use the following order of coordinates: (south,west,north,east)
-        final String[] mapRegionBounds = ConfigHelper.getConfigValue(mapFragment.getContext(), Constants.MAP_REGION_BOUNDS).split(",");
-        double north = Double.valueOf(mapRegionBounds[0]);
-        double east = Double.valueOf(mapRegionBounds[1]);
-        double south = Double.valueOf(mapRegionBounds[2]);
-        double west = Double.valueOf(mapRegionBounds[3]);
 
-        // Build the query
-        StringBuilder builder = new StringBuilder();
-        builder.append(Constants.URL_OVERPASS_SERVER);
-        final String query = String.format(Locale.US,Constants.QUERY_OVERPASS_BUS_ROUTE,
-                south,west,north,east,
-                south,west,north,east,
-                south,west,north,east);
-        try {
-            builder.append(URLEncoder.encode(query,"UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        final String finalUrl = builder.toString();
+        final String busRouteURL = overpassHelper.getBusRouteURL().toString();
 
         KmlDocument kmlDocument = new KmlDocument();
         // true if ok, false if technical error.
-        if(overpassProvider.addInKmlFolder(kmlDocument.mKmlRoot, finalUrl)){
+        if(overpassProvider.addInKmlFolder(kmlDocument.mKmlRoot, busRouteURL)){
             KmlFeature.Styler busRouteStyler = new BusRouteKmlStyler(mapFragment.getContext());
             return kmlDocument.mKmlRoot.buildOverlay(mapView,null, busRouteStyler, kmlDocument);
         }
