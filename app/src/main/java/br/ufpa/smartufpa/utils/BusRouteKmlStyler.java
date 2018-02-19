@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
-import br.ufpa.smartufpa.utils.enums.MarkerStatuses;
+import br.ufpa.smartufpa.utils.enums.MarkerStatus;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 
 import org.osmdroid.bonuspack.kml.KmlFeature;
@@ -43,8 +43,8 @@ public class BusRouteKmlStyler implements KmlFeature.Styler {
 
     @Override
     public void onPoint(Marker marker, KmlPlacemark kmlPlacemark, KmlPoint kmlPoint) {
-        final HashMap<MarkerStatuses, Drawable> markerDrawable = mapUtils.getMarkerDrawable(MarkerTypes.BUS_STOP);
-        marker.setIcon(markerDrawable.get(MarkerStatuses.NOT_CLICKED));
+        final HashMap<MarkerStatus, Drawable> markerDrawable = mapUtils.getMarkerDrawable(MarkerTypes.BUS_STOP);
+        marker.setIcon(markerDrawable.get(MarkerStatus.NOT_CLICKED));
         marker.setInfoWindow(null);
     }
 

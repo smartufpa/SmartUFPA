@@ -1,13 +1,10 @@
 package br.ufpa.smartufpa.asynctasks;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.utils.BusRouteKmlStyler;
-import br.ufpa.smartufpa.utils.ConfigHelper;
-import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.OverpassHelper;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
@@ -16,10 +13,6 @@ import org.osmdroid.bonuspack.kml.KmlFeature;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Locale;
 
 /**
  * AsyncTask responsible for querying the route of internal buses.
@@ -53,7 +46,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
     protected Overlay doInBackground(Void... voids) {
         OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
 
-        final String busRouteURL = overpassHelper.getBusRouteURL().toString();
+        final String busRouteURL = overpassHelper.getBusRouteByNameURL().toString();
 
         KmlDocument kmlDocument = new KmlDocument();
         // true if ok, false if technical error.

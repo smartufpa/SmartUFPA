@@ -162,7 +162,7 @@ public class OverpassHelper {
         return searchURL;
     }
 
-    public URL getBusRouteURL(){
+    public URL getBusRouteByNameURL(){
         final String queryBusRoute = this.context.getString(R.string.query_bus_route);
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
