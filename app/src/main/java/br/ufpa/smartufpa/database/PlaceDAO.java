@@ -73,14 +73,14 @@ public class PlaceDAO {
         new Thread(){
             @Override
             public void run() {
-                try {
-                    final String response = HttpRequest.makeGetRequest(builtUri.toString(), null);
-                    Gson gson = new Gson();
-                    final Place place = gson.fromJson(response, Place.class);
-                    Log.i(TAG, "run: " + place.toString());
-                } catch (SocketTimeoutException e) {
-                    e.printStackTrace();
-                }
+//                try {
+////                    final String response = HttpRequest.makeGetRequest(builtUri.toString(), null);
+//                    Gson gson = new Gson();
+////                    final Place place = gson.fromJson(response, Place.class);
+////                    Log.i(TAG, "run: " + place.toString());
+//                } catch (SocketTimeoutException e) {
+//                    e.printStackTrace();
+//                }
             }
         }.start();
 
