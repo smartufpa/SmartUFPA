@@ -50,7 +50,7 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
         this.parentContext = parentContext;
         this.callBack = (OnFilterSearchListener) parentContext;
         this.taskStatus = ServerResponse.SUCCESS;
-        this.overpassHelper = OverpassHelper.getInstance(parentContext);
+        this.overpassHelper = OverpassHelper.getInstance(parentContext.getApplicationContext());
     }
 
     @SuppressLint("DefaultLocale")

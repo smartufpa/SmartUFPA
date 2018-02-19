@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                 // Get location configs from file
                 final String[] defaultPlaceCoord = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_COORDINATES).split(",");
                 final String[] mapRegionBounds = ConfigHelper.getConfigValue(this, Constants.MAP_REGION_BOUNDS).split(",");
-                final String defaultPlaceName = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_NAME);
+                final String defaultPlaceName = ConfigHelper.getConfigValue(this, Constants.MAP_REGION_NAME);
 
                 // Parse information about place
                 double lat = Double.valueOf(defaultPlaceCoord[0]);

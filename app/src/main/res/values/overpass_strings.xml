@@ -49,7 +49,7 @@
 
     <string name="query_name_search" translatable="false">
         [out:json][timeout:30];
-        area[\"name\" = \"Universidade Federal do Pará\"]->.a;
+        area[\"name\" = \"%s\"]->.a;
         (way(area.a)[\"name\"~\"%s\",i];
         node(area.a)[\"name\"~\"%s\",i];
         way(area.a)[\"short_name\"~\"%s\",i];

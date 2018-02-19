@@ -19,18 +19,6 @@ public final class Constants {
     public static final String URL_BUS_LOCATION = "http://104.41.62.111:8080/bus-location";
     public static final String URL_OVERPASS_SERVER = "http://overpass-api.de/api/interpreter?data=";
 
-   
-    // TODO: change the name for the name on config file
-    public static final String QUERY_OVERPASS_SEARCH = "[out:json][timeout:30];" +
-            "area[\"name\" = \"Universidade Federal do Pará\"]->.a;" +
-            "(way(area.a)[\"name\"~\"%s\",i];" +
-            "node(area.a)[\"name\"~\"%s\",i];" +
-            "way(area.a)[\"short_name\"~\"%s\",i];" +
-            "node(area.a)[\"short_name\"~\"%s\",i];" +
-            "way(area.a)[\"loc_name\"~\"%s\",i];" +
-            "node(area.a)[\"loc_name\"~\"%s\",i];" +
-            ");" +
-            "out center;";
 
     public static final String QUERY_OVERPASS_BUS_ROUTE = "[out:json][timeout:30];" +
             "(relation[name=\"circular\"][highway=bus_stop]);" + "out qt body 500;" +
@@ -51,6 +39,6 @@ public final class Constants {
 
     // Config file constants
     public static final String DEFAULT_PLACE_COORDINATES = "default_place_coordinates";
-    public static final String DEFAULT_PLACE_NAME = "default_place_name" ;
+    public static final String MAP_REGION_NAME = "map_region_name" ;
     public static final String MAP_REGION_BOUNDS = "map_region_bounds";
 }

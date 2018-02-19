@@ -25,6 +25,7 @@ public class OverpassHelper {
     private Double eastCoordinate;
     private Double southCoordinate;
     private Double westCoordinate;
+    private String mapRegionName;
 
     private OverpassHelper(Context context) {
         this.context = context;
@@ -33,6 +34,7 @@ public class OverpassHelper {
         this.eastCoordinate = Double.valueOf(mapRegionBounds[1]);
         this.southCoordinate = Double.valueOf(mapRegionBounds[2]);
         this.westCoordinate = Double.valueOf(mapRegionBounds[3]);
+        this.mapRegionName = ConfigHelper.getConfigValue(context,Constants.MAP_REGION_NAME);
 
     }
 
@@ -147,4 +149,27 @@ public class OverpassHelper {
         return  restroomURL;
     }
 
+    public URL getSearchURL(String userQuery){
+        // Cleans all the white spaces on the query
+        userQuery = userQuery.replaceAll("\\s+", " ");
+        if (Character.isWhitespace(userQuery.charAt(userQuery.length()-1))){
+            userQuery = userQuery.substring(0,userQuery.length()-1);
+        }
+
+        final String searchNameQuery = this.context.getString(R.string.query_name_search);
+        final String formattedQuery = String.format(Locale.US, searchNameQuery, mapRegionName,
+                userQuery, userQuery, userQuery, userQuery, userQuery, userQuery);
+        final String overpassURL = this.context.getString(R.string.overpass_url);
+
+        URL searchURL = null;
+        try {
+            searchURL = new URL (overpassURL + URLEncoder.encode(formattedQuery,"UTF-8"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return searchURL;
+    }
 }

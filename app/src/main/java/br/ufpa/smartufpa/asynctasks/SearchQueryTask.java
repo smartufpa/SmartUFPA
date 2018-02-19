@@ -11,6 +11,7 @@ import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.models.Place;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.JsonParser;
+import br.ufpa.smartufpa.utils.OverpassHelper;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 import java.net.SocketTimeoutException;
@@ -36,31 +37,20 @@ public class SearchQueryTask extends AsyncTask<String,Void,String> {
     private Context parentContext;
 
     private ServerResponse taskStatus;
+    private OverpassHelper overpassHelper;
 
     public SearchQueryTask(Context parentContext) {
         this.parentContext = parentContext;
         this.callBack = (OnSearchQueryListener) parentContext;
         this.taskStatus = ServerResponse.SUCCESS ;
-    }
-
-
-
-    private String buildSearchQuery(String userQuery){
-        // Cleans all the white spaces on the query
-        userQuery = userQuery.replaceAll("\\s+", " ");
-
-        if (Character.isWhitespace(userQuery.charAt(userQuery.length()-1))){
-            userQuery = userQuery.substring(0,userQuery.length()-1);
-        }
-        return String.format(Locale.US,Constants.QUERY_OVERPASS_SEARCH,userQuery,userQuery,
-                userQuery,userQuery,userQuery,userQuery);
+        this.overpassHelper = OverpassHelper.getInstance(parentContext.getApplicationContext());
     }
 
     @Override
     protected String doInBackground(String... params) {
         String jsonResponse = null;
         try {
-            jsonResponse = HttpRequest.makeGetRequest(Constants.URL_OVERPASS_SERVER, buildSearchQuery(params[0]));
+            jsonResponse = HttpRequest.makeGetRequest(overpassHelper.getSearchURL(params[0]));
         } catch (SocketTimeoutException e) {
             taskStatus = ServerResponse.TIMEOUT;
             Log.e(TAG, "Request response took too long.", e);
