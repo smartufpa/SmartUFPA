@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!-- Overpass API urls -->
+    <!-- test on https://overpass-turbo.eu/ -->
+    <!-- reference: http://wiki.openstreetmap.org/wiki/Overpass_API -->
+<resources>
+
+    <string name="overpass_url" translatable="false">
+        http://overpass-api.de/api/interpreter?data=
+    </string>
+    <string name="query_restroom" translatable="false">
+        [out:json][timeout:30];
+        (way[\"toilets\"=\"yes\"](%f,%f,%f,%f);
+        way[\"amenity\"=\"toilets\"](%f,%f,%f,%f);
+        node[\"amenity\"=\"toilets\"](%f,%f,%f,%f););
+        out body center;
+    </string>
+
+    <string name="query_food" translatable="false">
+        [out:json][timeout:30];
+        (way[\"amenity\"=\"restaurant\"](%f,%f,%f,%f);
+        way[\"amenity\"=\"food_court\"](%f,%f,%f,%f);
+        node[\"amenity\"=\"restaurant\"](%f,%f,%f,%f););
+        out body center;
+    </string>
+
+    <string name="query_xerox" translatable="false">
+        [out:json][timeout:30];
+        (way[\"shop\"=\"copyshop\"](%f,%f,%f,%f);
+        way[\"shop\"=\"copyshop\"](%f,%f,%f,%f);
+        node[\"shop\"=\"copyshop\"](%f,%f,%f,%f););
+        out body center;
+    </string>
+
+    <string name="query_auditoriums" translatable="false">
+        [out:json][timeout:30];
+        (way[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f);
+        way[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f);
+        node[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f););
+        out body center;
+    </string>
+
+    <string name="query_libraries" translatable="false">
+        [out:json][timeout:30];
+        (way[\"amenity\"=\"library\"](%f,%f,%f,%f);
+        way[\"amenity\"=\"library\"](%f,%f,%f,%f);
+        node[\"amenity\"=\"library\"](%f,%f,%f,%f););
+        out body center;
+    </string>
+
+    <string name="query_name_search" translatable="false">
+        [out:json][timeout:30];
+        area[\"name\" = \"Universidade Federal do Pará\"]->.a;
+        (way(area.a)[\"name\"~\"%s\",i];
+        node(area.a)[\"name\"~\"%s\",i];
+        way(area.a)[\"short_name\"~\"%s\",i];
+        node(area.a)[\"short_name\"~\"%s\",i];
+        way(area.a)[\"loc_name\"~\"%s\",i];
+        node(area.a)[\"loc_name\"~\"%s\",i];);
+        out center;
+    </string>
+
+    <string name="query_bus_route" translatable="false">
+        [out:json][timeout:30];
+        (relation[name=\"circular\"][highway=bus_stop]);
+        out qt body 500;
+        (node[route=bus][name=\"circular\"](%f,%f,%f,%f);
+        way[route=bus][name=\"circular\"](%f,%f,%f,%f););
+        out qt geom tags 500;relation[route=bus][name=\"circular\"]
+        (%f,%f,%f,%f);out qt geom body 500;
+    </string>
+
+
+</resources>
