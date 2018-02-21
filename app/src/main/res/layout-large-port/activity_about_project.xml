@@ -25,7 +25,7 @@
             android:minWidth="200dp"
             android:layout_margin="10dp"
             android:id="@+id/logo_ufpa_about"
-            android:src="@drawable/logo_ufpa"
+            android:src="@drawable/logo_university"
             />
 
         <ImageView

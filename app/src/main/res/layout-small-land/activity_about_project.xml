@@ -24,7 +24,7 @@
             android:maxWidth="65dp"
             android:maxHeight="65dp"
             android:id="@+id/logo_ufpa_about"
-            android:src="@drawable/logo_ufpa"
+            android:src="@drawable/logo_university"
             />
 
         <ImageView

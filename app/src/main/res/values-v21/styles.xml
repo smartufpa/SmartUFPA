@@ -1,4 +1,3 @@
-<!--Stable Commit (20/09)-->
 <resources>
 
     <style name="AppTheme.NoActionBar">
@@ -33,6 +32,8 @@
         <item name="android:paddingRight">16dp</item>
     </style>
 
-
+    <style name="AppCompat.FullScreen" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
 </resources>

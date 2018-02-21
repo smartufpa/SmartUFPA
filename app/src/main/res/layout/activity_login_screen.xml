@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Stable Commit (20/09)-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -16,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:id="@+id/img_logo"
-            android:src="@drawable/logo_smartufpa_main" />
+            android:src="@drawable/logo_app" />
 
         <Button
             android:text="@string/btn_login_entrar"

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="320dp"
             android:id="@+id/img_logo"
-            android:src="@drawable/logo_smartufpa_main"
+            android:src="@drawable/logo_app"
             />
 
         <Button

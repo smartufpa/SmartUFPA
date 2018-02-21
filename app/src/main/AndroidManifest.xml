@@ -34,7 +34,7 @@
                 <action android:name="smartufpa.ACTION_LOGIN" />
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
                 <category android:name="smartufpa.CATEGORY_LOGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -75,19 +75,28 @@
             android:label="Sobre">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_ABOUT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="smartufpa.CATEGORY_ABOUT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.about.AboutProjectActivity"
             android:label="@string/title_activity_about_project"
             android:theme="@style/AppTheme" />
-
-        <activity android:name=".activities.about.AboutCodeActivity"
+        <activity
+            android:name=".activities.about.AboutCodeActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.SplashScreenActivity"
+            android:theme="@style/AppCompat.FullScreen"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:id="@+id/img_logo"
-            android:src="@drawable/logo_smartufpa_main"
+            android:src="@drawable/logo_app"
             />
         <RelativeLayout
             android:layout_width="wrap_content"
