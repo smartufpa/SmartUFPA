@@ -1,18 +1,15 @@
-<!--Stable Commit (20/09)-->
 <resources>
     <string name="app_name">Smart UFPA</string>
 
     <string name="title_activity_map">MapActivity</string>
     <string name="title_about">Sobre o aplicativo</string>
     <string name="title_settings">Configurações</string>
-    <string name="title_fragment_map_download">Realizando o download do mapa:</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="drawer_subheader">LabVis - UFPA</string>
     <string name="drawer_subtitle">ICEN - Faculdade de Computação</string>
-
 
     <string name="action_add_location">Adicione um lugar ao Mapa</string>
     <string name="action_search">Busca</string>
@@ -28,7 +25,10 @@
     <string name="error_no_internet_connection">Cheque sua conexão com a internet e tente novamente.</string>
     <string name="error_server_internal_error">Não foi possível completar a operação. Tente novamente.</string>
     <string name="error_server_timeout">Tempo de requisição esgotado. Tente novamente em alguns segundos.</string>
-    <string name="error_no_gps">O GPS deve estar ligado para iniciar o aplicativo.</string>
+
+
+    <string name="error_no_gps_title">Localização Desligada</string>
+    <string name="error_no_gps_subtitle">O Localizador deve estar ligado \n para que possamos mostrar sua posição no mapa.</string>
 
     <string name="error_fragment_no_input">Você deve inserir uma entrada.</string>
     <string name="error_fragment_input_too_long">A entrada inserida é muito longa.</string>
@@ -71,7 +71,10 @@
     <string name="btn_fragment_cancel">Cancelar</string>
     <string name="btn_fragment_confirm">Confirmar</string>
     <string name="btn_foot_route">Mostrar Caminho</string>
-    <string name="btn_turn_on_gps">Ligar GPS</string>
+    <string name="btn_settings">Configurações</string>
+    <string name="btn_ready">Pronto!</string>
+    <string name="btn_exit">Sair</string>
+    <string name="btn_grant_permissions">Conceder Permissões</string>
 
 
     <string name="btn_mobility">Mobilidade e Localização</string>
@@ -126,6 +129,14 @@
     <string name="about_opt_title_code">Sobre o Código</string>
     <string name="about_opt_subtitle_code">Detalhes sobre as tecnologias usadas</string>
 
+    <!--Permission Activity-->
+    <string name="act_permission_title">Permissões Necessárias</string>
+    <string name="act_permission_subtitle_storage">
+        Armazenamento:\nPara armazenar porções do mapa, reduzir consumo de dados e para uso offline;
+    </string>
+    <string name="act_permission_subtitle_location">
+        Localização:\nPara mostrar a sua localização no mapa.
+    </string>
 
     <string name="dialog_title">Ops…</string>
     <string name="lbl_local_name">Nome local:</string>
@@ -140,6 +151,7 @@
 
 
     <string name="title_activity_about_project">AboutProjectActivity</string>
+
 
 
 </resources>

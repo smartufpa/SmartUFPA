@@ -1,8 +1,10 @@
 package br.ufpa.smartufpa.fragments;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -31,7 +34,6 @@ import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.MapUtils;
-import br.ufpa.smartufpa.utils.PermissionChecker;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
@@ -201,12 +203,16 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         return view;
     }
 
+    private boolean isLocationPermissionGranted(Context context){
+        return (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+    }
     @SuppressLint("MissingPermission") // Permission check done by static method
     @Override
     public void onResume() {
         super.onResume();
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (PermissionChecker.isLocationPermissionGranted(getContext())) {
+        if (isLocationPermissionGranted(getContext())) {
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
             final String bestProvider = locationManager.getBestProvider(criteria, true);

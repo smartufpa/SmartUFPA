@@ -12,7 +12,6 @@ import br.ufpa.smartufpa.utils.SystemServicesManager;
 
 
 /**
- * Stable Commit (20/09)
  * Activity launched when the user tries to initialize the
  * Main Activity without GPS signal
  */
@@ -23,17 +22,27 @@ public class NoGpsActivity extends AppCompatActivity {
     public final static String TAG = NoGpsActivity.class.getSimpleName();
 
     // Views
-    private Button btnGoToGpsSettings;
+    private Button btnSettings;
+    private Button btnExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_no_gps);
-        btnGoToGpsSettings = findViewById(R.id.btn_turn_on_gps);
-        btnGoToGpsSettings.setOnClickListener(new View.OnClickListener() {
+        btnSettings = findViewById(R.id.btn_settings);
+        btnExit = findViewById(R.id.btn_exit);
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        });
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -41,7 +50,7 @@ public class NoGpsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (SystemServicesManager.isGPSEnabled(this)) {
+        if (SystemServicesManager.isGPSEnabled(getApplicationContext())) {
             Intent intent = new Intent(MainActivity.ACTION_MAIN);
             intent.addCategory(MainActivity.CATEGORY_MAIN);
             startActivity(intent);

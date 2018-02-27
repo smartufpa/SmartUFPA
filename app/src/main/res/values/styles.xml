@@ -59,6 +59,15 @@
         <item name="android:paddingRight">16dp</item>
     </style>
 
+    <style name="RaisedButtonWhite" parent="Theme.AppCompat">
+        <item name="android:minHeight">48dp</item>
+        <item name="colorButtonNormal">@color/white</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
 
     <style name="RaisedButtonDisabled" parent="Theme.AppCompat">
         <item name="colorControlHighlight">@color/disabledHighlight</item>
@@ -74,8 +83,6 @@
         <item name="colorAccent">@color/colorPrimary</item>
 
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppCompat.FullScreen" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowFullscreen">true</item>

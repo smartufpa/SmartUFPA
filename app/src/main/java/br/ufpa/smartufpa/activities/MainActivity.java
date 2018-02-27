@@ -1,9 +1,12 @@
 package br.ufpa.smartufpa.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +14,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -51,6 +55,9 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -65,6 +72,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
     public static final String CATEGORY_MAIN = "smartufpa.CATEGORY_MAIN";
+
 
 
     // VIEWS
@@ -119,7 +127,27 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        // Requests permissions on versions from Marshmallow and over
+        if (Build.VERSION.SDK_INT >= 23) {
+            if(!isPermissionGranted()){
+                startActivity(new Intent(MainActivity.this, PermissionCheckActivity.class));
+                finish();
+            }
+        }
+        if(!SystemServicesManager.isGPSEnabled(getApplicationContext())){
+            // Doesn't start the main activity, instead asks user to turn on the GPS
+            Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
+            intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
+            startActivity(intent);
+        }
         setupBottomSheetContainer();
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean isPermissionGranted() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     /**
@@ -135,8 +163,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Configuration method for the MapFragment.
-     * It will pass up to the fragment the location where the map should be positioned.
+     * Starts the fragment that contains the map
      */
 
     // TODO: desenvolver função universal de configuração através de um arquivo somente
