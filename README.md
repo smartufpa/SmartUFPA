@@ -74,4 +74,4 @@ Contatos:
  
 <br>
 <hr>
-<i>Código sob licença <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.0</a>.</i>
+<i>Código sob licença <a href="https://opensource.org/licenses/MIT">MIT</a>.</i>
