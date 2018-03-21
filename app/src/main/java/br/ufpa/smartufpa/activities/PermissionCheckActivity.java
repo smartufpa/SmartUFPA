@@ -35,7 +35,6 @@ public class PermissionCheckActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkPermissions();
-                Toast.makeText(PermissionCheckActivity.this, "CLique", Toast.LENGTH_SHORT).show();
             }
         });
     }
