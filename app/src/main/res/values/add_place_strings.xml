@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_building_name" translatable="true">Nome</string>
+    <string name="label_building_description" translatable="true">Descrição</string>
+    <string name="label_building_website" translatable="true">Site</string>
+    <string name="label_building_operation_hours" translatable="true">Horário de Funcionamento</string>
+    <string name="label_building_operation_hours_from" translatable="true">Abre às</string>
+    <string name="label_building_operation_hours_to" translatable="true">Fecha às</string>
+    <string name="label_building_administrative_role" translatable="true">Função Administrativa</string>
+
+    <string name="hint_building_name">Ex.: Instituto de Ciências Exatas e Naturais</string>
+    <string name="hint_building_description">Insira uma descrição sobre o prédio</string>
+    <string name="hint_building_website">Ex.: icen.ufpa.br</string>
+    <string name="hint_building_hours_from">Ex.: 08:00</string>
+    <string name="hint_building_hours_to">Ex.: 18:00</string>
+
+</resources>

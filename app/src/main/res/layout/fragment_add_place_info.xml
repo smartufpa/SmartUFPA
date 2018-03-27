@@ -55,6 +55,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="end"
+
         android:layout_weight="0"
        >
         <Button

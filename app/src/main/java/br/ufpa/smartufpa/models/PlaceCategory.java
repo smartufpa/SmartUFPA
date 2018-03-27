@@ -12,7 +12,7 @@ import br.ufpa.smartufpa.R;
  * Created by kaeuchoa on 13/12/2017.
  */
 
-public class PlaceCategory implements Parcelable{
+public class PlaceCategory implements Parcelable {
 
     private int id;
     private String name;
@@ -22,10 +22,10 @@ public class PlaceCategory implements Parcelable{
         this.id = id;
         // Sets the image for the card
         // TODO: get names from string.xml
-        switch (id){
+        switch (id) {
             case 0:
                 this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_auditorium);
-                this.name = "Departamento";
+                this.name = "Prédio";
                 break;
             case 1:
                 this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restroom);
@@ -37,11 +37,19 @@ public class PlaceCategory implements Parcelable{
                 break;
             case 3:
                 this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restaurant);
-                this.name = "Alimentação";
+                this.name = "Refeições";
                 break;
             case 4:
                 this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_xerox);
                 this.name = "Xerox";
+                break;
+            case 5:
+                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.btn_add_info);
+                this.name = "Faculdade";
+                break;
+            case 6:
+                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.btn_add_info);
+                this.name = "Laboratório";
                 break;
             default:
                 this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_about);
@@ -80,6 +88,7 @@ public class PlaceCategory implements Parcelable{
             return new PlaceCategory[size];
         }
     };
+
     @Override
     public int describeContents() {
         return 0;

@@ -1,15 +1,17 @@
 package br.ufpa.smartufpa.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import br.ufpa.smartufpa.R;
@@ -22,6 +24,9 @@ import br.ufpa.smartufpa.models.PlaceCategory;
  * create an instance of this fragment.
  */
 public class AddPlaceInfoFragment extends Fragment {
+
+    // TODO: check this https://stuff.mit.edu/afs/sipb/project/android/docs/training/improving-layouts/loading-ondemand.html
+    // https://stackoverflow.com/questions/25884448/dynamically-loading-xml-file-to-linearlayout
 
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
@@ -86,6 +91,7 @@ public class AddPlaceInfoFragment extends Fragment {
         btnCancel = view.findViewById(R.id.btn_add_place_cancel);
         tbAddPlace = getActivity().findViewById(R.id.tb_add_place);
         layoutAddPlaceInfo = view.findViewById(R.id.layout_add_place_info);
+        layoutAddPlaceInfo.setPadding(16,16,16,16);
 
 
         return view;
@@ -104,19 +110,21 @@ public class AddPlaceInfoFragment extends Fragment {
 
         switch (category.getId()){
             case 0:
-                loadDepartmentView();
+                loadBuildingView();
                 break;
         }
     }
 
-    private void loadDepartmentView(){
-        TextView txtName = new TextView(getContext());
-        txtName.setText("Nome");
-        layoutAddPlaceInfo.addView(txtName);
+    private void loadBuildingView(){
 
-        TextInputEditText inputName = new TextInputEditText(getContext());
-        inputName.setHint("Ex.: Instituto de Ciências Exatas e Naturais");
-        layoutAddPlaceInfo.addView(inputName);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.template_add_building,null);
+        layoutAddPlaceInfo.addView(view);
+
+        Spinner spinner = getActivity().findViewById(R.id.spin_administrative_role);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.spinner_administrative_role, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
     }
 

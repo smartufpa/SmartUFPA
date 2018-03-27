@@ -21,7 +21,6 @@ import br.ufpa.smartufpa.models.PlaceCategory;
 
 
 /**
- * Stable Commit (20/09)
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link SelectCategoryFragment.OnAddPlaceListener} interface
@@ -91,7 +90,7 @@ public class SelectCategoryFragment extends Fragment {
         tbAddPlace = getActivity().findViewById(R.id.tb_add_place);
 
         // Create the adapter to the RecyclerView
-        final AddPlaceOptionAdapter addPlaceOptionAdapter = new AddPlaceOptionAdapter(getContext());
+        final AddPlaceOptionAdapter addPlaceOptionAdapter = new AddPlaceOptionAdapter(getActivity().getApplicationContext());
 
 
         addPlaceOptionAdapter.setOnItemClickListener(new AddPlaceOptionAdapter.OnItemClickListener() {

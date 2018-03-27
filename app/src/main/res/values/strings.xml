@@ -1,4 +1,3 @@
-<!--Stable Commit (20/09)-->
 <resources>
     <string name="app_name">Smart UFPA</string>
 
@@ -104,7 +103,7 @@
     <string name="about_txt_version">Smart UFPA Versão 1.0</string>
     <string name="about_txt_labvis">Laboratório de Visualização (LABVIS)</string>
     <string name="about_txt_ufpa">Universidade Federal do Pará</string>
-    <string name="about_lbl_logo">Logo feita por:</string>
+    <string name="about_lbl_logo">Artes feitas por:</string>
     <string name="about_txt_giordana">Giordanna De Gregoriis</string>
     <string name="about_txt_port_gio">( http://gior.hol.es/ )</string>
     <string name="about_lbl_more">Mais informações:</string>
@@ -124,8 +123,6 @@
     <string name="msg_request_both_permissions">A permissão de armazenamento é necessária para armazenar porções do mapa para reduzir consumo de dados e para uso offline.   E a permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="search_filters">Filtros de Busca</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
