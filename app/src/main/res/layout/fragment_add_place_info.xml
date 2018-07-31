@@ -50,35 +50,6 @@
 
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end"
-
-        android:layout_weight="0"
-       >
-        <Button
-            android:id="@+id/btn_add_place_cancel"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:text="Cancelar"
-            android:theme="@style/RaisedButton"
-            />
-
-        <Button
-            android:id="@+id/btn_add_place_confirm"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:text="Confirmar"
-            android:layout_centerHorizontal="true"
-            android:theme="@style/RaisedButton"
-            />
-    </LinearLayout>
-
-
-
-
 
 </LinearLayout>
 

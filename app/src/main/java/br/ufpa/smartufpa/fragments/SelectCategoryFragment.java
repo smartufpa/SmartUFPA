@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -98,34 +99,15 @@ public class SelectCategoryFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 final ArrayList<PlaceCategory> placeCategories = addPlaceOptionAdapter.getPlaceCategories();
                 final PlaceCategory category = placeCategories.get(position);
-                final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                AddPlaceInfoFragment addPlaceInfoFragment =
-                        (AddPlaceInfoFragment) fragmentManager.findFragmentByTag(AddPlaceInfoFragment.FRAGMENT_TAG);
-
-                if(addPlaceInfoFragment == null){
-                    final FragmentTransaction ft = fragmentManager.beginTransaction();
-                    addPlaceInfoFragment = AddPlaceInfoFragment.newInstance(latitude,longitude,category);
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                            .replace(R.id.frame_add_place_container, addPlaceInfoFragment, AddPlaceInfoFragment.FRAGMENT_TAG)
-                            .addToBackStack(SelectCategoryFragment.FRAGMENT_TAG)
-                            .commit();
-                }
-
-//                Toast.makeText(getContext(), placeCategories.get(position).getName()+ "\n " + latitude + "\n " + longitude, Toast.LENGTH_SHORT).show();
-//                getActivity().getSupportFragmentManager().findFragmentById()
             }
         });
-
-
 
         // Attach the adapter to the RecyclerView
         rvOptions.setAdapter(addPlaceOptionAdapter);
 
         // Create and attach a LayoutManager to the RecyclerView
-        RecyclerView.LayoutManager llm = new GridLayoutManager(getContext(), 2);
+        RecyclerView.LayoutManager llm = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         rvOptions.setLayoutManager(llm);
-
-        //
 
         // Inflate the layout for this fragment
         return view;

@@ -177,14 +177,14 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         cl.addView(mapView,0);
 
         fabMyLocation = view.findViewById(R.id.fab_my_location);
-        fabBusLocation = view.findViewById(R.id.fab_bus_location);
+//        fabBusLocation = view.findViewById(R.id.fab_bus_location);
         btnClearMap = view.findViewById(R.id.btn_clear_map);
 
         fabMyLocation.setOnClickListener(myLocationListener);
-        fabBusLocation.setOnClickListener(busLocationListener);
+//        fabBusLocation.setOnClickListener(busLocationListener);
 
         // TODO: MAKE IT VISIBLE WHEN THE BUS LOCATION FUNCTION IS IMPLEMENTED
-        fabBusLocation.setVisibility(View.GONE);
+//        fabBusLocation.setVisibility(View.GONE);
         btnClearMap.setOnClickListener(clearMapListener);
 
         initializeMap();

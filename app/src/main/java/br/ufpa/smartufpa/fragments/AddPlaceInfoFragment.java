@@ -100,18 +100,18 @@ public class AddPlaceInfoFragment extends Fragment {
 
         txtCategoryTitle = view.findViewById(R.id.txt_category);
         imgCategoryIcon = view.findViewById(R.id.img_add_info_icon);
-        btnConfirm = view.findViewById(R.id.btn_add_place_confirm);
-        btnCancel = view.findViewById(R.id.btn_add_place_cancel);
+//        btnConfirm = view.findViewById(R.id.btn_add_place_confirm);
+//        btnCancel = view.findViewById(R.id.btn_add_place_cancel);
         tbAddPlace = getActivity().findViewById(R.id.tb_add_place);
         layoutAddPlaceInfo = view.findViewById(R.id.layout_add_place_info);
         layoutAddPlaceInfo.setPadding(16, 16, 16, 16);
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+//        btnCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
 
 
         return view;
