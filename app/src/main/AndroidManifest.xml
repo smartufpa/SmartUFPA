@@ -80,10 +80,10 @@
                 <category android:name="smartufpa.CATEGORY_ABOUT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AddPlaceActivity"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+        <activity
+            android:name=".activities.AddPlaceActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
+        <activity android:name=".activities.AddBuildingActivity"></activity>
     </application>
 
 </manifest>

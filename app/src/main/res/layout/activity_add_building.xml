@@ -3,7 +3,24 @@
     android:id="@+id/linear_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+    android:paddingVertical="@dimen/activity_vertical_margin"
     android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+            android:text="Novo Prédio"
+            android:layout_marginBottom="8dp"
+            />
+    </LinearLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_name"
@@ -67,9 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/label_building_operation_hours_from"
-                android:clickable="true"
-                android:inputType="none"
-                android:focusable="false"
+
                 />
 
 
@@ -86,9 +101,6 @@
                 android:id="@+id/input_closingtime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:inputType="none"
-                android:focusable="false"
                 android:hint="@string/label_building_operation_hours_to" />
 
 
@@ -107,6 +119,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spin_administrative_role"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_add_place_cancel"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Cancelar"
+            android:theme="@style/RaisedButton" />
+
+        <Button
+            android:id="@+id/btn_add_place_confirm"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:text="Confirmar"
+            android:theme="@style/RaisedButton" />
+    </LinearLayout>
 
 
 </LinearLayout>
