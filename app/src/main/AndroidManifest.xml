@@ -82,8 +82,12 @@
         </activity>
         <activity
             android:name=".activities.AddPlaceActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".activities.AddBuildingActivity"></activity>
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.AddBuildingActivity" />
+        <activity
+            android:name=".activities.AddLibraryActivity"
+            android:label="@string/title_activity_add_library"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 package br.ufpa.smartufpa.activities;
 
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +9,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TimePicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import br.ufpa.smartufpa.R;
 
@@ -36,6 +31,7 @@ public class AddBuildingActivity extends AppCompatActivity {
     private Spinner spinner;
     private TextInputEditText edtxtClosingTime;
     private Button btnConfirm;
+    private Button btnCancel;
 
 
     private final String keyName = "name";
@@ -55,20 +51,21 @@ public class AddBuildingActivity extends AppCompatActivity {
         longitude = intent.getDoubleExtra(ARG_LONGITUDE, 0);
 
         /*EditText input Name*/
-        edtxtName = findViewById(R.id.input_name);
+        edtxtName = findViewById(R.id.input_bld_name);
         /*EditText input Description*/
-        edtxtDescription = findViewById(R.id.input_description);
+        edtxtDescription = findViewById(R.id.input_bld_description);
         /*EditText input Website*/
-        edtxtWebsite = findViewById(R.id.input_website);
+        edtxtWebsite = findViewById(R.id.input_bld_website);
         /*EditText input OperationHours openning*/
-        edtxtOpeningTime = findViewById(R.id.input_openingtime);
+        edtxtOpeningTime = findViewById(R.id.input_bld_openingtime);
         /*EditText input OperationHours openning*/
-        edtxtClosingTime = findViewById(R.id.input_closingtime);
+        edtxtClosingTime = findViewById(R.id.input_bld_closingtime);
 
-        btnConfirm = findViewById(R.id.btn_add_place_confirm);
+        btnConfirm = findViewById(R.id.btn_bld_confirm);
+        btnCancel = findViewById(R.id.btn_bld_cancel);
 
         /*Spinner input*/
-        spinner = findViewById(R.id.spin_administrative_role);
+        spinner = findViewById(R.id.spin_bld_administrative_role);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_administrative_role, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

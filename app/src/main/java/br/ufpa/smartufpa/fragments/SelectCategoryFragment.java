@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.AddBuildingActivity;
+import br.ufpa.smartufpa.activities.AddLibraryActivity;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
 import br.ufpa.smartufpa.models.PlaceCategory;
 
@@ -98,16 +99,15 @@ public class SelectCategoryFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 final ArrayList<PlaceCategory> placeCategories = addPlaceOptionAdapter.getPlaceCategories();
                 final PlaceCategory category = placeCategories.get(position);
+                Intent intent = null;
                 switch (position){
                     case 0: // "Prédio"
-                        Intent intent = new Intent(view.getContext(), AddBuildingActivity.class);
-                        intent.putExtra(ARG_LATITUDE,latitude);
-                        intent.putExtra(ARG_LONGITUDE,longitude);
-                        startActivity(intent);
+                        intent  = new Intent(view.getContext(), AddBuildingActivity.class);
                         break;
                     case 1: //  "Banheiro"
                         break;
                     case 2: //"Biblioteca"
+                        intent = new Intent(view.getContext(), AddLibraryActivity.class);
                         break;
                     case 3: // "Refeições"
                         break;
@@ -121,6 +121,12 @@ public class SelectCategoryFragment extends Fragment {
                     default: // "Outro"
                         break;
                 }
+                if(intent != null){
+                    intent.putExtra(ARG_LATITUDE,latitude);
+                    intent.putExtra(ARG_LONGITUDE,longitude);
+                    startActivity(intent);
+                }
+
 
 
 

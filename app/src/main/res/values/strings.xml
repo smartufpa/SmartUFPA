@@ -122,6 +122,9 @@
     <string name="msg_request_location_permission">A permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="msg_request_both_permissions">A permissão de armazenamento é necessária para armazenar porções do mapa para reduzir consumo de dados e para uso offline.   E a permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="search_filters">Filtros de Busca</string>
+    <string name="title_activity_add_library">AddLibraryActivity</string>
+    <string name="label_library_name">Nome da Biblioteca</string>
+    <string name="label_library_building">Buscar Prédio</string>
 
 
 </resources>
