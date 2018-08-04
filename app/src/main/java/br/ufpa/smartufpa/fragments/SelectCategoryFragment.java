@@ -18,6 +18,7 @@ import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.AddBuildingActivity;
 import br.ufpa.smartufpa.activities.AddCopyshopActivity;
 import br.ufpa.smartufpa.activities.AddFacultyActivity;
+import br.ufpa.smartufpa.activities.AddFoodPlaceActivity;
 import br.ufpa.smartufpa.activities.AddLibraryActivity;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
 import br.ufpa.smartufpa.models.PlaceCategory;
@@ -110,6 +111,7 @@ public class SelectCategoryFragment extends Fragment {
                         intent = new Intent(context, AddLibraryActivity.class);
                         break;
                     case 3: // "Refeições"
+                        intent = new Intent(context, AddFoodPlaceActivity.class);
                         break;
                     case 4: // "Xerox"
                         intent = new Intent(context, AddCopyshopActivity.class);

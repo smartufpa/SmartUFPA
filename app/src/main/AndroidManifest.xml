@@ -90,7 +90,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.AddFacultyActivity" />
         <activity android:name=".activities.AddCourseActivity" />
-        <activity android:name=".activities.AddCopyshopActivity"></activity>
+        <activity android:name=".activities.AddCopyshopActivity" />
+        <activity android:name=".activities.AddFoodPlaceActivity"></activity>
     </application>
 
 </manifest>

@@ -136,6 +136,7 @@
     <string name="label_search_faculty">Buscar Faculdade</string>
     <string name="label_cpy_name">Nome da Xerox</string>
     <string name="label_cpy_owner">Nome do Proprietário</string>
+    <string name="label_food_category">Categoria</string>
 
 
 </resources>
