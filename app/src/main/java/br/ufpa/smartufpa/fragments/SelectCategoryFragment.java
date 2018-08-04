@@ -20,6 +20,7 @@ import br.ufpa.smartufpa.activities.AddCopyshopActivity;
 import br.ufpa.smartufpa.activities.AddFacultyActivity;
 import br.ufpa.smartufpa.activities.AddFoodPlaceActivity;
 import br.ufpa.smartufpa.activities.AddLibraryActivity;
+import br.ufpa.smartufpa.activities.AddMiscActivity;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
 import br.ufpa.smartufpa.models.PlaceCategory;
 
@@ -122,6 +123,7 @@ public class SelectCategoryFragment extends Fragment {
                     case 6: // "Laboratório"
                         break;
                     default: // "Outro"
+                        intent = new Intent(context, AddMiscActivity.class);
                         break;
                 }
                 if(intent != null){
