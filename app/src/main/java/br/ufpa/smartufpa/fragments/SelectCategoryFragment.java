@@ -126,10 +126,6 @@ public class SelectCategoryFragment extends Fragment {
                     startActivity(intent);
                 }
 
-
-
-
-
             }
         });
 

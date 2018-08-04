@@ -88,7 +88,8 @@
             android:name=".activities.AddLibraryActivity"
             android:label="@string/title_activity_add_library"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.AddFacultyActivity"></activity>
+        <activity android:name=".activities.AddFacultyActivity" />
+        <activity android:name=".activities.AddCourseActivity"></activity>
     </application>
 
 </manifest>

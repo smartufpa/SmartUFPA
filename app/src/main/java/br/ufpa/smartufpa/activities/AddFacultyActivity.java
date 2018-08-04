@@ -2,7 +2,6 @@ package br.ufpa.smartufpa.activities;
 
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +39,7 @@ public class AddFacultyActivity extends AddPlaceParent {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_faculty_acitivity);
+        setContentView(R.layout.activity_add_faculty_activity);
 
         Intent intent = getIntent();
         latitude = intent.getDoubleExtra(ARG_LATITUDE, 0);

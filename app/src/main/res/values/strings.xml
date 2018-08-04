@@ -129,7 +129,11 @@
     <string name="label_faculty_short_name">Abreviação do nome</string>
     <string name="label_faculty_principal">Nome do(a) diretor(a)</string>
     <string name="label_faculty_website">Site da Faculdade</string>
-
+    <string name="label_crs_name">Nome do Curso</string>
+    <string name="label_crs_code">Código do Curso</string>
+    <string name="label_crs_duration">Duração (em anos)</string>
+    <string name="label_course_level">Nível de Ensino</string>
+    <string name="label_search_faculty">Buscar Faculdade</string>
 
 
 </resources>

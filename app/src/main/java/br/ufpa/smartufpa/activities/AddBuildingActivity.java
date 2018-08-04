@@ -17,12 +17,8 @@ import br.ufpa.smartufpa.R;
 
 public class AddBuildingActivity extends AddPlaceParent {
 
-    private static final String ARG_LATITUDE = "latitude";
-    private static final String ARG_LONGITUDE = "longitude";
     private static final String TAG = AddBuildingActivity.class.getName();
 
-    private double latitude;
-    private double longitude;
 
     private TextInputEditText edtxtName;
     private TextInputEditText edtxtDescription;
