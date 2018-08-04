@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.AddBuildingActivity;
+import br.ufpa.smartufpa.activities.AddCopyshopActivity;
 import br.ufpa.smartufpa.activities.AddFacultyActivity;
 import br.ufpa.smartufpa.activities.AddLibraryActivity;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
@@ -111,6 +112,7 @@ public class SelectCategoryFragment extends Fragment {
                     case 3: // "Refeições"
                         break;
                     case 4: // "Xerox"
+                        intent = new Intent(context, AddCopyshopActivity.class);
                         break;
                     case 5: // "Faculdade"
                         intent = new Intent(context, AddFacultyActivity.class);

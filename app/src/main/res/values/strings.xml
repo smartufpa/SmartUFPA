@@ -134,6 +134,8 @@
     <string name="label_crs_duration">Duração (em anos)</string>
     <string name="label_course_level">Nível de Ensino</string>
     <string name="label_search_faculty">Buscar Faculdade</string>
+    <string name="label_cpy_name">Nome da Xerox</string>
+    <string name="label_cpy_owner">Nome do Proprietário</string>
 
 
 </resources>
