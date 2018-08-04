@@ -2,7 +2,6 @@ package br.ufpa.smartufpa.activities;
 
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,9 +12,10 @@ import android.widget.Spinner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.ufpa.smartufpa.AddPlaceParent;
 import br.ufpa.smartufpa.R;
 
-public class AddBuildingActivity extends AppCompatActivity {
+public class AddBuildingActivity extends AddPlaceParent {
 
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";

@@ -14,9 +14,10 @@ import android.widget.Button;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.ufpa.smartufpa.AddPlaceParent;
 import br.ufpa.smartufpa.R;
 
-public class AddLibraryActivity extends AppCompatActivity {
+public class AddLibraryActivity extends AddPlaceParent {
 
     private TextInputEditText edtxtName;
     private TextInputEditText edtxtOpening;
@@ -26,12 +27,9 @@ public class AddLibraryActivity extends AppCompatActivity {
     private Button btnConfirm;
     private Button btnCancel;
 
-    private static final String ARG_LATITUDE = "latitude";
-    private static final String ARG_LONGITUDE = "longitude";
+
     private static final String TAG = AddLibraryActivity.class.getName();
 
-    private double latitude;
-    private double longitude;
 
     private final String keyName = "name";
     private final String keyOpeningTime = "opening_time";
