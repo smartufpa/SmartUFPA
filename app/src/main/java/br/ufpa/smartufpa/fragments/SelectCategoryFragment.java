@@ -1,11 +1,9 @@
 package br.ufpa.smartufpa.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,12 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.AddBuildingActivity;
+import br.ufpa.smartufpa.activities.AddFacultyActivity;
 import br.ufpa.smartufpa.activities.AddLibraryActivity;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
 import br.ufpa.smartufpa.models.PlaceCategory;
@@ -100,21 +98,22 @@ public class SelectCategoryFragment extends Fragment {
                 final ArrayList<PlaceCategory> placeCategories = addPlaceOptionAdapter.getPlaceCategories();
                 final PlaceCategory category = placeCategories.get(position);
                 Intent intent = null;
+                Context context = view.getContext();
                 switch (position){
                     case 0: // "Prédio"
-                        intent  = new Intent(view.getContext(), AddBuildingActivity.class);
+                        intent  = new Intent(context, AddBuildingActivity.class);
                         break;
                     case 1: //  "Banheiro"
                         break;
                     case 2: //"Biblioteca"
-                        intent = new Intent(view.getContext(), AddLibraryActivity.class);
+                        intent = new Intent(context, AddLibraryActivity.class);
                         break;
                     case 3: // "Refeições"
                         break;
                     case 4: // "Xerox"
                         break;
                     case 5: // "Faculdade"
-
+                        intent = new Intent(context, AddFacultyActivity.class);
                         break;
                     case 6: // "Laboratório"
                         break;

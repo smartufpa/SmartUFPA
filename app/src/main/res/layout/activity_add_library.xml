@@ -84,7 +84,7 @@
             android:id="@+id/input_lib_building"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/label_library_building"
+            android:hint="@string/label_search_building"
             android:inputType="text"
             android:maxLength="40"/>
 
@@ -115,20 +115,5 @@
             android:theme="@style/RaisedButton" />
     </LinearLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_closingtime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingLeft="6dp">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/input_bld_closingtime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/label_building_operation_hours_to" />
-
-
-    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

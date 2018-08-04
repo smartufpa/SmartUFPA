@@ -124,7 +124,12 @@
     <string name="search_filters">Filtros de Busca</string>
     <string name="title_activity_add_library">AddLibraryActivity</string>
     <string name="label_library_name">Nome da Biblioteca</string>
-    <string name="label_library_building">Buscar Prédio</string>
+    <string name="label_search_building">Buscar Prédio</string>
+    <string name="label_faculty_name">Nome da Faculdade</string>
+    <string name="label_faculty_short_name">Abreviação do nome</string>
+    <string name="label_faculty_principal">Nome do(a) diretor(a)</string>
+    <string name="label_faculty_website">Site da Faculdade</string>
+
 
 
 </resources>
