@@ -67,6 +67,13 @@ public class AddCopyshopActivity extends AddPlaceParent {
                 Log.i(TAG, "onClick: " + json.toString());
             }
         });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddCopyshopActivity.this.onBackPressed();
+            }
+        });
+
 
     }
 }

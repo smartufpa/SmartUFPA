@@ -89,6 +89,13 @@ public class AddLaboratoryActivity extends AddPlaceParent {
             }
         });
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddLaboratoryActivity.this.onBackPressed();
+            }
+        });
+
 
 
 

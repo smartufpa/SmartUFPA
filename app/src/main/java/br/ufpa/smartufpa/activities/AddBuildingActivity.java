@@ -26,6 +26,7 @@ public class AddBuildingActivity extends AddPlaceParent {
     private TextInputEditText edtxtOpeningTime;
     private Spinner spinner;
     private TextInputEditText edtxtClosingTime;
+
     private Button btnConfirm;
     private Button btnCancel;
 
@@ -94,6 +95,13 @@ public class AddBuildingActivity extends AddPlaceParent {
                 Log.i(TAG, "onClick: " + json.toString());
             }
         });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddBuildingActivity.this.onBackPressed();
+            }
+        });
+
 
 
     }

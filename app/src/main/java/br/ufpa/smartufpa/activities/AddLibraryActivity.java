@@ -79,6 +79,13 @@ public class AddLibraryActivity extends AddPlaceParent {
                 Log.i(TAG, "onClick: " + json.toString());
             }
         });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddLibraryActivity.this.onBackPressed();
+            }
+        });
+
 
     }
 

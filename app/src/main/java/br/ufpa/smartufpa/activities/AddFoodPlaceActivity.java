@@ -85,5 +85,12 @@ public class AddFoodPlaceActivity extends AddPlaceParent {
             }
         });
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddFoodPlaceActivity.this.onBackPressed();
+            }
+        });
+
     }
 }

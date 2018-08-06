@@ -82,9 +82,14 @@ public class AddMiscActivity extends AddPlaceParent {
             }
         });
 
-
-
-
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddMiscActivity.this.onBackPressed();
+            }
+        });
 
     }
+
+
 }
