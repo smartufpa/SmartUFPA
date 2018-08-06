@@ -140,6 +140,10 @@
     <string name="label_misc_name">Nome do Local</string>
     <string name="label_misc_contact">Contato ou Responsável</string>
     <string name="label_misc_services">Serviço Ofertado</string>
+    <string name="title_activity_add_laboratory">AddLaboratoryActivity</string>
+    <string name="label_lab_name">Nome do Laboratório</string>
+    <string name="label_lab_access">Acesso ao Laboratório</string>
+    <string name="label_lab_category">Categoria</string>
 
 
 </resources>

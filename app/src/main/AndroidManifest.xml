@@ -92,7 +92,11 @@
         <activity android:name=".activities.AddCourseActivity" />
         <activity android:name=".activities.AddCopyshopActivity" />
         <activity android:name=".activities.AddFoodPlaceActivity" />
-        <activity android:name=".activities.AddMiscActivity"></activity>
+        <activity android:name=".activities.AddMiscActivity" />
+        <activity
+            android:name=".activities.AddLaboratoryActivity"
+            android:label="@string/title_activity_add_laboratory"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
