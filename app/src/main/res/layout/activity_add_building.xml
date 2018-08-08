@@ -76,8 +76,11 @@
                 android:id="@+id/input_bld_openingtime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="time"
                 android:hint="@string/label_building_operation_hours_from"
-
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
                 />
 
 
@@ -94,7 +97,12 @@
                 android:id="@+id/input_bld_closingtime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/label_building_operation_hours_to" />
+                android:inputType="time"
+                android:hint="@string/label_building_operation_hours_to"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
+                />
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>

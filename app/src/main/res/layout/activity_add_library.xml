@@ -53,7 +53,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/label_building_operation_hours_from"
-
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
                 />
 
 
@@ -69,7 +71,11 @@
                 android:id="@+id/input_lib_closingtime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/label_building_operation_hours_to" />
+                android:hint="@string/label_building_operation_hours_to"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
+                />
 
 
         </android.support.design.widget.TextInputLayout>

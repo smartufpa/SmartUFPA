@@ -55,6 +55,7 @@ public class AddBuildingActivity extends AddPlaceParent {
         edtxtWebsite = findViewById(R.id.input_bld_website);
         /*EditText input OperationHours openning*/
         edtxtOpeningTime = findViewById(R.id.input_bld_openingtime);
+
         /*EditText input OperationHours openning*/
         edtxtClosingTime = findViewById(R.id.input_bld_closingtime);
 
@@ -67,7 +68,6 @@ public class AddBuildingActivity extends AddPlaceParent {
                 R.array.spinner_administrative_role, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-
 
 
         //Confirm Button
@@ -103,6 +103,21 @@ public class AddBuildingActivity extends AddPlaceParent {
         });
 
 
+        edtxtOpeningTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                showTimePickerDialog(edtxtOpeningTime);
+            }
+        });
+
+        edtxtClosingTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                showTimePickerDialog(edtxtClosingTime);
+            }
+        });
 
     }
+
+
 }

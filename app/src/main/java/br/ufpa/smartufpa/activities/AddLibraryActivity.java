@@ -86,6 +86,20 @@ public class AddLibraryActivity extends AddPlaceParent {
             }
         });
 
+        edtxtOpening.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                showTimePickerDialog(edtxtOpening);
+            }
+        });
+
+        edtxtClosing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                showTimePickerDialog(edtxtClosing);
+            }
+        });
+
 
     }
 
