@@ -80,10 +80,23 @@
                 <category android:name="smartufpa.CATEGORY_ABOUT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AddPlaceActivity"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+        <activity
+            android:name=".activities.AddPlaceActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.AddBuildingActivity" />
+        <activity
+            android:name=".activities.AddLibraryActivity"
+            android:label="@string/title_activity_add_library"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.AddFacultyActivity" />
+        <activity android:name=".activities.AddCourseActivity" />
+        <activity android:name=".activities.AddCopyshopActivity" />
+        <activity android:name=".activities.AddFoodPlaceActivity" />
+        <activity android:name=".activities.AddMiscActivity" />
+        <activity
+            android:name=".activities.AddLaboratoryActivity"
+            android:label="@string/title_activity_add_laboratory"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -5,33 +5,33 @@
     android:id="@+id/card_view"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_margin="6dp"
     card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
     <LinearLayout
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/img_add_place_category"
+            android:layout_height="45dp"
+            android:layout_width="35dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_marker_auditorium" />
 
         <TextView
             android:id="@+id/txt_add_place_category"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="Categoria"
+            android:layout_gravity="center_vertical"
             android:textAlignment="center"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorPrimary" />
 
-        <ImageView
-            android:id="@+id/img_add_place_category"
-            android:layout_height="55dp"
-            android:layout_width="55dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_marker_auditorium" />
+
 
     </LinearLayout>
 

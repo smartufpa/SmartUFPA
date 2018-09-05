@@ -1,21 +1,27 @@
 package br.ufpa.smartufpa.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.activities.AddBuildingActivity;
+import br.ufpa.smartufpa.activities.AddCopyshopActivity;
+import br.ufpa.smartufpa.activities.AddFacultyActivity;
+import br.ufpa.smartufpa.activities.AddFoodPlaceActivity;
+import br.ufpa.smartufpa.activities.AddLaboratoryActivity;
+import br.ufpa.smartufpa.activities.AddLibraryActivity;
+import br.ufpa.smartufpa.activities.AddMiscActivity;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
 import br.ufpa.smartufpa.models.PlaceCategory;
 
@@ -28,8 +34,6 @@ import br.ufpa.smartufpa.models.PlaceCategory;
  * Use the {@link SelectCategoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-
-
 
 
 public class SelectCategoryFragment extends Fragment {
@@ -52,8 +56,7 @@ public class SelectCategoryFragment extends Fragment {
     }
 
     /**
-
-     * @param latitude Latitude do ponto sinalizado pelo marcador.
+     * @param latitude  Latitude do ponto sinalizado pelo marcador.
      * @param longitude Longitude do ponto sinalizado pelo marcador.
      * @return Uma nova instância de SelectCategoryFragment.
      */
@@ -61,8 +64,8 @@ public class SelectCategoryFragment extends Fragment {
     public static SelectCategoryFragment newInstance(double latitude, double longitude) {
         final SelectCategoryFragment selectCategoryFragment = new SelectCategoryFragment();
         Bundle bundle = new Bundle();
-        bundle.putDouble(ARG_LATITUDE,latitude);
-        bundle.putDouble(ARG_LONGITUDE,longitude);
+        bundle.putDouble(ARG_LATITUDE, latitude);
+        bundle.putDouble(ARG_LONGITUDE, longitude);
         selectCategoryFragment.setArguments(bundle);
         return selectCategoryFragment;
     }
@@ -71,7 +74,7 @@ public class SelectCategoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            latitude  = getArguments().getDouble(ARG_LATITUDE);
+            latitude = getArguments().getDouble(ARG_LATITUDE);
             longitude = getArguments().getDouble(ARG_LONGITUDE);
         }
     }
@@ -98,34 +101,48 @@ public class SelectCategoryFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 final ArrayList<PlaceCategory> placeCategories = addPlaceOptionAdapter.getPlaceCategories();
                 final PlaceCategory category = placeCategories.get(position);
-                final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                AddPlaceInfoFragment addPlaceInfoFragment =
-                        (AddPlaceInfoFragment) fragmentManager.findFragmentByTag(AddPlaceInfoFragment.FRAGMENT_TAG);
-
-                if(addPlaceInfoFragment == null){
-                    final FragmentTransaction ft = fragmentManager.beginTransaction();
-                    addPlaceInfoFragment = AddPlaceInfoFragment.newInstance(latitude,longitude,category);
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                            .replace(R.id.frame_add_place_container, addPlaceInfoFragment, AddPlaceInfoFragment.FRAGMENT_TAG)
-                            .addToBackStack(SelectCategoryFragment.FRAGMENT_TAG)
-                            .commit();
+                Intent intent = null;
+                Context context = view.getContext();
+                switch (position){
+                    case 0: // "Prédio"
+                        intent  = new Intent(context, AddBuildingActivity.class);
+                        break;
+                    case 1: //  "Banheiro"
+                        break;
+                    case 2: //"Biblioteca"
+                        intent = new Intent(context, AddLibraryActivity.class);
+                        break;
+                    case 3: // "Refeições"
+                        intent = new Intent(context, AddFoodPlaceActivity.class);
+                        break;
+                    case 4: // "Xerox"
+                        intent = new Intent(context, AddCopyshopActivity.class);
+                        break;
+                    case 5: // "Faculdade"
+                        intent = new Intent(context, AddFacultyActivity.class);
+                        break;
+                    case 6: // "Laboratório"
+                        intent = new Intent(context, AddLaboratoryActivity.class);
+                        break;
+                    default: // "Outro"
+                        intent = new Intent(context, AddMiscActivity.class);
+                        break;
+                }
+                if(intent != null){
+                    intent.putExtra(ARG_LATITUDE,latitude);
+                    intent.putExtra(ARG_LONGITUDE,longitude);
+                    startActivity(intent);
                 }
 
-//                Toast.makeText(getContext(), placeCategories.get(position).getName()+ "\n " + latitude + "\n " + longitude, Toast.LENGTH_SHORT).show();
-//                getActivity().getSupportFragmentManager().findFragmentById()
             }
         });
-
-
 
         // Attach the adapter to the RecyclerView
         rvOptions.setAdapter(addPlaceOptionAdapter);
 
         // Create and attach a LayoutManager to the RecyclerView
-        RecyclerView.LayoutManager llm = new GridLayoutManager(getContext(), 2);
+        RecyclerView.LayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvOptions.setLayoutManager(llm);
-
-        //
 
         // Inflate the layout for this fragment
         return view;
@@ -134,7 +151,7 @@ public class SelectCategoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(tbAddPlace != null)
+        if (tbAddPlace != null)
             tbAddPlace.setSubtitle(R.string.add_place_subtitle_categories);
     }
 
@@ -144,38 +161,36 @@ public class SelectCategoryFragment extends Fragment {
     }
 
 
-
-
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         Log.i(FRAGMENT_TAG, "onDestroyView()");
     }
 
 
     @Override
-    public void onDetach(){
+    public void onDetach() {
         super.onDetach();
         Log.i(FRAGMENT_TAG, "onDetach()");
     }
 
 
     @Override
-    public void onSaveInstanceState(Bundle outState){
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.i(FRAGMENT_TAG, "onSaveInstanceState()");
     }
 
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         Log.i(FRAGMENT_TAG, "onStart()");
     }
 
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         Log.i(FRAGMENT_TAG, "onStop()");
     }
