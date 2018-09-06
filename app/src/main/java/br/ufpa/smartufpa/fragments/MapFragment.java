@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -18,10 +20,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -31,6 +36,7 @@ import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.asynctasks.SearchRouteTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 
+import br.ufpa.smartufpa.customviews.AddPlaceInfoWindow;
 import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.MapUtils;
@@ -40,7 +46,7 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
 import br.ufpa.smartufpa.asynctasks.BusRouteTask;
 import br.ufpa.smartufpa.customviews.CustomMapView;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.enums.MarkerStatus;
 
@@ -101,6 +107,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private static BoundingBox mapRegion;
     private Place userLocation;
     private LocationManager locationManager;
+
+    private MapUtils mapUtils;
 
       /* CLICK LISTENERS */
 
@@ -177,6 +185,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         ROUTE_LINE_COLORS.add(Color.rgb(100, 100, 255)); // blue
         ROUTE_LINE_COLORS.add(Color.rgb(255, 100, 100)); // red
         ROUTE_LINE_COLORS.add(Color.rgb(62, 153, 62)); // green
+
+        mapUtils = new MapUtils(getContext());
 
     }
 
@@ -441,7 +451,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onLocationChanged(Location location) {
         if(userLocation == null)
-            userLocation = new Place(location.getLatitude(),location.getLongitude(),"user_location");
+            userLocation = new Place((long)0,location.getLatitude(),location.getLongitude(),"user_location");
         else {
             userLocation.setLongitude(location.getLongitude());
             userLocation.setLatitude(location.getLatitude());
@@ -494,4 +504,52 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         (getActivity().findViewById(R.id.progress_bar)).setVisibility(View.INVISIBLE);
 
     }
+
+    public void addLocationToMap() {
+        Toast.makeText(context, R.string.msg_drag_marker, Toast.LENGTH_LONG).show();
+
+        final Marker customMarker = mapUtils.createCustomMarker(
+                mapView, ContextCompat.getDrawable(context,R.drawable.ic_marker),
+                                    (GeoPoint) mapView.getMapCenter(), null);
+        final AddPlaceInfoWindow addPlaceInfoWindow = new AddPlaceInfoWindow(R.layout.custom_info_window, mapView, customMarker, getActivity());
+
+        customMarker.setInfoWindow(addPlaceInfoWindow);
+        customMarker.setDraggable(true);
+
+
+        customMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                if(!marker.isInfoWindowShown())
+                    marker.showInfoWindow();
+                return false;
+            }
+        });
+
+        customMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDrag(Marker marker) {}
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                // TODO: check if the infowindow is inside the screen
+                //https://stackoverflow.com/questions/24989659/android-how-to-drag-a-view-within-screen-size
+                //https://stackoverflow.com/questions/3644030/whats-the-best-way-to-check-if-the-view-is-visible-on-the-window
+                //https://stackoverflow.com/questions/24078302/determine-if-a-view-is-partly-off-screen
+                marker.showInfoWindow();
+                mapCamera.animateTo(marker.getPosition());
+            }
+
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                if(marker.isInfoWindowShown())
+                    marker.getInfoWindow().close();
+            }
+        });
+        final FolderOverlay folderOverlay = new FolderOverlay();
+        folderOverlay.add(customMarker);
+        mapView.addOverlay(folderOverlay,OverlayTags.NEW_LOCATION);
+        btnClearMap.setVisibility(View.VISIBLE);
+    }
+
 }

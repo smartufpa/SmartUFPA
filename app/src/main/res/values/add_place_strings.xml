@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_building_name" translatable="true">Nome (Ex.: Reitoria)</string>
+    <string name="label_building_description" translatable="true">Descrição (Breve Descrição do Local)</string>
+    <string name="label_building_website" translatable="true">Site (Ex.: www.instituto.ufpa.br)</string>
+    <string name="label_building_operation_hours_from" translatable="true">Abre às</string>
+    <string name="label_building_operation_hours_to" translatable="true">Fecha às</string>
+    <string name="label_building_administrative_role" translatable="true">Função Administrativa</string>
+
+</resources>

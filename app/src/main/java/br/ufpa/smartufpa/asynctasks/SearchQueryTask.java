@@ -1,6 +1,5 @@
 package br.ufpa.smartufpa.asynctasks;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,7 +7,7 @@ import android.util.Log;
 
 import br.ufpa.smartufpa.utils.HttpRequest;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.JsonParser;
 import br.ufpa.smartufpa.utils.OverpassHelper;

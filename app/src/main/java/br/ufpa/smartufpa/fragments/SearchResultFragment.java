@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.adapters.SearchResultAdapter;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 
 import java.util.ArrayList;
 

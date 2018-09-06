@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Stable Commit (20/09)-->
 <resources>
 
     <string-array name="left_drawer_options">
@@ -11,8 +10,21 @@
         <item name="nav_libraries">Bibliotecas</item>
     </string-array>
 
+
+    <integer-array name="default_categories_ids">
+        <item name="predio">0</item>
+        <item name="banheiro">1</item>
+        <item name="biblioteca">2</item>
+        <item name="refeicoes">3</item>
+        <item name="xerox">4</item>
+        <item name="faculdade">5</item>
+        <item name="laboratorio">6</item>
+
+        <item name="outro">100</item>
+    </integer-array>
+
+    <!--These two list should be equivalent (the icons must have the same order than this list)-->
     <string-array name="default_places">
-        <item>Tipo do Local</item>
         <item>Auditório</item>
         <item>Banheiro</item>
         <item>Biblioteca</item>
@@ -20,4 +32,13 @@
         <item>Xerox</item>
         <item>Outro</item>
     </string-array>
+
+    <string-array name="spinner_administrative_role">
+        <item>Escolha Uma Opção</item>
+        <item >Instituto</item>
+        <item>Administrativo</item>
+    </string-array>
+
+
+
 </resources>

@@ -32,7 +32,6 @@
                 <category android:name="smartufpa.CATEGORY_MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -72,6 +71,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.AddPlaceActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.AddBuildingActivity" />
+        <activity
+            android:name=".activities.AddLibraryActivity"
+            android:label="@string/title_activity_add_library"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.AddFacultyActivity" />
+        <activity android:name=".activities.AddCourseActivity" />
+        <activity android:name=".activities.AddCopyshopActivity" />
+        <activity android:name=".activities.AddFoodPlaceActivity" />
+        <activity android:name=".activities.AddMiscActivity" />
+        <activity
+            android:name=".activities.AddLaboratoryActivity"
+            android:label="@string/title_activity_add_laboratory"
+            android:theme="@style/AppTheme"></activity>
         <activity android:name=".activities.PermissionCheckActivity" android:theme="@style/AppCompat.FullScreen" />
     </application>
 

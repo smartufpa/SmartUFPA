@@ -33,6 +33,7 @@
     </style>
 
 
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="CustomShowcaseTheme2" parent="ShowcaseView">
@@ -87,4 +88,6 @@
     <style name="AppCompat.FullScreen" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowFullscreen">true</item>
     </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
 </resources>

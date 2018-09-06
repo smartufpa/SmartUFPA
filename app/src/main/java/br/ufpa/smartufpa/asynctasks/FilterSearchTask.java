@@ -7,7 +7,7 @@ import android.util.Log;
 
 import br.ufpa.smartufpa.utils.HttpRequest;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnFilterSearchListener;
-import br.ufpa.smartufpa.models.Place;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.OverpassHelper;

@@ -88,6 +88,7 @@
     <string name="lbl_search_result_title">Resultados</string>
     <string name="lbl_place_details">Detalhes</string>
     <string name="lbl_placeholder">PlaceHolder Text</string>
+    <string name="lbl_local_name">Nome local:</string>
     <string name="lbl_about_title">Sobre Nós</string>
 
     <string name="tutorial_map_executed">tutorial_executed</string>
@@ -107,12 +108,14 @@
     <string name="about_txt_version">Smart UFPA Versão 1.0</string>
     <string name="about_txt_labvis">Laboratório de Visualização (LABVIS)</string>
     <string name="about_txt_ufpa">Universidade Federal do Pará</string>
-    <string name="about_lbl_logo">Logo feita por:</string>
+    <string name="about_lbl_logo">Artes feitas por:</string>
     <string name="about_txt_giordana">Giordanna De Gregoriis</string>
     <string name="about_txt_port_gio">http://gior.hol.es/</string>
     <string name="about_lbl_more">Mais informações:</string>
     <string name="about_txt_site">http://facebook.com/smart.campus.ufpa</string>
 
+    <string name="add_place_subtitle_details">Insira os detalhes sobre o local</string>
+    <string name="add_place_subtitle_categories">Selecione uma categoria</string>
     <!--Activity About Code-->
     <string name="about_lbl_map">Cartografia:</string>
     <string name="about_txt_map">©contribuidores do OpenStreetMap</string>
@@ -139,7 +142,6 @@
     </string>
 
     <string name="dialog_title">Ops…</string>
-    <string name="lbl_local_name">Nome local:</string>
     <string name="error_connection_failed">Erro na conexão durante a requisição. Tente novamente.</string>
     <string name="btn_login_entrar">Entrar</string>
     <string name="msg_no_filter_results">Nenhum local foi encontrado nessa categoria.</string>
@@ -148,7 +150,28 @@
     <string name="msg_request_location_permission">A permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="msg_request_both_permissions">A permissão de armazenamento é necessária para armazenar porções do mapa para reduzir consumo de dados e para uso offline.   E a permissão de localização é necessária para mostrar a sua localização no mapa.</string>
     <string name="search_filters">Filtros de Busca</string>
-
+    <string name="title_activity_add_library">AddLibraryActivity</string>
+    <string name="label_library_name">Nome da Biblioteca</string>
+    <string name="label_search_building">Buscar Prédio</string>
+    <string name="label_faculty_name">Nome da Faculdade</string>
+    <string name="label_faculty_short_name">Abreviação do nome</string>
+    <string name="label_faculty_principal">Nome do(a) diretor(a)</string>
+    <string name="label_faculty_website">Site da Faculdade</string>
+    <string name="label_crs_name">Nome do Curso</string>
+    <string name="label_crs_code">Código do Curso</string>
+    <string name="label_crs_duration">Duração (em anos)</string>
+    <string name="label_course_level">Nível de Ensino</string>
+    <string name="label_search_faculty">Buscar Faculdade</string>
+    <string name="label_cpy_name">Nome da Xerox</string>
+    <string name="label_cpy_owner">Nome do Proprietário</string>
+    <string name="label_food_category">Categoria</string>
+    <string name="label_misc_name">Nome do Local</string>
+    <string name="label_misc_contact">Contato ou Responsável</string>
+    <string name="label_misc_services">Serviço Ofertado</string>
+    <string name="title_activity_add_laboratory">AddLaboratoryActivity</string>
+    <string name="label_lab_name">Nome do Laboratório</string>
+    <string name="label_lab_access">Acesso ao Laboratório</string>
+    <string name="label_lab_category">Categoria</string>
 
     <string name="title_activity_about_project">AboutProjectActivity</string>
 

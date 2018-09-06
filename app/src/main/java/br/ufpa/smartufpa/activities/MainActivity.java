@@ -21,6 +21,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,35 +30,33 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
+import org.osmdroid.util.BoundingBox;
+
+import java.util.ArrayList;
+
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.about.AboutActivity;
 import br.ufpa.smartufpa.asynctasks.FilterSearchTask;
 import br.ufpa.smartufpa.asynctasks.SearchQueryTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnFilterSearchListener;
+import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
+import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment;
+import br.ufpa.smartufpa.fragments.SearchResultFragment;
+import br.ufpa.smartufpa.models.smartufpa.Place;
 import br.ufpa.smartufpa.utils.Constants;
+import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.apptutorial.AppTutorial;
 import br.ufpa.smartufpa.utils.apptutorial.ShowcaseHolder;
 import br.ufpa.smartufpa.utils.apptutorial.ToolbarActionItemTarget;
 import br.ufpa.smartufpa.utils.apptutorial.ViewTargets;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
-import br.ufpa.smartufpa.utils.enums.ServerResponse;
-import br.ufpa.smartufpa.fragments.MapFragment;
-import br.ufpa.smartufpa.fragments.SearchResultFragment;
-import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
-import br.ufpa.smartufpa.models.Place;
-import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
 import br.ufpa.smartufpa.utils.enums.OverpassFilters;
-
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 
 /**
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
     public static final String CATEGORY_MAIN = "smartufpa.CATEGORY_MAIN";
-
 
 
     // VIEWS
@@ -163,15 +161,32 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Starts the fragment that contains the map
+     * Configuration method for the MapFragment.
+     * It will pass up to the fragment the location where the map should be positioned.
      */
-
-    // TODO: desenvolver função universal de configuração através de um arquivo somente
     private void setupMapFragment(){
        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
         if(mapFragment == null){
             try {
-                mapFragment = MapFragment.newInstance();
+                // Get location configs from file
+                final String[] defaultPlaceCoord = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_COORDINATES).split(",");
+                final String[] mapRegionBounds = ConfigHelper.getConfigValue(this, Constants.MAP_REGION_BOUNDS).split(",");
+                final String defaultPlaceName = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_NAME);
+
+                // Parse information about place
+                double lat = Double.valueOf(defaultPlaceCoord[0]);
+                double longtd = Double.valueOf(defaultPlaceCoord[1]);
+                // Parse information about map bounds
+                double north = Double.valueOf(mapRegionBounds[0]);
+                double east = Double.valueOf(mapRegionBounds[1]);
+                double south = Double.valueOf(mapRegionBounds[2]);
+                double west = Double.valueOf(mapRegionBounds[3]);
+
+                // Define variables to pass to the MapFragment
+                final BoundingBox mapBounds = new BoundingBox(north,east,south,west);
+                final Place chosenLocation = new Place((long)265732584,lat,longtd,defaultPlaceName);
+                mapFragment = MapFragment.newInstance(chosenLocation,mapBounds);
+
                 // Loads the fragment
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frame_map_container,mapFragment,MapFragment.FRAGMENT_TAG);
@@ -353,6 +368,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add_location:
+                mapFragment.addLocationToMap();
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
     public void onBackPressed() {
         // Defines left drawer behavior when back button is pressed
         layoutDrawer = findViewById(R.id.layout_drawer);
@@ -413,7 +440,7 @@ public class MainActivity extends AppCompatActivity
             // The query returned multiple results
             if(places.size() > 1){
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
+                Log.i(TAG,places.toString());
                 // Open SearchResultFragment
                 SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
                 mapFragment.createOverlay(places,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
