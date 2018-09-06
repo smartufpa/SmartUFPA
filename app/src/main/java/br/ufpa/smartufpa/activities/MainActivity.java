@@ -47,6 +47,7 @@ import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment;
 import br.ufpa.smartufpa.fragments.SearchResultFragment;
 import br.ufpa.smartufpa.models.smartufpa.Place;
+import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.apptutorial.AppTutorial;
@@ -60,7 +61,6 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 
 /**
- * Stable Commit (20/09)
  * Main Activity that holds core functions of the app
  * @author kaeuchoa
  */
@@ -168,24 +168,7 @@ public class MainActivity extends AppCompatActivity
        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
         if(mapFragment == null){
             try {
-                // Get location configs from file
-                final String[] defaultPlaceCoord = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_COORDINATES).split(",");
-                final String[] mapRegionBounds = ConfigHelper.getConfigValue(this, Constants.MAP_REGION_BOUNDS).split(",");
-                final String defaultPlaceName = ConfigHelper.getConfigValue(this, Constants.DEFAULT_PLACE_NAME);
-
-                // Parse information about place
-                double lat = Double.valueOf(defaultPlaceCoord[0]);
-                double longtd = Double.valueOf(defaultPlaceCoord[1]);
-                // Parse information about map bounds
-                double north = Double.valueOf(mapRegionBounds[0]);
-                double east = Double.valueOf(mapRegionBounds[1]);
-                double south = Double.valueOf(mapRegionBounds[2]);
-                double west = Double.valueOf(mapRegionBounds[3]);
-
-                // Define variables to pass to the MapFragment
-                final BoundingBox mapBounds = new BoundingBox(north,east,south,west);
-                final Place chosenLocation = new Place((long)265732584,lat,longtd,defaultPlaceName);
-                mapFragment = MapFragment.newInstance(chosenLocation,mapBounds);
+                mapFragment = MapFragment.newInstance();
 
                 // Loads the fragment
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
