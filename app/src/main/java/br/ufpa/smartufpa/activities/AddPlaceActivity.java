@@ -2,26 +2,20 @@ package br.ufpa.smartufpa.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.adapters.AddPlaceOptionAdapter;
-import br.ufpa.smartufpa.fragments.AddPlaceInfoFragment;
-import br.ufpa.smartufpa.fragments.SelectCategoryFragment;
 import br.ufpa.smartufpa.models.PlaceCategory;
 
 public class AddPlaceActivity extends AppCompatActivity {
-
-    private SelectCategoryFragment selectCategoryFragment;
     public static final String LABEL_LATITUDE = "lat";
     public static final String LABEL_LONGITUDE = "long";
 
@@ -58,6 +52,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         // Building
+                        Toast.makeText(AddPlaceActivity.this, "Teste", Toast.LENGTH_SHORT).show();
                         break;
                 }
 
