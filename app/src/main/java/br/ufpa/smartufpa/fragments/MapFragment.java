@@ -84,8 +84,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private CopyrightOverlay mCopyrightOverlay;
     private IMapController mapCamera;
     private static final int DEFAULT_ZOOM = 16;
-    private static final int MIN_ZOOM = 15;
-    private static final int MAX_ZOOM = 18;
+    private static final double MIN_ZOOM = 15;
+    private static final double MAX_ZOOM = 18;
 
     // Maximum number of routes that can be shown simultaneously
     private static final int MAX_ROUTES = 3;
