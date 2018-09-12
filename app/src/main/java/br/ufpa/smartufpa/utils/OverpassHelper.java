@@ -27,6 +27,7 @@ public class OverpassHelper {
     private Double westCoordinate;
     private String mapRegionName;
     private String mapBusRouteName;
+    private String mapBusOperator;
 
     private OverpassHelper(Context applicationContext) {
         this.context = applicationContext;
@@ -42,7 +43,7 @@ public class OverpassHelper {
         this.eastCoordinate = Double.valueOf(eastLimit);
         this.northCoordinate = Double.valueOf(northLimit);
         this.mapRegionName = ConfigHelper.getConfigValue(applicationContext,Constants.CONFIG_MAP_REGION_NAME);
-        this.mapBusRouteName = ConfigHelper.getConfigValue(applicationContext,Constants.CONFIG_MAP_BUS_ROUTE_NAME);
+        this.mapBusOperator = ConfigHelper.getConfigValue(applicationContext,Constants.CONFIG_MAP_BUS_OPERATOR);
 
 
     }
@@ -176,7 +177,7 @@ public class OverpassHelper {
 
         // For overpass queries, use the following order of coordinates: (south,west,north,east)
         final String formattedQuery = String.format(Locale.US, queryBusRoute,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,mapBusRouteName);
+                southCoordinate, westCoordinate, northCoordinate, eastCoordinate,mapBusOperator);
 
         final String overpassURL = this.context.getString(R.string.overpass_url);
         URL busRouteURL = null;

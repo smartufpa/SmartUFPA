@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-    <!-- Overpass API urls -->
-    <!-- test on https://overpass-turbo.eu/ -->
-    <!-- reference: http://wiki.openstreetmap.org/wiki/Overpass_API -->
+<?xml version="1.0" encoding="utf-8"?><!-- Overpass API urls --><!-- test on https://overpass-turbo.eu/ --><!-- reference: http://wiki.openstreetmap.org/wiki/Overpass_API -->
 <resources>
 
     <string name="overpass_url" translatable="false">
@@ -60,13 +57,13 @@
     </string>
 
     <string name="query_bus_route" translatable="false">
+        [bbox:%1$f,%2$f,%3$f,%4$f]
         [out:json][timeout:30];
-        (relation[name=\"%5$s\"][highway=bus_stop]);
-        out qt body 500;
-        (node[route=bus][name=\"%5$s\"](%1$f,%2$f,%3$f,%4$f);
-        way[route=bus][name=\"%5$s\"](%1$f,%2$f,%3$f,%4$f););
-        out qt geom tags 500;relation[route=bus][name=\"%5$s\"]
-        (%1$f,%2$f,%3$f,%4$f);out qt geom body 500;
+        (relation["route"="bus"][operator=\"%5$s\"];)->.re;
+        (way(r.re);)->.route;
+        (node(r.re:"platform");)->.stations;
+        .route out qt 500 geom;
+        .stations out qt;
     </string>
 
 

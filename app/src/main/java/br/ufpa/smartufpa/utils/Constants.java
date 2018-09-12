@@ -100,6 +100,7 @@ public final class Constants {
     public static final String CONFIG_START_CAMERA_COORDINATES = "start_camera_coordinates";
     public static final String CONFIG_MAP_REGION_NAME = "map_region_name" ;
     public static final String CONFIG_MAP_BUS_ROUTE_NAME = "map_bus_route_name" ;
+    public static final String CONFIG_MAP_BUS_OPERATOR = "map_bus_operator" ;
     public static final String CONFIG_WEST_LIMIT = "map_region_westlimit";
     public static final String CONFIG_SOUTH_LIMIT = "map_region_southlimit";
     public static final String CONFIG_EAST_LIMIT = "map_region_eastlimit";

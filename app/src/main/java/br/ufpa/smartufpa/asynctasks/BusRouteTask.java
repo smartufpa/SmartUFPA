@@ -47,6 +47,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
         OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
 
         final String busRouteURL = overpassHelper.getBusRouteByNameURL().toString();
+//        final String busRouteURL = overpassProvider.urlForTagSearchKml("route=bus,name='Ônibus Universitário'", mapView.getBoundingBox(), 500, 30);;
 
         KmlDocument kmlDocument = new KmlDocument();
         // true if ok, false if technical error.
