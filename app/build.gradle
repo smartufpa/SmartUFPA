@@ -63,13 +63,10 @@ android {
         it.buildConfigField 'String', 'GRAPHHOPPER_KEY', GraphHopperKey
     }
 
-
-
 //    sourceSets {
 //        main { java.srcDirs = ['src/main/java', 'src/main/java/com.example.kaeuc.osmapp.db'] }
 //    }
 //    useLibrary 'org.apache.http.legacy'
-
 
     /**
      * The productFlavors {} block is where you can configure multiple product

@@ -11,7 +11,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.activities.AddPlaceActivity;
+import br.ufpa.smartufpa.activities.SelectCategoryActivity;
 
 /**
  * Created by kaeuc on 07/03/2017.
@@ -62,9 +62,9 @@ public class AddPlaceInfoWindow extends InfoWindow {
     private void startAddPlaceActivity() {
         double latitude = locationMarker.getPosition().getLatitude();
         double longitude = locationMarker.getPosition().getLongitude();
-        Intent intent = new Intent(parentActivity, AddPlaceActivity.class);
-        intent.putExtra(AddPlaceActivity.LABEL_LATITUDE,latitude);
-        intent.putExtra(AddPlaceActivity.LABEL_LONGITUDE,longitude);
+        Intent intent = new Intent(parentActivity, SelectCategoryActivity.class);
+        intent.putExtra(SelectCategoryActivity.KEY_LATITUDE,latitude);
+        intent.putExtra(SelectCategoryActivity.KEY_LONGITUDE,longitude);
         parentActivity.startActivity(intent);
     }
 }

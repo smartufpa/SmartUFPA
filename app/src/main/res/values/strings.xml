@@ -174,7 +174,7 @@
     <string name="label_lab_category">Categoria</string>
 
     <string name="title_activity_about_project">AboutProjectActivity</string>
-
+    <string name="title_activity_new_place_form" />
 
 
 </resources>

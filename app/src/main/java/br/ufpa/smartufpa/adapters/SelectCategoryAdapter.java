@@ -1,12 +1,16 @@
 package br.ufpa.smartufpa.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
@@ -17,52 +21,46 @@ import br.ufpa.smartufpa.models.PlaceCategory;
  * Created by kaeuchoa on 29/11/2017.
  */
 
-public class AddPlaceOptionAdapter extends RecyclerView.Adapter {
+public class SelectCategoryAdapter extends RecyclerView.Adapter {
 
     private Context parentContext;
 
-    public static final String TAG = AddPlaceOptionAdapter.class.getSimpleName();
+    public static final String TAG = SelectCategoryAdapter.class.getSimpleName();
 
     private ArrayList<PlaceCategory> placeCategories;
-    private AddPlaceOptionAdapter.OnItemClickListener onItemClickListener;
+    private SelectCategoryAdapter.OnItemClickListener onItemClickListener;
 
-    public AddPlaceOptionAdapter(Context parentContext) {
+    public SelectCategoryAdapter(Context parentContext) {
         this.parentContext = parentContext;
-        // List of categories defined on values>array.xml
-        final int[] categoriesId = parentContext.getResources().getIntArray(R.array.default_categories_ids);
         placeCategories = new ArrayList<>();
-        for (int id : categoriesId) {
-            placeCategories.add(new PlaceCategory(id,parentContext));
+
+        PlaceCategory.Categories[] categories = PlaceCategory.Categories.values();
+
+        for (PlaceCategory.Categories category : categories) {
+            placeCategories.add(new PlaceCategory(category));
         }
     }
 
-    /**
-     * Interface to mimic the OnItemClick from list view
-     */
-    public interface OnItemClickListener{
-        void onItemClick(View view, int position);
-    }
 
-    public void setOnItemClickListener(AddPlaceOptionAdapter.OnItemClickListener onItemClickListener){
-        this.onItemClickListener = onItemClickListener;
-    }
-
-
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parentContext)
                 .inflate(R.layout.add_place_option_item,parent,false);
 
-        return new AddPlaceOptionAdapter.AddPlaceOptionViewHolder(view);
+        return new SelectCategoryAdapter.AddPlaceOptionViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         AddPlaceOptionViewHolder viewHolder = (AddPlaceOptionViewHolder) holder;
+        final PlaceCategory category = placeCategories.get(position);
+        final String optionName = category.getName();
+        final Drawable iconDrawable = ContextCompat.getDrawable(parentContext,category.getIconID());
         // Sets the title and icon for the card
-        viewHolder.txtAddPlaceCategory.setText(placeCategories.get(position).getName());
-        viewHolder.imgAddPlaceCategory.setImageDrawable(placeCategories.get(position).getIcon());
+        viewHolder.txtAddPlaceCategory.setText(optionName);
+        viewHolder.imgAddPlaceCategory.setImageDrawable(iconDrawable);
 
     }
 
@@ -72,10 +70,21 @@ public class AddPlaceOptionAdapter extends RecyclerView.Adapter {
         return placeCategories.size();
     }
 
-    public  ArrayList<PlaceCategory> getPlaceCategories() {
-        return placeCategories;
+    /**
+     * Interface to mimic the OnItemClick from list view
+     */
+    public interface OnItemClickListener{
+        void onItemClick(View view, int position);
     }
 
+    public void setOnItemClickListener(SelectCategoryAdapter.OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
+    }
+
+
+    public ArrayList<PlaceCategory> getPlaceCategories() {
+        return placeCategories;
+    }
 
 
     private class AddPlaceOptionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

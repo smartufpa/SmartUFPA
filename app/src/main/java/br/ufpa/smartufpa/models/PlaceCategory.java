@@ -1,10 +1,7 @@
 package br.ufpa.smartufpa.models;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.content.ContextCompat;
 
 import br.ufpa.smartufpa.R;
 
@@ -14,45 +11,28 @@ import br.ufpa.smartufpa.R;
 
 public class PlaceCategory implements Parcelable {
 
-    private int id;
+    private Categories category;
     private String name;
-    private Drawable icon;
+    private int iconID;
 
-    public PlaceCategory(int id, Context parentContext) {
-        this.id = id;
-        // Sets the image for the card
-        // TODO: get names from string.xml
-        switch (id) {
-            case 0:
-                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_auditorium);
-                this.name = "Prédio";
-                break;
-            case 1:
-                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restroom);
-                this.name = "Banheiro";
-                break;
-            case 2:
-                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_library);
-                this.name = "Biblioteca";
-                break;
-            case 3:
-                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_restaurant);
+
+    public enum Categories{
+        FOODPLACE, BUILDING
+    }
+
+    public PlaceCategory(Categories category) {
+        this.category = category;
+        switch (category) {
+            case FOODPLACE:
+                this.iconID = R.drawable.ic_marker_restaurant;
                 this.name = "Refeições";
                 break;
-            case 4:
-                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_marker_xerox);
-                this.name = "Xerox";
-                break;
-            case 5:
-                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.btn_add_info);
-                this.name = "Faculdade";
-                break;
-            case 6:
-                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.btn_add_info);
-                this.name = "Laboratório";
+            case BUILDING:
+                this.iconID = R.drawable.ic_marker_auditorium;
+                this.name = "Prédio";
                 break;
             default:
-                this.icon = ContextCompat.getDrawable(parentContext, R.drawable.ic_about);
+                this.iconID =  R.drawable.ic_about;
                 this.name = "Outro";
                 break;
         }
@@ -64,16 +44,16 @@ public class PlaceCategory implements Parcelable {
         return name;
     }
 
-    public Drawable getIcon() {
-        return icon;
+    public int getIconID() {
+        return iconID;
     }
 
-    public int getId() {
-        return id;
+    public Categories getCategory() {
+        return category;
     }
 
     protected PlaceCategory(Parcel in) {
-        id = in.readInt();
+//        category = in.readInt();
         name = in.readString();
     }
 
@@ -96,7 +76,7 @@ public class PlaceCategory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
+//        parcel.writeInt(id);
         parcel.writeString(name);
     }
 }
