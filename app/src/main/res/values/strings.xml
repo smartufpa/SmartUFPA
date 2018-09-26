@@ -175,6 +175,9 @@
 
     <string name="title_activity_about_project">AboutProjectActivity</string>
     <string name="title_activity_new_place_form" />
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_confirm">Confirmar</string>
+    <string name="holder_implement">Funcionalidade ainda não implementada</string>
 
 
 </resources>

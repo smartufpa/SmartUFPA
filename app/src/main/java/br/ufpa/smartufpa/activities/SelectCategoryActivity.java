@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.activities.addInfo.NewPlaceActivity;
 import br.ufpa.smartufpa.adapters.SelectCategoryAdapter;
 import br.ufpa.smartufpa.models.PlaceCategory;
 

@@ -6,8 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -22,33 +20,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
-import br.ufpa.smartufpa.BuildConfig;
-import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.asynctasks.SearchRouteTask;
-import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
-
-import br.ufpa.smartufpa.customviews.AddPlaceInfoWindow;
-import br.ufpa.smartufpa.utils.ConfigHelper;
-import br.ufpa.smartufpa.utils.Constants;
-import br.ufpa.smartufpa.utils.MapUtils;
-import br.ufpa.smartufpa.utils.enums.MarkerTypes;
-import br.ufpa.smartufpa.utils.enums.OverlayTags;
-import br.ufpa.smartufpa.utils.enums.ServerResponse;
-import br.ufpa.smartufpa.asynctasks.BusRouteTask;
-import br.ufpa.smartufpa.customviews.CustomMapView;
-import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
-import br.ufpa.smartufpa.models.smartufpa.Place;
-import br.ufpa.smartufpa.utils.SystemServicesManager;
-import br.ufpa.smartufpa.utils.enums.MarkerStatus;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -67,6 +44,24 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import br.ufpa.smartufpa.BuildConfig;
+import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.asynctasks.BusRouteTask;
+import br.ufpa.smartufpa.asynctasks.SearchRouteTask;
+import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
+import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
+import br.ufpa.smartufpa.customviews.AddPlaceInfoWindow;
+import br.ufpa.smartufpa.customviews.CustomMapView;
+import br.ufpa.smartufpa.models.smartufpa.Place;
+import br.ufpa.smartufpa.utils.ConfigHelper;
+import br.ufpa.smartufpa.utils.Constants;
+import br.ufpa.smartufpa.utils.MapUtils;
+import br.ufpa.smartufpa.utils.SystemServicesManager;
+import br.ufpa.smartufpa.utils.enums.MarkerStatus;
+import br.ufpa.smartufpa.utils.enums.MarkerTypes;
+import br.ufpa.smartufpa.utils.enums.OverlayTags;
+import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 /**
  * Stable Commit (20/09)

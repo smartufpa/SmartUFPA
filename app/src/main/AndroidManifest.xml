@@ -75,7 +75,6 @@
         <activity
             android:name=".activities.SelectCategoryActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activities.AddBuildingActivity" />
         <activity
             android:name=".activities.AddLibraryActivity"
             android:label="@string/title_activity_add_library" />
@@ -91,7 +90,7 @@
             android:name=".activities.PermissionCheckActivity"
             android:theme="@style/AppCompat.FullScreen" />
         <activity
-            android:name=".activities.addInfo.NewPlaceActivity"
+            android:name=".activities.NewPlaceActivity"
             android:label="@string/title_activity_new_place_form"
             android:theme="@style/AppTheme"/>
     </application>
