@@ -17,6 +17,11 @@
         android:resizeable="true"
         android:smallScreens="true" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -75,24 +80,26 @@
         <activity
             android:name=".activities.SelectCategoryActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activities.AddLibraryActivity"
-            android:label="@string/title_activity_add_library" />
-        <activity android:name=".activities.AddFacultyActivity" />
-        <activity android:name=".activities.AddCourseActivity" />
-        <activity android:name=".activities.AddCopyshopActivity" />
-        <activity android:name=".activities.AddFoodPlaceActivity" />
-        <activity android:name=".activities.AddMiscActivity" />
-        <activity
-            android:name=".activities.AddLaboratoryActivity"
-            android:label="@string/title_activity_add_laboratory" />
+
         <activity
             android:name=".activities.PermissionCheckActivity"
             android:theme="@style/AppCompat.FullScreen" />
         <activity
             android:name=".activities.NewPlaceActivity"
             android:label="@string/title_activity_new_place_form"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.LoginActivity">
+            <intent-filter>
+                <action android:name="smartufpa.ACTION_LOGIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="smartufpa.CATEGORY_LOGIN" />
+            </intent-filter>
+        </activity>
     </application>
+
+
 
 </manifest>

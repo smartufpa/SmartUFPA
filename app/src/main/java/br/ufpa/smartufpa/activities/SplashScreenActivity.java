@@ -42,9 +42,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                             startActivity(new Intent(SplashScreenActivity.this, PermissionCheckActivity.class));
                             finish();
                         }else{
-                            Intent intent = new Intent(MainActivity.ACTION_MAIN);
-                            intent.addCategory(MainActivity.CATEGORY_MAIN);
-                            startActivity(intent);
+//                            Intent intent = new Intent(MainActivity.ACTION_MAIN);
+//                            intent.addCategory(MainActivity.CATEGORY_MAIN);
+//                            startActivity(intent);
+                            startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
                         }
 
                     }
