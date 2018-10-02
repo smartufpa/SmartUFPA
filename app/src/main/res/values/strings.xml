@@ -197,6 +197,7 @@
     <string name="label_login_password">Senha</string>
     <string name="label_btn_login">Entrar</string>
     <string name="label_btn_register">Ainda não tem conta? Crie agora!</string>
+    <string name="server_ip">http://192.168.0.21:8080/</string>
 
 
 </resources>

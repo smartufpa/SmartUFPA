@@ -15,7 +15,7 @@ android {
      * compile your app. This means your app can use the API features included in
      * this API level and lower.
      */
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     /**
      * The defaultConfig {} block encapsulates default settings and entries for all
@@ -33,7 +33,7 @@ android {
         // Defines the minimum API level required to run the app.
         minSdkVersion 16
         // Specifies the API level used to test the app.
-        targetSdkVersion 27
+        targetSdkVersion 28
         // Defines the version number of your app.
         versionCode 1
         // Defines a user-friendly version name for your app.
@@ -103,5 +103,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 }
