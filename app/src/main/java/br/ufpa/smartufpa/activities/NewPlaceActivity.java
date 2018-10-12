@@ -32,9 +32,9 @@ public class NewPlaceActivity extends AppCompatActivity implements NewPlaceFragm
             setContentView(R.layout.activity_new_place);
             switch (category) {
                 case BUILDING:
-                    final AddBuildingFragment addBuildingFragment = new AddBuildingFragment();
+                    final AddBuildingFragment addBuildingFragment = AddBuildingFragment.newInstance(this);
                     addBuildingFragment.setArguments(bundle);
-                    ft.replace(R.id.frame_new_place, addBuildingFragment, AddBuildingFragment.TAG);
+                    ft.replace(R.id.frame_new_place, addBuildingFragment, AddBuildingFragment.Companion.getTAG());
                     break;
                 case FOODPLACE:
                     Toast.makeText(this, getString(R.string.holder_implement), Toast.LENGTH_SHORT).show();

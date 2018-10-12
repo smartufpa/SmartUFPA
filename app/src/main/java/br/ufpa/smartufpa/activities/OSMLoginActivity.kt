@@ -12,7 +12,7 @@ class OSMLoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_osmlogin)
 
-        val url  = getString(R.string.login_url);
+        val url  = getString(R.string.url_login);
         if (url.isEmpty())
             finish();
         webview_login.settings.javaScriptEnabled = true

@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import br.ufpa.smartufpa.R
+import br.ufpa.smartufpa.models.retrofit.UsersList
+import br.ufpa.smartufpa.utils.retrofit.RetrofitClient
+import br.ufpa.smartufpa.utils.retrofit.UserAPI
 import kotlinx.android.synthetic.main.activity_enter_screen.*
 
 class EnterScreenActivity : AppCompatActivity() {

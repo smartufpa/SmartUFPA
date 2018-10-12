@@ -199,7 +199,8 @@
     <string name="label_btn_register">Ainda não tem conta? Crie agora!</string>
     <string name="server_ip">http://192.168.0.21:8080/</string>
     <string name="register_url">https://www.openstreetmap.org/user/new</string>
-    <string name="login_url">https://www.openstreetmap.org/oauth/request_token</string>
+    <string name="url_login">https://www.openstreetmap.org/oauth/request_token</string>
+    <string name="url_dev_api">https://master.apis.dev.openstreetmap.org/</string>
 
 
 </resources>
