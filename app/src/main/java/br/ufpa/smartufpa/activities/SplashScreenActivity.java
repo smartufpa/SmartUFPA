@@ -10,9 +10,6 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.utils.PrefManager;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
@@ -45,7 +42,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 //                            Intent intent = new Intent(MainActivity.ACTION_MAIN);
 //                            intent.addCategory(MainActivity.CATEGORY_MAIN);
 //                            startActivity(intent);
-                            startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
+                            startActivity(new Intent(SplashScreenActivity.this,EnterScreenActivity.class));
                         }
 
                     }
