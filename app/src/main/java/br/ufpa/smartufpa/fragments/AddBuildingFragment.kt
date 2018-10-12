@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.activities.SelectCategoryActivity
+import br.ufpa.smartufpa.adapters.SearchResultAdapter
 import br.ufpa.smartufpa.models.smartufpa.APIResponse
 import br.ufpa.smartufpa.models.smartufpa.Building
 import br.ufpa.smartufpa.utils.retrofit.PlaceAPI
@@ -48,6 +50,9 @@ class AddBuildingFragment : NewPlaceFragment() {
 
     private var latitude: Double = 0.toDouble()
     private var longitude: Double = 0.toDouble()
+//    private var administrativeRole: Building.AdministrativeRole = Building.AdministrativeRole.NONE
+    private var administrativeRole: String = ""
+
 
     private var listener: NewPlaceFragment.onNewPlaceListener? = null
 
@@ -64,6 +69,17 @@ class AddBuildingFragment : NewPlaceFragment() {
                 R.array.spinner_administrative_role, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spin_bld_administrative_role!!.adapter = adapter
+        spin_bld_administrative_role!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                administrativeRole = adapter.getItem(position).toString()
+                Toast.makeText(context,administrativeRole,Toast.LENGTH_LONG).show()
+            }
+
+        }
 
         val onClickListener = View.OnClickListener { view ->
             when (view.id) {
@@ -99,10 +115,8 @@ class AddBuildingFragment : NewPlaceFragment() {
         }
     }
 
-    fun sendToServer(){
-        val building = Building(0,latitude, longitude, input_bld_name.text.toString(),
-                            "","","")
-        val call: Call<APIResponse> = placeAPIClient.addBuilding(building)
+    override fun sendToServer(){
+        val call: Call<APIResponse> = placeAPIClient.addBuilding(initBuilding())
         call.enqueue(object : Callback<APIResponse> {
             override fun onResponse(call: Call<APIResponse>, response: Response<APIResponse>) {
                 val status = response.isSuccessful
@@ -118,27 +132,17 @@ class AddBuildingFragment : NewPlaceFragment() {
         });
     }
 
-    override fun updateJson() {
-//        val json = JSONObject()
-//        try {
-//            json.put(keyName, edtxtName!!.text.toString())
-//            json.put(SelectCategoryActivity.KEY_LATITUDE, latitude)
-//            json.put(SelectCategoryActivity.KEY_LONGITUDE, longitude)
-//            json.put(keyDescription, edtxtDescription!!.text.toString())
-//            json.put(keyWebsite, edtxtWebsite!!.text.toString())
-//            json.put(keyOpeningTime, edtxtOpeningTime!!.text.toString())
-//            json.put(keyClosingTime, edtxtClosingTime!!.text.toString())
-//
-//            if (spinner!!.selectedItemId == 0L)
-//                json.put(keyAdministrativeRole, "")
-//            else
-//                json.put(keyAdministrativeRole, spinner!!.selectedItem.toString())
-//        } catch (e: JSONException) {
-//            e.printStackTrace()
-//        }
-//
-//        listener!!.getFormJSON(json)
+    private fun initBuilding():Building{
+        val name = input_bld_name.text.toString()
+        val openingTime = input_bld_openingtime.text.toString()
+        val closingTime = input_bld_closingtime.text.toString()
+        val website = input_bld_website.text.toString()
+        val description = input_bld_description.text.toString()
+        return Building(latitude = latitude,longitude = longitude,name= name,
+                openingTime = openingTime, closingTime = closingTime, website = website,
+                description = description)
     }
+
 
 
 

@@ -9,9 +9,9 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-import br.ufpa.smartufpa.interfaces.OnUpdateJsonListener;
+import br.ufpa.smartufpa.interfaces.OnCreatePlaceListener;
 
-public abstract class NewPlaceFragment extends Fragment implements OnUpdateJsonListener {
+public abstract class NewPlaceFragment extends Fragment implements OnCreatePlaceListener {
 
 
     protected void showTimePickerDialog(final TextInputEditText input) {

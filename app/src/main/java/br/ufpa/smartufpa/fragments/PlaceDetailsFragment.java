@@ -86,8 +86,8 @@ public class PlaceDetailsFragment extends Fragment {
         else
             txtDetPlaceName.setText(selectedPlace.getName() + " (" + selectedPlace.getShortName()+ ")");
 
-        txtDetPlaceDesc.setText(selectedPlace.getDescription());
-        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), selectedPlace.getLocName()));
+        txtDetPlaceDesc.setText("");
+        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), selectedPlace.getLocalName()));
 
         btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
             @Override

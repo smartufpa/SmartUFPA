@@ -61,8 +61,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
         else
             viewHolder.txtPlaceName.setText(place.getName());
 
-        if(!place.getLocName().equals(Constants.NO_LOCAL_NAME))
-            viewHolder.txtLocName.setText(place.getLocName());
+        if(!place.getLocalName().equals(Constants.NO_LOCAL_NAME))
+            viewHolder.txtLocName.setText(place.getLocalName());
         else
             viewHolder.txtLocName.setVisibility(View.GONE);
 

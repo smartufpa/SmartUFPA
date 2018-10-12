@@ -15,7 +15,7 @@ import br.ufpa.smartufpa.utils.Constants;
  * @author kaeuchoa
  */
 
-public class Place implements Parcelable,PlaceRating {
+public class Place_deprecated implements Parcelable,PlaceRating {
 
     private String description;
     private long id;
@@ -24,7 +24,7 @@ public class Place implements Parcelable,PlaceRating {
     private String name;
     private String shortName;
 
-    public Place(Long id, double latitude, double longitude, String name, String shortName,
+    public Place_deprecated(Long id, double latitude, double longitude, String name, String shortName,
                  String locName, String description) {
         this.id = id;
         this.latLong = new GeoPoint(latitude,longitude);
@@ -33,7 +33,7 @@ public class Place implements Parcelable,PlaceRating {
         this.description = description;
         this.name = name;
     }
-    public Place(Long id, double latitude, double longitude, String name) {
+    public Place_deprecated(Long id, double latitude, double longitude, String name) {
         this.id = id;
         this.latLong = new GeoPoint(latitude,longitude);
         this.name = name;
@@ -42,7 +42,7 @@ public class Place implements Parcelable,PlaceRating {
         this.description = Constants.NO_DESCRIPTION;
     }
 
-    protected Place(Parcel in) {
+    protected Place_deprecated(Parcel in) {
         description = in.readString();
         id = in.readLong();
         locName = in.readString();
