@@ -53,7 +53,7 @@ import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
 import br.ufpa.smartufpa.customviews.AddPlaceInfoWindow;
 import br.ufpa.smartufpa.customviews.CustomMapView;
-import br.ufpa.smartufpa.models.smartufpa.Place;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.MapUtils;
@@ -100,7 +100,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private static GeoPoint startCameraPoint;
     // Map boundaries that must be set based on location_config file
     private static BoundingBox mapRegion;
-    private Place userLocation;
+    private POI userLocation;
     private LocationManager locationManager;
 
     private MapUtils mapUtils;
@@ -347,11 +347,11 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     /**
      * Creates and add an overlay to the map.
-     * @param places List of places to plot on the map.
+     * @param POIS List of POIS to plot on the map.
      * @param markersType Identifier for what icon should be used for markers.
      * @param overlayTag  Identifier for the overlay to be added on the OverlayManager.
      */
-    public void createOverlay(List<Place> places, MarkerTypes markersType, OverlayTags overlayTag){
+    public void createOverlay(List<POI> POIS, MarkerTypes markersType, OverlayTags overlayTag){
         final FolderOverlay poiMarkers = new FolderOverlay();
 
         MapUtils mapUtils = new MapUtils(getContext());
@@ -359,12 +359,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
 
         // Creates a marker for each place found
-        for (int i = 0; i < places.size(); i++) {
-            Place checkPlace = places.get(i);
-            if (!mapRegion.contains(checkPlace.getLatitude(),checkPlace.getLongitude()))
-                places.remove(checkPlace);
+        for (int i = 0; i < POIS.size(); i++) {
+            POI checkPOI = POIS.get(i);
+            if (!mapRegion.contains(checkPOI.getLatitude(), checkPOI.getLongitude()))
+                POIS.remove(checkPOI);
 
-            final Place rightPlace =  places.get(i);
+            final POI rightPOI =  POIS.get(i);
             Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
@@ -373,9 +373,9 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
                     BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
                     behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                    // Sets up a PlaceDetailsFragment to show specific information about the selected Place
+                    // Sets up a PlaceDetailsFragment to show specific information about the selected POI
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(rightPlace);
+                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(rightPOI);
                     fragmentManager.beginTransaction()
                             .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
                             .commit();
@@ -389,7 +389,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
             final Marker customMarker = mapUtils
                     .createCustomMarker(mapView, markerDrawables.get(MarkerStatus.NOT_CLICKED),
-                    new GeoPoint(rightPlace.getLatitude(), rightPlace.getLongitude()), onMarkerClickListener);
+                    new GeoPoint(rightPOI.getLatitude(), rightPOI.getLongitude()), onMarkerClickListener);
 
             poiMarkers.add(customMarker);
 
@@ -416,7 +416,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
      * a destination and limits the number of routes that can be shown simultaneously.
      * @param destination the final place to calculate the route
      */
-    public void findRouteToPlace(final Place destination) {
+    public void findRouteToPlace(final POI destination) {
         if (userLocation == null){
             Toast.makeText(context, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
         }else if(ROUTES_COUNTER == MAX_ROUTES) {
@@ -433,7 +433,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
      * and limits the number of routes that can be shown simultaneously.
      * @param destination the final place to calculate the route
      */
-    public void findRouteToPlace(final Place origin, final Place destination){
+    public void findRouteToPlace(final POI origin, final POI destination){
         if (userLocation == null){
             Toast.makeText(context, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
         }else if(ROUTES_COUNTER == MAX_ROUTES) {
@@ -446,7 +446,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onLocationChanged(Location location) {
         if(userLocation == null)
-            userLocation = new Place(location.getLatitude(),location.getLongitude(),"user_location","","", "");
+            userLocation = new POI(location.getLatitude(),location.getLongitude(),"user_location","","", "");
         else {
             userLocation.setLongitude(location.getLongitude());
             userLocation.setLatitude(location.getLatitude());
@@ -462,7 +462,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onProviderDisabled(String provider) {}
 
-    public Place getUserLocation() {
+    public POI getUserLocation() {
         return userLocation;
     }
 

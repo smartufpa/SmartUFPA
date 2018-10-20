@@ -13,14 +13,14 @@ import android.view.ViewGroup;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.adapters.SearchResultAdapter;
-import br.ufpa.smartufpa.models.smartufpa.Place;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 
 import java.util.ArrayList;
 
 
 /**
  * Stable Commit (20/09)
- * Fragment that can show a list of places that is return for a search query.
+ * Fragment that can show a list of POIS that is return for a search query.
  * @author kaeuchoa
  */
 public class SearchResultFragment extends Fragment {
@@ -34,7 +34,7 @@ public class SearchResultFragment extends Fragment {
     // KEY TO IDENTIFY THE ARGUMENT CONTAINING A LIST OF PLACES
     private static final String ARG_PLACES = "PLACES_LIST";
 
-    private ArrayList<Place> places;
+    private ArrayList<POI> POIS;
     private RecyclerView rvSearchResult;
 
     public SearchResultFragment() {
@@ -45,13 +45,13 @@ public class SearchResultFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param places List of places to be shown on the recycler view.
+     * @param POIS List of POIS to be shown on the recycler view.
      * @return A new instance of fragment SearchResultFragment.
      */
-    public static SearchResultFragment newInstance(ArrayList<Place> places) {
+    public static SearchResultFragment newInstance(ArrayList<POI> POIS) {
         SearchResultFragment fragment = new SearchResultFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PLACES, places);
+        args.putParcelableArrayList(ARG_PLACES, POIS);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +60,7 @@ public class SearchResultFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            places = getArguments().getParcelableArrayList(ARG_PLACES);
+            POIS = getArguments().getParcelableArrayList(ARG_PLACES);
         }
     }
 
@@ -74,15 +74,15 @@ public class SearchResultFragment extends Fragment {
         rvSearchResult = view.findViewById(R.id.list_search_result);
 
         // Create the adapter to the RecyclerView
-        SearchResultAdapter searchResultAdapter = new SearchResultAdapter(places, getContext());
+        SearchResultAdapter searchResultAdapter = new SearchResultAdapter(POIS, getContext());
         searchResultAdapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) { // On click, create a PlaceDetailFragment
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                final Place currentPlace = places.get(position);
+                final POI currentPOI = POIS.get(position);
 
                 // Instantiate the fragment with the current place
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace);
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPOI);
                 // Start Transaction
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION

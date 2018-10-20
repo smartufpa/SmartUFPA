@@ -11,14 +11,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.models.smartufpa.Place;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 
 /**
  * Stable Commit (20/09)
  * Fragment to show details about an specific place selected by the user.
- * Must follow the Place model.
+ * Must follow the POI model.
  * @author kaeuchoa
  */
 public class PlaceDetailsFragment extends Fragment {
@@ -39,7 +39,7 @@ public class PlaceDetailsFragment extends Fragment {
 
     // TODO (POSTPONED): LOAD IMAGE OF PLACE AND IMPLEMENT RATING FUNCTIONS
 
-    private Place selectedPlace;
+    private POI selectedPOI;
 
     public PlaceDetailsFragment() {
         // Required empty public constructor
@@ -49,13 +49,13 @@ public class PlaceDetailsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param selectedPlace Place which the user has chosen to see details.
+     * @param selectedPOI POI which the user has chosen to see details.
      * @return A new instance of fragment PlaceDetailsFragment.
      */
-    public static PlaceDetailsFragment newInstance(Place selectedPlace) {
+    public static PlaceDetailsFragment newInstance(POI selectedPOI) {
         PlaceDetailsFragment fragment = new PlaceDetailsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_SELECTED_PLACE, selectedPlace);
+        args.putParcelable(ARG_SELECTED_PLACE, selectedPOI);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +65,7 @@ public class PlaceDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            selectedPlace = getArguments().getParcelable(ARG_SELECTED_PLACE);
+            selectedPOI = getArguments().getParcelable(ARG_SELECTED_PLACE);
         }
 
     }
@@ -81,13 +81,13 @@ public class PlaceDetailsFragment extends Fragment {
         txtDetLocName = view.findViewById(R.id.txt_det_place_loc_name);
         btnDetFootRoute = view.findViewById(R.id.btn_det_foot_route);
 
-        if(selectedPlace.getShortName().equals(Constants.NO_SHORT_NAME))
-            txtDetPlaceName.setText(selectedPlace.getName());
+        if(selectedPOI.getShortName().equals(Constants.NO_SHORT_NAME))
+            txtDetPlaceName.setText(selectedPOI.getName());
         else
-            txtDetPlaceName.setText(selectedPlace.getName() + " (" + selectedPlace.getShortName()+ ")");
+            txtDetPlaceName.setText(selectedPOI.getName() + " (" + selectedPOI.getShortName()+ ")");
 
         txtDetPlaceDesc.setText("");
-        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), selectedPlace.getLocalName()));
+        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), selectedPOI.getLocalName()));
 
         btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +95,7 @@ public class PlaceDetailsFragment extends Fragment {
                 if(SystemServicesManager.isNetworkEnabled(getContext())) {
                     final MapFragment mapFragment = (MapFragment) getActivity().getSupportFragmentManager()
                             .findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                    mapFragment.findRouteToPlace(selectedPlace);
+                    mapFragment.findRouteToPlace(selectedPOI);
                 }else{
                     Toast.makeText(getContext(), R.string.error_no_internet_connection, Toast.LENGTH_SHORT).show();
                 }

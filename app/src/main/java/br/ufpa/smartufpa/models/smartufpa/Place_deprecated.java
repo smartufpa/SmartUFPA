@@ -100,15 +100,15 @@ public class Place_deprecated implements Parcelable,PlaceRating {
         dest.writeString(name);
         dest.writeString(shortName);
     }
-    public static final Creator<Place> CREATOR = new Creator<Place>() {
+    public static final Creator<POI> CREATOR = new Creator<POI>() {
         @Override
-        public Place createFromParcel(Parcel in) {
-            return new Place(in);
+        public POI createFromParcel(Parcel in) {
+            return new POI(in);
         }
 
         @Override
-        public Place[] newArray(int size) {
-            return new Place[size];
+        public POI[] newArray(int size) {
+            return new POI[size];
         }
     };
 

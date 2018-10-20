@@ -7,15 +7,13 @@ import android.util.Log;
 
 import br.ufpa.smartufpa.utils.HttpRequest;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
-import br.ufpa.smartufpa.models.smartufpa.Place;
-import br.ufpa.smartufpa.utils.Constants;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.JsonParser;
 import br.ufpa.smartufpa.utils.OverpassHelper;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * AsyncTask responsible for executing searches for specific Points of Interest based on
@@ -68,8 +66,8 @@ public class SearchQueryTask extends AsyncTask<String,Void,String> {
             callBack.onSearchQueryResponse(null,taskStatus);
         }else if(taskStatus.equals(ServerResponse.SUCCESS)){
           try{
-              ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
-              callBack.onSearchQueryResponse(places,taskStatus);
+              ArrayList<POI> POIS = JsonParser.parseOverpassResponse(jsonResponse);
+              callBack.onSearchQueryResponse(POIS,taskStatus);
           }catch (JsonParser.EmptyResponseException e){
               Log.e(TAG,"", e);
               taskStatus = ServerResponse.EMPTY_RESPONSE;

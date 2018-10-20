@@ -7,9 +7,7 @@ import android.util.Log;
 
 import br.ufpa.smartufpa.utils.HttpRequest;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnFilterSearchListener;
-import br.ufpa.smartufpa.models.smartufpa.Place;
-import br.ufpa.smartufpa.utils.ConfigHelper;
-import br.ufpa.smartufpa.utils.Constants;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.OverpassHelper;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
@@ -20,7 +18,6 @@ import br.ufpa.smartufpa.utils.JsonParser;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Locale;
 
 
 /**
@@ -101,8 +98,8 @@ public class FilterSearchTask extends AsyncTask<OverpassFilters,Void,String> {
 
         }else if(taskStatus.equals(ServerResponse.SUCCESS)){
             try{
-                final ArrayList<Place> places = JsonParser.parseOverpassResponse(jsonResponse);
-                callBack.onFilterSearchResponse(places, markersType, overlayTag, taskStatus);
+                final ArrayList<POI> POIS = JsonParser.parseOverpassResponse(jsonResponse);
+                callBack.onFilterSearchResponse(POIS, markersType, overlayTag, taskStatus);
             }catch (JsonParser.EmptyResponseException e){
                 taskStatus = ServerResponse.EMPTY_RESPONSE;
                 callBack.onFilterSearchResponse(null, null, null, taskStatus);

@@ -9,7 +9,7 @@ class Building(latitude: Double,
                var openingTime: String = "",
                var closingTime: String = "",
                var administrativeRole: AdministrativeRole = AdministrativeRole.NONE,
-               var website : String = "") : Place(latitude, longitude, name, shortName, localName,description) {
+               var website : String = "") : POI(latitude, longitude, name, shortName, localName,description) {
 
     enum class AdministrativeRole{
         ADMNISTRATIVE, INSTUTE, NONE

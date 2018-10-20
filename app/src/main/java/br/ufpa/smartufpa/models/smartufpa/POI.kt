@@ -4,12 +4,12 @@ import android.os.Parcel
 import android.os.Parcelable
 import org.osmdroid.util.GeoPoint
 
-open class Place(var latitude: Double,
-                 var longitude: Double,
-                 var name: String?,
-                 var shortName: String? = "",
-                 var localName: String? = "",
-                 var description: String? = "") : Parcelable {
+open class POI(var latitude: Double,
+               var longitude: Double,
+               var name: String?,
+               var shortName: String? = "",
+               var localName: String? = "",
+               var description: String? = "") : Parcelable {
 
 
     fun getGeoPoint() : GeoPoint{
@@ -38,12 +38,12 @@ open class Place(var latitude: Double,
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Place> {
-        override fun createFromParcel(parcel: Parcel): Place {
-            return Place(parcel)
+    companion object CREATOR : Parcelable.Creator<POI> {
+        override fun createFromParcel(parcel: Parcel): POI {
+            return POI(parcel)
         }
 
-        override fun newArray(size: Int): Array<Place?> {
+        override fun newArray(size: Int): Array<POI?> {
             return arrayOfNulls(size)
         }
     }

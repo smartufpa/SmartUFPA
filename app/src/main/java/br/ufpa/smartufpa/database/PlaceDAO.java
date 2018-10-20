@@ -5,9 +5,7 @@ import android.util.Log;
 
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.HttpRequest;
-import br.ufpa.smartufpa.models.smartufpa.Place;
-
-import com.google.gson.Gson;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -62,7 +60,7 @@ public class PlaceDAO {
 
 
         final String QUERY_PLACE_NAME = "name";
-        final ArrayList<Place> places = new ArrayList<>();
+        final ArrayList<POI> POIS = new ArrayList<>();
 
         final Uri builtUri = Uri.parse(Constants.URL_LOCAL_HOST).buildUpon()
                 .appendPath(API_PATH)
@@ -76,7 +74,7 @@ public class PlaceDAO {
 //                try {
 ////                    final String response = HttpRequest.makeGetRequest(builtUri);
 //                    Gson gson = new Gson();
-////                    final Place place = gson.fromJson(response, Place.class);
+////                    final POI place = gson.fromJson(response, POI.class);
 ////                    Log.i(TAG, "run: " + place.toString());
 //                } catch (SocketTimeoutException e) {
 //                    e.printStackTrace();

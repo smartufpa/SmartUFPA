@@ -33,8 +33,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
-import org.osmdroid.util.BoundingBox;
-
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
@@ -46,8 +44,7 @@ import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment;
 import br.ufpa.smartufpa.fragments.SearchResultFragment;
-import br.ufpa.smartufpa.models.smartufpa.Place;
-import br.ufpa.smartufpa.utils.ConfigHelper;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.apptutorial.AppTutorial;
@@ -395,10 +392,10 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onFilterSearchResponse(final ArrayList<Place> places, final MarkerTypes markersType, final OverlayTags overlayTag, final ServerResponse taskStatus) {
+    public void onFilterSearchResponse(final ArrayList<POI> POIS, final MarkerTypes markersType, final OverlayTags overlayTag, final ServerResponse taskStatus) {
         progressBar.setVisibility(View.INVISIBLE);
         if(taskStatus == ServerResponse.SUCCESS){
-            mapFragment.createOverlay(places,markersType,overlayTag);
+            mapFragment.createOverlay(POIS,markersType,overlayTag);
             Toast.makeText(this, getString(R.string.msg_click_marker), Toast.LENGTH_LONG).show();
         }else if(taskStatus == ServerResponse.TIMEOUT){
             Toast.makeText(this, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
@@ -415,18 +412,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSearchQueryResponse(ArrayList<Place> places, final ServerResponse taskStatus) {
+    public void onSearchQueryResponse(ArrayList<POI> POIS, final ServerResponse taskStatus) {
         progressBar.setVisibility(View.INVISIBLE);
 
         if(taskStatus == ServerResponse.SUCCESS){
             searchItem.collapseActionView();
             // The query returned multiple results
-            if(places.size() > 1){
+            if(POIS.size() > 1){
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                Log.i(TAG,places.toString());
+                Log.i(TAG, POIS.toString());
                 // Open SearchResultFragment
-                SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(places);
-                mapFragment.createOverlay(places,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
+                SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(POIS);
+                mapFragment.createOverlay(POIS,MarkerTypes.DEFAULT,OverlayTags.SEARCH);
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -437,10 +434,10 @@ public class MainActivity extends AppCompatActivity
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                 // Places to pass over PlaceDetailsFragment to present the data
-                final Place currentPlace = places.get(0);
+                final POI currentPOI = POIS.get(0);
 
                 // Open PlaceDetailsFragment
-                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPlace);
+                PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPOI);
                 // TODO (VISUAL ADJUSTMENTS): CREATE A TRANSITION
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -449,8 +446,8 @@ public class MainActivity extends AppCompatActivity
 
                 // Uses mapFragment methods to utilize map functions
                 final MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                mapFragment.zoomToGeoPoint(currentPlace.getGeoPoint(),18);
-                mapFragment.createOverlay(places, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
+                mapFragment.zoomToGeoPoint(currentPOI.getGeoPoint(),18);
+                mapFragment.createOverlay(POIS, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
             }
 
         }else if(taskStatus.equals(ServerResponse.EMPTY_RESPONSE)){

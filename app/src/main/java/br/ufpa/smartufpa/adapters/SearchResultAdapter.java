@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.utils.Constants;
-import br.ufpa.smartufpa.models.smartufpa.Place;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 
 import java.util.List;
 
@@ -22,12 +22,12 @@ import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter{
 
-    private List<Place> places;
+    private List<POI> POIS;
     private Context parentContext;
     private OnItemClickListener onItemClickListener;
 
-    public SearchResultAdapter(List<Place> places, Context parentContext) {
-        this.places = places;
+    public SearchResultAdapter(List<POI> POIS, Context parentContext) {
+        this.POIS = POIS;
         this.parentContext = parentContext;
     }
 
@@ -55,14 +55,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
 
         SearchResultViewHolder viewHolder = (SearchResultViewHolder) holder;
 
-        Place place = places.get(position);
-        if(!place.getShortName().equals(Constants.NO_SHORT_NAME))
-            viewHolder.txtPlaceName.setText(place.getName() + " (" + place.getShortName() + ")");
+        POI POI = POIS.get(position);
+        if(!POI.getShortName().equals(Constants.NO_SHORT_NAME))
+            viewHolder.txtPlaceName.setText(POI.getName() + " (" + POI.getShortName() + ")");
         else
-            viewHolder.txtPlaceName.setText(place.getName());
+            viewHolder.txtPlaceName.setText(POI.getName());
 
-        if(!place.getLocalName().equals(Constants.NO_LOCAL_NAME))
-            viewHolder.txtLocName.setText(place.getLocalName());
+        if(!POI.getLocalName().equals(Constants.NO_LOCAL_NAME))
+            viewHolder.txtLocName.setText(POI.getLocalName());
         else
             viewHolder.txtLocName.setVisibility(View.GONE);
 
@@ -71,7 +71,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        return places.size();
+        return POIS.size();
     }
 
 

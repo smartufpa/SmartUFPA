@@ -3,7 +3,7 @@ package br.ufpa.smartufpa.utils;
 import br.ufpa.smartufpa.models.PlaceTranslator;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.models.overpass.OverpassModel;
-import br.ufpa.smartufpa.models.smartufpa.Place;
+import br.ufpa.smartufpa.models.smartufpa.POI;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -23,11 +23,11 @@ public class JsonParser {
 
     private static final String TAG = JsonParser.class.getSimpleName();
 
-    public static List<Place> parseLocalResponse(String jsonResponse) {
+    public static List<POI> parseLocalResponse(String jsonResponse) {
         return null;
     }
 
-    public static ArrayList<Place> parseOverpassResponse(String jsonInput) throws EmptyResponseException {
+    public static ArrayList<POI> parseOverpassResponse(String jsonInput) throws EmptyResponseException {
         Gson gson = new Gson();
         OverpassModel overpassModel;
         // Tries to convert the string input to an instance of OverpassModel
@@ -45,14 +45,14 @@ public class JsonParser {
         // Translates the overpassmodel to place model
         final PlaceTranslator translator = PlaceTranslator.getInstance();
 
-        ArrayList<Place> listOfPlaces = new ArrayList<>();
+        ArrayList<POI> listOfPOIS = new ArrayList<>();
 
         for (Element element : overpassModel.getElements()) {
-            final Place place = translator.elementToPlace(element);
-            listOfPlaces.add(place);
+            final POI POI = translator.elementToPlace(element);
+            listOfPOIS.add(POI);
         }
 
-        return listOfPlaces;
+        return listOfPOIS;
     }
 
     public static class EmptyResponseException extends RuntimeException {
