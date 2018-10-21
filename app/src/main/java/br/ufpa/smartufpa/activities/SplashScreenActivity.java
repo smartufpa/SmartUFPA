@@ -27,17 +27,16 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Checks if the user has a proper network and GPS connection
-                if (SystemServicesManager.isNetworkEnabled(getApplicationContext())){
-                    if (!SystemServicesManager.isGPSEnabled(getApplicationContext())){
+                final boolean networkEnabled = SystemServicesManager.isNetworkEnabled(getApplicationContext());
+                if (networkEnabled){
+                    final boolean gpsEnabled = SystemServicesManager.isGPSEnabled(getApplicationContext());
+                    if (!gpsEnabled){
                         // Doesn't start the main activity, instead asks user to turn on the GPS
-                        Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
-                        intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
-                        startActivity(intent);
+                        startNoGPSActivity();
                     }else{
                         // Proper network connection, goes to MainActivity
                         if(manager.isFirstTimeLaunch() || !isPermissionGranted()){
-                            startActivity(new Intent(SplashScreenActivity.this, PermissionCheckActivity.class));
-                            finish();
+                            startPermissionActivity();
                         }else{
 //                            Intent intent = new Intent(MainActivity.ACTION_MAIN);
 //                            intent.addCategory(MainActivity.CATEGORY_MAIN);
@@ -53,6 +52,17 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         },2000);
 
+    }
+
+    private void startNoGPSActivity() {
+        Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
+        intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
+        startActivity(intent);
+    }
+
+    private void startPermissionActivity() {
+        startActivity(new Intent(SplashScreenActivity.this, PermissionCheckActivity.class));
+        finish();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
