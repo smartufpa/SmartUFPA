@@ -1,0 +1,1 @@
+<osmChange version="0.6" generator="iD"><create><node id="-15" lon="-48.4884398863665" lat="-1.4386104736717769" version="0"><tag k="shop" v="chemist"/><tag k="name" v="Drogasil"/></node></create><modify/><delete if-unused="true"/></osmChange>
