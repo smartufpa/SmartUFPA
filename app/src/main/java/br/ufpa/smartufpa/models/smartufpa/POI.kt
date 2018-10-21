@@ -11,10 +11,10 @@ open class POI(var latitude: Double,
                var localName: String? = "",
                var description: String? = "") : Parcelable {
 
-
-    fun getGeoPoint() : GeoPoint{
-        return GeoPoint(latitude,longitude)
-    }
+    val geoPoint: GeoPoint
+        get() {
+            return GeoPoint(latitude, longitude)
+        }
 
     constructor(parcel: Parcel) : this(
             parcel.readDouble(),
