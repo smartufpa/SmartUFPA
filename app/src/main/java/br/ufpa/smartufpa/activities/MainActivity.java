@@ -32,6 +32,8 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
+import org.osmdroid.api.IMapController;
+
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity
     private Button btnClear;
 
     private MapFragment mapFragment;
+    private IMapController mapCamera;
 
 
     @Override
@@ -181,6 +184,8 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
+        mapCamera = mapFragment.getMapCamera();
+
     }
 
     /**
@@ -212,46 +217,41 @@ public class MainActivity extends AppCompatActivity
                 if (networkEnabled) {
                     OverpassFilters filter;
                     Context context = MainActivity.this;
+                    showProgressBar();
                     switch (id) {
                         case R.id.nav_copy_service:
                             filter = OverpassFilters.XEROX;
                             // If the layer is enabled it means the search was performed and there is no need to do it again
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) {
-                                showProgressBar();
                                 new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_food:
                             filter = OverpassFilters.FOOD;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_FOOD)) {
-                                showProgressBar();
                                 new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_restroom:
                             filter = OverpassFilters.RESTROOM;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM)) {
-                                showProgressBar();
                                 new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_bus_route:
                             if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE)) {
-                                showProgressBar();
                                 mapFragment.enableBusOverlay();
                             }
                             break;
                         case R.id.nav_auditorium:
                             filter = OverpassFilters.AUDITORIUMS;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS)) {
-                                showProgressBar();
                                 new FilterSearchTask(context).execute(filter);
                             }
                             break;
                         case R.id.nav_library:
                             filter = OverpassFilters.LIBRARIES;
                             if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES)) {
-                                showProgressBar();
                                 new FilterSearchTask(context).execute(filter);
                             }
                             break;
@@ -492,10 +492,9 @@ public class MainActivity extends AppCompatActivity
     private void showSingleResultFragment(final POI currentPOI) {
         PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPOI);
         fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
-
-        // Uses mapFragment methods to utilize map functions
-        final MapFragment mapFragment = (MapFragment) fragmentHelper.findFragmentByTag(MapFragment.FRAGMENT_TAG);
-        mapFragment.zoomToGeoPoint(currentPOI.getGeoPoint(), 18);
+        if(mapCamera != null){
+            mapCamera.animateTo(currentPOI.getGeoPoint(),18.0,(long)1000);
+        }
     }
 
     private void showMultipleResultsFragment(ArrayList<POI> POIS) {

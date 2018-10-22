@@ -38,10 +38,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                         if(manager.isFirstTimeLaunch() || !isPermissionGranted()){
                             startPermissionActivity();
                         }else{
-//                            Intent intent = new Intent(MainActivity.ACTION_MAIN);
-//                            intent.addCategory(MainActivity.CATEGORY_MAIN);
-//                            startActivity(intent);
-                            startActivity(new Intent(SplashScreenActivity.this,EnterScreenActivity.class));
+//                            startEnterScreenActivity();
+                            startMainActivity();
                         }
 
                     }
@@ -54,6 +52,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     }
 
+    private void startEnterScreenActivity() {
+        startActivity(new Intent(SplashScreenActivity.this,EnterScreenActivity.class));
+    }
+
     private void startNoGPSActivity() {
         Intent intent = new Intent(NoGpsActivity.ACTION_NO_GPS);
         intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
@@ -62,7 +64,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void startPermissionActivity() {
         startActivity(new Intent(SplashScreenActivity.this, PermissionCheckActivity.class));
-        finish();
+    }
+
+    private void startMainActivity() {
+        startActivity(new Intent(SplashScreenActivity.this,MainActivity.class));
     }
 
     @TargetApi(Build.VERSION_CODES.M)

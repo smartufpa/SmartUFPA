@@ -1,10 +1,8 @@
 package br.ufpa.smartufpa.fragments;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -54,9 +51,9 @@ import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
 import br.ufpa.smartufpa.customviews.AddPlaceInfoWindow;
 import br.ufpa.smartufpa.customviews.CustomMapView;
 import br.ufpa.smartufpa.models.smartufpa.POI;
-import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.MapUtils;
+import br.ufpa.smartufpa.utils.PermissionHelper;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.enums.MarkerStatus;
 import br.ufpa.smartufpa.utils.enums.MarkerTypes;
@@ -64,7 +61,6 @@ import br.ufpa.smartufpa.utils.enums.OverlayTags;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 /**
- * Stable Commit (20/09)
  * Fragment that holds the map view and all the tasks related to the map.
  * @author kaeuchoa
  */
@@ -76,11 +72,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     // MAP
     private MyLocationNewOverlay myLocationOverlay;
-    private CopyrightOverlay mCopyrightOverlay;
     private IMapController mapCamera;
-    private static final int DEFAULT_ZOOM = 16;
-    private static final double MIN_ZOOM = 15;
-    private static final double MAX_ZOOM = 18;
+
 
     // Maximum number of routes that can be shown simultaneously
     private static final int MAX_ROUTES = 3;
@@ -102,6 +95,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private static BoundingBox mapRegion;
     private POI userLocation;
     private LocationManager locationManager;
+    private PermissionHelper permissionHelper;
 
     private MapUtils mapUtils;
 
@@ -110,7 +104,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private Button.OnClickListener myLocationListener = new Button.OnClickListener(){
         @Override
         public void onClick(View v) {
-            moveCameraToMyLocation();
+            moveCameraToUserLocation();
         }
     };
 
@@ -141,35 +135,18 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
-
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity().getApplicationContext();
+        context = getContext();
+        mapUtils = new MapUtils(context);
+        permissionHelper = new PermissionHelper(context);
 
-        // Get map configuration from location_config.properties
-        final String westLimit = ConfigHelper.getConfigValue(context, Constants.CONFIG_WEST_LIMIT);
-        final String southLimit = ConfigHelper.getConfigValue(context, Constants.CONFIG_SOUTH_LIMIT);
-        final String eastLimit = ConfigHelper.getConfigValue(context, Constants.CONFIG_EAST_LIMIT);
-        final String northLimit = ConfigHelper.getConfigValue(context, Constants.CONFIG_NORTH_LIMIT);
-
-        final String[] startCameraCoordinates = ConfigHelper.getConfigValue(
-                context, Constants.CONFIG_START_CAMERA_COORDINATES).split(",");
-
-        // Parse information about map bounds
-        double westBound = Double.valueOf(westLimit);
-        double southBound = Double.valueOf(southLimit);
-        double eastBound = Double.valueOf(eastLimit);
-        double northBound = Double.valueOf(northLimit);
-
-
-        startCameraPoint = new GeoPoint(Double.valueOf(startCameraCoordinates[0]),
-                Double.valueOf(startCameraCoordinates[1]));
-
-        mapRegion =  new BoundingBox(northBound,eastBound,southBound,westBound);
+        startCameraPoint = mapUtils.getMapStartPoint();
+        mapRegion = mapUtils.getMapBoundingBox();
 
         /* Important! Configure the user agent so you don't get banned from OSM servers.
          * The user agent must be a unique ID of you app.
@@ -180,8 +157,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         ROUTE_LINE_COLORS.add(Color.rgb(100, 100, 255)); // blue
         ROUTE_LINE_COLORS.add(Color.rgb(255, 100, 100)); // red
         ROUTE_LINE_COLORS.add(Color.rgb(62, 153, 62)); // green
-
-        mapUtils = new MapUtils(getContext());
 
     }
 
@@ -203,27 +178,29 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
         btnClearMap.setOnClickListener(clearMapListener);
 
-        initMap();
+        initMapView();
+        initMapCamera();
 
         return view;
     }
 
-    private boolean isLocationPermissionGranted(Context context){
-        return (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-    }
-    @SuppressLint("MissingPermission") // Permission check done by static method
+
     @Override
     public void onResume() {
         super.onResume();
+        setupLocationManager();
+        enableMyLocationOverlay();
+    }
+
+    @SuppressLint("MissingPermission") // Permission check done by static method
+    private void setupLocationManager() {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (isLocationPermissionGranted(getContext())) {
+        if (permissionHelper.isLocationPermissionGranted()) {
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
             final String bestProvider = locationManager.getBestProvider(criteria, true);
-            locationManager.requestLocationUpdates(bestProvider, 0l, 0f, this);
+            locationManager.requestLocationUpdates(bestProvider, 0L, 0f, this);
         }
-        enableMyLocationOverlay();
     }
 
     @Override
@@ -233,12 +210,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         myLocationOverlay.disableMyLocation();
 
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
 
     @Override
     public void onDestroy() {
@@ -259,24 +230,24 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
      * Initialize the map configurations such as MapCamera, zoom values
      * and interface aspects.
      */
-    private void initMap(){
-        // Map camera configuration
-        mapCamera = mapView.getController();
-        mapCamera.setZoom(DEFAULT_ZOOM);
-        mapCamera.animateTo(startCameraPoint);
-
-        // Map configuration
+    private void initMapView(){
         mapView.setTilesScaledToDpi(true);
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         mapView.setBuiltInZoomControls(false);
-        mapView.setMinZoomLevel(MIN_ZOOM);
-        mapView.setMaxZoomLevel(MAX_ZOOM);
+        mapView.setMinZoomLevel(Constants.MapConfig.MIN_ZOOM);
+        mapView.setMaxZoomLevel(Constants.MapConfig.MAX_ZOOM);
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
         // Limits the map area to the region set
         mapView.setScrollableAreaLimitDouble(mapRegion);
-        mCopyrightOverlay = new CopyrightOverlay(context);
+        CopyrightOverlay mCopyrightOverlay = new CopyrightOverlay(context);
         mapView.addOverlay(mCopyrightOverlay, OverlayTags.COPYRIGHT);
+    }
+
+    private void initMapCamera(){
+        // Map camera configuration
+        mapCamera = mapView.getController();
+        mapCamera.animateTo(startCameraPoint,Constants.MapConfig.DEFAULT_ZOOM,(long)0);
     }
 
     /**
@@ -292,8 +263,9 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
         myLocationOverlay.setOptionsMenuEnabled(true);
-        if(!mapView.containsOverlay(OverlayTags.MY_LOCATION))
-            mapView.addOverlay(myLocationOverlay, OverlayTags.MY_LOCATION);
+
+        if(!mapView.isMyLocationActive())
+            mapView.activeMyLocationOverlay(myLocationOverlay);
     }
 
     /**
@@ -306,7 +278,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     // TODO (OFFLINE FUNCTIONS): USE KMLFOLDER TO SAVE IT
     // https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
     private boolean areMapsInStorage(){
-
         return false;
     }
 
@@ -318,16 +289,14 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
 
-    private void moveCameraToMyLocation(){
+    private void moveCameraToUserLocation(){
         try {
-            double latitude = userLocation.getLatitude(),
-                    longitude = userLocation.getLongitude();
-
             // Check if the user is inside the map region and just moves the camera if he/she is
-            if(!mapRegion.contains(latitude,longitude))
+            if (mapUtils.isUserWithinLimits(userLocation, mapRegion)) {
+                mapCamera.animateTo(userLocation.getGeoPoint());
+            } else {
                 Toast.makeText(context, R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
-            else
-                mapCamera.animateTo(new GeoPoint(latitude,longitude));
+            }
 
         }catch (NullPointerException e){
             Log.e(TAG,"Could not get current location.",e);
@@ -341,8 +310,14 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
 
+
+
     public boolean isLayerEnabled(final OverlayTags layerTag){
         return mapView.containsOverlay(layerTag);
+    }
+
+    public IMapController getMapCamera(){
+        return mapCamera;
     }
 
     /**
@@ -401,17 +376,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
     /**
-     * Moves and zoom in or out the camera to an specific geopoint.
-     * @param geoPoint Point to move the camera
-     * @param zoomLevel Value to zoom in or out - default zoom is 16
-     */
-    public void zoomToGeoPoint(final GeoPoint geoPoint, final int zoomLevel){
-        mapView.getController().setZoom(zoomLevel);
-        mapView.getController().animateTo(geoPoint);
-        mapView.getController().setCenter(geoPoint);
-    }
-
-    /**
      * Calls the task that will calculate the route between user's current location and
      * a destination and limits the number of routes that can be shown simultaneously.
      * @param destination the final place to calculate the route
@@ -462,9 +426,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     @Override
     public void onProviderDisabled(String provider) {}
 
-    public POI getUserLocation() {
-        return userLocation;
-    }
 
     @Override
     public void onSearchRouteResponse(final Overlay overlay, final ServerResponse taskStatus) {

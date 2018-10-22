@@ -106,4 +106,11 @@ public final class Constants {
     public static final String CONFIG_EAST_LIMIT = "map_region_eastlimit";
     public static final String CONFIG_NORTH_LIMIT = "map_region_northlimit";
 
+
+    public class MapConfig {
+        public static final double DEFAULT_ZOOM = 16.0;
+        public static final double MIN_ZOOM = 15.0;
+        public static final double MAX_ZOOM = 18.0;
+    }
+
 }

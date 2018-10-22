@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stable Commit (20/09)
  * Custom MapView to adapt methods to the app necessity.
  * @author kaeuchoa
  */
@@ -88,6 +87,15 @@ public class CustomMapView extends MapView {
      */
     public boolean containsOverlay(final OverlayTags layerTag){
         return layersTags.contains(layerTag);
+    }
+
+    public boolean isMyLocationActive(){
+        return this.containsOverlay(OverlayTags.MY_LOCATION);
+    }
+
+    public void activeMyLocationOverlay(MyLocationNewOverlay locationNewOverlay){
+        this.addOverlay(locationNewOverlay,OverlayTags.MY_LOCATION);
+
     }
 
 
