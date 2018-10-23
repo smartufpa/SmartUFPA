@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.util.Locale;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.utils.enums.OverpassFilters;
 
 /**
  * Created by kaeuc on 19/02/2018.
@@ -45,7 +46,6 @@ public class OverpassHelper {
         this.mapRegionName = ConfigHelper.getConfigValue(applicationContext,Constants.CONFIG_MAP_REGION_NAME);
         this.mapBusOperator = ConfigHelper.getConfigValue(applicationContext,Constants.CONFIG_MAP_BUS_OPERATOR);
 
-
     }
 
     public static synchronized OverpassHelper getInstance(Context applicationContext){
@@ -54,100 +54,28 @@ public class OverpassHelper {
         return instance;
     }
 
-    public URL getXeroxURL(){
-        final String queryXerox = this.context.getString(R.string.query_xerox);
-
-        // For overpass queries, use the following order of coordinates: (south,west,north,east)
-        final String formattedQuery = String.format(Locale.US, queryXerox,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
-
-        final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL xeroxURL = null;
-        try {
-            xeroxURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+    public String getOverpassQuery(OverpassFilters filter){
+        String queryString = null;
+        switch (filter){
+            case XEROX:
+                queryString = this.context.getString(R.string.query_xerox);
+                break;
+            case FOOD:
+                queryString = this.context.getString(R.string.query_food);
+                break;
+            case RESTROOM:
+                queryString = this.context.getString(R.string.query_restroom);
+                break;
+            case LIBRARIES:
+                queryString = this.context.getString(R.string.query_libraries);
+                break;
+            case AUDITORIUMS:
+                queryString = this.context.getString(R.string.query_auditoriums);
+                break;
         }
-        return  xeroxURL;
+        return String.format(Locale.US, queryString,southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
     }
 
-    public URL getAuditoriumsURL(){
-        final String queryAuditoriums = this.context.getString(R.string.query_auditoriums);
-
-        // For overpass queries, use the following order of coordinates: (south,west,north,east)
-        final String formattedQuery = String.format(Locale.US, queryAuditoriums,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
-
-        final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL auditoriumsURL = null;
-        try {
-            auditoriumsURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return  auditoriumsURL;
-    }
-
-    public URL getLibrariesURL(){
-        final String queryLibraries = this.context.getString(R.string.query_libraries);
-
-        // For overpass queries, use the following order of coordinates: (south,west,north,east)
-        final String formattedQuery = String.format(Locale.US, queryLibraries,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
-
-        final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL librariesURL = null;
-        try {
-            librariesURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return  librariesURL;
-    }
-
-    public URL getFoodURL(){
-        final String queryFood = this.context.getString(R.string.query_food);
-
-        // For overpass queries, use the following order of coordinates: (south,west,north,east)
-        final String formattedQuery = String.format(Locale.US, queryFood,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
-
-        final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL foodURL = null;
-        try {
-            foodURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return  foodURL;
-    }
-
-    public URL getRestroomURL(){
-        final String queryRestroom = this.context.getString(R.string.query_restroom);
-
-        // For overpass queries, use the following order of coordinates: (south,west,north,east)
-        final String formattedQuery = String.format(Locale.US, queryRestroom,
-                southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
-
-        final String overpassURL = this.context.getString(R.string.overpass_url);
-        URL restroomURL = null;
-        try {
-            restroomURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return  restroomURL;
-    }
 
     public URL getSearchURL(String userQuery){
         // Cleans all the white spaces on the query

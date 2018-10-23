@@ -35,19 +35,22 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import org.osmdroid.api.IMapController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.about.AboutActivity;
-import br.ufpa.smartufpa.asynctasks.FilterSearchTask;
 import br.ufpa.smartufpa.asynctasks.SearchQueryTask;
-import br.ufpa.smartufpa.asynctasks.interfaces.OnFilterSearchListener;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment;
 import br.ufpa.smartufpa.fragments.SearchResultFragment;
+import br.ufpa.smartufpa.models.overpass.Element;
+import br.ufpa.smartufpa.models.overpass.OverpassModel;
+import br.ufpa.smartufpa.models.retrofit.OverpassApi;
 import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.FragmentHelper;
+import br.ufpa.smartufpa.utils.OverpassHelper;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.UIHelper;
 import br.ufpa.smartufpa.utils.apptutorial.AppTutorial;
@@ -58,6 +61,10 @@ import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
 import br.ufpa.smartufpa.utils.enums.OverpassFilters;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
+import br.ufpa.smartufpa.utils.retrofit.RetrofitHelper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -66,8 +73,7 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
  * @author kaeuchoa
  */
 
-public class MainActivity extends AppCompatActivity
-        implements OnFilterSearchListener, OnSearchQueryListener {
+public class MainActivity extends AppCompatActivity implements OnSearchQueryListener, Callback<OverpassModel> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
@@ -87,7 +93,8 @@ public class MainActivity extends AppCompatActivity
 
     private MapFragment mapFragment;
     private IMapController mapCamera;
-
+    private OverpassApi overpassApi;
+    private OverpassHelper overpassHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +113,9 @@ public class MainActivity extends AppCompatActivity
         setupToolbar();
         setupDrawer();
         setupMapFragment();
+        overpassApi = RetrofitHelper.INSTANCE.getOverpassApi();
+        overpassHelper = OverpassHelper.getInstance(this);
+
     }
 
     @Override
@@ -213,58 +223,25 @@ public class MainActivity extends AppCompatActivity
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // TODO (OFFLINE FUNCTIONS): CHECK IF DATA IS IN MEMORY; IF IT'S NOT CHECK INTERNET TO DOWNLOAD
                 final int id = item.getItemId();
+                Call<OverpassModel> call = null;
+                String query = null;
                 final boolean networkEnabled = SystemServicesManager.isNetworkEnabled(getApplicationContext());
                 if (networkEnabled) {
-                    OverpassFilters filter;
-                    Context context = MainActivity.this;
                     showProgressBar();
-                    switch (id) {
-                        case R.id.nav_copy_service:
-                            filter = OverpassFilters.XEROX;
-                            // If the layer is enabled it means the search was performed and there is no need to do it again
-                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX)) {
-                                new FilterSearchTask(context).execute(filter);
-                            }
-                            break;
-                        case R.id.nav_food:
-                            filter = OverpassFilters.FOOD;
-                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_FOOD)) {
-                                new FilterSearchTask(context).execute(filter);
-                            }
-                            break;
-                        case R.id.nav_restroom:
-                            filter = OverpassFilters.RESTROOM;
-                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM)) {
-                                new FilterSearchTask(context).execute(filter);
-                            }
-                            break;
-                        case R.id.nav_bus_route:
-                            if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE)) {
-                                mapFragment.enableBusOverlay();
-                            }
-                            break;
-                        case R.id.nav_auditorium:
-                            filter = OverpassFilters.AUDITORIUMS;
-                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS)) {
-                                new FilterSearchTask(context).execute(filter);
-                            }
-                            break;
-                        case R.id.nav_library:
-                            filter = OverpassFilters.LIBRARIES;
-                            if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES)) {
-                                new FilterSearchTask(context).execute(filter);
-                            }
-                            break;
-                        case R.id.nav_about:
-                            startAboutActivity();
-                            break;
+                    if (id == R.id.nav_about) {
+                        startAboutActivity();
+                    } else if (id == R.id.nav_bus_route) {
+                        if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE))
+                            mapFragment.enableBusOverlay();
+                    } else {
+                        query = getFilterQuery(id);
+                        if(query != null){
+                            call = overpassApi.getData(query);
+                            call.enqueue(MainActivity.this);
+                        }
                     }
-
-                } else if (id == R.id.nav_about) {
-                    startAboutActivity();
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_SHORT).show();
-
+                    UIHelper.showToastShort(MainActivity.this, getString(R.string.error_no_internet_connection));
                 }
                 layoutDrawer.closeDrawer(GravityCompat.START);
                 return true;
@@ -273,6 +250,28 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(navigationItemListener);
         drawerToggle.syncState();
+    }
+
+    private String getFilterQuery(int id) {
+        // If the layer is enabled it means the search was performed return null
+        switch (id) {
+            case R.id.nav_copy_service:
+                if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX))
+                    return overpassHelper.getOverpassQuery(OverpassFilters.XEROX);
+            case R.id.nav_food:
+                if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_FOOD))
+                    return overpassHelper.getOverpassQuery(OverpassFilters.FOOD);
+            case R.id.nav_restroom:
+                if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM))
+                    return overpassHelper.getOverpassQuery(OverpassFilters.RESTROOM);
+            case R.id.nav_auditorium:
+                if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS))
+                    return overpassHelper.getOverpassQuery(OverpassFilters.AUDITORIUMS);
+            case R.id.nav_library:
+                if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES))
+                    return overpassHelper.getOverpassQuery(OverpassFilters.AUDITORIUMS);
+        }
+        return null;
     }
 
     private void startAboutActivity() {
@@ -433,26 +432,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public void onFilterSearchResponse(final ArrayList<POI> POIS, final MarkerTypes markersType, final OverlayTags overlayTag, final ServerResponse taskStatus) {
-        hideProgressBar();
-        if (taskStatus == ServerResponse.SUCCESS) {
-            mapFragment.createOverlay(POIS, markersType, overlayTag);
-            UIHelper.showToastLong(this, getString(R.string.msg_click_marker));
-        } else if (taskStatus == ServerResponse.TIMEOUT) {
-            UIHelper.showToastShort(this, getString(R.string.error_server_timeout));
-        } else if (taskStatus == ServerResponse.CONNECTION_FAILED) {
-            UIHelper.showToastShort(this, getString(R.string.error_connection_failed));
-        } else if (taskStatus.equals(ServerResponse.EMPTY_RESPONSE)) {
-            new MaterialDialog.Builder(this)
-                    .title(getString(R.string.dialog_title))
-                    .content(R.string.msg_no_filter_results)
-                    .positiveText("OK")
-                    .show();
-        }
-
-    }
-
     private void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
     }
@@ -492,8 +471,8 @@ public class MainActivity extends AppCompatActivity
     private void showSingleResultFragment(final POI currentPOI) {
         PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPOI);
         fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
-        if(mapCamera != null){
-            mapCamera.animateTo(currentPOI.getGeoPoint(),18.0,(long)1000);
+        if (mapCamera != null) {
+            mapCamera.animateTo(currentPOI.getGeoPoint(), 18.0, (long) 1000);
         }
     }
 
@@ -548,4 +527,30 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onResponse(Call<OverpassModel> call, Response<OverpassModel> response) {
+        hideProgressBar();
+        final List<Element> points = response.body().getElements();
+        UIHelper.showToastShort(this,"Resposta retornada");
+
+//        if (taskStatus == ServerResponse.SUCCESS) {
+//            mapFragment.createOverlay(POIS, markersType, overlayTag);
+//            UIHelper.showToastLong(this, getString(R.string.msg_click_marker));
+//        } else if (taskStatus == ServerResponse.TIMEOUT) {
+//            UIHelper.showToastShort(this, getString(R.string.error_server_timeout));
+//        } else if (taskStatus == ServerResponse.CONNECTION_FAILED) {
+//            UIHelper.showToastShort(this, getString(R.string.error_connection_failed));
+//        } else if (taskStatus.equals(ServerResponse.EMPTY_RESPONSE)) {
+//            new MaterialDialog.Builder(this)
+//                    .title(getString(R.string.dialog_title))
+//                    .content(R.string.msg_no_filter_results)
+//                    .positiveText("OK")
+//                    .show();
+//        }
+    }
+
+    @Override
+    public void onFailure(Call<OverpassModel> call, Throwable t) {
+        UIHelper.showToastShort(this, "Erro ao recuperar dados do servidor do OSM.");
+    }
 }
