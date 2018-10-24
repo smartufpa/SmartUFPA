@@ -14,8 +14,7 @@ import br.ufpa.smartufpa.models.smartufpa.POI;
 import java.util.List;
 
 /**
- * Stable Commit (20/09)
- * ArrayAdapter used for listing the results on searches with multiple POIs
+ * * ArrayAdapter used for listing the results on searches with multiple POIs
  * @author kaeuchoa
  *
  */
@@ -56,15 +55,15 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
         SearchResultViewHolder viewHolder = (SearchResultViewHolder) holder;
 
         POI POI = POIS.get(position);
-        if(!POI.getShortName().equals(Constants.NO_SHORT_NAME))
-            viewHolder.txtPlaceName.setText(POI.getName() + " (" + POI.getShortName() + ")");
-        else
-            viewHolder.txtPlaceName.setText(POI.getName());
-
-        if(!POI.getLocalName().equals(Constants.NO_LOCAL_NAME))
-            viewHolder.txtLocName.setText(POI.getLocalName());
-        else
-            viewHolder.txtLocName.setVisibility(View.GONE);
+//        if(!POI.getShortName().equals(Constants.NO_SHORT_NAME))
+//            viewHolder.txtPlaceName.setText(POI.getName() + " (" + POI.getShortName() + ")");
+//        else
+//            viewHolder.txtPlaceName.setText(POI.getName());
+//
+//        if(!POI.getLocalName().equals(Constants.NO_LOCAL_NAME))
+//            viewHolder.txtLocName.setText(POI.getLocalName());
+//        else
+//            viewHolder.txtLocName.setVisibility(View.GONE);
 
 
     }

@@ -10,8 +10,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -25,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -39,6 +36,7 @@ import java.util.List;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.about.AboutActivity;
+import br.ufpa.smartufpa.activities.ui.BottomSheetView;
 import br.ufpa.smartufpa.asynctasks.SearchQueryTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
@@ -82,11 +80,9 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
 
     // VIEWS
     private Toolbar mapToolbar;
-    private DrawerLayout layoutDrawer;
+    private DrawerLayout drawerMenu;
     private NavigationView navigationView;
     private ProgressBar progressBar;
-    private FrameLayout bottomSheetContainer;
-    private BottomSheetBehavior bottomSheetBehavior;
     private MenuItem searchItem;
     private FragmentHelper fragmentHelper;
     private Button btnClear;
@@ -95,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     private IMapController mapCamera;
     private OverpassApi overpassApi;
     private OverpassHelper overpassHelper;
+    private BottomSheetView bottomSheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +99,10 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         setContentView(R.layout.activity_main);
 
         // views
-        layoutDrawer = findViewById(R.id.layout_drawer);
+        drawerMenu = findViewById(R.id.layout_drawer);
         mapToolbar = findViewById(R.id.tb_main);
         navigationView = findViewById(R.id.nav_view);
         progressBar = findViewById(R.id.progress_bar);
-        bottomSheetContainer = findViewById(R.id.bottom_sheet_container);
         btnClear = findViewById(R.id.btn_clear_map);
 
         fragmentHelper = new FragmentHelper(getSupportFragmentManager());
@@ -115,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         setupMapFragment();
         overpassApi = RetrofitHelper.INSTANCE.getOverpassApi();
         overpassHelper = OverpassHelper.getInstance(this);
+        bottomSheet = new BottomSheetView(this, getWindow().getDecorView(), fragmentHelper);
 
     }
 
@@ -159,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
             intent.addCategory(NoGpsActivity.CATEGORY_NO_GPS);
             startActivity(intent);
         }
-        setupBottomSheetContainer();
     }
 
 
@@ -203,19 +199,18 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
      * TODO: refactor
      */
     private void setupDrawer() {
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, layoutDrawer, mapToolbar,
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerMenu, mapToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             // Called when a drawer has settled in a completely open state.
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 // Check the state of the bottom sheet so they don't overlap each other on the view
-                final int state = bottomSheetBehavior.getState();
-                if (state == BottomSheetBehavior.STATE_EXPANDED || state == BottomSheetBehavior.STATE_COLLAPSED) {
-                    hideBottomSheet();
+                if (bottomSheet.isVisible()) {
+                    bottomSheet.hide();
                 }
             }
         };
-        layoutDrawer.addDrawerListener(drawerToggle);
+        drawerMenu.addDrawerListener(drawerToggle);
 
         // Defines the actions for each item on the list
         NavigationView.OnNavigationItemSelectedListener navigationItemListener = new NavigationView.OnNavigationItemSelectedListener() {
@@ -235,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
                             mapFragment.enableBusOverlay();
                     } else {
                         query = getFilterQuery(id);
-                        if(query != null){
+                        if (query != null) {
                             call = overpassApi.getData(query);
                             call.enqueue(MainActivity.this);
                         }
@@ -243,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
                 } else {
                     UIHelper.showToastShort(MainActivity.this, getString(R.string.error_no_internet_connection));
                 }
-                layoutDrawer.closeDrawer(GravityCompat.START);
+                drawerMenu.closeDrawer(GravityCompat.START);
                 return true;
             }
         };
@@ -286,32 +281,6 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
      * showing information about places searched and their details.
      * Serves as a container.
      */
-    private void setupBottomSheetContainer() {
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer);
-        hideBottomSheet();
-
-        // Defines behaviors for the bottom sheet
-        final BottomSheetCallback sheetCallback = new BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        clearBottomSheetFragment();
-                        showBtnClear();
-                        break;
-                    case (BottomSheetBehavior.STATE_EXPANDED):
-                        hideBtnClear();
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // Nothing to do here
-            }
-        };
-        bottomSheetBehavior.setBottomSheetCallback(sheetCallback);
-    }
 
     private void clearBottomSheetFragment() {
         final boolean searchRemoved = fragmentHelper.removeFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
@@ -380,55 +349,18 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     @Override
     public void onBackPressed() {
         // Defines left drawer behavior when back button is pressed
-        closeLeftDrawer();
-
-        /*TODO: refactor*/
-        PlaceDetailsFragment placeDetailsFragment = (PlaceDetailsFragment) getSupportFragmentManager()
-                .findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
-
-        SearchResultFragment searchResultFragment = (SearchResultFragment) getSupportFragmentManager()
-                .findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
-
-        // Defines bottom sheet behavior when back button is pressed
-        if (placeDetailsFragment != null && isBottomSheetCollapsed())
-            hideBottomSheet();
-        else {
-            if ((placeDetailsFragment != null && searchResultFragment == null) && isBottomSheetExpanded())
-                hideBottomSheet();
-            else if (placeDetailsFragment != null && isBottomSheetExpanded())
-                super.onBackPressed();
-            else if (searchResultFragment != null && isBottomSheetCollapsed()) {
-                hideBottomSheet();
-            } else if (searchResultFragment != null && isBottomSheetExpanded())
-                collapseBottomSheet();
+        if (drawerMenu.isDrawerOpen(GravityCompat.START)) {
+            drawerMenu.closeDrawer(GravityCompat.START);
+            return;
         }
 
-        // Defines the specific scenario where the back button should take back to the previous activity
+        // Defines bottomsheet behavior
+        if(bottomSheet.isVisible()) {
+            bottomSheet.hide();
+            return;
+        }
 
-        if (!layoutDrawer.isDrawerOpen(GravityCompat.START) && isBottomSheetHidden())
-            super.onBackPressed();
-
-    }
-
-    private boolean isBottomSheetCollapsed() {
-        return bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED;
-    }
-
-    private boolean isBottomSheetExpanded() {
-        return bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED;
-    }
-
-    private boolean isBottomSheetHidden() {
-        return bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN;
-    }
-
-    private void hideBottomSheet() {
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
-
-    private void closeLeftDrawer() {
-        if (layoutDrawer.isDrawerOpen(GravityCompat.START))
-            layoutDrawer.closeDrawer(GravityCompat.START);
+        super.onBackPressed();
     }
 
 
@@ -442,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
 
         if (taskStatus == ServerResponse.SUCCESS) {
             searchItem.collapseActionView();
-            expandBottomSheet();
+//            expand();
             // The query returned multiple results
             if (POIs.size() > 1) {
                 showMultipleResultsFragment(POIs);
@@ -479,17 +411,17 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     private void showMultipleResultsFragment(ArrayList<POI> POIS) {
         Log.i(TAG, POIS.toString());
         // Open SearchResultFragment
-        SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(POIS);
-        fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, searchResultFrag, SearchResultFragment.FRAGMENT_TAG);
+//        SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(POIS);
+//        fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, searchResultFrag, SearchResultFragment.FRAGMENT_TAG);
     }
 
-    private void collapseBottomSheet() {
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-    }
-
-    private void expandBottomSheet() {
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-    }
+//    private void collapse() {
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//    }
+//
+//    private void expand() {
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//    }
 
 
     /**
@@ -530,27 +462,40 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     @Override
     public void onResponse(Call<OverpassModel> call, Response<OverpassModel> response) {
         hideProgressBar();
-        final List<Element> points = response.body().getElements();
-        UIHelper.showToastShort(this,"Resposta retornada");
+        UIHelper.showToastShort(this, "Resposta retornada");
+        final int code = response.code();
+        switch (code) {
+            case 400:
+                UIHelper.showToastShort(this, getString(R.string.error_server_internal_error));
+                break;
+            case 200:
+                showFilterResults(response.body());
+        }
 
-//        if (taskStatus == ServerResponse.SUCCESS) {
-//            mapFragment.createOverlay(POIS, markersType, overlayTag);
-//            UIHelper.showToastLong(this, getString(R.string.msg_click_marker));
-//        } else if (taskStatus == ServerResponse.TIMEOUT) {
-//            UIHelper.showToastShort(this, getString(R.string.error_server_timeout));
-//        } else if (taskStatus == ServerResponse.CONNECTION_FAILED) {
-//            UIHelper.showToastShort(this, getString(R.string.error_connection_failed));
-//        } else if (taskStatus.equals(ServerResponse.EMPTY_RESPONSE)) {
-//            new MaterialDialog.Builder(this)
-//                    .title(getString(R.string.dialog_title))
-//                    .content(R.string.msg_no_filter_results)
-//                    .positiveText("OK")
-//                    .show();
-//        }
     }
+
+    private void showFilterResults(OverpassModel overpassModel) {
+        if (overpassModel != null) {
+            final List<Element> elements = overpassModel.getElements();
+            final int numberOfResults = elements.size();
+            switch (numberOfResults) {
+                case 0:
+                    UIHelper.showToastShort(this, getString(R.string.msg_no_filter_results));
+                    break;
+                case 1:
+                    bottomSheet.showPlaceDetailsFragment(elements);
+                    break;
+                default:
+                    bottomSheet.showSearchResultFragment(elements);
+            }
+        }
+    }
+
 
     @Override
     public void onFailure(Call<OverpassModel> call, Throwable t) {
         UIHelper.showToastShort(this, "Erro ao recuperar dados do servidor do OSM.");
     }
+
+
 }

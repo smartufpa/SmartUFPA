@@ -11,12 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 
 /**
- * Stable Commit (20/09)
  * Fragment to show details about an specific place selected by the user.
  * Must follow the POI model.
  * @author kaeuchoa
@@ -26,7 +26,7 @@ public class PlaceDetailsFragment extends Fragment {
 
     public static final String FRAGMENT_TAG = PlaceDetailsFragment.class.getName();
 
-    private static final String ARG_SELECTED_PLACE = "selected_place";
+    private static final String ARG_POINT_OF_INTEREST = "point_of_interest";
     private static final String TAG = PlaceDetailsFragment.class.getSimpleName();
 
     // VIEWS
@@ -39,7 +39,7 @@ public class PlaceDetailsFragment extends Fragment {
 
     // TODO (POSTPONED): LOAD IMAGE OF PLACE AND IMPLEMENT RATING FUNCTIONS
 
-    private POI selectedPOI;
+    private POI pointOfInterest;
 
     public PlaceDetailsFragment() {
         // Required empty public constructor
@@ -55,17 +55,26 @@ public class PlaceDetailsFragment extends Fragment {
     public static PlaceDetailsFragment newInstance(POI selectedPOI) {
         PlaceDetailsFragment fragment = new PlaceDetailsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_SELECTED_PLACE, selectedPOI);
+        args.putParcelable(ARG_POINT_OF_INTEREST, selectedPOI);
         fragment.setArguments(args);
         return fragment;
     }
+
+    public static PlaceDetailsFragment newInstance(Element element) {
+        PlaceDetailsFragment fragment = new PlaceDetailsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_POINT_OF_INTEREST, element);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            selectedPOI = getArguments().getParcelable(ARG_SELECTED_PLACE);
+            pointOfInterest = getArguments().getParcelable(ARG_POINT_OF_INTEREST);
         }
 
     }
@@ -76,31 +85,31 @@ public class PlaceDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_place_details, container, false);
 
-        txtDetPlaceName = view.findViewById(R.id.txt_det_placename);
-        txtDetPlaceDesc = view.findViewById(R.id.txt_det_place_desc);
-        txtDetLocName = view.findViewById(R.id.txt_det_place_loc_name);
-        btnDetFootRoute = view.findViewById(R.id.btn_det_foot_route);
-
-        if(selectedPOI.getShortName().equals(Constants.NO_SHORT_NAME))
-            txtDetPlaceName.setText(selectedPOI.getName());
-        else
-            txtDetPlaceName.setText(selectedPOI.getName() + " (" + selectedPOI.getShortName()+ ")");
-
-        txtDetPlaceDesc.setText("");
-        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), selectedPOI.getLocalName()));
-
-        btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(SystemServicesManager.isNetworkEnabled(getContext())) {
-                    final MapFragment mapFragment = (MapFragment) getActivity().getSupportFragmentManager()
-                            .findFragmentByTag(MapFragment.FRAGMENT_TAG);
-                    mapFragment.findRouteToPlace(selectedPOI);
-                }else{
-                    Toast.makeText(getContext(), R.string.error_no_internet_connection, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        txtDetPlaceName = view.findViewById(R.id.txt_det_placename);
+//        txtDetPlaceDesc = view.findViewById(R.id.txt_det_place_desc);
+//        txtDetLocName = view.findViewById(R.id.txt_det_place_loc_name);
+//        btnDetFootRoute = view.findViewById(R.id.btn_det_foot_route);
+//
+//        if(pointOfInterest.getShortName().equals(Constants.NO_SHORT_NAME))
+//            txtDetPlaceName.setText(pointOfInterest.getName());
+//        else
+//            txtDetPlaceName.setText(pointOfInterest.getName() + " (" + pointOfInterest.getShortName()+ ")");
+//
+//        txtDetPlaceDesc.setText("");
+//        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), pointOfInterest.getLocalName()));
+//
+//        btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(SystemServicesManager.isNetworkEnabled(getContext())) {
+//                    final MapFragment mapFragment = (MapFragment) getActivity().getSupportFragmentManager()
+//                            .findFragmentByTag(MapFragment.FRAGMENT_TAG);
+//                    mapFragment.findRouteToPlace(pointOfInterest);
+//                }else{
+//                    Toast.makeText(getContext(), R.string.error_no_internet_connection, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         return view;
     }

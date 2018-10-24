@@ -144,7 +144,7 @@
     <string name="dialog_title">Ops…</string>
     <string name="error_connection_failed">Erro na conexão durante a requisição. Tente novamente.</string>
     <string name="btn_login_entrar">Entrar</string>
-    <string name="msg_no_filter_results">Nenhum local foi encontrado nessa categoria.</string>
+    <string name="msg_no_filter_results">Nenhum resultado foi encontrado nessa categoria.</string>
     <string name="msg_all_permissions_granted">Todas as permissões necessárias foram cedidas.</string>
     <string name="msg_request_storage_permission">A permissão de armazenamento é necessária para armazenar porções do mapa para reduzir consumo de dados e para uso offline.</string>
     <string name="msg_request_location_permission">A permissão de localização é necessária para mostrar a sua localização no mapa.</string>
