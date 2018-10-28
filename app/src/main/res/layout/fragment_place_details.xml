@@ -1,77 +1,115 @@
-<!--Stable Commit (20/09)-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:layout_editor_absoluteY="25dp"
     tools:mapFragment="br.ufpa.smartufpa.fragments.PlaceDetailsFragment">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:textAllCaps="true"
-        android:text="@string/lbl_place_details"
-        android:id="@+id/txt_results"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@color/colorPrimaryText"
-        />
 
-    <ImageView
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="125dp"
-        android:src="@drawable/horizontal_img_place_holder"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
+        <ImageView
+            android:id="@+id/ivWebsite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="?android:attr/listChoiceIndicatorSingle" />
+
+        <TextView
+            android:id="@+id/txtWebsite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="[Sem site cadastrado]"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivWebsite"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout5"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_det_placename"
-        android:textStyle="bold"
-        android:text="@string/lbl_placeholder"
-        android:textSize="16sp"
-        android:textAllCaps="true"
-        />
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
+        <ImageView
+            android:id="@+id/ivOperationHours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="?android:attr/listChoiceIndicatorSingle" />
 
-    <TextView
+        <TextView
+            android:id="@+id/txtOperationHours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="[Sem horário de funcionamento cadastrado]"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivOperationHours"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_placeholder"
-        android:id="@+id/txt_det_place_loc_name"
-        android:layout_marginTop="5dp"/>
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_det_place_desc"
-        android:text="@string/lorem_ipsum"
-        android:textSize="14sp"/>
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="?android:attr/listChoiceIndicatorSingle" />
 
-    <Button
-        android:id="@+id/btn_det_foot_route"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:text="@string/btn_foot_route"
-        android:layout_gravity="bottom|end"
-        android:drawableRight="@drawable/ic_directions_walk"
-    />
-
-    <Button
-        android:id="@+id/btn_det_rate_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:text="@string/btn_rate_info"
-        android:layout_gravity="bottom|end"
-        android:drawableTint="@color/colorAccent"
-        android:visibility="invisible"
-        tools:targetApi="m" />
-
-</LinearLayout>
+        <TextView
+            android:id="@+id/txtDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="[Sem descrição]"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView5"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>
 
 
 

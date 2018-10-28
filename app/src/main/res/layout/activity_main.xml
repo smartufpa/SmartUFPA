@@ -34,5 +34,17 @@
 
     </android.support.v4.widget.DrawerLayout>
 
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_close_bsheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        app:layout_anchor="@+id/bottom_sheet_container"
+        app:layout_anchorGravity="top|end"
+        android:visibility="gone"
+        />
+
     <include layout="@layout/bottom_sheet"/>
 </android.support.design.widget.CoordinatorLayout>

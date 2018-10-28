@@ -66,8 +66,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
         viewHolder.ivInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UIHelper.showToastShort(parentContext,"Clique");
-//                startPlaceDetailsFragment(element);
+                startPlaceDetailsFragment(element);
             }
         });
     }

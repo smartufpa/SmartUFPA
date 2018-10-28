@@ -36,7 +36,7 @@ import java.util.List;
 
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.about.AboutActivity;
-import br.ufpa.smartufpa.activities.ui.BottomSheetView;
+import br.ufpa.smartufpa.activities.ui.BottomSheetController;
 import br.ufpa.smartufpa.asynctasks.SearchQueryTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     private IMapController mapCamera;
     private OverpassApi overpassApi;
     private OverpassHelper overpassHelper;
-    private BottomSheetView bottomSheet;
+    public BottomSheetController bottomSheetController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         setupMapFragment();
         overpassApi = RetrofitHelper.INSTANCE.getOverpassApi();
         overpassHelper = OverpassHelper.getInstance(this);
-        bottomSheet = new BottomSheetView(this, getWindow().getDecorView(), fragmentHelper);
+        bottomSheetController = new BottomSheetController(this, getWindow().getDecorView(), fragmentHelper);
 
     }
 
@@ -205,8 +205,8 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 // Check the state of the bottom sheet so they don't overlap each other on the view
-                if (bottomSheet.isVisible()) {
-                    bottomSheet.hide();
+                if (bottomSheetController.isVisible()) {
+                    bottomSheetController.hide();
                 }
             }
         };
@@ -355,8 +355,8 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         }
 
         // Defines bottomsheet behavior
-        if(bottomSheet.isVisible()) {
-            bottomSheet.hide();
+        if(bottomSheetController.isVisible()) {
+            bottomSheetController.hide();
             return;
         }
 
@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     }
 
     private void showSingleResultFragment(final POI currentPOI) {
-        PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPOI);
+//        PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPOI);
 //        fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
         if (mapCamera != null) {
             mapCamera.animateTo(currentPOI.getGeoPoint(), 18.0, (long) 1000);
@@ -462,7 +462,6 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     @Override
     public void onResponse(Call<OverpassModel> call, Response<OverpassModel> response) {
         hideProgressBar();
-        UIHelper.showToastShort(this, "Resposta retornada");
         final int code = response.code();
         switch (code) {
             case 400:
@@ -483,10 +482,10 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
                     UIHelper.showToastShort(this, getString(R.string.msg_no_filter_results));
                     break;
                 case 1:
-                    bottomSheet.showPlaceDetailsFragment(elements);
+                    bottomSheetController.showPlaceDetailsFragment(elements.get(0));
                     break;
                 default:
-                    bottomSheet.showSearchResultFragment(elements);
+                    bottomSheetController.showSearchResultFragment(elements);
             }
         }
     }

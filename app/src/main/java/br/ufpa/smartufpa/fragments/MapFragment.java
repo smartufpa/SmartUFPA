@@ -349,11 +349,11 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
                     behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
                     // Sets up a PlaceDetailsFragment to show specific information about the selected POI
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(rightPOI);
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
-                            .commit();
+//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(rightPOI);
+//                    fragmentManager.beginTransaction()
+//                            .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
+//                            .commit();
 
                     // Will change the marker to its clicked icon
                     marker.setIcon(markerDrawables.get(MarkerStatus.CLICKED));

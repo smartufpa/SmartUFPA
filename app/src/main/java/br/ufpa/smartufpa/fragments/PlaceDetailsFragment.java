@@ -6,15 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.activities.MainActivity;
 import br.ufpa.smartufpa.models.overpass.Element;
-import br.ufpa.smartufpa.models.smartufpa.POI;
-import br.ufpa.smartufpa.utils.Constants;
-import br.ufpa.smartufpa.utils.SystemServicesManager;
+import br.ufpa.smartufpa.utils.ElementParser;
+import br.ufpa.smartufpa.utils.UIHelper;
 
 /**
  * Fragment to show details about an specific place selected by the user.
@@ -30,34 +29,20 @@ public class PlaceDetailsFragment extends Fragment {
     private static final String TAG = PlaceDetailsFragment.class.getSimpleName();
 
     // VIEWS
-    private TextView txtDetPlaceName;
+    private TextView txtWebsite;
+    private TextView txtOperationHours;
+    private TextView txtDescription;
+    private ImageButton btnBack;
 
-    private TextView txtDetPlaceDesc;
-    private TextView txtDetLocName;
-    private Button btnDetFootRoute;
+    private ElementParser elementParser;
 
 
     // TODO (POSTPONED): LOAD IMAGE OF PLACE AND IMPLEMENT RATING FUNCTIONS
 
-    private POI pointOfInterest;
+    private Element pointOfInterest;
 
     public PlaceDetailsFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param selectedPOI POI which the user has chosen to see details.
-     * @return A new instance of fragment PlaceDetailsFragment.
-     */
-    public static PlaceDetailsFragment newInstance(POI selectedPOI) {
-        PlaceDetailsFragment fragment = new PlaceDetailsFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_POINT_OF_INTEREST, selectedPOI);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     public static PlaceDetailsFragment newInstance(Element element) {
@@ -73,43 +58,66 @@ public class PlaceDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        elementParser = ElementParser.INSTANCE;
         if (getArguments() != null) {
             pointOfInterest = getArguments().getParcelable(ARG_POINT_OF_INTEREST);
         }
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_place_details, container, false);
+        txtWebsite = view.findViewById(R.id.txtWebsite);
+        txtDescription = view.findViewById(R.id.txtDescription);
+        txtOperationHours = view.findViewById(R.id.txtOperationHours);
 
-//        txtDetPlaceName = view.findViewById(R.id.txt_det_placename);
-//        txtDetPlaceDesc = view.findViewById(R.id.txt_det_place_desc);
-//        txtDetLocName = view.findViewById(R.id.txt_det_place_loc_name);
-//        btnDetFootRoute = view.findViewById(R.id.btn_det_foot_route);
-//
-//        if(pointOfInterest.getShortName().equals(Constants.NO_SHORT_NAME))
-//            txtDetPlaceName.setText(pointOfInterest.getName());
-//        else
-//            txtDetPlaceName.setText(pointOfInterest.getName() + " (" + pointOfInterest.getShortName()+ ")");
-//
-//        txtDetPlaceDesc.setText("");
-//        txtDetLocName.setText(String.format("%s %s", getString(R.string.lbl_local_name), pointOfInterest.getLocalName()));
-//
-//        btnDetFootRoute.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(SystemServicesManager.isNetworkEnabled(getContext())) {
-//                    final MapFragment mapFragment = (MapFragment) getActivity().getSupportFragmentManager()
-//                            .findFragmentByTag(MapFragment.FRAGMENT_TAG);
-//                    mapFragment.findRouteToPlace(pointOfInterest);
-//                }else{
-//                    Toast.makeText(getContext(), R.string.error_no_internet_connection, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+        final MainActivity parentActivity = (MainActivity) getActivity();
+
+        if (parentActivity != null) {
+            // Back Button
+            parentActivity.bottomSheetController.collapse();
+            btnBack = parentActivity.findViewById(R.id.imgBtnBack);
+            btnBack.setVisibility(View.VISIBLE);
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UIHelper.showToastShort(parentActivity,"clique");
+                }
+            });
+
+            // Title
+            final TextView txtBsheetTitle = parentActivity.findViewById(R.id.txt_bsheet_title);
+            txtBsheetTitle.setText(elementParser.getName(pointOfInterest));
+
+            // Subtitle
+            final TextView txtBsheetSubtitle = parentActivity.findViewById(R.id.txt_bsheet_subtitle);
+            final String localName = elementParser.getLocalName(pointOfInterest);
+            if (localName != null){
+                txtBsheetSubtitle.setText(localName);
+            }else{
+                txtBsheetSubtitle.setVisibility(View.INVISIBLE);
+            }
+
+            // ExtraInfo
+            final TextView txtExtraInfo = parentActivity.findViewById(R.id.txt_bsheet_extra_info);
+            txtExtraInfo.setVisibility(View.GONE);
+
+        }
+
+        final String website = elementParser.getWebsite(pointOfInterest);
+        if(website!= null)
+            txtWebsite.setText(website);
+
+        final String operationHours = elementParser.getOperationHours(pointOfInterest);
+        if(operationHours != null)
+            txtOperationHours.setText(operationHours);
+
+        final String description = elementParser.getDescription(pointOfInterest);
+        if(description != null)
+            txtDescription.setText(description);
 
         return view;
     }

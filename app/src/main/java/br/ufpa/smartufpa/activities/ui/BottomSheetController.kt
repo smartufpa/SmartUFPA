@@ -13,21 +13,21 @@ import br.ufpa.smartufpa.utils.UIHelper
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 
-class BottomSheetView(private val context: Context, private val view: View, private val fragmentHelper: FragmentHelper) : BottomSheetBehavior.BottomSheetCallback() {
+class BottomSheetController(private val context: Context, private val view: View, private val fragmentHelper: FragmentHelper) : BottomSheetBehavior.BottomSheetCallback() {
 
     private val bottomSheetBehavior = from(view.bottom_sheet_container)
+
     init {
         bottomSheetBehavior.setBottomSheetCallback(this)
         view.fab_close_bsheet.setOnClickListener {
             hide()
         }
-
         hide()
     }
 
 
-    fun showPlaceDetailsFragment(elements: List<Element>) {
-        val placeDetailsFragment = PlaceDetailsFragment.newInstance(elements[0])
+    fun showPlaceDetailsFragment(element: Element) {
+        val placeDetailsFragment = PlaceDetailsFragment.newInstance(element)
 //        fragmentHelper.loadWithReplace(R.id.bottom_sheet, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG)
         expand()
     }
@@ -53,16 +53,27 @@ class BottomSheetView(private val context: Context, private val view: View, priv
         }
     }
 
-    private fun setTitle(title: String){
-        view.txt_bsheet_title.setText(title)
+    private fun setTitle(title: String) {
+        with(view.txt_bsheet_title) {
+            setText(title)
+            visibility = View.VISIBLE
+        }
+
     }
 
-    private fun setSubTitle(subtitle: String){
-        view.txt_bsheet_subtitle.setText(subtitle)
+    private fun setSubTitle(subtitle: String) {
+        with(view.txt_bsheet_subtitle) {
+            setText(subtitle)
+            visibility = View.VISIBLE
+        }
     }
 
-    private fun setExtraInfo(extraInfo: String){
-        view.txt_bsheet_extra_info.setText(extraInfo)
+    private fun setExtraInfo(extraInfo: String) {
+        with(view.txt_bsheet_extra_info){
+            setText(extraInfo)
+            visibility = View.VISIBLE
+        }
+
     }
 
     private fun clearBottomSheetFragment() {
