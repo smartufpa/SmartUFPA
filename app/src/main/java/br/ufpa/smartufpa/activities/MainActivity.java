@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
 
     private void showSingleResultFragment(final POI currentPOI) {
         PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPOI);
-        fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
+//        fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
         if (mapCamera != null) {
             mapCamera.animateTo(currentPOI.getGeoPoint(), 18.0, (long) 1000);
         }
@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         Log.i(TAG, POIS.toString());
         // Open SearchResultFragment
 //        SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(POIS);
-//        fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, searchResultFrag, SearchResultFragment.FRAGMENT_TAG);
+//        fragmentHelper.loadWithReplace(R.id.bottom_sheet, searchResultFrag, SearchResultFragment.FRAGMENT_TAG);
     }
 
 //    private void collapse() {

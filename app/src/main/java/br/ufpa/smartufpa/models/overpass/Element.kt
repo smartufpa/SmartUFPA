@@ -2,6 +2,7 @@ package br.ufpa.smartufpa.models.overpass
 
 import android.os.Parcel
 import android.os.Parcelable
+import br.ufpa.smartufpa.models.smartufpa.POI
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 

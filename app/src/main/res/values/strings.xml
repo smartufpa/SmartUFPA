@@ -201,6 +201,7 @@
     <string name="register_url">https://www.openstreetmap.org/user/new</string>
     <string name="url_login">https://www.openstreetmap.org/oauth/request_token</string>
     <string name="url_dev_api">https://master.apis.dev.openstreetmap.org/</string>
+    <string name="place_holder_no_name">[Sem nome]</string>
 
 
 </resources>
