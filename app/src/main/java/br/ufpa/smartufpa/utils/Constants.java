@@ -1,5 +1,7 @@
 package br.ufpa.smartufpa.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Class to keep constants that will be directly used on the code.
  * @author kaeuchoa
@@ -105,6 +107,14 @@ public final class Constants {
     public static final String CONFIG_SOUTH_LIMIT = "map_region_southlimit";
     public static final String CONFIG_EAST_LIMIT = "map_region_eastlimit";
     public static final String CONFIG_NORTH_LIMIT = "map_region_northlimit";
+
+    public class OpeningHours{
+        public static final String OPENING_DAY = "opening_day";
+        public static final String CLOSING_DAY = "closing_day";
+        public static final String OPENING_HOUR = "opening_hour";
+        public static final String CLOSING_HOUR = "closing_hour";
+    }
+
 
 
     public class MapConfig {

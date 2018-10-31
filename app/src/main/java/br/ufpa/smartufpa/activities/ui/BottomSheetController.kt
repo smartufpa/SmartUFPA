@@ -13,7 +13,7 @@ import br.ufpa.smartufpa.utils.UIHelper
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 
-class BottomSheetController(private val context: Context, private val view: View, private val fragmentManager: FragmentManager, private val fragmentHelper: FragmentHelper) : BottomSheetBehavior.BottomSheetCallback() {
+class BottomSheetController(private val view: View, private val fragmentHelper: FragmentHelper) : BottomSheetBehavior.BottomSheetCallback() {
 
     private val bottomSheetBehavior = from(view.bottom_sheet_container)
 
@@ -31,7 +31,6 @@ class BottomSheetController(private val context: Context, private val view: View
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -39,6 +38,13 @@ class BottomSheetController(private val context: Context, private val view: View
             STATE_HIDDEN -> {
                 clearBottomSheetFragment()
             }
+            STATE_DRAGGING -> {
+                view.fab_close_bsheet.visibility = View.GONE
+            }
+            else -> {
+                view.fab_close_bsheet.visibility = View.VISIBLE
+            }
+
         }
     }
 
@@ -66,7 +72,7 @@ class BottomSheetController(private val context: Context, private val view: View
     }
 
     private fun clearBottomSheetFragment() {
-        UIHelper.showToastLong(context, "Clear BottomSheet")
+        view.fab_close_bsheet.visibility = View.GONE
     }
 
     fun isVisible(): Boolean {

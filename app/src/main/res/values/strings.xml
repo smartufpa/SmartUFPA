@@ -205,6 +205,7 @@
     <string name="search_result_title">Resultados Encontrados</string>
     <string name="search_result_subtitle">Número de resultados</string>
     <string name="search_result_extra">(%d)</string>
+    <string name="operation_hours_template">Aberto de %s a %s, de %s até %s</string>
 
 
 </resources>

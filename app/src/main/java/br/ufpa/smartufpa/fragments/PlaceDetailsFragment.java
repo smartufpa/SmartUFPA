@@ -6,14 +6,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.activities.MainActivity;
 import br.ufpa.smartufpa.models.overpass.Element;
+import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.ElementParser;
-import br.ufpa.smartufpa.utils.UIHelper;
 
 /**
  * Fragment to show details about an specific place selected by the user.
@@ -33,8 +35,11 @@ public class PlaceDetailsFragment extends Fragment {
     private TextView txtOperationHours;
     private TextView txtDescription;
     private ImageButton btnBack;
+    private Button btnEdit;
 
     private ElementParser elementParser;
+
+    private int colorBlack;
 
 
     // TODO (POSTPONED): LOAD IMAGE OF PLACE AND IMPLEMENT RATING FUNCTIONS
@@ -62,6 +67,8 @@ public class PlaceDetailsFragment extends Fragment {
         if (getArguments() != null) {
             pointOfInterest = getArguments().getParcelable(ARG_POINT_OF_INTEREST);
         }
+
+        colorBlack = getActivity().getResources().getColor(android.R.color.black);
     }
 
 
@@ -73,22 +80,46 @@ public class PlaceDetailsFragment extends Fragment {
         txtWebsite = view.findViewById(R.id.txtWebsite);
         txtDescription = view.findViewById(R.id.txtDescription);
         txtOperationHours = view.findViewById(R.id.txtOperationHours);
+        btnEdit = view.findViewById(R.id.btnEdit);
 
         final String website = elementParser.getWebsite(pointOfInterest);
-        if(website!= null)
-            txtWebsite.setText(website);
-
-        final String operationHours = elementParser.getOperationHours(pointOfInterest);
-        if(operationHours != null)
-            txtOperationHours.setText(operationHours);
-
+        final HashMap<String, String> operationHours = elementParser.getOpeningHours(pointOfInterest);
         final String description = elementParser.getDescription(pointOfInterest);
-        if(description != null)
-            txtDescription.setText(description);
+
+        setupWebsiteText(website);
+        setupOperationHoursText(operationHours, txtOperationHours);
+        setupDescriptionText(description, txtDescription);
 
         return view;
     }
 
+    private void setupDescriptionText(String description, TextView txtDescription) {
+        if (description != null) {
+            txtDescription.setText(description);
+            txtDescription.setTextColor(colorBlack);
+        }
+    }
+
+    private void setupOperationHoursText(HashMap<String, String> operationHours, TextView txtOperationHours) {
+        //TODO parse de horas
+        if (operationHours != null){
+            txtOperationHours.setText(
+                    String.format(getString(R.string.operation_hours_template),
+                            operationHours.get(Constants.OpeningHours.OPENING_DAY),
+                            operationHours.get(Constants.OpeningHours.CLOSING_DAY),
+                            operationHours.get(Constants.OpeningHours.OPENING_HOUR),
+                            operationHours.get(Constants.OpeningHours.CLOSING_HOUR)
+                    ));
+            txtOperationHours.setTextColor(colorBlack);
+        }
+    }
+
+    private void setupWebsiteText(String website) {
+        if(website!= null) {
+            txtWebsite.setText(website);
+            txtWebsite.setTextColor(colorBlack);
+        }
+    }
 
 
 }

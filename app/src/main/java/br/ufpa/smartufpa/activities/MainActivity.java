@@ -11,8 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -90,14 +88,16 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     private NavigationView navigationView;
     private ProgressBar progressBar;
     private MenuItem searchItem;
-    private FragmentHelper fragmentHelper;
     private Button btnClear;
 
     private MapFragment mapFragment;
     private IMapController mapCamera;
     private OverpassApi overpassApi;
-    private OverpassHelper overpassHelper;
     private BottomSheetController bottomSheetController;
+
+    private OverpassHelper overpassHelper;
+    private FragmentHelper fragmentHelper;
+    private final ElementParser elementParser = ElementParser.INSTANCE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         setupMapFragment();
         overpassApi = RetrofitHelper.INSTANCE.getOverpassApi();
         overpassHelper = OverpassHelper.getInstance(this);
-        bottomSheetController = new BottomSheetController(this, getWindow().getDecorView(), getSupportFragmentManager(), fragmentHelper);
+        bottomSheetController = new BottomSheetController(getWindow().getDecorView(), fragmentHelper);
 
     }
 
@@ -516,38 +516,41 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     @Override
     public void showPlaceDetailsFragment(@NotNull Element element) {
         PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(element);
+        bottomSheetController.showFragment(placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
+//        fragmentHelper.loadWithReplace(R.id.frame_fragment_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_fragment_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
-        final ElementParser elementParser = ElementParser.INSTANCE;
         final String name = elementParser.getName(element);
-        if(name != null){
-            bottomSheetController.setTitle(name);
-        }else{
-            bottomSheetController.setTitle(getString(R.string.place_holder_no_name));
-        }
-
         final String localName = elementParser.getLocalName(element);
-        if(localName != null){
-            bottomSheetController.setSubTitle(localName);
-        }else{
-            bottomSheetController.setSubTitle("");
-        }
-
         final String shortName = elementParser.getShortName(element);
+
+        initPlaceDetailsTitle(name);
+        initPlaceDetailsSubtitle(localName);
+        initPlaceDetailsExtra(shortName);
+    }
+
+    private void initPlaceDetailsExtra(String shortName) {
         if(shortName != null){
             bottomSheetController.setExtraInfo(String.format("(%s)",shortName));
         }else{
             bottomSheetController.setExtraInfo("");
         }
-
-//        bottomSheetController.showFragment(placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
-
     }
 
+    private void initPlaceDetailsSubtitle(String localName) {
+        if(localName != null){
+            bottomSheetController.setSubTitle(localName);
+        }else{
+            bottomSheetController.setSubTitle("");
+        }
+    }
 
+    private void initPlaceDetailsTitle(String name) {
+        if(name != null){
+            bottomSheetController.setTitle(name);
+        }else{
+            bottomSheetController.setTitle(getString(R.string.place_holder_no_name));
+        }
+    }
 
 
     @Override

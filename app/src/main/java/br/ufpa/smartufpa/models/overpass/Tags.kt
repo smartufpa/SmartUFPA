@@ -34,6 +34,16 @@ class Tags {
     @SerializedName("building")
     val building: String? = null
 
+    @SerializedName("indoor")
+    val indoor: String? = null
+
+    @SerializedName("opening_hours")
+    val openingHours: String? = null
+
+
+
+
+
     override fun toString(): String {
         return "[name=$name,short_name=$shortName,shop=$shop,amenity=$amenity,loc_name=$locName,description=$description]"
     }
