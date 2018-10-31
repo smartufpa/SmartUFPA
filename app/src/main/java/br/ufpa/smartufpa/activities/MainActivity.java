@@ -11,6 +11,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +32,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
+import org.jetbrains.annotations.NotNull;
 import org.osmdroid.api.IMapController;
 
 import java.util.ArrayList;
@@ -42,11 +46,13 @@ import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment;
 import br.ufpa.smartufpa.fragments.SearchResultFragment;
+import br.ufpa.smartufpa.interfaces.PlaceDetailsDelegate;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.models.overpass.OverpassModel;
 import br.ufpa.smartufpa.models.retrofit.OverpassApi;
 import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
+import br.ufpa.smartufpa.utils.ElementParser;
 import br.ufpa.smartufpa.utils.FragmentHelper;
 import br.ufpa.smartufpa.utils.OverpassHelper;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
@@ -71,7 +77,7 @@ import retrofit2.Response;
  * @author kaeuchoa
  */
 
-public class MainActivity extends AppCompatActivity implements OnSearchQueryListener, Callback<OverpassModel> {
+public class MainActivity extends AppCompatActivity implements OnSearchQueryListener, Callback<OverpassModel>, PlaceDetailsDelegate {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
@@ -91,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     private IMapController mapCamera;
     private OverpassApi overpassApi;
     private OverpassHelper overpassHelper;
-    public BottomSheetController bottomSheetController;
+    private BottomSheetController bottomSheetController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         setupMapFragment();
         overpassApi = RetrofitHelper.INSTANCE.getOverpassApi();
         overpassHelper = OverpassHelper.getInstance(this);
-        bottomSheetController = new BottomSheetController(this, getWindow().getDecorView(), fragmentHelper);
+        bottomSheetController = new BottomSheetController(this, getWindow().getDecorView(), getSupportFragmentManager(), fragmentHelper);
 
     }
 
@@ -264,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
                     return overpassHelper.getOverpassQuery(OverpassFilters.AUDITORIUMS);
             case R.id.nav_library:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES))
-                    return overpassHelper.getOverpassQuery(OverpassFilters.AUDITORIUMS);
+                    return overpassHelper.getOverpassQuery(OverpassFilters.LIBRARIES);
         }
         return null;
     }
@@ -356,6 +362,11 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
 
         // Defines bottomsheet behavior
         if(bottomSheetController.isVisible()) {
+            // TODO
+//            final PlaceDetailsFragment fragmentByTag = (PlaceDetailsFragment) getSupportFragmentManager().findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
+//            if(fragmentByTag != null){
+//                getSupportFragmentManager().popBackStack();
+//            }
             bottomSheetController.hide();
             return;
         }
@@ -481,20 +492,69 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
                 case 0:
                     UIHelper.showToastShort(this, getString(R.string.msg_no_filter_results));
                     break;
-                case 1:
-                    bottomSheetController.showPlaceDetailsFragment(elements.get(0));
-                    break;
                 default:
-                    bottomSheetController.showSearchResultFragment(elements);
+                    showSearchResultFragment(elements);
             }
         }
     }
+
+
+
+    private void showSearchResultFragment(List<Element> elements) {
+        SearchResultFragment searchResultFragment = SearchResultFragment.newInstance(elements);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_fragment_container, searchResultFragment, searchResultFragment.FRAGMENT_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(SearchResultFragment.FRAGMENT_TAG)
+                .commit();
+        bottomSheetController.setTitle(getString(R.string.search_result_title));
+        bottomSheetController.setSubTitle(getString(R.string.search_result_subtitle));
+        bottomSheetController.setExtraInfo(String.format(getString(R.string.search_result_extra),elements.size()));
+        bottomSheetController.showFragment(searchResultFragment, SearchResultFragment.FRAGMENT_TAG);
+    }
+
+    @Override
+    public void showPlaceDetailsFragment(@NotNull Element element) {
+        PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(element);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_fragment_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+        final ElementParser elementParser = ElementParser.INSTANCE;
+        final String name = elementParser.getName(element);
+        if(name != null){
+            bottomSheetController.setTitle(name);
+        }else{
+            bottomSheetController.setTitle(getString(R.string.place_holder_no_name));
+        }
+
+        final String localName = elementParser.getLocalName(element);
+        if(localName != null){
+            bottomSheetController.setSubTitle(localName);
+        }else{
+            bottomSheetController.setSubTitle("");
+        }
+
+        final String shortName = elementParser.getShortName(element);
+        if(shortName != null){
+            bottomSheetController.setExtraInfo(String.format("(%s)",shortName));
+        }else{
+            bottomSheetController.setExtraInfo("");
+        }
+
+//        bottomSheetController.showFragment(placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
+
+    }
+
+
 
 
     @Override
     public void onFailure(Call<OverpassModel> call, Throwable t) {
         UIHelper.showToastShort(this, "Erro ao recuperar dados do servidor do OSM.");
     }
+
 
 
 }

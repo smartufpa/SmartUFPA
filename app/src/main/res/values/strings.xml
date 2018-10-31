@@ -202,6 +202,9 @@
     <string name="url_login">https://www.openstreetmap.org/oauth/request_token</string>
     <string name="url_dev_api">https://master.apis.dev.openstreetmap.org/</string>
     <string name="place_holder_no_name">[Sem nome]</string>
+    <string name="search_result_title">Resultados Encontrados</string>
+    <string name="search_result_subtitle">Número de resultados</string>
+    <string name="search_result_extra">(%d)</string>
 
 
 </resources>

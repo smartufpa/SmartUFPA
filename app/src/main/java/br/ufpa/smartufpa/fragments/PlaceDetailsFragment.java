@@ -74,39 +74,6 @@ public class PlaceDetailsFragment extends Fragment {
         txtDescription = view.findViewById(R.id.txtDescription);
         txtOperationHours = view.findViewById(R.id.txtOperationHours);
 
-        final MainActivity parentActivity = (MainActivity) getActivity();
-
-        if (parentActivity != null) {
-            // Back Button
-            parentActivity.bottomSheetController.collapse();
-            btnBack = parentActivity.findViewById(R.id.imgBtnBack);
-            btnBack.setVisibility(View.VISIBLE);
-            btnBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UIHelper.showToastShort(parentActivity,"clique");
-                }
-            });
-
-            // Title
-            final TextView txtBsheetTitle = parentActivity.findViewById(R.id.txt_bsheet_title);
-            txtBsheetTitle.setText(elementParser.getName(pointOfInterest));
-
-            // Subtitle
-            final TextView txtBsheetSubtitle = parentActivity.findViewById(R.id.txt_bsheet_subtitle);
-            final String localName = elementParser.getLocalName(pointOfInterest);
-            if (localName != null){
-                txtBsheetSubtitle.setText(localName);
-            }else{
-                txtBsheetSubtitle.setVisibility(View.INVISIBLE);
-            }
-
-            // ExtraInfo
-            final TextView txtExtraInfo = parentActivity.findViewById(R.id.txt_bsheet_extra_info);
-            txtExtraInfo.setVisibility(View.GONE);
-
-        }
-
         final String website = elementParser.getWebsite(pointOfInterest);
         if(website!= null)
             txtWebsite.setText(website);

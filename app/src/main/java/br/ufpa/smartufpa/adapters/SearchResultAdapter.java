@@ -3,7 +3,6 @@ package br.ufpa.smartufpa.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.fragments.PlaceDetailsFragment;
-import br.ufpa.smartufpa.fragments.SearchResultFragment;
+import br.ufpa.smartufpa.interfaces.PlaceDetailsDelegate;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.utils.ElementParser;
-import br.ufpa.smartufpa.utils.UIHelper;
 
 import java.util.List;
 
@@ -28,16 +25,16 @@ import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter {
 
-    private FragmentManager fragmentManager;
     private List<Element> pointsOfInterest;
     private Context parentContext;
     private ElementParser elementParser;
     private Resources resources;
+    private PlaceDetailsDelegate placeDetailsDelegate;
 
-    public SearchResultAdapter(List<Element> pointsOfInterest, Context parentContext, FragmentManager fragmentManager, Resources resources) {
+    public SearchResultAdapter(List<Element> pointsOfInterest, Context parentContext, Resources resources) {
         this.pointsOfInterest = pointsOfInterest;
         this.parentContext = parentContext;
-        this.fragmentManager = fragmentManager;
+        this.placeDetailsDelegate = (PlaceDetailsDelegate) parentContext;
         this.resources = resources;
         this.elementParser = ElementParser.INSTANCE;
     }
@@ -66,21 +63,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
         viewHolder.ivInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startPlaceDetailsFragment(element);
+                placeDetailsDelegate.showPlaceDetailsFragment(element);
             }
         });
     }
 
-    private void startPlaceDetailsFragment(final Element element) {
-        PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(element);
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.frame_fragment_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG)
-                .addToBackStack(SearchResultFragment.FRAGMENT_TAG)
-                .commit();
-    }
-
     private void initPlaceName(SearchResultViewHolder viewHolder, String name) {
+        viewHolder.txtPlaceName.setTextColor(resources.getColor(android.R.color.black));
         if (name != null)
             viewHolder.txtPlaceName.setText(name);
         else

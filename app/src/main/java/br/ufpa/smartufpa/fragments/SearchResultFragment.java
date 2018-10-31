@@ -72,7 +72,7 @@ public class SearchResultFragment extends Fragment {
         // Find RecyclerView
         rvSearchResult = view.findViewById(R.id.list_search_result);
         // Create the adapter to the RecyclerView
-        SearchResultAdapter searchResultAdapter = new SearchResultAdapter(pointsOfInterest, getContext(),getFragmentManager(), getResources());
+        SearchResultAdapter searchResultAdapter = new SearchResultAdapter(pointsOfInterest, getContext(), getResources());
         // Attach the adapter to the RecyclerView
         rvSearchResult.setAdapter(searchResultAdapter);
         // Create and attach a LayoutManager to the RecyclerView

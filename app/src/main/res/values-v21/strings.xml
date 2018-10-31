@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="place_holder_no_name">[Sem nome]</string>
+    <string name="search_result_title">Resultados Encontrados</string>
+    <string name="search_result_subtitle">Número de resultados</string>
+    <string name="search_result_extra">(%d)</string>
 </resources>

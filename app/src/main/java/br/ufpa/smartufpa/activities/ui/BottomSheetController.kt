@@ -3,17 +3,17 @@ package br.ufpa.smartufpa.activities.ui
 import android.content.Context
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetBehavior.*
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import android.view.View
 import br.ufpa.smartufpa.R
-import br.ufpa.smartufpa.fragments.PlaceDetailsFragment
-import br.ufpa.smartufpa.fragments.SearchResultFragment
-import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.FragmentHelper
 import br.ufpa.smartufpa.utils.UIHelper
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 
-class BottomSheetController(private val context: Context, private val view: View, private val fragmentHelper: FragmentHelper) : BottomSheetBehavior.BottomSheetCallback() {
+class BottomSheetController(private val context: Context, private val view: View, private val fragmentManager: FragmentManager, private val fragmentHelper: FragmentHelper) : BottomSheetBehavior.BottomSheetCallback() {
 
     private val bottomSheetBehavior = from(view.bottom_sheet_container)
 
@@ -25,19 +25,8 @@ class BottomSheetController(private val context: Context, private val view: View
         hide()
     }
 
-
-    fun showPlaceDetailsFragment(element: Element) {
-        val placeDetailsFragment = PlaceDetailsFragment.newInstance(element)
-//        fragmentHelper.loadWithReplace(R.id.bottom_sheet, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG)
-        expand()
-    }
-
-    fun showSearchResultFragment(elements: List<Element>) {
-        val searchResultFragment = SearchResultFragment.newInstance(elements)
-        setTitle("Resultados Encontrados")
-        setSubTitle("Número de resultados")
-        setExtraInfo("(${elements.size})")
-        fragmentHelper.loadWithReplace(R.id.frame_fragment_container, searchResultFragment, SearchResultFragment.FRAGMENT_TAG)
+    fun showFragment(fragment: Fragment, fragmentTag: String) {
+        fragmentHelper.loadWithReplace(R.id.frame_fragment_container, fragment, fragmentTag)
         expand()
     }
 
@@ -53,7 +42,7 @@ class BottomSheetController(private val context: Context, private val view: View
         }
     }
 
-    private fun setTitle(title: String) {
+    fun setTitle(title: String) {
         with(view.txt_bsheet_title) {
             setText(title)
             visibility = View.VISIBLE
@@ -61,15 +50,15 @@ class BottomSheetController(private val context: Context, private val view: View
 
     }
 
-    private fun setSubTitle(subtitle: String) {
+    fun setSubTitle(subtitle: String) {
         with(view.txt_bsheet_subtitle) {
             setText(subtitle)
             visibility = View.VISIBLE
         }
     }
 
-    private fun setExtraInfo(extraInfo: String) {
-        with(view.txt_bsheet_extra_info){
+    fun setExtraInfo(extraInfo: String) {
+        with(view.txt_bsheet_extra_info) {
             setText(extraInfo)
             visibility = View.VISIBLE
         }
