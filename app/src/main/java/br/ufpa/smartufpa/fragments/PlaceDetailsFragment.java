@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.dialogs.EditDialog;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.ElementParser;
@@ -20,6 +21,7 @@ import br.ufpa.smartufpa.utils.ElementParser;
 /**
  * Fragment to show details about an specific place selected by the user.
  * Must follow the POI model.
+ *
  * @author kaeuchoa
  */
 public class PlaceDetailsFragment extends Fragment {
@@ -59,7 +61,6 @@ public class PlaceDetailsFragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +78,8 @@ public class PlaceDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_place_details, container, false);
-        txtWebsite = view.findViewById(R.id.txtWebsite);
-        txtDescription = view.findViewById(R.id.txtDescription);
-        txtOperationHours = view.findViewById(R.id.txtOperationHours);
-        btnEdit = view.findViewById(R.id.btnEdit);
+        bindViews(view);
+
 
         final String website = elementParser.getWebsite(pointOfInterest);
         final HashMap<String, String> operationHours = elementParser.getOpeningHours(pointOfInterest);
@@ -89,8 +88,26 @@ public class PlaceDetailsFragment extends Fragment {
         setupWebsiteText(website);
         setupOperationHoursText(operationHours, txtOperationHours);
         setupDescriptionText(description, txtDescription);
+        setupBtnEdit(pointOfInterest);
 
         return view;
+    }
+
+    private void setupBtnEdit(final Element pointOfInterest) {
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditDialog editDialog = new EditDialog(view.getContext(), (ViewGroup) view.getRootView(), getResources());
+                editDialog.open(pointOfInterest);
+            }
+        });
+    }
+
+    private void bindViews(View view) {
+        txtWebsite = view.findViewById(R.id.txtWebsite);
+        txtDescription = view.findViewById(R.id.txtDescription);
+        txtOperationHours = view.findViewById(R.id.txtOperationHours);
+        btnEdit = view.findViewById(R.id.btnEdit);
     }
 
     private void setupDescriptionText(String description, TextView txtDescription) {
@@ -102,7 +119,7 @@ public class PlaceDetailsFragment extends Fragment {
 
     private void setupOperationHoursText(HashMap<String, String> operationHours, TextView txtOperationHours) {
         //TODO parse de horas
-        if (operationHours != null){
+        if (operationHours != null) {
             txtOperationHours.setText(
                     String.format(getString(R.string.operation_hours_template),
                             operationHours.get(Constants.OpeningHours.OPENING_DAY),
@@ -115,7 +132,7 @@ public class PlaceDetailsFragment extends Fragment {
     }
 
     private void setupWebsiteText(String website) {
-        if(website!= null) {
+        if (website != null) {
             txtWebsite.setText(website);
             txtWebsite.setTextColor(colorBlack);
         }

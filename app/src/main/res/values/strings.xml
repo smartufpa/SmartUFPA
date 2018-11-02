@@ -206,6 +206,10 @@
     <string name="search_result_subtitle">Número de resultados</string>
     <string name="search_result_extra">(%d)</string>
     <string name="operation_hours_template">Aberto de %s a %s, de %s até %s</string>
+    <string name="subtitle_operation_time">Funcionamento</string>
+    <string name="subtitle_opening_day">De</string>
+    <string name="subtitle_closing_day">Até</string>
+    <string name="title_edit">Editar: </string>
 
 
 </resources>
