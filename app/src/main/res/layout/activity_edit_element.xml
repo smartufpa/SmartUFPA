@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_sheet_container"
     android:layout_width="match_parent"
-    android:layout_height="420dp"
-    android:layout_gravity="bottom"
-    android:background="@color/white"
-    android:minHeight="420dp"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    app:behavior_hideable="true"
-    app:behavior_peekHeight="96dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/editTitleContainer"
@@ -66,7 +59,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/txtEditTitle" />
 
             <TextView
-                android:id="@+id/txt_bsheet_extra_info"
+                android:id="@+id/txtEditExtraInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -83,12 +76,40 @@
     </android.support.constraint.ConstraintLayout>
 
     <FrameLayout
-        android:id="@+id/containerBottomsheet"
-        android:layout_width="match_parent"
+        android:id="@+id/containerEditForm"
+        android:layout_width="368dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTitleContainer"
-        app:layout_constraintVertical_bias="0.52" />
+        app:layout_constraintTop_toBottomOf="@+id/editTitleContainer">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btnEditBack"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/btnEditBack" />
+
+        <Button
+            android:id="@+id/btnEditNext"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/btnEditNext" />
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

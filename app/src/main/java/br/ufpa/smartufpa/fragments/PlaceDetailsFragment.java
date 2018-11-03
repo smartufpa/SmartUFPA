@@ -1,19 +1,19 @@
 package br.ufpa.smartufpa.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.HashMap;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.dialogs.EditDialog;
+import br.ufpa.smartufpa.activities.EditElementActivity;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.ElementParser;
@@ -29,24 +29,21 @@ public class PlaceDetailsFragment extends Fragment {
 
     public static final String FRAGMENT_TAG = PlaceDetailsFragment.class.getName();
 
-    private static final String ARG_POINT_OF_INTEREST = "point_of_interest";
+    public static final String ARG_ELEMENT = "element";
+
     private static final String TAG = PlaceDetailsFragment.class.getSimpleName();
 
     // VIEWS
     private TextView txtWebsite;
     private TextView txtOperationHours;
     private TextView txtDescription;
-    private ImageButton btnBack;
     private Button btnEdit;
 
     private ElementParser elementParser;
 
     private int colorBlack;
 
-
-    // TODO (POSTPONED): LOAD IMAGE OF PLACE AND IMPLEMENT RATING FUNCTIONS
-
-    private Element pointOfInterest;
+    private Element element;
 
     public PlaceDetailsFragment() {
         // Required empty public constructor
@@ -55,7 +52,7 @@ public class PlaceDetailsFragment extends Fragment {
     public static PlaceDetailsFragment newInstance(Element element) {
         PlaceDetailsFragment fragment = new PlaceDetailsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_POINT_OF_INTEREST, element);
+        args.putParcelable(ARG_ELEMENT, element);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,7 +63,7 @@ public class PlaceDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         elementParser = ElementParser.INSTANCE;
         if (getArguments() != null) {
-            pointOfInterest = getArguments().getParcelable(ARG_POINT_OF_INTEREST);
+            element = getArguments().getParcelable(ARG_ELEMENT);
         }
 
         colorBlack = getActivity().getResources().getColor(android.R.color.black);
@@ -81,24 +78,27 @@ public class PlaceDetailsFragment extends Fragment {
         bindViews(view);
 
 
-        final String website = elementParser.getWebsite(pointOfInterest);
-        final HashMap<String, String> operationHours = elementParser.getOpeningHours(pointOfInterest);
-        final String description = elementParser.getDescription(pointOfInterest);
+        final String website = elementParser.getWebsite(element);
+        final HashMap<String, String> operationHours = elementParser.getOpeningHours(element);
+        final String description = elementParser.getDescription(element);
 
         setupWebsiteText(website);
         setupOperationHoursText(operationHours, txtOperationHours);
         setupDescriptionText(description, txtDescription);
-        setupBtnEdit(pointOfInterest);
+        setupBtnEdit(element);
 
         return view;
     }
 
-    private void setupBtnEdit(final Element pointOfInterest) {
+    private void setupBtnEdit(final Element element) {
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditDialog editDialog = new EditDialog(view.getContext(), (ViewGroup) view.getRootView(), getResources());
-                editDialog.open(pointOfInterest);
+                final Intent intent = new Intent(getContext(), EditElementActivity.class);
+                intent.putExtra(ARG_ELEMENT,element);
+                startActivityForResult(intent,Constants.RequestCode.EDIT_ELEMENT);
+//                EditDialog editDialog = new EditDialog(view.getContext(), (ViewGroup) view.getRootView(), getResources());
+//                editDialog.open(element);
             }
         });
     }

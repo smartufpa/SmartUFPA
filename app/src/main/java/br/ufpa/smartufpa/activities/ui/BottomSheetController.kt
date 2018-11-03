@@ -1,15 +1,11 @@
 package br.ufpa.smartufpa.activities.ui
 
-import android.content.Context
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetBehavior.*
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
 import android.view.View
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.utils.FragmentHelper
-import br.ufpa.smartufpa.utils.UIHelper
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 
@@ -26,7 +22,7 @@ class BottomSheetController(private val view: View, private val fragmentHelper: 
     }
 
     fun showFragment(fragment: Fragment, fragmentTag: String) {
-        fragmentHelper.loadWithReplace(R.id.frame_fragment_container, fragment, fragmentTag)
+        fragmentHelper.loadWithReplace(R.id.containerBottomsheet, fragment, fragmentTag)
         expand()
     }
 
@@ -49,7 +45,7 @@ class BottomSheetController(private val view: View, private val fragmentHelper: 
     }
 
     fun setTitle(title: String) {
-        with(view.txt_bsheet_title) {
+        with(view.txtEditTitle) {
             setText(title)
             visibility = View.VISIBLE
         }
@@ -57,7 +53,7 @@ class BottomSheetController(private val view: View, private val fragmentHelper: 
     }
 
     fun setSubTitle(subtitle: String) {
-        with(view.txt_bsheet_subtitle) {
+        with(view.txtEditSubtitle) {
             setText(subtitle)
             visibility = View.VISIBLE
         }

@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -361,14 +362,14 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         }
 
         // Defines bottomsheet behavior
-        if(bottomSheetController.isVisible()) {
+        if (bottomSheetController.isVisible()) {
             // TODO
-//            final PlaceDetailsFragment fragmentByTag = (PlaceDetailsFragment) getSupportFragmentManager().findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
-//            if(fragmentByTag != null){
-//                getSupportFragmentManager().popBackStack();
+//            final FragmentManager fragmentManager = getSupportFragmentManager();
+//            final PlaceDetailsFragment fragmentByTag = (PlaceDetailsFragment) fragmentManager.findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
+//            if (fragmentByTag == null) {
+//                bottomSheetController.hide();
 //            }
-            bottomSheetController.hide();
-            return;
+//            return;
         }
 
         super.onBackPressed();
@@ -425,15 +426,6 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
 //        SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(POIS);
 //        fragmentHelper.loadWithReplace(R.id.bottom_sheet, searchResultFrag, SearchResultFragment.FRAGMENT_TAG);
     }
-
-//    private void collapse() {
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//    }
-//
-//    private void expand() {
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//    }
-
 
     /**
      * Method to run a tutorial for users on the first time they open the app
@@ -499,25 +491,35 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     }
 
 
-
     private void showSearchResultFragment(List<Element> elements) {
-        SearchResultFragment searchResultFragment = SearchResultFragment.newInstance(elements);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_fragment_container, searchResultFragment, searchResultFragment.FRAGMENT_TAG)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .addToBackStack(SearchResultFragment.FRAGMENT_TAG)
-                .commit();
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        SearchResultFragment searchResultFragment = (SearchResultFragment) fragmentManager.findFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+
+        if(searchResultFragment != null){
+            searchResultFragment.updateResults(elements);
+        }else{
+            searchResultFragment = SearchResultFragment.newInstance(elements);
+            ft.add(R.id.containerBottomsheet, searchResultFragment, SearchResultFragment.FRAGMENT_TAG)
+                    .commit();
+        }
+
         bottomSheetController.setTitle(getString(R.string.search_result_title));
         bottomSheetController.setSubTitle(getString(R.string.search_result_subtitle));
-        bottomSheetController.setExtraInfo(String.format(getString(R.string.search_result_extra),elements.size()));
-        bottomSheetController.showFragment(searchResultFragment, SearchResultFragment.FRAGMENT_TAG);
+        bottomSheetController.setExtraInfo(String.format(getString(R.string.search_result_extra), elements.size()));
+        bottomSheetController.expand();
+
+
     }
 
     @Override
     public void showPlaceDetailsFragment(@NotNull Element element) {
-        PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(element);
-        bottomSheetController.showFragment(placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
-//        fragmentHelper.loadWithReplace(R.id.frame_fragment_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        PlaceDetailsFragment placeDetailsFragment = (PlaceDetailsFragment) fragmentManager
+                .findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
+
+        if (placeDetailsFragment == null)
+            placeDetailsFragment = PlaceDetailsFragment.newInstance(element);
 
         final String name = elementParser.getName(element);
         final String localName = elementParser.getLocalName(element);
@@ -526,28 +528,36 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         initPlaceDetailsTitle(name);
         initPlaceDetailsSubtitle(localName);
         initPlaceDetailsExtra(shortName);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.containerBottomsheet, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG)
+                .addToBackStack(PlaceDetailsFragment.ARG_ELEMENT)
+                .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK)
+                .commit();
+        bottomSheetController.expand();
+
     }
 
     private void initPlaceDetailsExtra(String shortName) {
-        if(shortName != null){
-            bottomSheetController.setExtraInfo(String.format("(%s)",shortName));
-        }else{
+        if (shortName != null) {
+            bottomSheetController.setExtraInfo(String.format("(%s)", shortName));
+        } else {
             bottomSheetController.setExtraInfo("");
         }
     }
 
     private void initPlaceDetailsSubtitle(String localName) {
-        if(localName != null){
+        if (localName != null) {
             bottomSheetController.setSubTitle(localName);
-        }else{
+        } else {
             bottomSheetController.setSubTitle("");
         }
     }
 
     private void initPlaceDetailsTitle(String name) {
-        if(name != null){
+        if (name != null) {
             bottomSheetController.setTitle(name);
-        }else{
+        } else {
             bottomSheetController.setTitle(getString(R.string.place_holder_no_name));
         }
     }
@@ -556,8 +566,9 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     @Override
     public void onFailure(Call<OverpassModel> call, Throwable t) {
         UIHelper.showToastShort(this, "Erro ao recuperar dados do servidor do OSM.");
+        Log.e(TAG,"Erro ao recuperar dados", t);
+        hideProgressBar();
     }
-
 
 
 }

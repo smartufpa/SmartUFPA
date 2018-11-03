@@ -2,7 +2,6 @@ package br.ufpa.smartufpa.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +24,14 @@ import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter {
 
-    private List<Element> pointsOfInterest;
+    private List<Element> elements;
     private Context parentContext;
     private ElementParser elementParser;
     private Resources resources;
     private PlaceDetailsDelegate placeDetailsDelegate;
 
-    public SearchResultAdapter(List<Element> pointsOfInterest, Context parentContext, Resources resources) {
-        this.pointsOfInterest = pointsOfInterest;
+    public SearchResultAdapter(List<Element> elements, Context parentContext, Resources resources) {
+        this.elements = elements;
         this.parentContext = parentContext;
         this.placeDetailsDelegate = (PlaceDetailsDelegate) parentContext;
         this.resources = resources;
@@ -51,7 +50,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         SearchResultViewHolder viewHolder = (SearchResultViewHolder) holder;
-        final Element element = pointsOfInterest.get(position);
+        final Element element = elements.get(position);
         final String name = elementParser.getName(element);
         final String localName = elementParser.getLocalName(element);
         initPlaceName(viewHolder, name);
@@ -85,10 +84,15 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
             viewHolder.txtLocName.setVisibility(View.GONE);
     }
 
+    public void updateData(List<Element> elements){
+        this.elements.clear();
+        this.elements.addAll(elements);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
-        return pointsOfInterest.size();
+        return elements.size();
     }
 
 

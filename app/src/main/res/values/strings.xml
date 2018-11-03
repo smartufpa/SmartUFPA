@@ -210,6 +210,13 @@
     <string name="subtitle_opening_day">De</string>
     <string name="subtitle_closing_day">Até</string>
     <string name="title_edit">Editar: </string>
+    <string name="btnEditBack">Voltar</string>
+    <string name="btnEditNext">Continuar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="labelShortName">Abreviação</string>
+    <string name="labelLocalName">Nome Local (Apelido)</string>
 
 
 </resources>

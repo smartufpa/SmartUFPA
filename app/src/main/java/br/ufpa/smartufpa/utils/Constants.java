@@ -115,6 +115,10 @@ public final class Constants {
         public static final String CLOSING_HOUR = "closing_hour";
     }
 
+    public class RequestCode{
+        public static final int EDIT_ELEMENT = 100;
+    }
+
 
 
     public class MapConfig {

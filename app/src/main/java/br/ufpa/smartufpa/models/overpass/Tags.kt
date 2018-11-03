@@ -1,9 +1,12 @@
 package br.ufpa.smartufpa.models.overpass
 
+import android.os.Parcel
+import android.os.Parcelable
+import br.ufpa.smartufpa.R
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Tags {
+class Tags() : Parcelable {
 
     @SerializedName("name")
     var name: String? = null
@@ -17,7 +20,6 @@ class Tags {
     @SerializedName("shop")
     var shop: String? = null
 
-
     @SerializedName("toilets")
     val toilets: String? = null
 
@@ -29,22 +31,69 @@ class Tags {
     var description: String? = null
 
     @SerializedName("website")
-    val website: String? = null
+    var website: String? = null
 
     @SerializedName("building")
-    val building: String? = null
+    var building: String? = null
 
     @SerializedName("indoor")
-    val indoor: String? = null
+    var indoor: String? = null
+
+    var iconResourceID : Int? = null
+        get() {
+        if((toilets != null && toilets.equals("yes")) or amenity?.equals("toilets")!!){
+            return R.drawable.ic_restroom
+        }
+        return null
+    }
+
 
     @SerializedName("opening_hours")
-    val openingHours: String? = null
+    var openingHours: String? = null
 
-
-
-
+    constructor(parcel: Parcel) : this() {
+        name = parcel.readString()
+        shortName = parcel.readString()
+        locName = parcel.readString()
+        shop = parcel.readString()
+        amenity = parcel.readString()
+        description = parcel.readString()
+        website = parcel.readString()
+        building = parcel.readString()
+        indoor = parcel.readString()
+        openingHours = parcel.readString()
+    }
 
     override fun toString(): String {
         return "[name=$name,short_name=$shortName,shop=$shop,amenity=$amenity,loc_name=$locName,description=$description]"
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(name)
+        parcel.writeString(shortName)
+        parcel.writeString(locName)
+        parcel.writeString(shop)
+        parcel.writeString(amenity)
+        parcel.writeString(description)
+        parcel.writeString(website)
+        parcel.writeString(building)
+        parcel.writeString(indoor)
+        parcel.writeString(openingHours)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Tags> {
+        override fun createFromParcel(parcel: Parcel): Tags {
+            return Tags(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Tags?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+
 }

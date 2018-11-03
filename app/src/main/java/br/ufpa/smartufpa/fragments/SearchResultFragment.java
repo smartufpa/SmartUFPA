@@ -83,5 +83,10 @@ public class SearchResultFragment extends Fragment {
         return view;
     }
 
+    public void updateResults(List<Element> elements){
+        final SearchResultAdapter adapter = (SearchResultAdapter) rvSearchResult.getAdapter();
+        adapter.updateData(elements);
+    }
+
 
 }
