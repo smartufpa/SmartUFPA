@@ -23,9 +23,21 @@ object ElementParser {
         }
     }
 
+    fun setName(element:Element,name: String){
+        element.tags.let {
+            it?.name = name
+        }
+    }
+
     fun getShortName(element: Element): String? {
         element.tags.let {
             return it?.shortName
+        }
+    }
+
+    fun setShortName(element: Element, shortName: String){
+        element.tags.let {
+            it?.shortName = shortName
         }
     }
 
@@ -35,9 +47,34 @@ object ElementParser {
         }
     }
 
+    fun setLocalName(element: Element, localName: String) {
+        element.tags.let {
+            it?.locName = localName
+        }
+    }
+
     fun getWebsite(element: Element): String? {
         element.tags.let {
             return it?.website
+        }
+    }
+
+    fun setWebSite(element: Element, webSite: String) {
+        element.tags.let {
+            it?.website = webSite
+        }
+
+    }
+
+
+    fun getDescription(element: Element): String? {
+        element.tags.let {
+            return it?.description
+        }
+    }
+    fun setDescription(element: Element, description: String) {
+        element.tags.let {
+            it?.description = description
         }
     }
 
@@ -71,10 +108,7 @@ object ElementParser {
         return daysofWeek_ptBr[dayInEn]!!
     }
 
-    fun getDescription(element: Element): String? {
-        element.tags.let {
-            return it?.description
-        }
-    }
+
+
 
 }

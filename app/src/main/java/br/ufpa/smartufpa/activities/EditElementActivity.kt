@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.fragments.ElementBasicDataForm
 import br.ufpa.smartufpa.fragments.FoodPlaceForm
@@ -12,9 +13,16 @@ import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.ElementParser
 import kotlinx.android.synthetic.main.activity_edit_element.*
 
+
+
 class EditElementActivity : AppCompatActivity() {
     private val elementParser : ElementParser = ElementParser
+    private lateinit var elementBasicDataForm : ElementBasicDataForm
     private lateinit var element : Element
+    companion object {
+        private val TAG = EditElementActivity::class.simpleName
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_element)
@@ -24,12 +32,15 @@ class EditElementActivity : AppCompatActivity() {
         setActivityExtraInfo()
         initFormFragment()
         btnEditNext.setOnClickListener {
-            val foodPlaceForm = FoodPlaceForm.newInstance("", "")
-            val fragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.containerEditForm,foodPlaceForm,foodPlaceForm.tag)
-                    .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK)
-                    .addToBackStack(foodPlaceForm.tag)
-                    .commit()
+//            val foodPlaceForm = FoodPlaceForm.newInstance("", "")
+//            val fragmentTransaction = supportFragmentManager.beginTransaction()
+//            fragmentTransaction.replace(R.id.containerEditForm,foodPlaceForm,foodPlaceForm.tag)
+//                    .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK)
+//                    .addToBackStack(foodPlaceForm.tag)
+//                    .commit()
+            elementBasicDataForm.updateElementData()
+            // TODO: enviar o element para o servidor?
+
         }
 
         btnEditBack.setOnClickListener {
@@ -66,7 +77,7 @@ class EditElementActivity : AppCompatActivity() {
     }
 
     private fun initFormFragment() {
-        val elementBasicDataForm = ElementBasicDataForm.newInstance("", "")
+        elementBasicDataForm = ElementBasicDataForm.newInstance(element)
         val ft = supportFragmentManager.beginTransaction()
         ft.add(R.id.containerEditForm,elementBasicDataForm, elementBasicDataForm.tag)
                 .commit()
