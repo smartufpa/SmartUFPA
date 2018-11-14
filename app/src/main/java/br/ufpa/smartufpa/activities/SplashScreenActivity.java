@@ -39,8 +39,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                             startPermissionActivity();
                         }else{
 //                            startEnterScreenActivity();
-                            startMainActivity();
+//                            startMainActivity();
+                            startActivity(new Intent(SplashScreenActivity.this,TesteAuth.class));
                         }
+
 
                     }
                 }else{

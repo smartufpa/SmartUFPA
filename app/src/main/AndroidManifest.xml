@@ -99,12 +99,21 @@
                 <category android:name="smartufpa.CATEGORY_LOGIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.OSMLoginActivity"></activity>
+        <activity android:name=".activities.OSMLoginActivity" />
         <activity android:name=".activities.EditElementActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <activity android:name=".activities.TesteAuth">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="br.ufpa.smartufpa" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

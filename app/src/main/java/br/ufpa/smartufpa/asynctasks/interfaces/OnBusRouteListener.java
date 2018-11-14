@@ -6,7 +6,7 @@ import org.osmdroid.views.overlay.Overlay;
 
 /**
  * Stable Commit (20/09)
- * Interface to listen for Bus Route query.
+ * Interface to onRequestTokenResponse for Bus Route query.
  * Task is launched by the item "Rota do Circular" (pt-br) on the left drawer on Main Activity.
  * @author kaeuchoa
  */

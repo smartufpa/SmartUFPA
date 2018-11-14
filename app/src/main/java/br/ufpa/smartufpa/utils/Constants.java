@@ -119,6 +119,9 @@ public final class Constants {
         public static final int EDIT_ELEMENT = 100;
     }
 
+    public class OAuth{
+        public static final int REQUEST_TOKEN_TASK = 0;
+    }
 
 
     public class MapConfig {
