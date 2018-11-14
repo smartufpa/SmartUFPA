@@ -3,9 +3,13 @@ package br.ufpa.smartufpa.activities;
 import com.github.scribejava.core.builder.api.DefaultApi10a;
 
 public class OsmApi extends DefaultApi10a {
+    private static final String DEV_AUTHORIZE_URL = "https://master.apis.dev.openstreetmap.org/oauth/authorize";
+    private static  final String DEV_REQUEST_TOKEN_URL = "https://master.apis.dev.openstreetmap.org/oauth/request_token";
+    private static  final String DEV_ACCESS_TOKEN_URL = "https://master.apis.dev.openstreetmap.org/oauth/access_token";
+
+    private static  final String REQUEST_TOKEN_URL = "https://www.openstreetmap.org/oauth/request_token";
     private static final String AUTHORIZE_URL = "https://www.openstreetmap.org/oauth/authorize";
-    private static  final String requestTokenURL = "https://www.openstreetmap.org/oauth/request_token";
-    private static  final String accessTokenURL = "https://www.openstreetmap.org/oauth/access_token";
+    private static  final String ACCESS_TOKEN_URL = "https://www.openstreetmap.org/oauth/access_token";
 
     protected OsmApi() {
     }
@@ -20,17 +24,17 @@ public class OsmApi extends DefaultApi10a {
 
     @Override
     public String getAccessTokenEndpoint() {
-        return accessTokenURL;
+        return DEV_ACCESS_TOKEN_URL;
     }
 
     @Override
     protected String getAuthorizationBaseUrl() {
-        return AUTHORIZE_URL;
+        return DEV_AUTHORIZE_URL;
     }
 
     @Override
     public String getRequestTokenEndpoint() {
-        return requestTokenURL;
+        return DEV_REQUEST_TOKEN_URL;
     }
 
 }

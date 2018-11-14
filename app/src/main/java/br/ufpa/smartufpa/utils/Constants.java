@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Class to keep constants that will be directly used on the code.
+ *
  * @author kaeuchoa
  */
 
@@ -33,7 +34,7 @@ public final class Constants {
             "out body center;";
 
 
-    public static final String QUERY_OVERPASS_FOOD =  "[out:json][timeout:30];" +
+    public static final String QUERY_OVERPASS_FOOD = "[out:json][timeout:30];" +
             "(way[\"amenity\"=\"restaurant\"](%f,%f,%f,%f);" +
             "way[\"amenity\"=\"food_court\"](%f,%f,%f,%f);" +
             "node[\"amenity\"=\"restaurant\"](%f,%f,%f,%f););" +
@@ -50,7 +51,6 @@ public final class Constants {
             "way[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f);" +
             "node[\"amenity\"=\"exhibition_centre\"](%f,%f,%f,%f););" +
             "out body center;";
-
 
 
     public static final String QUERY_OVERPASS_LIBRARIES = "[out:json][timeout:30];" +
@@ -89,9 +89,10 @@ public final class Constants {
     public static final int TUTORIAL_NOT_EXECUTED = 0;
     public static final int TUTORIAL_BTN_LEFT = 1;
 
+
     // Config file constants
     public static final String DEFAULT_PLACE_COORDINATES = "default_place_coordinates";
-    public static final String DEFAULT_PLACE_NAME = "default_place_name" ;
+    public static final String DEFAULT_PLACE_NAME = "default_place_name";
     public static final String MAP_REGION_BOUNDS = "map_region_bounds";
 
     // JSON Parse
@@ -100,27 +101,34 @@ public final class Constants {
 
 
     public static final String CONFIG_START_CAMERA_COORDINATES = "start_camera_coordinates";
-    public static final String CONFIG_MAP_REGION_NAME = "map_region_name" ;
-    public static final String CONFIG_MAP_BUS_ROUTE_NAME = "map_bus_route_name" ;
-    public static final String CONFIG_MAP_BUS_OPERATOR = "map_bus_operator" ;
+    public static final String CONFIG_MAP_REGION_NAME = "map_region_name";
+    public static final String CONFIG_MAP_BUS_ROUTE_NAME = "map_bus_route_name";
+    public static final String CONFIG_MAP_BUS_OPERATOR = "map_bus_operator";
     public static final String CONFIG_WEST_LIMIT = "map_region_westlimit";
     public static final String CONFIG_SOUTH_LIMIT = "map_region_southlimit";
     public static final String CONFIG_EAST_LIMIT = "map_region_eastlimit";
     public static final String CONFIG_NORTH_LIMIT = "map_region_northlimit";
 
-    public class OpeningHours{
+    public class OpeningHours {
         public static final String OPENING_DAY = "opening_day";
         public static final String CLOSING_DAY = "closing_day";
         public static final String OPENING_HOUR = "opening_hour";
         public static final String CLOSING_HOUR = "closing_hour";
     }
 
-    public class RequestCode{
+    public class RequestCode {
         public static final int EDIT_ELEMENT = 100;
     }
 
-    public class OAuth{
-        public static final int REQUEST_TOKEN_TASK = 0;
+    public class SharedPrefs {
+        public static final String PREFS_NAME = "app_preferences";
+        public static final String KEY_ACCESS_TOKEN = "access_token";
+        public static final String KEY_ACCESS_SECRET = "access_secret";
+        public static final String KEY_ANDROID_ID = "android_id";
+
+        public static final String KEY_USER_ID = "user_id";
+        public static final String KEY_USER_DISPLAY_NAME = "user_display_name";
+        public static final String KEY_USER_ACCOUNT_CREATED = "user_account_created";
     }
 
 
