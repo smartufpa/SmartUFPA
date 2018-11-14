@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.activities;
+package br.ufpa.smartufpa.utils;
 
 import com.github.scribejava.core.builder.api.DefaultApi10a;
 

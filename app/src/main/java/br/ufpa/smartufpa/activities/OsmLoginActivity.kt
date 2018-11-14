@@ -2,7 +2,6 @@ package br.ufpa.smartufpa.activities
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -13,11 +12,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.models.overpass.OsmUser
-import br.ufpa.smartufpa.utils.Constants
+import br.ufpa.smartufpa.utils.*
 import br.ufpa.smartufpa.utils.Constants.SharedPrefs.*
-import br.ufpa.smartufpa.utils.OsmApiXmlParser
-import br.ufpa.smartufpa.utils.SharedPrefsHelper
-import br.ufpa.smartufpa.utils.UIHelper
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.github.scribejava.core.model.OAuth1RequestToken
@@ -29,13 +25,17 @@ import java.io.ByteArrayInputStream
 import java.util.concurrent.ExecutionException
 
 
-class TesteAuth : AppCompatActivity() {
+class OsmLoginActivity : AppCompatActivity() {
 
+    //TODO guardar chaves em um local apropriado
     private val dev_consumerKey = "IY3GmCJIaUxSeSlceMf8FrXihe0Km2bU9zrUCD9n"
     private val consumerKey = "dZG58UbBiP2F3Pi995CC7YY0FRnCxEHr2AvpHOnG"
     private val dev_consumerSecret = "IvAJZJSOL6Eeb6ra9BUy1QlPVz3OVczbDQ27jr5R"
     private val consumerSecret = "tpyAHG2yInll2IJkNfZNe6T3oWOd8QIUmPZQp55y"
     private val callback = "br.ufpa.smartufpa://callback"
+
+    private val dev_registerUrl = "https://master.apis.dev.openstreetmap.org/user/new"
+    private val registerUrl = "https://openstreetmap.org/user/new"
 
     val service: OAuth10aService = ServiceBuilder(dev_consumerKey)
             .debug()
@@ -46,7 +46,7 @@ class TesteAuth : AppCompatActivity() {
     private lateinit var authUrl: String
 
     companion object {
-        val LOG_TAG = TesteAuth::class.simpleName
+        val LOG_TAG = OsmLoginActivity::class.simpleName
         val KEY_QUERY_OAUTH_VERIFIER = "oauth_verifier"
 
         var requestToken: OAuth1RequestToken? = null
@@ -56,22 +56,28 @@ class TesteAuth : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teste_auth)
-        btnAuth.setOnClickListener {
+        btnLoginOsm.setOnClickListener {
             initAuthUrl()
-            startCustomTabIntent()
+            startCustomTabIntent(Uri.parse(authUrl))
+        }
+
+        btnRegister.setOnClickListener {
+            startCustomTabIntent(Uri.parse(registerUrl))
         }
     }
 
     override fun onResume() {
         super.onResume()
         val uri: Uri? = intent.data
-        if (!isUserDetailSaved()) {
+        if (!isUserDetailSaved() && uri != null) {
             if (!isAccessTokenSaved() && !isAccessSecretSaved()) {
                 startOAuthFlow(uri)
             }
             saveUserDetails(getUserDetails())
         }
-        goToMainActivity()
+
+        if (isUserDetailSaved())
+            goToMainActivity()
     }
 
     private fun saveUserDetails(userDetails: String?) {
@@ -116,16 +122,14 @@ class TesteAuth : AppCompatActivity() {
         }
     }
 
-    private fun startOAuthFlow(uri: Uri?) {
-        if (uri != null) {
-            val oauthVerifier = uri.getQueryParameter(KEY_QUERY_OAUTH_VERIFIER)
-            try {
-                if (!oauthVerifier!!.isEmpty()) {
-                    AccessTokenTask(this).execute(oauthVerifier)
-                }
-            } catch (e: NullPointerException) {
-                UIHelper.showToastLong(this, "Não foi possível recuperar o código verificador.")
+    private fun startOAuthFlow(uri: Uri) {
+        val oauthVerifier = uri.getQueryParameter(KEY_QUERY_OAUTH_VERIFIER)
+        try {
+            if (!oauthVerifier!!.isEmpty()) {
+                AccessTokenTask(this).execute(oauthVerifier)
             }
+        } catch (e: NullPointerException) {
+            UIHelper.showToastLong(this, "Não foi possível recuperar o código verificador.")
         }
     }
 
@@ -148,12 +152,11 @@ class TesteAuth : AppCompatActivity() {
         return isUserIdSet && isUserDisplayNameSet && isUserAccountCreatedSet
     }
 
-    private fun startCustomTabIntent() {
-        val uri = Uri.parse(authUrl)
+    private fun startCustomTabIntent(uri: Uri) {
         val intentBuilder = CustomTabsIntent.Builder()
         with(intentBuilder) {
-            setToolbarColor(ContextCompat.getColor(this@TesteAuth, R.color.colorPrimary))
-            setSecondaryToolbarColor(ContextCompat.getColor(this@TesteAuth, R.color.colorPrimaryDark))
+            setToolbarColor(ContextCompat.getColor(this@OsmLoginActivity, R.color.colorPrimary))
+            setSecondaryToolbarColor(ContextCompat.getColor(this@OsmLoginActivity, R.color.colorPrimaryDark))
         }
         val customTabsIntent = intentBuilder.build()
         customTabsIntent.launchUrl(this, uri)
@@ -208,8 +211,8 @@ class TesteAuth : AppCompatActivity() {
         private fun getAccessToken(): OAuth1AccessToken {
             val stringAccessToken = SharedPrefsHelper.getStringByKey(context, Constants.SharedPrefs.KEY_ACCESS_TOKEN)
             val stringAccessSecret = SharedPrefsHelper.getStringByKey(context, Constants.SharedPrefs.KEY_ACCESS_SECRET)
-            val newAccessToken = OAuth1AccessToken(stringAccessToken, stringAccessSecret)
-            return newAccessToken
+
+            return OAuth1AccessToken(stringAccessToken, stringAccessSecret)
         }
 
     }

@@ -195,8 +195,9 @@
     <string name="desc_login_logo">Logo Smart UFPA</string>
     <string name="label_login_email">Email</string>
     <string name="label_login_password">Senha</string>
-    <string name="label_btn_login">Login OSM</string>
+    <string name="label_btn_login">Login OpenStreetMap</string>
     <string name="label_btn_register">Ainda não tem conta? Crie agora!</string>
+    <string name="btn_register">Criar Conta</string>
     <string name="server_ip">http://192.168.0.21:8080/</string>
     <string name="register_url">https://www.openstreetmap.org/user/new</string>
     <string name="url_login">https://www.openstreetmap.org/oauth/request_token</string>

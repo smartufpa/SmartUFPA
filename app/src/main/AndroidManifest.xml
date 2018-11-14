@@ -73,7 +73,7 @@
             android:name=".activities.about.AboutCodeActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".activities.SplashScreenActivity"
+            android:name=".activities.SplashActivity"
             android:theme="@style/AppCompat.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -99,21 +99,23 @@
                 <category android:name="smartufpa.CATEGORY_LOGIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.OSMLoginActivity" />
         <activity android:name=".activities.EditElementActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".activities.TesteAuth">
+        <activity android:name=".activities.OsmLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="br.ufpa.smartufpa" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.RedirectActivity"></activity>
     </application>
 
 </manifest>

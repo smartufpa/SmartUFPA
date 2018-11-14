@@ -74,7 +74,7 @@ public class PermissionCheckActivity extends AppCompatActivity {
                     btnReady.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            startActivity(new Intent(PermissionCheckActivity.this, MainActivity.class));
+                            startActivity(new Intent(PermissionCheckActivity.this, RedirectActivity.class));
                             finish();
                         }
                     });
