@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.utils.BusRouteKmlStyler;
-import br.ufpa.smartufpa.utils.OverpassHelper;
+import br.ufpa.smartufpa.utils.osm.OverpassHelper;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 import org.osmdroid.bonuspack.kml.KmlDocument;

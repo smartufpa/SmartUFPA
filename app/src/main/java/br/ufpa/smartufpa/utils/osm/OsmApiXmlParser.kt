@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.utils
+package br.ufpa.smartufpa.utils.osm
 
 import android.util.Xml
 import br.ufpa.smartufpa.models.overpass.OsmUser

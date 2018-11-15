@@ -12,7 +12,7 @@ import android.widget.TextView;
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.interfaces.PlaceDetailsDelegate;
 import br.ufpa.smartufpa.models.overpass.Element;
-import br.ufpa.smartufpa.utils.ElementParser;
+import br.ufpa.smartufpa.utils.osm.ElementParser;
 
 import java.util.List;
 

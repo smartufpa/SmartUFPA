@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.models.overpass.Element
-import br.ufpa.smartufpa.utils.ElementParser
+import br.ufpa.smartufpa.utils.osm.ElementParser
 import kotlinx.android.synthetic.main.fragment_element_basic_data_form.view.*
 
 private const val ARG_ELEMENT = "element"

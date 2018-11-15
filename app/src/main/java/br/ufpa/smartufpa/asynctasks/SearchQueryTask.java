@@ -9,7 +9,7 @@ import br.ufpa.smartufpa.utils.HttpRequest;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.JsonParser;
-import br.ufpa.smartufpa.utils.OverpassHelper;
+import br.ufpa.smartufpa.utils.osm.OverpassHelper;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 import java.net.SocketTimeoutException;

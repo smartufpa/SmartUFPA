@@ -16,7 +16,7 @@ import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.EditElementActivity;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.utils.Constants;
-import br.ufpa.smartufpa.utils.ElementParser;
+import br.ufpa.smartufpa.utils.osm.ElementParser;
 
 /**
  * Fragment to show details about an specific place selected by the user.

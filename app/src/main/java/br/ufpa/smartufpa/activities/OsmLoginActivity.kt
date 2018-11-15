@@ -14,6 +14,8 @@ import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.models.overpass.OsmUser
 import br.ufpa.smartufpa.utils.*
 import br.ufpa.smartufpa.utils.Constants.SharedPrefs.*
+import br.ufpa.smartufpa.utils.osm.OsmApi
+import br.ufpa.smartufpa.utils.osm.OsmApiXmlParser
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.github.scribejava.core.model.OAuth1RequestToken

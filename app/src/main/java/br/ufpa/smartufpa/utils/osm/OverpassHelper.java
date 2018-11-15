@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.utils;
+package br.ufpa.smartufpa.utils.osm;
 
 import android.content.Context;
 
@@ -9,9 +9,9 @@ import java.net.URLEncoder;
 import java.util.Locale;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.models.overpass.OverpassModel;
+import br.ufpa.smartufpa.utils.ConfigHelper;
+import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.enums.OverpassFilters;
-import retrofit2.Response;
 
 /**
  * Created by kaeuc on 19/02/2018.

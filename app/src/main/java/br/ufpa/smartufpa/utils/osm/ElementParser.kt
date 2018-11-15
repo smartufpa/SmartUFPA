@@ -1,7 +1,7 @@
-package br.ufpa.smartufpa.utils
+package br.ufpa.smartufpa.utils.osm
 
 import br.ufpa.smartufpa.models.overpass.Element
-import java.util.*
+import br.ufpa.smartufpa.utils.Constants
 import kotlin.collections.HashMap
 
 

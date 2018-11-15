@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.utils;
+package br.ufpa.smartufpa.utils.osm;
 
 import com.github.scribejava.core.builder.api.DefaultApi10a;
 

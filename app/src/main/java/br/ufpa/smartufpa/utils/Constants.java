@@ -132,6 +132,27 @@ public final class Constants {
     }
 
 
+    public class OsmXmlTags{
+        public static final String TAG_OSM = "osm";
+        public static final String TAG_OSM_CHANGE = "osmchange";
+        public static final String TAG_CHANGESET = "changeset";
+        public static final String TAG_CREATE = "create";
+        public static final String TAG_MODIFY = "modify";
+        public static final String TAG_TAG = "tag";
+        public static final String TAG_NODE = "node";
+    }
+
+    public class OsmXmlAttr{
+        public static final String ATTR_VERSION = "version";
+        public static final String ATTR_GENERATOR = "generator";
+        public static final String ATTR_CHANGESET = "changeset";
+        public static final String ATTR_ID = "id";
+        public static final String ATTR_KEY = "k";
+        public static final String ATTR_VALUE = "v";
+
+    }
+
+
     public class MapConfig {
         public static final double DEFAULT_ZOOM = 16.0;
         public static final double MIN_ZOOM = 15.0;
