@@ -115,7 +115,7 @@
                 <data android:scheme="br.ufpa.smartufpa" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RedirectActivity"></activity>
+        <activity android:name=".activities.RedirectActivity" />
     </application>
 
 </manifest>

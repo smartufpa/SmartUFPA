@@ -6,19 +6,25 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import br.ufpa.smartufpa.R
+import br.ufpa.smartufpa.dialogs.CommentDialog
 import br.ufpa.smartufpa.fragments.ElementBasicDataForm
 import br.ufpa.smartufpa.fragments.FoodPlaceForm
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment
 import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.ElementParser
+import br.ufpa.smartufpa.utils.UIHelper
 import kotlinx.android.synthetic.main.activity_edit_element.*
 
 
 
-class EditElementActivity : AppCompatActivity() {
+class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate {
+
+
     private val elementParser : ElementParser = ElementParser
     private lateinit var elementBasicDataForm : ElementBasicDataForm
     private lateinit var element : Element
+    private lateinit var commentText: String
+
     companion object {
         private val TAG = EditElementActivity::class.simpleName
     }
@@ -30,7 +36,9 @@ class EditElementActivity : AppCompatActivity() {
         setActivityTitle()
         setActivitySubtitle()
         setActivityExtraInfo()
+
         initFormFragment()
+
         btnEditNext.setOnClickListener {
 //            val foodPlaceForm = FoodPlaceForm.newInstance("", "")
 //            val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -39,7 +47,7 @@ class EditElementActivity : AppCompatActivity() {
 //                    .addToBackStack(foodPlaceForm.tag)
 //                    .commit()
             elementBasicDataForm.updateElementData()
-            // TODO: enviar o element para o servidor?
+            openCommentDialog()
 
         }
 
@@ -79,7 +87,20 @@ class EditElementActivity : AppCompatActivity() {
     private fun initFormFragment() {
         elementBasicDataForm = ElementBasicDataForm.newInstance(element)
         val ft = supportFragmentManager.beginTransaction()
-        ft.add(R.id.containerEditForm,elementBasicDataForm, elementBasicDataForm.tag)
-                .commit()
+        ft.add(R.id.containerEditForm,elementBasicDataForm, elementBasicDataForm.tag).commit()
+    }
+
+    private fun openCommentDialog(){
+        val commentDialog = CommentDialog()
+        commentDialog.show(supportFragmentManager,CommentDialog.DIALOG_TAG)
+    }
+
+
+    // Btn Enviar foi pressionado
+    override fun delegateComment(commentText: String) {
+        this.commentText = commentText
+        Log.d(TAG, this.commentText)
+        UIHelper.showToastShort(this,getString(R.string.msg_edit_sent))
+        finish()
     }
 }

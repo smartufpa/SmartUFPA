@@ -45,9 +45,7 @@ public class PlaceDetailsFragment extends Fragment {
 
     private Element element;
 
-    public PlaceDetailsFragment() {
-        // Required empty public constructor
-    }
+    public PlaceDetailsFragment() {}
 
     public static PlaceDetailsFragment newInstance(Element element) {
         PlaceDetailsFragment fragment = new PlaceDetailsFragment();
@@ -97,8 +95,6 @@ public class PlaceDetailsFragment extends Fragment {
                 final Intent intent = new Intent(getContext(), EditElementActivity.class);
                 intent.putExtra(ARG_ELEMENT,element);
                 startActivityForResult(intent,Constants.RequestCode.EDIT_ELEMENT);
-//                EditDialog editDialog = new EditDialog(view.getContext(), (ViewGroup) view.getRootView(), getResources());
-//                editDialog.open(element);
             }
         });
     }
