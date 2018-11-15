@@ -20,7 +20,7 @@ import com.github.scribejava.core.model.OAuth1RequestToken
 import com.github.scribejava.core.model.OAuthRequest
 import com.github.scribejava.core.model.Verb
 import com.github.scribejava.core.oauth.OAuth10aService
-import kotlinx.android.synthetic.main.activity_teste_auth.*
+import kotlinx.android.synthetic.main.activity_osm_login.*
 import java.io.ByteArrayInputStream
 import java.util.concurrent.ExecutionException
 
@@ -55,7 +55,7 @@ class OsmLoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_teste_auth)
+        setContentView(R.layout.activity_osm_login)
         btnLoginOsm.setOnClickListener {
             initAuthUrl()
             startCustomTabIntent(Uri.parse(authUrl))
