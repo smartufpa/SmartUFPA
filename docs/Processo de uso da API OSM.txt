@@ -1,0 +1,65 @@
+POI <node>
+Passo a passo edição:
+
+1. Criar changeset:
+		- Request URL: https://www.openstreetmap.org/api/0.6/changeset/create
+		- Request Method: PUT
+
+• payload:
+<osm>																											-> Obrigatório
+	<changeset version="0.6" generator="iD"> 								-> Obrigatório
+		<tag k="comment" v="Adiciona farmácia drogasil"/> 		-> Obrigatório
+		<tag k="created_by" v="iD 2.11.1"/> 									-> Obrigatório
+		<tag k="locale" v="pt-BR"/>
+	</changeset>
+</osm>
+
+2. Criar osmChange payload:
+		- Request URL: https://www.openstreetmap.org/api/0.6/changeset/64531134/upload -> (64531134) id do changeset adquirido no passo 1
+		- Request Method: POST
+
+• payload de criação:
+<osmChange version="0.6" generator="iD">
+	<create>
+		<node id="-15" lon="-48.4884398863665" lat="-1.4386104736717769" version="0" changeset="63715599">
+			<tag k="shop" v="chemist"/>
+			<tag k="name" v="Drogasil"/>
+		</node>
+	</create>
+	<modify/>
+	<delete if-unused="true"/>
+</osmChange>
+
+• payload de edição:
+<osmChange version="0.6" generator="iD">
+    <create />
+    <modify>
+        <node id="4455189945" lon="-48.4563356" lat="-1.4745413" version="7" changeset="64532070">
+            <tag k="amenity" v="restaurant" />
+            <tag k="indoor" v="yes" />
+            <tag k="level" v="0" />
+            <tag k="name" v="Restaurante da Néia" />
+            <tag k="opening_hours" v="Mo-Fr 08:00-18:00" />
+            <tag k="outdoor_seating" v="no" />
+        </node>
+    </modify>
+    <delete if-unused="true" />
+</osmChange>
+
+• payload para exclusão:
+<osmChange version="0.6" generator="iD">
+    <create />
+    <modify />
+    <delete if-unused="true">
+        <node id="5190979489" lon="-48.4576861" lat="-1.4761763" version="1" changeset="64531134">
+            <tag k="name" v="Posto de Cadastro Biométrico TRE" />
+            <tag k="office" v="government" />
+            <tag k="short_name" v="Biometria" />
+            <tag k="source" v="local_knowledge" />
+        </node>
+    </delete>
+</osmChange>
+
+3. Fechar changeset:
+		- Request URL: https://www.openstreetmap.org/api/0.6/changeset/64532070/close
+		- Request Method: PUT
