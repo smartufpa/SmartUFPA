@@ -3,40 +3,39 @@ package br.ufpa.smartufpa.models.overpass
 import android.os.Parcel
 import android.os.Parcelable
 import br.ufpa.smartufpa.R
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
+import br.ufpa.smartufpa.utils.Constants.ElementTags.*
 class Tags() : Parcelable {
 
-    @SerializedName("name")
+    @SerializedName(TAG_NAME)
     var name: String? = null
 
-    @SerializedName("short_name")
+    @SerializedName(TAG_SHORT_NAME)
     var shortName: String? = null
 
-    @SerializedName("loc_name")
+    @SerializedName(TAG_LOC_NAME)
     var locName: String? = null
 
-    @SerializedName("shop")
+    @SerializedName(TAG_SHOP)
     var shop: String? = null
 
-    @SerializedName("toilets")
+    @SerializedName(TAG_TOILETS)
     val toilets: String? = null
 
     //Amenity reúne os tipos: food_court, restaurant, library, toilets, exhibition centre
-    @SerializedName("amenity")
+    @SerializedName(TAG_AMENITY)
     var amenity: String? = null
 
-    @SerializedName("description")
+    @SerializedName(TAG_DESCRIPTION)
     var description: String? = null
 
-    @SerializedName("website")
+    @SerializedName(TAG_WEBSITE)
     var website: String? = null
 
-    @SerializedName("building")
+    @SerializedName(TAG_BUILDING)
     var building: String? = null
 
-    @SerializedName("indoor")
+    @SerializedName(TAG_INDOOR)
     var indoor: String? = null
 
     var iconResourceID : Int? = null
@@ -45,6 +44,32 @@ class Tags() : Parcelable {
             return R.drawable.ic_restroom
         }
         return null
+    }
+
+    fun getTags(): HashMap<String, String> {
+        val hashMap = HashMap<String, String>()
+        if(name != null) hashMap[TAG_NAME] = this.name!!
+
+        if (shortName != null) hashMap[TAG_SHORT_NAME] = this.shortName!!
+
+        if (locName != null) hashMap[TAG_LOC_NAME] = this.locName!!
+
+        if (shop != null) hashMap[TAG_SHOP] = this.shop!!
+
+        if (toilets != null) hashMap[TAG_TOILETS] = this.toilets
+
+        if (amenity != null) hashMap[TAG_AMENITY] = this.amenity!!
+
+        if (description != null) hashMap[TAG_DESCRIPTION] = this.description!!
+
+        if (website != null) hashMap[TAG_WEBSITE] = this.website!!
+
+        if (building != null ) hashMap[TAG_BUILDING] = this.building!!
+
+        if (indoor != null) hashMap[TAG_INDOOR] = this.indoor!!
+
+        return hashMap
+
     }
 
 

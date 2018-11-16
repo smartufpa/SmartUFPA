@@ -132,24 +132,45 @@ public final class Constants {
     }
 
 
-    public class OsmXmlTags{
+    public class OsmXmlTags {
         public static final String TAG_OSM = "osm";
-        public static final String TAG_OSM_CHANGE = "osmchange";
+        public static final String TAG_OSM_CHANGE = "osmChange";
         public static final String TAG_CHANGESET = "changeset";
         public static final String TAG_CREATE = "create";
         public static final String TAG_MODIFY = "modify";
+        public static final String TAG_DELETE = "delete";
         public static final String TAG_TAG = "tag";
         public static final String TAG_NODE = "node";
     }
 
-    public class OsmXmlAttr{
+    public class OsmXmlAttr {
         public static final String ATTR_VERSION = "version";
         public static final String ATTR_GENERATOR = "generator";
-        public static final String ATTR_CHANGESET = "changeset";
+        public static final String ATTR_CHANGESET_ID = "changeset";
         public static final String ATTR_ID = "id";
         public static final String ATTR_KEY = "k";
         public static final String ATTR_VALUE = "v";
+        public static final String ATTR_LAT = "lat";
+        public static final String ATTR_LON = "lon";
 
+    }
+
+
+    public class ElementTags {
+        public static final String TAG_NAME = "name";
+        public static final String TAG_SHORT_NAME = "short_name";
+        public static final String TAG_LOC_NAME = "loc_name";
+        public static final String TAG_SHOP = "shop";
+        public static final String TAG_TOILETS = "toilets";
+        public static final String TAG_AMENITY = "amenity";
+        public static final String TAG_DESCRIPTION = "description";
+        public static final String TAG_WEBSITE = "website";
+        public static final String TAG_BUILDING = "building";
+        public static final String TAG_INDOOR = "indoor";
+    }
+
+    public class ErrorCodes{
+        public static final String ERROR_CREATE_CHANGESET = "-1";
     }
 
 

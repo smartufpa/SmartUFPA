@@ -12,8 +12,11 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.models.overpass.OsmUser
-import br.ufpa.smartufpa.utils.*
+import br.ufpa.smartufpa.utils.Constants
 import br.ufpa.smartufpa.utils.Constants.SharedPrefs.*
+import br.ufpa.smartufpa.utils.OAuthHelper
+import br.ufpa.smartufpa.utils.SharedPrefsHelper
+import br.ufpa.smartufpa.utils.UIHelper
 import br.ufpa.smartufpa.utils.osm.OsmApi
 import br.ufpa.smartufpa.utils.osm.OsmApiXmlParser
 import com.github.scribejava.core.builder.ServiceBuilder
@@ -29,23 +32,11 @@ import java.util.concurrent.ExecutionException
 
 class OsmLoginActivity : AppCompatActivity() {
 
-    //TODO guardar chaves em um local apropriado
-    private val dev_consumerKey = "IY3GmCJIaUxSeSlceMf8FrXihe0Km2bU9zrUCD9n"
-    private val consumerKey = "dZG58UbBiP2F3Pi995CC7YY0FRnCxEHr2AvpHOnG"
-    private val dev_consumerSecret = "IvAJZJSOL6Eeb6ra9BUy1QlPVz3OVczbDQ27jr5R"
-    private val consumerSecret = "tpyAHG2yInll2IJkNfZNe6T3oWOd8QIUmPZQp55y"
-    private val callback = "br.ufpa.smartufpa://callback"
-
-    private val dev_registerUrl = "https://master.apis.dev.openstreetmap.org/user/new"
-    private val registerUrl = "https://openstreetmap.org/user/new"
-
-    val service: OAuth10aService = ServiceBuilder(dev_consumerKey)
-            .debug()
-            .apiSecret(dev_consumerSecret)
-            .callback(callback)
-            .build(OsmApi.instance())
 
     private lateinit var authUrl: String
+    private val registerUrl = "https://openstreetmap.org/user/new"
+    private val dev_registerUrl = "https://master.apis.dev.openstreetmap.org/user/new"
+    val oAuthHelper =  OAuthHelper(this)
 
     companion object {
         val LOG_TAG = OsmLoginActivity::class.simpleName
@@ -60,7 +51,6 @@ class OsmLoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_osm_login)
         btnLoginOsm.setOnClickListener {
             initAuthUrl()
-            startCustomTabIntent(Uri.parse(authUrl))
         }
 
         btnRegister.setOnClickListener {
@@ -82,7 +72,9 @@ class OsmLoginActivity : AppCompatActivity() {
             goToMainActivity()
     }
 
+
     private fun saveUserDetails(userDetails: String?) {
+        Log.d(LOG_TAG, userDetails)
         val osmApiXmlParser = OsmApiXmlParser()
         val stream = ByteArrayInputStream(userDetails?.toByteArray())
         val user: OsmUser? = osmApiXmlParser.parseUser(stream)
@@ -117,6 +109,7 @@ class OsmLoginActivity : AppCompatActivity() {
     private fun initAuthUrl() {
         try {
             authUrl = RequestTokenTask().execute().get()
+            startCustomTabIntent(Uri.parse(authUrl))
         } catch (e: InterruptedException) {
             e.printStackTrace()
         } catch (e: ExecutionException) {
@@ -167,9 +160,9 @@ class OsmLoginActivity : AppCompatActivity() {
 
     private inner class RequestTokenTask : AsyncTask<Unit, Void, String>() {
         override fun doInBackground(vararg p0: Unit?): String {
-            requestToken = service.requestToken
+            requestToken = oAuthHelper.service.requestToken
             Log.d(LOG_TAG, requestToken?.rawResponse)
-            return service.getAuthorizationUrl(requestToken)
+            return oAuthHelper.service.getAuthorizationUrl(requestToken)
         }
     }
 
@@ -180,10 +173,10 @@ class OsmLoginActivity : AppCompatActivity() {
         override fun doInBackground(vararg args: String?) {
             Log.d(LOG_TAG, requestToken?.rawResponse)
             val verifier: String? = args[0]
-            val accessToken: OAuth1AccessToken = service.getAccessToken(requestToken, verifier)
+            val accessToken: OAuth1AccessToken = oAuthHelper.service.getAccessToken(requestToken, verifier)
             saveTokenDetails(accessToken)
         }
-
+        // todo: sobrescrever para usuarios não autenticados
         private fun saveTokenDetails(accessToken: OAuth1AccessToken) {
             val androidId = Settings.Secure.getString(applicationContext.contentResolver,
                     Settings.Secure.ANDROID_ID)
@@ -197,25 +190,14 @@ class OsmLoginActivity : AppCompatActivity() {
 
     }
 
-    private inner class GetUserDetailsTask(private val context: Context) : AsyncTask<Unit, Unit, String?>() {
+    private inner class GetUserDetailsTask(val context: Context) : AsyncTask<Unit, Unit, String?>() {
 
         private val urlUserDetails = "https://master.apis.dev.openstreetmap.org/api/0.6/user/details"
-
         override fun doInBackground(vararg p0: Unit?): String? {
-            val newAccessToken = getAccessToken()
-            val request = OAuthRequest(Verb.GET, urlUserDetails)
-            service.signRequest(newAccessToken, request)
-            val response = service.execute(request)
-            Log.d(LOG_TAG, response.body)
-            return response.body
+            oAuthHelper.makeRequest(Verb.GET, urlUserDetails,null)
+            val response = oAuthHelper.makeRequest(Verb.GET, urlUserDetails,null)
+            Log.d(LOG_TAG, response?.body)
+            return response?.body
         }
-
-        private fun getAccessToken(): OAuth1AccessToken {
-            val stringAccessToken = SharedPrefsHelper.getStringByKey(context, Constants.SharedPrefs.KEY_ACCESS_TOKEN)
-            val stringAccessSecret = SharedPrefsHelper.getStringByKey(context, Constants.SharedPrefs.KEY_ACCESS_SECRET)
-
-            return OAuth1AccessToken(stringAccessToken, stringAccessSecret)
-        }
-
     }
 }
