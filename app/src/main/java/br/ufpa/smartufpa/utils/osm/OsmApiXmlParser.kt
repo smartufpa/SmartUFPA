@@ -43,6 +43,39 @@ class OsmApiXmlParser {
         return osmUser
     }
 
+
+    @Throws(XmlPullParserException::class, IOException::class)
+    fun parseElementVersion(inputStream: InputStream): String? {
+        inputStream.use {
+            val parser: XmlPullParser = Xml.newPullParser()
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
+            parser.setInput(it, null)
+            parser.nextTag()
+            return readElementVersion(parser)
+        }
+    }
+
+
+    @Throws(XmlPullParserException::class, IOException::class)
+    private fun readElementVersion(parser: XmlPullParser): String? {
+        var elementVersion: String? = null
+
+        parser.require(XmlPullParser.START_TAG, ns, "osm")
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.eventType != XmlPullParser.START_TAG) {
+                continue
+            }
+            // Starts by looking for the entry tag
+            if (parser.name == "way" || parser.name == "node") {
+                elementVersion = parser.getAttributeValue(null,"version")
+            } else {
+                skip(parser)
+            }
+        }
+        return elementVersion
+    }
+
+
     @Throws(XmlPullParserException::class, IOException::class)
     private fun skip(parser: XmlPullParser) {
         if (parser.eventType != XmlPullParser.START_TAG) {

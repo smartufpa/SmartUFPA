@@ -103,8 +103,8 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
     // Btn Enviar foi pressionado
     override fun delegateComment(commentText: String) {
         UIHelper.showToastShort(this,getString(R.string.msg_edit_sent))
-//        makeCreateChangeSetRequest(OsmXmlBuilder.createChangeSetXml(commentText))
-        makeGetElementVersionRequest(element.id.toString(),element.type.toString())
+        makeCreateChangeSetRequest(OsmXmlBuilder.createChangeSetXml(commentText))
+//        makeGetElementVersionRequest(element.id.toString(),element.type.toString())
     }
 
     private fun makeCreateChangeSetRequest(payload: String){
@@ -119,9 +119,9 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
         CloseChangeSetTask(this).execute(changesetId)
     }
 
-    private fun makeGetElementVersionRequest(elementId: String, elementType: String){
-        val element = GetElementVersionTask(this).execute(elementId, elementType).get()
-        Log.d(TAG, element.toString())
+    private fun makeGetElementVersionRequest(elementId: String, elementType: String): String? {
+        return GetElementVersionTask(this).execute(elementId, elementType).get()
+
 
     }
 
@@ -129,7 +129,8 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
         if(changesetId == Constants.ErrorCodes.ERROR_CREATE_CHANGESET){
             UIHelper.showToastShort(this,"Erro ao criar o changeset")
         }else{
-            makeUploadChangeSetRequest(OsmXmlBuilder.uploadChangeSetXml(element, changesetId,"-1"),changesetId)
+            val elementVersion = makeGetElementVersionRequest(element.id.toString(), element.type.toString())
+            makeUploadChangeSetRequest(OsmXmlBuilder.uploadChangeSetXml(element, changesetId,elementVersion),changesetId)
         }
     }
 
