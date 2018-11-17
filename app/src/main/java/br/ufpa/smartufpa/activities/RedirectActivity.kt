@@ -23,6 +23,7 @@ class RedirectActivity : AppCompatActivity() {
 
         if(!hasPermissionConditions()){
             goToPermissionActivity()
+            return
         }
 
         if (isGPSEnabled()) {

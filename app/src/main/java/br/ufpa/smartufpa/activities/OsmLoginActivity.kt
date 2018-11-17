@@ -192,7 +192,7 @@ class OsmLoginActivity : AppCompatActivity() {
 
     private inner class GetUserDetailsTask(val context: Context) : AsyncTask<Unit, Unit, String?>() {
 
-        private val urlUserDetails = "https://master.apis.dev.openstreetmap.org/api/0.6/user/details"
+        private val urlUserDetails = Constants.OsmApiUrl.GET_USER_DETAILS
         override fun doInBackground(vararg p0: Unit?): String? {
             oAuthHelper.makeRequest(Verb.GET, urlUserDetails,null)
             val response = oAuthHelper.makeRequest(Verb.GET, urlUserDetails,null)

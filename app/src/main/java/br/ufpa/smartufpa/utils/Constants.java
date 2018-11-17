@@ -158,6 +158,36 @@ public final class Constants {
         public static final String ATTR_REF = "ref";
 
     }
+    //TODO guardar chaves em um local apropriado
+    public class Oauth{
+        public static final String CONSUMER_SECRET = "tpyAHG2yInll2IJkNfZNe6T3oWOd8QIUmPZQp55y";
+        public static final String CONSUMER_KEY = "dZG58UbBiP2F3Pi995CC7YY0FRnCxEHr2AvpHOnG";
+        public static final String CALLBACK = "br.ufpa.smartufpa://callback";
+    }
+
+    public class OauthDev{
+        public static final String CONSUMER_SECRET = "IvAJZJSOL6Eeb6ra9BUy1QlPVz3OVczbDQ27jr5R";
+        public static final String CONSUMER_KEY = "IY3GmCJIaUxSeSlceMf8FrXihe0Km2bU9zrUCD9n";
+        public static final String CALLBACK = "br.ufpa.smartufpa://callback";
+    }
+
+    public class OsmApiUrlDev{
+        public static final String CLOSE_CHANGESET = "https://master.apis.dev.openstreetmap.org/api/0.6/changeset/%s/close";
+        public static final String CREATE_CHANGESET = "https://master.apis.dev.openstreetmap.org/api/0.6/changeset/create";
+        public static final String UPLOAD_CHANGESET = "https://master.apis.dev.openstreetmap.org/api/0.6/changeset/%s/upload";
+        public static final String GET_USER_DETAILS = "https://master.apis.dev.openstreetmap.org/api/0.6/user/details";
+    }
+
+    public class OsmApiUrl{
+        public static final String CLOSE_CHANGESET = "https://www.openstreetmap.org/api/0.6/changeset/%s/close";
+        public static final String CREATE_CHANGESET = "https://www.openstreetmap.org/api/0.6/changeset/create";
+        public static final String UPLOAD_CHANGESET = "https://www.openstreetmap.org/api/0.6/changeset/%s/upload";
+        public static final String GET_ELEMENT_VERSION = "https://www.openstreetmap.org/api/0.6/%s/%s";
+        public static final String GET_USER_DETAILS = "https://www.openstreetmap.org/api/0.6/user/details";
+        public static final String REQUEST_TOKEN = "https://www.openstreetmap.org/oauth/request_token";
+        public static final String AUTHORIZE = "https://www.openstreetmap.org/oauth/authorize";
+        public static final String ACCESS_TOKEN = "https://www.openstreetmap.org/oauth/access_token";
+    }
 
 
     public class ElementTags {

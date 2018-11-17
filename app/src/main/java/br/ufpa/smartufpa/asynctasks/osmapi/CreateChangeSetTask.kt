@@ -4,12 +4,13 @@ import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
+import br.ufpa.smartufpa.utils.Constants
 import br.ufpa.smartufpa.utils.OAuthHelper
 import com.github.scribejava.core.model.Verb
 
 class CreateChangeSetTask(private val context: Context) : AsyncTask<String,Unit,String>() {
 
-    private val urlCreateChangeSet = "https://master.apis.dev.openstreetmap.org/api/0.6/changeset/create"
+    private val urlCreateChangeSet = Constants.OsmApiUrl.CREATE_CHANGESET
     private val oAuthHelper = OAuthHelper(context)
 
     private val callback: CreateChangeSetListener = context as CreateChangeSetListener
