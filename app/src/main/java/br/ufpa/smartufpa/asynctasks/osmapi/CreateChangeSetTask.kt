@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.asynctasks
+package br.ufpa.smartufpa.asynctasks.osmapi
 
 import android.content.Context
 import android.os.AsyncTask
@@ -19,6 +19,7 @@ class CreateChangeSetTask(private val context: Context) : AsyncTask<String,Unit,
     }
 
     override fun doInBackground(vararg args: String?): String? {
+        Log.d(LOG_TAG, "Started Request.")
         val payloadXml = args[0]
         val response = oAuthHelper.makeRequest(Verb.PUT, urlCreateChangeSet, payloadXml)
         if (response != null){
@@ -35,6 +36,7 @@ class CreateChangeSetTask(private val context: Context) : AsyncTask<String,Unit,
 
     override fun onPostExecute(result: String?) {
         super.onPostExecute(result)
+        Log.d(LOG_TAG, "Finished Request")
         if(result != null)
             callback.onChangeSetCreated(result)
         else

@@ -78,6 +78,7 @@ fun XmlSerializer.insertNodeTag(element: Element, changeSetId: String) {
 
     this.startTag(emptyNamespace, TAG_NODE)
     this.attribute(emptyNamespace, ATTR_ID, element.id.toString())
+    this.attribute(emptyNamespace, ATTR_VERSION, "-1")
     this.attribute(emptyNamespace, ATTR_LAT, latitude.toString())
     this.attribute(emptyNamespace, ATTR_LON, longitude.toString())
     this.attribute(emptyNamespace, ATTR_CHANGESET_ID, changeSetId)

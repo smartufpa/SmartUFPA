@@ -3,14 +3,15 @@ package br.ufpa.smartufpa.activities
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.widget.Toast
 import br.ufpa.smartufpa.R
-import br.ufpa.smartufpa.asynctasks.CreateChangeSetTask
+import br.ufpa.smartufpa.asynctasks.osmapi.CloseChangeSetTask
+import br.ufpa.smartufpa.asynctasks.osmapi.CreateChangeSetTask
+import br.ufpa.smartufpa.asynctasks.osmapi.UploadChangeSetTask
 import br.ufpa.smartufpa.dialogs.CommentDialog
 import br.ufpa.smartufpa.fragments.ElementBasicDataForm
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
+import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
 import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.Constants
 import br.ufpa.smartufpa.utils.osm.ElementParser
@@ -20,12 +21,12 @@ import kotlinx.android.synthetic.main.activity_edit_element.*
 
 
 
-class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, CreateChangeSetListener {
+class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, CreateChangeSetListener, UploadChangeSetListener{
+
 
     private val elementParser : ElementParser = ElementParser
     private lateinit var elementBasicDataForm : ElementBasicDataForm
     private lateinit var element : Element
-    private lateinit var commentText: String
 
     companion object {
         private val TAG = EditElementActivity::class.simpleName
@@ -101,18 +102,29 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
     override fun delegateComment(commentText: String) {
         UIHelper.showToastShort(this,getString(R.string.msg_edit_sent))
         makeCreateChangeSetRequest(OsmXmlBuilder.createChangeSetXml(commentText))
-        finish()
     }
 
     private fun makeCreateChangeSetRequest(payload: String){
         CreateChangeSetTask(this).execute(payload)
     }
 
+    private fun makeUploadChangeSetRequest(payload: String, changesetId: String){
+        UploadChangeSetTask(this).execute(payload,changesetId)
+    }
+
+    private fun makeCloseChangeSetRequest(changesetId: String){
+        CloseChangeSetTask(this).execute(changesetId)
+    }
+
     override fun onChangeSetCreated(changesetId: String) {
-        if(changesetId.equals(Constants.ErrorCodes.ERROR_CREATE_CHANGESET)){
+        if(changesetId == Constants.ErrorCodes.ERROR_CREATE_CHANGESET){
             UIHelper.showToastShort(this,"Erro ao criar o changeset")
         }else{
-            //todo: criar o payload de modificação
+            makeUploadChangeSetRequest(OsmXmlBuilder.uploadChangeSetXml(element,changesetId),changesetId)
         }
+    }
+
+    override fun onChangesetUploaded(changesetId: String) {
+        makeCloseChangeSetRequest(changesetId)
     }
 }

@@ -18,11 +18,12 @@ class OsmXmlBuilder {
         private val keyLocale = "locale"
         private val valueLocale = "pt-BR"
 
-        private val serializer : XmlSerializer = Xml.newSerializer()
-        private val writer = StringWriter()
+
 
         @JvmStatic
         fun createChangeSetXml(commentText: String): String {
+            val serializer : XmlSerializer = Xml.newSerializer()
+            val writer = StringWriter()
 
             serializer.setOutput(writer)
             serializer.startDocument(charsetUtf8,true)
@@ -53,7 +54,9 @@ class OsmXmlBuilder {
         }
 
         @JvmStatic
-        fun createOsmChangeXml(element: Element, changeSetId: String): String {
+        fun uploadChangeSetXml(element: Element, changeSetId: String): String {
+            val serializer : XmlSerializer = Xml.newSerializer()
+            val writer = StringWriter()
             serializer.setOutput(writer)
             serializer.startDocument(charsetUtf8,true)
                 //<osmChange version="0.6" generator="iD">
@@ -65,6 +68,7 @@ class OsmXmlBuilder {
                     serializer.openOsmChangeModifyTag()
 
                     // Inserir dados
+                    // TODO: Diferenciar por type
                     serializer.insertNodeTag(element, changeSetId)
 
                     //</modify>
