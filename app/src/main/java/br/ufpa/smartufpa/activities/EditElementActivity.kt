@@ -3,9 +3,11 @@ package br.ufpa.smartufpa.activities
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.asynctasks.osmapi.CloseChangeSetTask
 import br.ufpa.smartufpa.asynctasks.osmapi.CreateChangeSetTask
+import br.ufpa.smartufpa.asynctasks.osmapi.GetElementVersionTask
 import br.ufpa.smartufpa.asynctasks.osmapi.UploadChangeSetTask
 import br.ufpa.smartufpa.dialogs.CommentDialog
 import br.ufpa.smartufpa.fragments.ElementBasicDataForm
@@ -101,7 +103,8 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
     // Btn Enviar foi pressionado
     override fun delegateComment(commentText: String) {
         UIHelper.showToastShort(this,getString(R.string.msg_edit_sent))
-        makeCreateChangeSetRequest(OsmXmlBuilder.createChangeSetXml(commentText))
+//        makeCreateChangeSetRequest(OsmXmlBuilder.createChangeSetXml(commentText))
+        makeGetElementVersionRequest(element.id.toString(),element.type.toString())
     }
 
     private fun makeCreateChangeSetRequest(payload: String){
@@ -114,6 +117,12 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
 
     private fun makeCloseChangeSetRequest(changesetId: String){
         CloseChangeSetTask(this).execute(changesetId)
+    }
+
+    private fun makeGetElementVersionRequest(elementId: String, elementType: String){
+        val element = GetElementVersionTask(this).execute(elementId, elementType).get()
+        Log.d(TAG, element.toString())
+
     }
 
     override fun onChangeSetCreated(changesetId: String) {
