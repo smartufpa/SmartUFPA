@@ -69,19 +69,19 @@ fun XmlSerializer.insertOsmChangeDeleteTag() {
 }
 
 // Node
-
-fun XmlSerializer.insertNodeTag(element: Element, changeSetId: String) {
+fun XmlSerializer.insertNodeTag(element: Element, changeSetId: String, nodeVersion: String?) {
     val tagsMap: HashMap<String, String> = element.tags?.getTags()!!
     val tagsKeys = if (tagsMap.size > 0) tagsMap.keys else null
-    val latitude = if (element.center == null) element.lat else element.center!!.lat
-    val longitude = if (element.center == null) element.lon else element.center!!.lon
 
     this.startTag(emptyNamespace, TAG_NODE)
     this.attribute(emptyNamespace, ATTR_ID, element.id.toString())
-    this.attribute(emptyNamespace, ATTR_VERSION, "-1")
-    this.attribute(emptyNamespace, ATTR_LAT, latitude.toString())
-    this.attribute(emptyNamespace, ATTR_LON, longitude.toString())
+    if (nodeVersion != null) {
+        this.attribute(emptyNamespace, ATTR_VERSION, nodeVersion)
+    }
     this.attribute(emptyNamespace, ATTR_CHANGESET_ID, changeSetId)
+    this.attribute(emptyNamespace, ATTR_LAT, element.lat.toString())
+    this.attribute(emptyNamespace, ATTR_LON, element.lon.toString())
+
 
     if (tagsKeys != null) {
         for (key in tagsKeys) {
@@ -89,6 +89,39 @@ fun XmlSerializer.insertNodeTag(element: Element, changeSetId: String) {
         }
     }
     this.endTag(emptyNamespace, TAG_NODE)
+}
+
+// Way
+fun XmlSerializer.insertWayTag(element: Element, changeSetId: String, wayVersion : String?) {
+    val tagsMap: HashMap<String, String> = element.tags?.getTags()!!
+    val tagsKeys = if (tagsMap.size > 0) tagsMap.keys else null
+    this.startTag(emptyNamespace, TAG_WAY)
+
+    // Adds id attributes
+    this.attribute(emptyNamespace, ATTR_ID, element.id.toString())
+    if (wayVersion != null) {
+        this.attribute(emptyNamespace, ATTR_VERSION, wayVersion)
+    }
+    this.attribute(emptyNamespace, ATTR_CHANGESET_ID, changeSetId)
+
+    // Adds nodes related to the way
+    for (nodeRef in element.nodes!!){
+        this.startTag(emptyNamespace, TAG_WAY_NODE)
+        this.attribute(emptyNamespace, ATTR_REF, nodeRef)
+        this.endTag(emptyNamespace, TAG_WAY_NODE)
+    }
+
+    // Adds the tags related to the way
+    if (tagsKeys != null) {
+        for (key in tagsKeys) {
+            this.createTagKV(key, tagsMap[key]!!)
+        }
+    }
+
+    this.endTag(emptyNamespace, TAG_WAY)
+
+
+
 }
 
 

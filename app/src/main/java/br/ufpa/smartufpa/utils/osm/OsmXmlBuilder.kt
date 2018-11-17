@@ -54,7 +54,7 @@ class OsmXmlBuilder {
         }
 
         @JvmStatic
-        fun uploadChangeSetXml(element: Element, changeSetId: String): String {
+        fun uploadChangeSetXml(element: Element, changeSetId: String, elementVersion: String?): String {
             val serializer : XmlSerializer = Xml.newSerializer()
             val writer = StringWriter()
             serializer.setOutput(writer)
@@ -68,8 +68,7 @@ class OsmXmlBuilder {
                     serializer.openOsmChangeModifyTag()
 
                     // Inserir dados
-                    // TODO: Diferenciar por type
-                    serializer.insertNodeTag(element, changeSetId)
+                    insertTagByElementType(serializer,element,changeSetId,elementVersion)
 
                     //</modify>
                     serializer.closeOsmChangeModifyTag()
@@ -82,6 +81,18 @@ class OsmXmlBuilder {
             serializer.endDocument()
 
             return writer.toString()
+        }
+
+        private fun insertTagByElementType(serializer: XmlSerializer, element: Element, changeSetId:String , elementVersion: String?) {
+            val elementType = element.type
+            when (elementType) {
+                "node" -> {
+                    serializer.insertNodeTag(element, changeSetId, elementVersion)
+                }
+                "way" -> {
+                    serializer.insertWayTag(element,changeSetId, elementVersion)
+                }
+            }
         }
     }
 }

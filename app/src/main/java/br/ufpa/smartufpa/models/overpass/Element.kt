@@ -25,6 +25,9 @@ class Element() : Parcelable{
     @SerializedName("center")
     var center: Center? = null
 
+    @SerializedName("nodes")
+    var nodes : List<String>? = null
+
     constructor(parcel: Parcel) : this() {
         type = parcel.readString()
         id = parcel.readLong()
@@ -32,6 +35,7 @@ class Element() : Parcelable{
         lon = parcel.readValue(Double::class.java.classLoader) as? Double
         tags = parcel.readParcelable(Tags::class.java.classLoader)
         center = parcel.readParcelable(Center::class.java.classLoader)
+        nodes = parcel.createStringArrayList()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -41,6 +45,7 @@ class Element() : Parcelable{
         parcel.writeValue(lon)
         parcel.writeParcelable(tags, flags)
         parcel.writeParcelable(center, flags)
+        parcel.writeStringList(nodes)
     }
 
     override fun describeContents(): Int {

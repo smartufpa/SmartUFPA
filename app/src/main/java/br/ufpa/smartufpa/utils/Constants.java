@@ -141,6 +141,9 @@ public final class Constants {
         public static final String TAG_DELETE = "delete";
         public static final String TAG_TAG = "tag";
         public static final String TAG_NODE = "node";
+        public static final String TAG_WAY = "way";
+        public static final String TAG_WAY_NODE = "nd";
+
     }
 
     public class OsmXmlAttr {
@@ -152,6 +155,7 @@ public final class Constants {
         public static final String ATTR_VALUE = "v";
         public static final String ATTR_LAT = "lat";
         public static final String ATTR_LON = "lon";
+        public static final String ATTR_REF = "ref";
 
     }
 

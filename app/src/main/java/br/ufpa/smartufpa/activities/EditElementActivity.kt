@@ -120,7 +120,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
         if(changesetId == Constants.ErrorCodes.ERROR_CREATE_CHANGESET){
             UIHelper.showToastShort(this,"Erro ao criar o changeset")
         }else{
-            makeUploadChangeSetRequest(OsmXmlBuilder.uploadChangeSetXml(element,changesetId),changesetId)
+            makeUploadChangeSetRequest(OsmXmlBuilder.uploadChangeSetXml(element, changesetId,"-1"),changesetId)
         }
     }
 
