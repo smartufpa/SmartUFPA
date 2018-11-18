@@ -8,7 +8,6 @@ import org.xmlpull.v1.XmlSerializer
 private val emptyNamespace = ""
 private val version = "0.6"
 private val generator = "Smart-Ufpa"
-private val elementParser: ElementParser = ElementParser
 fun XmlSerializer.openOsmTag() {
     this.startTag(emptyNamespace, TAG_OSM)
 }
@@ -67,6 +66,16 @@ fun XmlSerializer.insertOsmChangeDeleteTag() {
     this.startTag(emptyNamespace, TAG_DELETE)
     this.endTag(emptyNamespace, TAG_DELETE)
 }
+
+fun XmlSerializer.openOsmChangeCreateTag(){
+    this.startTag(emptyNamespace, TAG_CREATE)
+}
+
+fun XmlSerializer.closeOsmChangeCreateTag(){
+    this.endTag(emptyNamespace, TAG_CREATE)
+}
+
+
 
 // Node
 fun XmlSerializer.insertNodeTag(element: Element, changeSetId: String, nodeVersion: String?) {

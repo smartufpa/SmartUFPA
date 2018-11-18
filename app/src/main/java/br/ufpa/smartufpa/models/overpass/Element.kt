@@ -5,7 +5,7 @@ import android.os.Parcelable
 import br.ufpa.smartufpa.R
 import com.google.gson.annotations.SerializedName
 
-class Element() : Parcelable{
+class Element : Parcelable{
 
     @SerializedName("type")
     var type: String? = null
@@ -31,6 +31,79 @@ class Element() : Parcelable{
     @SerializedName("nodes")
     var nodes : List<String>? = null
 
+    constructor(){
+        this.tags = Tags()
+        this.version = 1
+    }
+
+
+
+    fun getName(): String? {
+        this.tags.let {
+            return it?.name
+        }
+    }
+
+    fun setName(name: String){
+        this.tags.let {
+            it?.name = name
+        }
+    }
+
+    fun getShortName(): String? {
+        this.tags.let {
+            return it?.shortName
+        }
+    }
+
+    fun setShortName(shortName: String){
+        this.tags.let {
+            it?.shortName = shortName
+        }
+    }
+
+    fun getLocalName(): String? {
+        this.tags.let {
+            return it?.locName
+        }
+    }
+
+    fun setLocalName(localName: String) {
+        this.tags.let {
+            it?.locName = localName
+        }
+    }
+
+    fun getWebsite(): String? {
+        this.tags.let {
+            return it?.website
+        }
+    }
+
+    fun setWebSite(webSite: String) {
+        this.tags.let {
+            it?.website = webSite
+        }
+
+    }
+
+    fun getDescription(): String? {
+        this.tags.let {
+            return it?.description
+        }
+    }
+    fun setDescription(description: String) {
+        this.tags.let {
+            it?.description = description
+        }
+    }
+
+
+
+
+
+
+    /* Parcelable implementation */
     constructor(parcel: Parcel) : this() {
         type = parcel.readString()
         id = parcel.readLong()

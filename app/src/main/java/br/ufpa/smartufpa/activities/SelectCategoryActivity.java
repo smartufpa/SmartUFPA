@@ -17,7 +17,6 @@ import br.ufpa.smartufpa.models.PlaceCategory;
 public class SelectCategoryActivity extends AppCompatActivity {
     public static final String KEY_LATITUDE = "lat";
     public static final String KEY_LONGITUDE = "long";
-    public static final String KEY_CATEGORY = "category";
     public static final String TAG = SelectCategoryActivity.class.getName();
 
     private RecyclerView rvOptions;
@@ -50,7 +49,8 @@ public class SelectCategoryActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), CreateElementActivity.class);
                 intent.putExtra(CreateElementActivity.getARG_LATITUDE(),latitude);
                 intent.putExtra(CreateElementActivity.getARG_LONGITUDE(),longitude);
-                intent.putExtra(CreateElementActivity.getARG_CATEGORY(), category.getName());
+                intent.putExtra(CreateElementActivity.getARG_CATEGORY(), category.getCategory());
+                intent.putExtra(CreateElementActivity.getARG_CATEGORY_NAME(), category.getName());
                 startActivity(intent);
 
             }

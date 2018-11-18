@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import br.ufpa.smartufpa.R
-import br.ufpa.smartufpa.asynctasks.osmapi.*
 import br.ufpa.smartufpa.dialogs.CommentDialog
 import br.ufpa.smartufpa.fragments.ElementBasicDataForm
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment
@@ -14,6 +13,7 @@ import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
 import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.osm.ElementParser
 import br.ufpa.smartufpa.utils.UIHelper
+import br.ufpa.smartufpa.utils.enums.FormFlag
 import br.ufpa.smartufpa.utils.osm.OsmUploadHelper
 import br.ufpa.smartufpa.utils.osm.OsmXmlBuilder
 import kotlinx.android.synthetic.main.activity_edit_element.*
@@ -30,7 +30,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
     private val osmUploadHelper = OsmUploadHelper(this)
 
     companion object {
-        private val TAG = EditElementActivity::class.simpleName
+        private val LOG_TAG = EditElementActivity::class.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,9 +44,8 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
         initFormFragment()
 
         btnEditNext.setOnClickListener {
-            elementBasicDataForm.updateElementData()
+            elementBasicDataForm.setElementData(FormFlag.EDIT)
             openCommentDialog()
-
         }
 
         btnEditBack.setOnClickListener {
@@ -106,7 +105,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
 
     override fun onCreateChangeSetResponse(changesetId: String) {
         val elementVersion = osmUploadHelper.makeGetElementVersionRequest(element.id.toString(), element.type.toString())
-        val payload = OsmXmlBuilder.uploadChangeSetXml(element, changesetId, elementVersion)
+        val payload = OsmXmlBuilder.uploadChangeSetXml(element, changesetId, elementVersion, FormFlag.EDIT)
         osmUploadHelper.makeUploadChangeSetRequest(payload,changesetId)
     }
 

@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/editTitleContainer"
+        android:id="@+id/createTitleContainer"
         android:layout_width="match_parent"
         android:layout_height="108dp"
         android:background="@color/colorPrimary"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/txtEditTitle"
+                android:id="@+id/txtCreateTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -47,7 +47,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtEditSubtitle"
+                android:id="@+id/txtCreateSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -56,10 +56,10 @@
                 android:text="subtitulo"
                 android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtEditTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/txtCreateTitle" />
 
             <TextView
-                android:id="@+id/txtEditExtraInfo"
+                android:id="@+id/txtCreateExtraInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -70,7 +70,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/txtEditSubtitle" />
+                app:layout_constraintStart_toEndOf="@+id/txtCreateSubtitle" />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
@@ -82,7 +82,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTitleContainer">
+        app:layout_constraintTop_toBottomOf="@+id/createTitleContainer">
 
     </FrameLayout>
 
@@ -96,7 +96,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btnEditBack"
+            android:id="@+id/btnCreateBack"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
@@ -104,7 +104,7 @@
             android:text="@string/btnEditBack" />
 
         <Button
-            android:id="@+id/btnEditNext"
+            android:id="@+id/btnCreateNext"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="48dp"

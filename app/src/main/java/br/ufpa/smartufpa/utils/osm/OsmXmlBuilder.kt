@@ -2,6 +2,7 @@ package br.ufpa.smartufpa.utils.osm
 
 import android.util.Xml
 import br.ufpa.smartufpa.models.overpass.Element
+import br.ufpa.smartufpa.utils.enums.FormFlag
 import org.xmlpull.v1.XmlSerializer
 import java.io.StringWriter
 
@@ -54,25 +55,41 @@ class OsmXmlBuilder {
         }
 
         @JvmStatic
-        fun uploadChangeSetXml(element: Element, changeSetId: String, elementVersion: String?): String {
+        fun uploadChangeSetXml(element: Element, changeSetId: String, elementVersion: String?, formFlag: FormFlag): String {
             val serializer : XmlSerializer = Xml.newSerializer()
             val writer = StringWriter()
             serializer.setOutput(writer)
             serializer.startDocument(charsetUtf8,true)
                 //<osmChange version="0.6" generator="iD">
                 serializer.openOsmChangeTag()
-                    //<create></create>
-                    serializer.insertOsmChangeCreateTag()
 
-                    //<modify>
-                    serializer.openOsmChangeModifyTag()
+                when(formFlag){
+                    FormFlag.CREATE ->{
+                        //<create>
+                        serializer.openOsmChangeCreateTag()
 
-                    // Inserir dados
-                    insertTagByElementType(serializer,element,changeSetId,elementVersion)
+                        // Inserir dados
+                        insertTagByElementType(serializer,element,changeSetId,elementVersion)
 
-                    //</modify>
-                    serializer.closeOsmChangeModifyTag()
+                        //</create>
+                        serializer.closeOsmChangeCreateTag()
+                        //<modify/>
+                        serializer.insertOsmChangeModifyTag()
+                    }
 
+                    FormFlag.EDIT -> {
+                        //<create/>
+                        serializer.insertOsmChangeCreateTag()
+                        //<modify>
+                        serializer.openOsmChangeModifyTag()
+
+                        // Inserir dados
+                        insertTagByElementType(serializer,element,changeSetId,elementVersion)
+
+                        //</modify>
+                        serializer.closeOsmChangeModifyTag()
+                    }
+                }
                     //<delete></delete>
                     serializer.insertOsmChangeDeleteTag()
                 //</osmChange>

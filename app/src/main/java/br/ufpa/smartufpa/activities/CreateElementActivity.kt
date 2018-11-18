@@ -2,33 +2,35 @@ package br.ufpa.smartufpa.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import br.ufpa.smartufpa.R
-import br.ufpa.smartufpa.R.id.txtEditExtraInfo
 import br.ufpa.smartufpa.dialogs.CommentDialog
 import br.ufpa.smartufpa.fragments.ElementBasicDataForm
 import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
 import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
 import br.ufpa.smartufpa.models.overpass.Element
-import br.ufpa.smartufpa.utils.osm.ElementParser
+import br.ufpa.smartufpa.utils.UIHelper
+import br.ufpa.smartufpa.utils.enums.FormFlag
 import br.ufpa.smartufpa.utils.osm.OsmUploadHelper
-import kotlinx.android.synthetic.main.activity_edit_element.*
+import br.ufpa.smartufpa.utils.osm.OsmXmlBuilder
+import kotlinx.android.synthetic.main.activity_create_element.*
 
 class CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
         CreateChangeSetListener, UploadChangeSetListener, CloseChangeSetListener {
 
-    private val elementParser: ElementParser = ElementParser
     private lateinit var elementBasicDataForm: ElementBasicDataForm
+    private lateinit var element : Element
     private val osmUploadHelper = OsmUploadHelper(this)
 
     companion object {
         @JvmStatic
-        public val ARG_LATITUDE = "latitude"
+        val ARG_LATITUDE = "latitude"
         @JvmStatic
         val ARG_LONGITUDE = "longitude"
         @JvmStatic
         val ARG_CATEGORY = "category"
+        @JvmStatic
+        val ARG_CATEGORY_NAME = "category_name"
 
         val TAG = CreateElementActivity::class.simpleName
     }
@@ -42,30 +44,30 @@ class CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate
 
         initFormFragment()
 
-        btnEditNext.setOnClickListener {
-            elementBasicDataForm.updateElementData()
+        btnCreateNext.setOnClickListener {
+            element = elementBasicDataForm.setElementData(FormFlag.CREATE)!!
+            element.lat = intent.getDoubleExtra(ARG_LATITUDE, 0.0)
+            element.lon = intent.getDoubleExtra(ARG_LONGITUDE, 0.0)
+            element.type = "node"
             openCommentDialog()
-
         }
 
-        btnEditBack.setOnClickListener {
+        btnCreateBack.setOnClickListener {
             super.onBackPressed()
         }
     }
 
 
     private fun setActivityTitle() {
-        txtEditTitle.text = "Novo Local"
+        txtCreateTitle.text = "Novo Local"
     }
 
     private fun setActivitySubtitle() {
-        txtEditSubtitle.text = "Insira as informações sobre o local"
+        txtCreateSubtitle.text = "Insira as informações sobre o local"
     }
 
     private fun setActivityExtraInfo() {
-        txtEditExtraInfo.text = String.format("(%s)", intent.getStringExtra(ARG_CATEGORY))
-
-
+        txtCreateExtraInfo.text = String.format("(%s)", intent.getStringExtra(ARG_CATEGORY_NAME))
     }
 
     private fun initFormFragment() {
@@ -79,19 +81,28 @@ class CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate
         commentDialog.show(supportFragmentManager, CommentDialog.DIALOG_TAG)
     }
 
+    // Btn Enviar foi pressionado
     override fun delegateComment(commentText: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        startUploadFlow(commentText)
+    }
+
+    private fun startUploadFlow(commentText: String) {
+        UIHelper.showToastShort(this,"Upload Iniciado")
+        val payload = OsmXmlBuilder.createChangeSetXml(commentText)
+        osmUploadHelper.makeCreateChangeSetRequest(payload)
     }
 
     override fun onCreateChangeSetResponse(changesetId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val payload = OsmXmlBuilder.uploadChangeSetXml(element, changesetId, element.version.toString(), FormFlag.CREATE)
+        osmUploadHelper.makeUploadChangeSetRequest(payload,changesetId)
     }
 
     override fun onUploadChangesetResponse(changesetId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        osmUploadHelper.makeCloseChangeSetRequest(changesetId)
     }
 
     override fun onCloseChangeSetResponse() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        UIHelper.showToastShort(this,"Upload Concluído")
+        finish()
     }
 }
