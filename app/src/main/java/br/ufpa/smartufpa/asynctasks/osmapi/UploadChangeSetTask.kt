@@ -8,7 +8,7 @@ import br.ufpa.smartufpa.utils.Constants
 import br.ufpa.smartufpa.utils.OAuthHelper
 import com.github.scribejava.core.model.Verb
 
-class UploadChangeSetTask(private val context: Context) : AsyncTask<String,Unit, String>() {
+class UploadChangeSetTask(context: Context) : AsyncTask<String,Unit, String>() {
 
     private val urlUploadChangeSet = Constants.OsmApiUrl.UPLOAD_CHANGESET
     private val oAuthHelper = OAuthHelper(context)
@@ -30,7 +30,7 @@ class UploadChangeSetTask(private val context: Context) : AsyncTask<String,Unit,
                 Log.d(LOG_TAG, response.toString())
                 return changesetId
             }else{
-                Log.e(LOG_TAG,"Erro no upload do changeset=$response ")
+                Log.e(LOG_TAG,"Erro no upload do changeset=$response")
             }
         }
 
@@ -41,8 +41,8 @@ class UploadChangeSetTask(private val context: Context) : AsyncTask<String,Unit,
         super.onPostExecute(changesetId)
         Log.d(LOG_TAG, "Finished Request")
         if(changesetId != null)
-            callback.onChangesetUploaded(changesetId)
+            callback.onUploadChangesetResponse(changesetId)
         else
-            callback.onChangesetUploaded("-1")
+            callback.onUploadChangesetResponse("-1")
     }
 }

@@ -49,6 +49,7 @@ class ElementBasicDataForm : Fragment() {
     }
 
     fun updateElementData() {
+        // TODO: verificar necessidade do element parser
         elementParser.let {
             with(element) {
                 it.setName(this, getFormName())

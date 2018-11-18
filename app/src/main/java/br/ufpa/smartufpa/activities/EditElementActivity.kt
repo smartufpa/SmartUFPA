@@ -3,32 +3,31 @@ package br.ufpa.smartufpa.activities
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import br.ufpa.smartufpa.R
-import br.ufpa.smartufpa.asynctasks.osmapi.CloseChangeSetTask
-import br.ufpa.smartufpa.asynctasks.osmapi.CreateChangeSetTask
-import br.ufpa.smartufpa.asynctasks.osmapi.GetElementVersionTask
-import br.ufpa.smartufpa.asynctasks.osmapi.UploadChangeSetTask
+import br.ufpa.smartufpa.asynctasks.osmapi.*
 import br.ufpa.smartufpa.dialogs.CommentDialog
 import br.ufpa.smartufpa.fragments.ElementBasicDataForm
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment
+import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
 import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
 import br.ufpa.smartufpa.models.overpass.Element
-import br.ufpa.smartufpa.utils.Constants
 import br.ufpa.smartufpa.utils.osm.ElementParser
 import br.ufpa.smartufpa.utils.UIHelper
+import br.ufpa.smartufpa.utils.osm.OsmUploadHelper
 import br.ufpa.smartufpa.utils.osm.OsmXmlBuilder
 import kotlinx.android.synthetic.main.activity_edit_element.*
 
 
 
-class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, CreateChangeSetListener, UploadChangeSetListener{
+class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
+        CreateChangeSetListener, UploadChangeSetListener, CloseChangeSetListener{
 
 
     private val elementParser : ElementParser = ElementParser
     private lateinit var elementBasicDataForm : ElementBasicDataForm
     private lateinit var element : Element
+    private val osmUploadHelper = OsmUploadHelper(this)
 
     companion object {
         private val TAG = EditElementActivity::class.simpleName
@@ -45,12 +44,6 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
         initFormFragment()
 
         btnEditNext.setOnClickListener {
-//            val foodPlaceForm = FoodPlaceForm.newInstance("", "")
-//            val fragmentTransaction = supportFragmentManager.beginTransaction()
-//            fragmentTransaction.replace(R.id.containerEditForm,foodPlaceForm,foodPlaceForm.tag)
-//                    .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK)
-//                    .addToBackStack(foodPlaceForm.tag)
-//                    .commit()
             elementBasicDataForm.updateElementData()
             openCommentDialog()
 
@@ -102,39 +95,29 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate, 
 
     // Btn Enviar foi pressionado
     override fun delegateComment(commentText: String) {
-        UIHelper.showToastShort(this,getString(R.string.msg_edit_sent))
-        makeCreateChangeSetRequest(OsmXmlBuilder.createChangeSetXml(commentText))
-//        makeGetElementVersionRequest(element.id.toString(),element.type.toString())
+        startUploadFlow(commentText)
     }
 
-    private fun makeCreateChangeSetRequest(payload: String){
-        CreateChangeSetTask(this).execute(payload)
+    private fun startUploadFlow(commentText: String) {
+        UIHelper.showToastShort(this,"Upload Iniciado")
+        val payload = OsmXmlBuilder.createChangeSetXml(commentText)
+        osmUploadHelper.makeCreateChangeSetRequest(payload)
     }
 
-    private fun makeUploadChangeSetRequest(payload: String, changesetId: String){
-        UploadChangeSetTask(this).execute(payload,changesetId)
+    override fun onCreateChangeSetResponse(changesetId: String) {
+        val elementVersion = osmUploadHelper.makeGetElementVersionRequest(element.id.toString(), element.type.toString())
+        val payload = OsmXmlBuilder.uploadChangeSetXml(element, changesetId, elementVersion)
+        osmUploadHelper.makeUploadChangeSetRequest(payload,changesetId)
     }
 
-    private fun makeCloseChangeSetRequest(changesetId: String){
-        CloseChangeSetTask(this).execute(changesetId)
+    override fun onUploadChangesetResponse(changesetId: String) {
+        osmUploadHelper.makeCloseChangeSetRequest(changesetId)
     }
 
-    private fun makeGetElementVersionRequest(elementId: String, elementType: String): String? {
-        return GetElementVersionTask(this).execute(elementId, elementType).get()
-
-
+    override fun onCloseChangeSetResponse() {
+        UIHelper.showToastShort(this,"Upload Concluído")
+        finish()
     }
 
-    override fun onChangeSetCreated(changesetId: String) {
-        if(changesetId == Constants.ErrorCodes.ERROR_CREATE_CHANGESET){
-            UIHelper.showToastShort(this,"Erro ao criar o changeset")
-        }else{
-            val elementVersion = makeGetElementVersionRequest(element.id.toString(), element.type.toString())
-            makeUploadChangeSetRequest(OsmXmlBuilder.uploadChangeSetXml(element, changesetId,elementVersion),changesetId)
-        }
-    }
 
-    override fun onChangesetUploaded(changesetId: String) {
-        makeCloseChangeSetRequest(changesetId)
-    }
 }

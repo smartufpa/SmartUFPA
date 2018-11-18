@@ -8,7 +8,7 @@ import br.ufpa.smartufpa.utils.Constants
 import br.ufpa.smartufpa.utils.OAuthHelper
 import com.github.scribejava.core.model.Verb
 
-class CreateChangeSetTask(private val context: Context) : AsyncTask<String,Unit,String>() {
+class CreateChangeSetTask(context: Context) : AsyncTask<String,Unit,String>() {
 
     private val urlCreateChangeSet = Constants.OsmApiUrl.CREATE_CHANGESET
     private val oAuthHelper = OAuthHelper(context)
@@ -28,7 +28,7 @@ class CreateChangeSetTask(private val context: Context) : AsyncTask<String,Unit,
                 Log.d(LOG_TAG, response.toString())
                 return response.body
             }else{
-                Log.e(LOG_TAG,"Erro na criação do changeset=${response.toString()} ")
+                Log.e(LOG_TAG,"Erro na criação do changeset=${response} ")
             }
         }
 
@@ -39,8 +39,8 @@ class CreateChangeSetTask(private val context: Context) : AsyncTask<String,Unit,
         super.onPostExecute(result)
         Log.d(LOG_TAG, "Finished Request")
         if(result != null)
-            callback.onChangeSetCreated(result)
+            callback.onCreateChangeSetResponse(result)
         else
-            callback.onChangeSetCreated("-1")
+            callback.onCreateChangeSetResponse("-1")
     }
 }
