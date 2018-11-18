@@ -83,14 +83,11 @@
         </activity>
         <activity
             android:name=".activities.SelectCategoryActivity"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.PermissionCheckActivity"
             android:theme="@style/AppCompat.FullScreen" />
-        <activity
-            android:name=".activities.NewPlaceActivity"
-            android:label="@string/title_activity_new_place_form"
-            android:theme="@style/AppTheme" />
         <activity android:name=".activities.EnterScreenActivity">
             <intent-filter>
                 <action android:name="smartufpa.ACTION_LOGIN" />
@@ -116,6 +113,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RedirectActivity" />
+        <activity android:name=".activities.CreateElementActivity"></activity>
     </application>
 
 </manifest>

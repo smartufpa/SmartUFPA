@@ -14,13 +14,13 @@ private const val ARG_ELEMENT = "element"
 
 class ElementBasicDataForm : Fragment() {
 
-    private lateinit var element: Element
+    private var element: Element? = null
     private val elementParser: ElementParser = ElementParser
     private lateinit var form: View
 
     companion object {
         @JvmStatic
-        fun newInstance(element: Element) = ElementBasicDataForm().apply {
+        fun newInstance(element: Element?) = ElementBasicDataForm().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_ELEMENT, element)
             }
@@ -38,12 +38,13 @@ class ElementBasicDataForm : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         form = inflater.inflate(R.layout.fragment_element_basic_data_form, container, false)
-
-        initFormName()
-        initFormShortName()
-        initFormLocalName()
-        initFormDescription()
-        initFormWebsite()
+        if(element != null) {
+//            initFormName()
+//            initFormShortName()
+//            initFormLocalName()
+//            initFormDescription()
+//            initFormWebsite()
+        }
 
         return form
     }
@@ -52,34 +53,34 @@ class ElementBasicDataForm : Fragment() {
         // TODO: verificar necessidade do element parser
         elementParser.let {
             with(element) {
-                it.setName(this, getFormName())
-                it.setShortName(this, getFormShortName())
-                it.setDescription(this, getFormDescription())
-                it.setLocalName(this, getFormLocalName())
-                it.setWebSite(this, getFormWebsite())
+//                it.setName(this, getFormName())
+//                it.setShortName(this, getFormShortName())
+//                it.setDescription(this, getFormDescription())
+//                it.setLocalName(this, getFormLocalName())
+//                it.setWebSite(this, getFormWebsite())
             }
         }
 
     }
 
-    private fun initFormWebsite() {
-        form.inputWebsite.setText(elementParser.getWebsite(element))
-    }
-
-    private fun initFormDescription() {
-        form.inputDescription.setText(elementParser.getDescription(element))
-    }
-
-    private fun initFormLocalName() {
-        form.inputLocalName.setText(elementParser.getLocalName(element))
-    }
-    private fun initFormName() {
-        form.inputName.setText(elementParser.getName(element))
-    }
-
-    private fun initFormShortName() {
-        form.inputShortName.setText(elementParser.getShortName(element))
-    }
+//    private fun initFormWebsite() {
+//        form.inputWebsite.setText(elementParser.getWebsite(element))
+//    }
+//
+//    private fun initFormDescription() {
+//        form.inputDescription.setText(elementParser.getDescription(element))
+//    }
+//
+//    private fun initFormLocalName() {
+//        form.inputLocalName.setText(elementParser.getLocalName(element))
+//    }
+//    private fun initFormName() {
+//        form.inputName.setText(elementParser.getName(element))
+//    }
+//
+//    private fun initFormShortName() {
+//        form.inputShortName.setText(elementParser.getShortName(element))
+//    }
 
     private fun getFormWebsite(): String {
         return form.inputLocalName.text.toString()

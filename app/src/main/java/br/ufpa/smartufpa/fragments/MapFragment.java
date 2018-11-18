@@ -3,6 +3,7 @@ package br.ufpa.smartufpa.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -14,7 +15,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,11 +44,11 @@ import java.util.List;
 
 import br.ufpa.smartufpa.BuildConfig;
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.activities.SelectCategoryActivity;
 import br.ufpa.smartufpa.asynctasks.BusRouteTask;
 import br.ufpa.smartufpa.asynctasks.SearchRouteTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
-import br.ufpa.smartufpa.customviews.AddPlaceInfoWindow;
 import br.ufpa.smartufpa.customviews.CustomMapView;
 import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
@@ -62,12 +62,13 @@ import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 /**
  * Fragment that holds the map view and all the tasks related to the map.
+ *
  * @author kaeuchoa
  */
 public class MapFragment extends Fragment implements LocationListener, OnSearchRouteListener,
         OnBusRouteListener {
 
-    private static final String TAG = MapFragment.class.getSimpleName() ;
+    private static final String TAG = MapFragment.class.getSimpleName();
     public static String FRAGMENT_TAG = MapFragment.class.getName();
 
     // MAP
@@ -99,23 +100,23 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     private MapUtils mapUtils;
 
-      /* CLICK LISTENERS */
+    /* CLICK LISTENERS */
 
-    private Button.OnClickListener myLocationListener = new Button.OnClickListener(){
+    private Button.OnClickListener myLocationListener = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
             moveCameraToUserLocation();
         }
     };
 
-    private Button.OnClickListener busLocationListener = new Button.OnClickListener(){
+    private Button.OnClickListener busLocationListener = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
             Toast.makeText(context, "Adicionar lógica da função de localizar o circular", Toast.LENGTH_SHORT).show();
         }
     };
 
-    private Button.OnClickListener clearMapListener = new Button.OnClickListener(){
+    private Button.OnClickListener clearMapListener = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
             clearMap();
@@ -123,12 +124,13 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     };
 
 
-
     // Required empty public constructor
-    public MapFragment() {}
+    public MapFragment() {
+    }
 
     /**
      * Initialize a MapFragment
+     *
      * @return MapFragment Instance
      */
 
@@ -164,12 +166,12 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view =  inflater.inflate(R.layout.fragment_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         // Must add the CustomMapView to the layout on index 0 because of the axis Z used on CoordinatorLayouts
         mapView = new CustomMapView(context);
         final CoordinatorLayout cl = view.findViewById(R.id.coordinator_layout);
-        cl.addView(mapView,0);
+        cl.addView(mapView, 0);
 
         fabMyLocation = view.findViewById(R.id.fab_my_location);
         btnClearMap = view.findViewById(R.id.btn_clear_map);
@@ -230,7 +232,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
      * Initialize the map configurations such as MapCamera, zoom values
      * and interface aspects.
      */
-    private void initMapView(){
+    private void initMapView() {
         mapView.setTilesScaledToDpi(true);
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         mapView.setBuiltInZoomControls(false);
@@ -244,52 +246,52 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         mapView.addOverlay(mCopyrightOverlay, OverlayTags.COPYRIGHT);
     }
 
-    private void initMapCamera(){
+    private void initMapCamera() {
         // Map camera configuration
         mapCamera = mapView.getController();
-        mapCamera.animateTo(startCameraPoint,Constants.MapConfig.DEFAULT_ZOOM,(long)0);
+        mapCamera.animateTo(startCameraPoint, Constants.MapConfig.DEFAULT_ZOOM, (long) 0);
     }
 
     /**
      * Initialize the map layer and feature to show user's location
      * on the map.
      */
-    private void enableMyLocationOverlay(){
-        if(userLocation == null){
+    private void enableMyLocationOverlay() {
+        if (userLocation == null) {
             GpsMyLocationProvider provider = new GpsMyLocationProvider(context);
             provider.addLocationSource(LocationManager.NETWORK_PROVIDER);
-            myLocationOverlay = new MyLocationNewOverlay(provider,mapView);
+            myLocationOverlay = new MyLocationNewOverlay(provider, mapView);
         }
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
         myLocationOverlay.setOptionsMenuEnabled(true);
 
-        if(!mapView.isMyLocationActive())
+        if (!mapView.isMyLocationActive())
             mapView.activeMyLocationOverlay(myLocationOverlay);
     }
 
     /**
      * Enables the layer to show the internal bus route with its bus stops
      */
-    public void enableBusOverlay(){
-        new BusRouteTask(this,mapView).execute();
+    public void enableBusOverlay() {
+        new BusRouteTask(this, mapView).execute();
     }
 
     // TODO (OFFLINE FUNCTIONS): USE KMLFOLDER TO SAVE IT
     // https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
-    private boolean areMapsInStorage(){
+    private boolean areMapsInStorage() {
         return false;
     }
 
-    private void clearMap(){
+    private void clearMap() {
         mapView.removeAllOverlays();
-        if(btnClearMap.getVisibility() == View.VISIBLE) btnClearMap.setVisibility(View.GONE);
-        if(ROUTES_COUNTER == MAX_ROUTES)
+        if (btnClearMap.getVisibility() == View.VISIBLE) btnClearMap.setVisibility(View.GONE);
+        if (ROUTES_COUNTER == MAX_ROUTES)
             ROUTES_COUNTER = 0;
     }
 
 
-    private void moveCameraToUserLocation(){
+    private void moveCameraToUserLocation() {
         try {
             // Check if the user is inside the map region and just moves the camera if he/she is
             if (mapUtils.isUserWithinLimits(userLocation, mapRegion)) {
@@ -298,9 +300,9 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
                 Toast.makeText(context, R.string.msg_out_of_covered_region, Toast.LENGTH_SHORT).show();
             }
 
-        }catch (NullPointerException e){
-            Log.e(TAG,"Could not get current location.",e);
-            if(!SystemServicesManager.isGPSEnabled(context)) {
+        } catch (NullPointerException e) {
+            Log.e(TAG, "Could not get current location.", e);
+            if (!SystemServicesManager.isGPSEnabled(context)) {
                 Toast.makeText(context, R.string.msg_turn_on_gps, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -310,23 +312,22 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
 
-
-
-    public boolean isLayerEnabled(final OverlayTags layerTag){
+    public boolean isLayerEnabled(final OverlayTags layerTag) {
         return mapView.containsOverlay(layerTag);
     }
 
-    public IMapController getMapCamera(){
+    public IMapController getMapCamera() {
         return mapCamera;
     }
 
     /**
      * Creates and add an overlay to the map.
-     * @param POIS List of POIS to plot on the map.
+     *
+     * @param POIS        List of POIS to plot on the map.
      * @param markersType Identifier for what icon should be used for markers.
      * @param overlayTag  Identifier for the overlay to be added on the OverlayManager.
      */
-    public void createOverlay(List<POI> POIS, MarkerTypes markersType, OverlayTags overlayTag){
+    public void createOverlay(List<POI> POIS, MarkerTypes markersType, OverlayTags overlayTag) {
         final FolderOverlay poiMarkers = new FolderOverlay();
 
         MapUtils mapUtils = new MapUtils(getContext());
@@ -339,7 +340,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
             if (!mapRegion.contains(checkPOI.getLatitude(), checkPOI.getLongitude()))
                 POIS.remove(checkPOI);
 
-            final POI rightPOI =  POIS.get(i);
+            final POI rightPOI = POIS.get(i);
             Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
@@ -364,13 +365,13 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
             final Marker customMarker = mapUtils
                     .createCustomMarker(mapView, markerDrawables.get(MarkerStatus.NOT_CLICKED),
-                    new GeoPoint(rightPOI.getLatitude(), rightPOI.getLongitude()), onMarkerClickListener);
+                            new GeoPoint(rightPOI.getLatitude(), rightPOI.getLongitude()), onMarkerClickListener);
 
             poiMarkers.add(customMarker);
 
         }
 
-        mapView.addOverlay(poiMarkers,overlayTag);
+        mapView.addOverlay(poiMarkers, overlayTag);
         btnClearMap.setVisibility(View.VISIBLE);
 
     }
@@ -378,12 +379,13 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     /**
      * Calls the task that will calculate the route between user's current location and
      * a destination and limits the number of routes that can be shown simultaneously.
+     *
      * @param destination the final place to calculate the route
      */
     public void findRouteToPlace(final POI destination) {
-        if (userLocation == null){
+        if (userLocation == null) {
             Toast.makeText(context, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
-        }else if(ROUTES_COUNTER == MAX_ROUTES) {
+        } else if (ROUTES_COUNTER == MAX_ROUTES) {
             Toast.makeText(context, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         } else {
             getActivity().findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
@@ -395,22 +397,24 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     /**
      * Calls the task that will calculate the route between two different locations
      * and limits the number of routes that can be shown simultaneously.
+     *
      * @param destination the final place to calculate the route
      */
-    public void findRouteToPlace(final POI origin, final POI destination){
-        if (userLocation == null){
+    public void findRouteToPlace(final POI origin, final POI destination) {
+        if (userLocation == null) {
             Toast.makeText(context, getString(R.string.msg_loading_current_position), Toast.LENGTH_SHORT).show();
-        }else if(ROUTES_COUNTER == MAX_ROUTES) {
+        } else if (ROUTES_COUNTER == MAX_ROUTES) {
             Toast.makeText(context, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         } else {
             new SearchRouteTask(this)
                     .execute(origin.getGeoPoint(), destination.getGeoPoint());
         }
     }
+
     @Override
     public void onLocationChanged(Location location) {
-        if(userLocation == null)
-            userLocation = new POI(location.getLatitude(),location.getLongitude(),"user_location","","", "");
+        if (userLocation == null)
+            userLocation = new POI(location.getLatitude(), location.getLongitude(), "user_location", "", "", "");
         else {
             userLocation.setLongitude(location.getLongitude());
             userLocation.setLatitude(location.getLatitude());
@@ -418,43 +422,46 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras){}
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
     @Override
-    public void onProviderEnabled(String provider) {}
+    public void onProviderEnabled(String provider) {
+    }
 
     @Override
-    public void onProviderDisabled(String provider) {}
+    public void onProviderDisabled(String provider) {
+    }
 
 
     @Override
     public void onSearchRouteResponse(final Overlay overlay, final ServerResponse taskStatus) {
         // actually plots the route on the map
-        if(taskStatus == ServerResponse.SUCCESS){
+        if (taskStatus == ServerResponse.SUCCESS) {
             Polyline roadOverlay = (Polyline) overlay;
             roadOverlay.setColor(ROUTE_LINE_COLORS.get(ROUTES_COUNTER));
             roadOverlay.setWidth(10);
             mapView.addOverlay(roadOverlay, OverlayTags.ROUTE);
             ROUTES_COUNTER++;
-        }else if(taskStatus == ServerResponse.TIMEOUT){
+        } else if (taskStatus == ServerResponse.TIMEOUT) {
             Toast.makeText(context, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
-        }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
+        } else if (taskStatus == ServerResponse.CONNECTION_FAILED) {
             Toast.makeText(context, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
-        }else if(ROUTES_COUNTER == MAX_ROUTES){
+        } else if (ROUTES_COUNTER == MAX_ROUTES) {
             Toast.makeText(context, R.string.msg_routes_limit, Toast.LENGTH_SHORT).show();
         }
         (getActivity().findViewById(R.id.progress_bar)).setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void onBusRouteResponse(final Overlay overlay,final ServerResponse taskStatus) {
+    public void onBusRouteResponse(final Overlay overlay, final ServerResponse taskStatus) {
         // actually plots the bus route on the map
-        if(taskStatus == ServerResponse.SUCCESS){
+        if (taskStatus == ServerResponse.SUCCESS) {
             mapView.addOverlay(overlay, OverlayTags.BUS_ROUTE);
             btnClearMap.setVisibility(View.VISIBLE);
-        }else if(taskStatus == ServerResponse.TIMEOUT){
+        } else if (taskStatus == ServerResponse.TIMEOUT) {
             Toast.makeText(context, getString(R.string.error_server_timeout), Toast.LENGTH_SHORT).show();
-        }else if (taskStatus == ServerResponse.CONNECTION_FAILED){
+        } else if (taskStatus == ServerResponse.CONNECTION_FAILED) {
             Toast.makeText(context, R.string.error_connection_failed, Toast.LENGTH_SHORT).show();
         }
         (getActivity().findViewById(R.id.progress_bar)).setVisibility(View.INVISIBLE);
@@ -463,49 +470,46 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     public void addLocationToMap() {
         Toast.makeText(context, R.string.msg_drag_marker, Toast.LENGTH_LONG).show();
-
+        // TODO: Mudar esse ícone
         final Marker customMarker = mapUtils.createCustomMarker(
-                mapView, ContextCompat.getDrawable(context,R.drawable.ic_marker),
-                                    (GeoPoint) mapView.getMapCenter(), null);
-        final AddPlaceInfoWindow addPlaceInfoWindow = new AddPlaceInfoWindow(R.layout.custom_info_window, mapView, customMarker, getActivity());
-
-        customMarker.setInfoWindow(addPlaceInfoWindow);
+                mapView, ContextCompat.getDrawable(context, R.drawable.ic_marker),
+                (GeoPoint) mapView.getMapCenter(), null);
         customMarker.setDraggable(true);
-
-
         customMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker, MapView mapView) {
-                if(!marker.isInfoWindowShown())
-                    marker.showInfoWindow();
+                double latitude = customMarker.getPosition().getLatitude();
+                double longitude = customMarker.getPosition().getLongitude();
+                goToSelectCategoryActivity(latitude,longitude);
                 return false;
             }
         });
 
         customMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
             @Override
-            public void onMarkerDrag(Marker marker) {}
+            public void onMarkerDrag(Marker marker) {
+            }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                // TODO: check if the infowindow is inside the screen
-                //https://stackoverflow.com/questions/24989659/android-how-to-drag-a-view-within-screen-size
-                //https://stackoverflow.com/questions/3644030/whats-the-best-way-to-check-if-the-view-is-visible-on-the-window
-                //https://stackoverflow.com/questions/24078302/determine-if-a-view-is-partly-off-screen
-                marker.showInfoWindow();
                 mapCamera.animateTo(marker.getPosition());
             }
 
             @Override
             public void onMarkerDragStart(Marker marker) {
-                if(marker.isInfoWindowShown())
-                    marker.getInfoWindow().close();
             }
         });
         final FolderOverlay folderOverlay = new FolderOverlay();
         folderOverlay.add(customMarker);
-        mapView.addOverlay(folderOverlay,OverlayTags.NEW_LOCATION);
+        mapView.addOverlay(folderOverlay, OverlayTags.NEW_LOCATION);
         btnClearMap.setVisibility(View.VISIBLE);
+    }
+
+    private void goToSelectCategoryActivity(double latitude, double longitude) {
+        Intent intent = new Intent(getActivity(), SelectCategoryActivity.class);
+        intent.putExtra(SelectCategoryActivity.KEY_LATITUDE, latitude);
+        intent.putExtra(SelectCategoryActivity.KEY_LONGITUDE, longitude);
+        startActivity(intent);
     }
 
 }

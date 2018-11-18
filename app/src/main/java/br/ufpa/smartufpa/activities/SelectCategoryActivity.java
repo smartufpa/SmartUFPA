@@ -47,10 +47,10 @@ public class SelectCategoryActivity extends AppCompatActivity {
 
                 Log.i(TAG, "Categoria escolhida: " + category.getName());
 
-                Intent intent = new Intent(getApplicationContext(), NewPlaceActivity.class);
-                intent.putExtra(SelectCategoryActivity.KEY_LATITUDE,latitude);
-                intent.putExtra(SelectCategoryActivity.KEY_LONGITUDE,longitude);
-                intent.putExtra(SelectCategoryActivity.KEY_CATEGORY, category.getCategory());
+                Intent intent = new Intent(getApplicationContext(), CreateElementActivity.class);
+                intent.putExtra(CreateElementActivity.getARG_LATITUDE(),latitude);
+                intent.putExtra(CreateElementActivity.getARG_LONGITUDE(),longitude);
+                intent.putExtra(CreateElementActivity.getARG_CATEGORY(), category.getName());
                 startActivity(intent);
 
             }
