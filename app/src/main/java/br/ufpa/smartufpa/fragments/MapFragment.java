@@ -50,6 +50,8 @@ import br.ufpa.smartufpa.asynctasks.SearchRouteTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchRouteListener;
 import br.ufpa.smartufpa.customviews.CustomMapView;
+import br.ufpa.smartufpa.interfaces.PlaceDetailsDelegate;
+import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.MapUtils;
@@ -97,6 +99,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
     private POI userLocation;
     private LocationManager locationManager;
     private PermissionHelper permissionHelper;
+    private PlaceDetailsDelegate placeDetailsDelegate;
 
     private MapUtils mapUtils;
 
@@ -146,6 +149,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         context = getContext();
         mapUtils = new MapUtils(context);
         permissionHelper = new PermissionHelper(context);
+        placeDetailsDelegate = (PlaceDetailsDelegate) context;
 
         startCameraPoint = mapUtils.getMapStartPoint();
         mapRegion = mapUtils.getMapBoundingBox();
@@ -159,6 +163,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         ROUTE_LINE_COLORS.add(Color.rgb(100, 100, 255)); // blue
         ROUTE_LINE_COLORS.add(Color.rgb(255, 100, 100)); // red
         ROUTE_LINE_COLORS.add(Color.rgb(62, 153, 62)); // green
+
 
     }
 
@@ -320,59 +325,37 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         return mapCamera;
     }
 
-    /**
-     * Creates and add an overlay to the map.
-     *
-     * @param POIS        List of POIS to plot on the map.
-     * @param markersType Identifier for what icon should be used for markers.
-     * @param overlayTag  Identifier for the overlay to be added on the OverlayManager.
-     */
-    public void createOverlay(List<POI> POIS, MarkerTypes markersType, OverlayTags overlayTag) {
+
+    public void addMarkersToMap(List<Element> elements) {
         final FolderOverlay poiMarkers = new FolderOverlay();
-
-        MapUtils mapUtils = new MapUtils(getContext());
-        final HashMap<MarkerStatus, Drawable> markerDrawables = mapUtils.getMarkerDrawable(markersType);
-
-
+        final MapUtils mapUtils = new MapUtils(context);
+        final Drawable clickedMarkerDrawable = ContextCompat.getDrawable(context, R.drawable.ic_marker_details);
+        final Drawable defaultMarkerDrawable = ContextCompat.getDrawable(context, R.drawable.ic_marker);
         // Creates a marker for each place found
-        for (int i = 0; i < POIS.size(); i++) {
-            POI checkPOI = POIS.get(i);
-            if (!mapRegion.contains(checkPOI.getLatitude(), checkPOI.getLongitude()))
-                POIS.remove(checkPOI);
-
-            final POI rightPOI = POIS.get(i);
-            Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
+        for (final Element element : elements) {
+            final Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    // Finds the container in which the fragment will be inflated
-                    FrameLayout bottomSheetContainer = getActivity().findViewById(R.id.bottom_sheet_container);
-                    BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheetContainer);
-                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-                    // Sets up a PlaceDetailsFragment to show specific information about the selected POI
-//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                    PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(rightPOI);
-//                    fragmentManager.beginTransaction()
-//                            .replace(R.id.bottom_sheet_container,placeDetailsFragment,PlaceDetailsFragment.FRAGMENT_TAG)
-//                            .commit();
-
                     // Will change the marker to its clicked icon
-                    marker.setIcon(markerDrawables.get(MarkerStatus.CLICKED));
+                    marker.setIcon(clickedMarkerDrawable);
                     mapView.postInvalidate();
+                    placeDetailsDelegate.showPlaceDetailsFragment(element);
                     return true;
                 }
             };
-
-            final Marker customMarker = mapUtils
-                    .createCustomMarker(mapView, markerDrawables.get(MarkerStatus.NOT_CLICKED),
-                            new GeoPoint(rightPOI.getLatitude(), rightPOI.getLongitude()), onMarkerClickListener);
-
+            final Drawable drawable = ContextCompat.getDrawable(context, element.getTags().getMarkerIconRes());
+            Marker customMarker;
+            final GeoPoint location = new GeoPoint(element.getLat(), element.getLon());
+            if (drawable != null) {
+                customMarker = mapUtils.createCustomMarker(mapView, drawable, location, onMarkerClickListener);
+            } else {
+                customMarker = mapUtils.createCustomMarker(mapView, defaultMarkerDrawable, location, onMarkerClickListener);
+            }
             poiMarkers.add(customMarker);
-
         }
-
-        mapView.addOverlay(poiMarkers, overlayTag);
+        mapView.addOverlay(poiMarkers, OverlayTags.SEARCH);
         btnClearMap.setVisibility(View.VISIBLE);
+
 
     }
 
@@ -480,7 +463,7 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
             public boolean onMarkerClick(Marker marker, MapView mapView) {
                 double latitude = customMarker.getPosition().getLatitude();
                 double longitude = customMarker.getPosition().getLongitude();
-                goToSelectCategoryActivity(latitude,longitude);
+                goToSelectCategoryActivity(latitude, longitude);
                 return false;
             }
         });

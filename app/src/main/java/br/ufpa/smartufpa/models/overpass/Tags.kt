@@ -5,6 +5,7 @@ import android.os.Parcelable
 import br.ufpa.smartufpa.R
 import com.google.gson.annotations.SerializedName
 import br.ufpa.smartufpa.utils.Constants.ElementTags.*
+
 class Tags() : Parcelable {
 
     @SerializedName(TAG_NAME)
@@ -38,17 +39,75 @@ class Tags() : Parcelable {
     @SerializedName(TAG_INDOOR)
     var indoor: String? = null
 
-    var iconResourceID : Int? = null
+    var iconRes: Int? = null
         get() {
-        if((toilets != null && toilets.equals("yes")) or amenity?.equals("toilets")!!){
-            return R.drawable.ic_restroom
+            if(amenity != null){
+                when(amenity){
+                    "food_court", "restaurant" -> {
+                        return R.drawable.ic_food
+                    }
+                    "library" -> {
+                        return R.drawable.ic_library
+                    }
+                    "exhibition_centre" ->{
+                        return R.drawable.ic_auditorium
+                    }
+
+                    "toilets" -> {
+                        return R.drawable.ic_restroom
+                    }
+                }
+            }else{
+                if (toilets != null) {
+                    if (toilets == "yes"){
+                        return R.drawable.ic_restroom
+                    }
+                }
+
+                if(shop != null){
+                    if(shop == "copyshop")
+                        return R.drawable.ic_xerox
+                }
+            }
+            return null
         }
-        return null
-    }
+
+    var markerIconRes: Int? = null
+        get() {
+            if(amenity != null){
+                when(amenity){
+                    "food_court", "restaurant" -> {
+                        return R.drawable.ic_marker_restaurant
+                    }
+                    "library" -> {
+                        return R.drawable.ic_marker_library
+                    }
+                    "exhibition_centre" ->{
+                        return R.drawable.ic_marker_auditorium
+                    }
+
+                    "toilets" -> {
+                        return R.drawable.ic_marker_restroom
+                    }
+                }
+            }else{
+                if (toilets != null) {
+                    if (toilets == "yes"){
+                        return R.drawable.ic_marker_restroom
+                    }
+                }
+
+                if(shop != null){
+                    if(shop == "copyshop")
+                        return R.drawable.ic_marker_xerox
+                }
+            }
+            return null
+        }
 
     fun getTags(): HashMap<String, String> {
         val hashMap = HashMap<String, String>()
-        if(name != null) hashMap[TAG_NAME] = this.name!!
+        if (name != null) hashMap[TAG_NAME] = this.name!!
 
         if (shortName != null) hashMap[TAG_SHORT_NAME] = this.shortName!!
 
@@ -64,7 +123,7 @@ class Tags() : Parcelable {
 
         if (website != null) hashMap[TAG_WEBSITE] = this.website!!
 
-        if (building != null ) hashMap[TAG_BUILDING] = this.building!!
+        if (building != null) hashMap[TAG_BUILDING] = this.building!!
 
         if (indoor != null) hashMap[TAG_INDOOR] = this.indoor!!
 

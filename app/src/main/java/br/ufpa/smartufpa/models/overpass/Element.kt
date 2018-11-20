@@ -18,9 +18,20 @@ class Element : Parcelable{
 
     @SerializedName("lat")
     var lat: Double? = null
+    get(){
+        if(field == null)
+            return center?.lat
+        return field
+    }
 
     @SerializedName("lon")
     var lon: Double? = null
+    get(){
+        if(field == null)
+            return center?.lon
+
+        return field
+    }
 
     @SerializedName("tags")
     var tags: Tags? = null

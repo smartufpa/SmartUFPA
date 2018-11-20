@@ -46,7 +46,6 @@ import br.ufpa.smartufpa.interfaces.PlaceDetailsDelegate;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.models.overpass.OverpassModel;
 import br.ufpa.smartufpa.models.retrofit.OverpassApi;
-import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.osm.ElementParser;
 import br.ufpa.smartufpa.utils.FragmentHelper;
@@ -57,10 +56,8 @@ import br.ufpa.smartufpa.utils.apptutorial.AppTutorial;
 import br.ufpa.smartufpa.utils.apptutorial.ShowcaseHolder;
 import br.ufpa.smartufpa.utils.apptutorial.ToolbarActionItemTarget;
 import br.ufpa.smartufpa.utils.apptutorial.ViewTargets;
-import br.ufpa.smartufpa.utils.enums.MarkerTypes;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
 import br.ufpa.smartufpa.utils.enums.OverpassFilters;
-import br.ufpa.smartufpa.utils.enums.ServerResponse;
 import br.ufpa.smartufpa.utils.retrofit.RetrofitHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -240,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
                     if (networkEnabled) {
                         showProgressBar();
                         if (id == R.id.nav_about) {
-                            startAboutActivity();
+                            goToAboutActivity();
                         } else if (id == R.id.nav_bus_route) {
                             if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE))
                                 mapFragment.enableBusOverlay();
@@ -282,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
         return null;
     }
 
-    private void startAboutActivity() {
+    private void goToAboutActivity() {
         final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
         intent.addCategory(AboutActivity.CATEGORY_ABOUT);
         startActivity(intent);
@@ -308,16 +305,17 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
         // Defines what happens when the search icon is clicked
         setupSearchItem(menu);
         // Restore the preferences stored and decide on whether executing or not the app tutorial
-        final int tutorialStatus = checkTutorialStatus();
-        if (tutorialStatus == Constants.TUTORIAL_NOT_EXECUTED)
-            runAppTutorial();
+        checkTutorialStatus();
+
 
         return true;
     }
 
-    private int checkTutorialStatus() {
+    private void checkTutorialStatus() {
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        return sharedPref.getInt(getString(R.string.tutorial_map_executed), Constants.TUTORIAL_NOT_EXECUTED);
+        final int tutorialStatus = sharedPref.getInt(getString(R.string.tutorial_map_executed), Constants.TUTORIAL_NOT_EXECUTED);
+        if (tutorialStatus == Constants.TUTORIAL_NOT_EXECUTED)
+            runAppTutorial();
     }
 
     private void setupSearchItem(Menu menu) {
@@ -431,10 +429,14 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
                     break;
                 default:
                     showSearchResultFragment(elements);
+                    populateMapView(elements);
             }
         }
     }
 
+    private void populateMapView(List<Element> elements){
+        mapFragment.addMarkersToMap(elements);
+    }
 
     private void showSearchResultFragment(List<Element> elements) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
