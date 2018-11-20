@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.activities.EditElementActivity;
+import br.ufpa.smartufpa.activities.api.EditElementActivity;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.osm.ElementParser;

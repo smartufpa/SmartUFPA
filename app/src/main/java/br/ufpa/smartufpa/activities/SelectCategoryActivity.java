@@ -11,6 +11,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
+import br.ufpa.smartufpa.activities.api.CreateElementActivity;
 import br.ufpa.smartufpa.adapters.SelectCategoryAdapter;
 import br.ufpa.smartufpa.models.PlaceCategory;
 

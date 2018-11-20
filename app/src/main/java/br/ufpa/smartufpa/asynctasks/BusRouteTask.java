@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import br.ufpa.smartufpa.asynctasks.interfaces.OnBusRouteListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.utils.BusRouteKmlStyler;
-import br.ufpa.smartufpa.utils.osm.OverpassHelper;
+import br.ufpa.smartufpa.utils.osm.OverpassQueryHelper;
 import br.ufpa.smartufpa.utils.enums.ServerResponse;
 
 import org.osmdroid.bonuspack.kml.KmlDocument;
@@ -17,8 +17,8 @@ import org.osmdroid.views.overlay.Overlay;
 /**
  * AsyncTask responsible for querying the route of internal buses.
  * Uses KML and OverpassAPI.
- * The query construction is made by OverpassHelper class.
- * @see OverpassHelper
+ * The query construction is made by OverpassQueryHelper class.
+ * @see OverpassQueryHelper
  * reference: https://github.com/MKergall/osmbonuspack/wiki/Tutorial_4
  * @author kaeuchoa
  *
@@ -29,7 +29,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
     private final MapView mapView;
     private MapFragment mapFragment;
     private ServerResponse taskStatus;
-    private OverpassHelper overpassHelper;
+    private OverpassQueryHelper overpassQueryHelper;
     // Parent Context that implements OnBusRouteListener which will receive the results
     private OnBusRouteListener callback;
 
@@ -38,7 +38,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
         this.callback = mapFragment;
         this.mapView = mapView;
         this.taskStatus = ServerResponse.SUCCESS;
-        this.overpassHelper = OverpassHelper.getInstance(mapFragment.getContext().getApplicationContext());
+        this.overpassQueryHelper = OverpassQueryHelper.getInstance(mapFragment.getContext().getApplicationContext());
     }
 
 
@@ -46,7 +46,7 @@ public class BusRouteTask extends AsyncTask<Void,Void, Overlay> {
     protected Overlay doInBackground(Void... voids) {
         OverpassAPIProvider overpassProvider = new OverpassAPIProvider();
 
-        final String busRouteURL = overpassHelper.getBusRouteByNameURL().toString();
+        final String busRouteURL = overpassQueryHelper.getBusRouteByNameURL().toString();
 //        final String busRouteURL = overpassProvider.urlForTagSearchKml("route=bus,name='Ônibus Universitário'", mapView.getBoundingBox(), 500, 30);;
 
         KmlDocument kmlDocument = new KmlDocument();

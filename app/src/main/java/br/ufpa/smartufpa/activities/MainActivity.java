@@ -28,7 +28,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,8 +39,6 @@ import java.util.List;
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.about.AboutActivity;
 import br.ufpa.smartufpa.activities.ui.BottomSheetController;
-import br.ufpa.smartufpa.asynctasks.SearchQueryTask;
-import br.ufpa.smartufpa.asynctasks.interfaces.OnSearchQueryListener;
 import br.ufpa.smartufpa.fragments.MapFragment;
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment;
 import br.ufpa.smartufpa.fragments.SearchResultFragment;
@@ -53,7 +50,7 @@ import br.ufpa.smartufpa.models.smartufpa.POI;
 import br.ufpa.smartufpa.utils.Constants;
 import br.ufpa.smartufpa.utils.osm.ElementParser;
 import br.ufpa.smartufpa.utils.FragmentHelper;
-import br.ufpa.smartufpa.utils.osm.OverpassHelper;
+import br.ufpa.smartufpa.utils.osm.OverpassQueryHelper;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.UIHelper;
 import br.ufpa.smartufpa.utils.apptutorial.AppTutorial;
@@ -76,7 +73,7 @@ import retrofit2.Response;
  * @author kaeuchoa
  */
 
-public class MainActivity extends AppCompatActivity implements OnSearchQueryListener, Callback<OverpassModel>, PlaceDetailsDelegate {
+public class MainActivity extends AppCompatActivity implements Callback<OverpassModel>, PlaceDetailsDelegate {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTION_MAIN = "smartufpa.ACTION_MAIN";
@@ -96,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
     private OverpassApi overpassApi;
     private BottomSheetController bottomSheetController;
 
-    private OverpassHelper overpassHelper;
+    private OverpassQueryHelper overpassQueryHelper;
     private FragmentHelper fragmentHelper;
     private final ElementParser elementParser = ElementParser.INSTANCE;
 
@@ -118,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         setupDrawer();
         setupMapFragment();
         overpassApi = RetrofitHelper.INSTANCE.getOverpassApi();
-        overpassHelper = OverpassHelper.getInstance(this);
+        overpassQueryHelper = OverpassQueryHelper.getInstance(this);
         bottomSheetController = new BottomSheetController(getWindow().getDecorView(), fragmentHelper);
 
     }
@@ -136,8 +133,12 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
      */
     private void handleSearchIntent(Intent searchIntent) {
         if (Intent.ACTION_SEARCH.equals(searchIntent.getAction()) && SystemServicesManager.isNetworkEnabled(this)) {
-            final String query = searchIntent.getStringExtra(SearchManager.QUERY);
-            new SearchQueryTask(this).execute(query);
+            final String userQuery = searchIntent.getStringExtra(SearchManager.QUERY);
+            final String overpassQuery = overpassQueryHelper.getSearchQuery(userQuery);
+            if(overpassQuery != null){
+                Call<OverpassModel> call = overpassApi.getData(overpassQuery);
+                call.enqueue(this);
+            }
             showProgressBar();
         } else {
             Toast.makeText(this, getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
@@ -204,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
 
     /**
      * Configuration method for the app left drawer
-     * TODO: refactor
      */
     private void setupDrawer() {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerMenu, mapToolbar,
@@ -221,38 +221,43 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         drawerMenu.addDrawerListener(drawerToggle);
 
         // Defines the actions for each item on the list
-        NavigationView.OnNavigationItemSelectedListener navigationItemListener = new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // TODO (OFFLINE FUNCTIONS): CHECK IF DATA IS IN MEMORY; IF IT'S NOT CHECK INTERNET TO DOWNLOAD
-                final int id = item.getItemId();
-                Call<OverpassModel> call = null;
-                String query = null;
-                final boolean networkEnabled = SystemServicesManager.isNetworkEnabled(getApplicationContext());
-                if (networkEnabled) {
-                    showProgressBar();
-                    if (id == R.id.nav_about) {
-                        startAboutActivity();
-                    } else if (id == R.id.nav_bus_route) {
-                        if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE))
-                            mapFragment.enableBusOverlay();
-                    } else {
-                        query = getFilterQuery(id);
-                        if (query != null) {
-                            call = overpassApi.getData(query);
-                            call.enqueue(MainActivity.this);
-                        }
-                    }
-                } else {
-                    UIHelper.showToastShort(MainActivity.this, getString(R.string.error_no_internet_connection));
-                }
-                drawerMenu.closeDrawer(GravityCompat.START);
-                return true;
-            }
-        };
+        NavigationView.OnNavigationItemSelectedListener navigationItemListener = initNavigationListener();
 
         navigationView.setNavigationItemSelectedListener(navigationItemListener);
         drawerToggle.syncState();
+    }
+
+    @NonNull
+    private NavigationView.OnNavigationItemSelectedListener initNavigationListener() {
+        return new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    // TODO (OFFLINE FUNCTIONS): CHECK IF DATA IS IN MEMORY; IF IT'S NOT CHECK INTERNET TO DOWNLOAD
+                    final int id = item.getItemId();
+                    Call<OverpassModel> call = null;
+                    String query = null;
+                    final boolean networkEnabled = SystemServicesManager.isNetworkEnabled(getApplicationContext());
+                    if (networkEnabled) {
+                        showProgressBar();
+                        if (id == R.id.nav_about) {
+                            startAboutActivity();
+                        } else if (id == R.id.nav_bus_route) {
+                            if (!mapFragment.isLayerEnabled(OverlayTags.BUS_ROUTE))
+                                mapFragment.enableBusOverlay();
+                        } else {
+                            query = getFilterQuery(id);
+                            if (query != null) {
+                                call = overpassApi.getData(query);
+                                call.enqueue(MainActivity.this);
+                            }
+                        }
+                    } else {
+                        UIHelper.showToastShort(MainActivity.this, getString(R.string.error_no_internet_connection));
+                    }
+                    drawerMenu.closeDrawer(GravityCompat.START);
+                    return true;
+                }
+            };
     }
 
     private String getFilterQuery(int id) {
@@ -260,19 +265,19 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         switch (id) {
             case R.id.nav_copy_service:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX))
-                    return overpassHelper.getOverpassQuery(OverpassFilters.XEROX);
+                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.XEROX);
             case R.id.nav_food:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_FOOD))
-                    return overpassHelper.getOverpassQuery(OverpassFilters.FOOD);
+                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.FOOD);
             case R.id.nav_restroom:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM))
-                    return overpassHelper.getOverpassQuery(OverpassFilters.RESTROOM);
+                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.RESTROOM);
             case R.id.nav_auditorium:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS))
-                    return overpassHelper.getOverpassQuery(OverpassFilters.AUDITORIUMS);
+                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.AUDITORIUMS);
             case R.id.nav_library:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES))
-                    return overpassHelper.getOverpassQuery(OverpassFilters.LIBRARIES);
+                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.LIBRARIES);
         }
         return null;
     }
@@ -281,20 +286,6 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         final Intent intent = new Intent(AboutActivity.ACTION_ABOUT);
         intent.addCategory(AboutActivity.CATEGORY_ABOUT);
         startActivity(intent);
-    }
-
-
-    /**
-     * Configuration method for the app bottom sheet which is responsible for
-     * showing information about places searched and their details.
-     * Serves as a container.
-     */
-
-    private void clearBottomSheetFragment() {
-        final boolean searchRemoved = fragmentHelper.removeFragmentByTag(SearchResultFragment.FRAGMENT_TAG);
-        if (!searchRemoved) {
-            fragmentHelper.removeFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
-        }
     }
 
     private void hideBtnClear() {
@@ -381,53 +372,6 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onSearchQueryResponse(ArrayList<POI> POIs, final ServerResponse taskStatus) {
-        hideProgressBar();
-
-        if (taskStatus == ServerResponse.SUCCESS) {
-            searchItem.collapseActionView();
-//            expand();
-            // The query returned multiple results
-            if (POIs.size() > 1) {
-                showMultipleResultsFragment(POIs);
-            } else {  // The query return a single result
-                // Places to pass over PlaceDetailsFragment to present the data
-                showSingleResultFragment(POIs.get(0));
-            }
-            mapFragment.createOverlay(POIs, MarkerTypes.DEFAULT, OverlayTags.SEARCH);
-
-        } else if (taskStatus.equals(ServerResponse.EMPTY_RESPONSE)) {
-            // Poup up dialog
-            new MaterialDialog.Builder(this)
-                    .title(getString(R.string.dialog_title))
-                    .content(R.string.msg_no_results_found)
-                    .positiveText("OK")
-                    .show();
-
-        } else if (taskStatus.equals(ServerResponse.TIMEOUT)) {
-            UIHelper.showToastLong(this, getString(R.string.error_server_timeout));
-        } else if (taskStatus == ServerResponse.CONNECTION_FAILED) {
-            UIHelper.showToastShort(this, getString(R.string.error_connection_failed));
-        }
-
-    }
-
-    private void showSingleResultFragment(final POI currentPOI) {
-//        PlaceDetailsFragment placeDetailsFragment = PlaceDetailsFragment.newInstance(currentPOI);
-//        fragmentHelper.loadWithReplace(R.id.bottom_sheet_container, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG);
-        if (mapCamera != null) {
-            mapCamera.animateTo(currentPOI.getGeoPoint(), 18.0, (long) 1000);
-        }
-    }
-
-    private void showMultipleResultsFragment(ArrayList<POI> POIS) {
-        Log.i(TAG, POIS.toString());
-        // Open SearchResultFragment
-//        SearchResultFragment searchResultFrag = SearchResultFragment.newInstance(POIS);
-//        fragmentHelper.loadWithReplace(R.id.bottom_sheet, searchResultFrag, SearchResultFragment.FRAGMENT_TAG);
-    }
-
     /**
      * Method to run a tutorial for users on the first time they open the app
      *
@@ -472,12 +416,12 @@ public class MainActivity extends AppCompatActivity implements OnSearchQueryList
                 UIHelper.showToastShort(this, getString(R.string.error_server_internal_error));
                 break;
             case 200:
-                showFilterResults(response.body());
+                filterResponse(response.body());
         }
 
     }
 
-    private void showFilterResults(OverpassModel overpassModel) {
+    private void filterResponse(OverpassModel overpassModel) {
         if (overpassModel != null) {
             final List<Element> elements = overpassModel.getElements();
             final int numberOfResults = elements.size();

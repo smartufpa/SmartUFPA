@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.activities
+package br.ufpa.smartufpa.activities.api
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle

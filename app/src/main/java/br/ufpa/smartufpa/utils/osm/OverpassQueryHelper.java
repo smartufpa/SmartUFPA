@@ -17,11 +17,11 @@ import br.ufpa.smartufpa.utils.enums.OverpassFilters;
  * Created by kaeuc on 19/02/2018.
  */
 
-public class OverpassHelper {
+public class OverpassQueryHelper {
 
-    public static final String LOG_TAG = OverpassHelper.class.getSimpleName();
+    public static final String LOG_TAG = OverpassQueryHelper.class.getSimpleName();
 
-    private static OverpassHelper instance;
+    private static OverpassQueryHelper instance;
 
     private Context context;
     private Double northCoordinate;
@@ -32,7 +32,7 @@ public class OverpassHelper {
     private String mapBusRouteName;
     private String mapBusOperator;
 
-    private OverpassHelper(Context applicationContext) {
+    private OverpassQueryHelper(Context applicationContext) {
         this.context = applicationContext;
 
         // Get map configuration from location_config.properties
@@ -50,9 +50,9 @@ public class OverpassHelper {
 
     }
 
-    public static synchronized OverpassHelper getInstance(Context applicationContext) {
+    public static synchronized OverpassQueryHelper getInstance(Context applicationContext) {
         if (instance == null)
-            return new OverpassHelper(applicationContext);
+            return new OverpassQueryHelper(applicationContext);
         return instance;
     }
 
@@ -79,7 +79,7 @@ public class OverpassHelper {
     }
 
 
-    public URL getSearchURL(String userQuery) {
+    public String getSearchQuery(String userQuery) {
         // Cleans all the white spaces on the query
         userQuery = userQuery.replaceAll("\\s+", " ");
         if (Character.isWhitespace(userQuery.charAt(userQuery.length() - 1))) {
@@ -88,18 +88,8 @@ public class OverpassHelper {
 
         final String searchNameQuery = this.context.getString(R.string.query_name_search);
         final String formattedQuery = String.format(Locale.US, searchNameQuery, mapRegionName, userQuery);
-        final String overpassURL = this.context.getString(R.string.overpass_url);
 
-        URL searchURL = null;
-        try {
-            searchURL = new URL(overpassURL + URLEncoder.encode(formattedQuery, "UTF-8"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return searchURL;
+        return formattedQuery;
     }
 
     public URL getBusRouteByNameURL() {

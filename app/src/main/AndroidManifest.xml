@@ -96,7 +96,7 @@
                 <category android:name="smartufpa.CATEGORY_LOGIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.EditElementActivity" />
+        <activity android:name=".activities.api.EditElementActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -113,7 +113,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RedirectActivity" />
-        <activity android:name=".activities.CreateElementActivity"></activity>
+        <activity android:name=".activities.api.CreateElementActivity"></activity>
     </application>
 
 </manifest>
