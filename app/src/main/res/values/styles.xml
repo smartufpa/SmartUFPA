@@ -81,7 +81,6 @@
 
     <style name="MyFAB" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/colorPrimary</item>
-
     </style>
 
     <style name="AppCompat.FullScreen" parent="Theme.AppCompat.NoActionBar">

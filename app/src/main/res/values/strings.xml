@@ -225,5 +225,19 @@
     <string name="msg_edit_sent">Sua requisição de edição está sendo enviada.</string>
     <string name="action_settings">Settings</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_checkbox_indoor">Interno?</string>
+    <string name="help_indoor_checkbox">Indica se o ponto está dentro de outro local/prédio</string>
+    <string name="label_food_price">Preço</string>
+    <string name="label_price_cheap">$</string>
+    <string name="label_price_expensive">$$$</string>
+    <string name="label_food_quality">Qualidade</string>
+    <string name="label_quality_bad">Ruim</string>
+    <string name="label_quality_great">Ótima</string>
+    <string name="label_tab_base">Básico</string>
+    <string name="label_tab_details">Detalhes</string>
+    <string name="label_tab_extras">Extra</string>
+
 
 </resources>

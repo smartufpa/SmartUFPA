@@ -112,7 +112,7 @@
         <activity android:name=".activities.RedirectActivity" />
         <activity android:name=".activities.api.old_CreateElementActivity" />
         <activity
-            android:name=".activities.TestTabs"
+            android:name=".activities.api.CreateElementActivity"
             android:parentActivityName=".activities.SelectCategoryActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

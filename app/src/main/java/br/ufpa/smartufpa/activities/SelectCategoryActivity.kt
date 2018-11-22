@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import br.ufpa.smartufpa.R
+import br.ufpa.smartufpa.activities.api.CreateElementActivity
 import br.ufpa.smartufpa.activities.api.old_CreateElementActivity
 import br.ufpa.smartufpa.adapters.SelectCategoryAdapter
 import kotlinx.android.synthetic.main.activity_select_category.*
@@ -54,7 +55,7 @@ class SelectCategoryActivity : AppCompatActivity() {
             val placeCategories = selectCategoryAdapter.placeCategories
             val category = placeCategories[position]
 
-            val intent = Intent(this, TestTabs::class.java)
+            val intent = Intent(this, CreateElementActivity::class.java)
             with(intent) {
                 putExtra(old_CreateElementActivity.ARG_LATITUDE, latitude)
                 putExtra(old_CreateElementActivity.ARG_LONGITUDE, longitude)

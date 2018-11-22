@@ -5,8 +5,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.dialogs.CommentDialog
-import br.ufpa.smartufpa.fragments.forms.ElementBasicDataForm
-import br.ufpa.smartufpa.fragments.PlaceDetailsFragment
+import br.ufpa.smartufpa.fragments.forms.FormBasicData
+import br.ufpa.smartufpa.fragments.ElementDetailsFragment
 import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
 import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
@@ -25,7 +25,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
 
 
     private val elementParser : ElementParser = ElementParser
-    private lateinit var elementBasicDataForm : ElementBasicDataForm
+    private lateinit var formBasicData : FormBasicData
     private lateinit var element : Element
     private val osmUploadHelper = OsmUploadHelper(this)
 
@@ -36,7 +36,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_element)
-        element = intent.getParcelableExtra(PlaceDetailsFragment.ARG_ELEMENT)
+        element = intent.getParcelableExtra(ElementDetailsFragment.ARG_ELEMENT)
         setActivityTitle()
         setActivitySubtitle()
         setActivityExtraInfo()
@@ -44,7 +44,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
         initFormFragment()
 
         btnEditNext.setOnClickListener {
-            elementBasicDataForm.setElementData(FormFlag.EDIT)
+            formBasicData.setElementData(FormFlag.EDIT)
             openCommentDialog()
         }
 
@@ -82,9 +82,9 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
     }
 
     private fun initFormFragment() {
-        elementBasicDataForm = ElementBasicDataForm.newInstance(element)
+        formBasicData = FormBasicData.newInstance(element)
         val ft = supportFragmentManager.beginTransaction()
-        ft.add(R.id.containerEditForm,elementBasicDataForm, elementBasicDataForm.tag).commit()
+        ft.add(R.id.containerEditForm,formBasicData, formBasicData.tag).commit()
     }
 
     private fun openCommentDialog(){

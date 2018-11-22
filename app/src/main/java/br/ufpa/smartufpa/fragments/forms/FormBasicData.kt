@@ -10,21 +10,22 @@ import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.enums.FormFlag
 import br.ufpa.smartufpa.utils.osm.ElementParser
-import kotlinx.android.synthetic.main.fragment_element_basic_data_form.view.*
+import kotlinx.android.synthetic.main.fragment_form_basic_data.view.*
+import kotlinx.android.synthetic.main.fragment_form_extra_info.view.*
 
 private const val ARG_ELEMENT = "element"
 
-class ElementBasicDataForm : Fragment() {
+class FormBasicData : Fragment() {
 
     private var element: Element? = null
     private val elementParser: ElementParser = ElementParser
     private lateinit var form: View
 
     companion object {
-        val LOG_TAG = ElementBasicDataForm::class.simpleName
+        val LOG_TAG = FormBasicData::class.simpleName
 
         @JvmStatic
-        fun newInstance(element: Element?) = ElementBasicDataForm().apply {
+        fun newInstance(element: Element?) = FormBasicData().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_ELEMENT, element)
             }
@@ -41,7 +42,7 @@ class ElementBasicDataForm : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        form = inflater.inflate(R.layout.fragment_element_basic_data_form, container, false)
+        form = inflater.inflate(R.layout.fragment_form_basic_data, container, false)
         if (element != null) {
             initFormName()
             initFormShortName()
@@ -80,7 +81,7 @@ class ElementBasicDataForm : Fragment() {
 
     private fun initFormWebsite() {
         try {
-            form.inputWebsite.setText(element!!.getWebsite())
+//            form.inputWebsite.setText(element!!.getWebsite())
         } catch (e: KotlinNullPointerException) {
             Log.e(LOG_TAG, "Element Website is null", e)
         }
@@ -97,7 +98,7 @@ class ElementBasicDataForm : Fragment() {
 
     private fun initFormLocalName() {
         try {
-            form.inputLocalName.setText(element!!.getLocalName())
+//            form.inputLocalName.setText(element!!.getLocalName())
         } catch (e: KotlinNullPointerException) {
             Log.e(LOG_TAG, "Element LocalName is null", e)
         }
@@ -113,7 +114,7 @@ class ElementBasicDataForm : Fragment() {
 
     private fun initFormShortName() {
         try {
-            form.inputShortName.setText(element!!.getShortName())
+//            form.inputShortName.setText(element!!.getShortName())
         } catch (e: KotlinNullPointerException) {
             Log.e(LOG_TAG, "Element ShortName is null", e)
         }

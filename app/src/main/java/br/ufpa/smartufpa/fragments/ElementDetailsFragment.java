@@ -24,14 +24,14 @@ import br.ufpa.smartufpa.utils.osm.ElementParser;
  *
  * @author kaeuchoa
  */
-public class PlaceDetailsFragment extends Fragment {
+public class ElementDetailsFragment extends Fragment {
 
 
-    public static final String FRAGMENT_TAG = PlaceDetailsFragment.class.getName();
+    public static final String FRAGMENT_TAG = ElementDetailsFragment.class.getName();
 
     public static final String ARG_ELEMENT = "element";
 
-    private static final String TAG = PlaceDetailsFragment.class.getSimpleName();
+    private static final String TAG = ElementDetailsFragment.class.getSimpleName();
 
     // VIEWS
     private TextView txtWebsite;
@@ -45,10 +45,10 @@ public class PlaceDetailsFragment extends Fragment {
 
     private Element element;
 
-    public PlaceDetailsFragment() {}
+    public ElementDetailsFragment() {}
 
-    public static PlaceDetailsFragment newInstance(Element element) {
-        PlaceDetailsFragment fragment = new PlaceDetailsFragment();
+    public static ElementDetailsFragment newInstance(Element element) {
+        ElementDetailsFragment fragment = new ElementDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_ELEMENT, element);
         fragment.setArguments(args);

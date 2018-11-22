@@ -2,9 +2,8 @@ package br.ufpa.smartufpa.activities.api
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.dialogs.CommentDialog
-import br.ufpa.smartufpa.fragments.forms.ElementBasicDataForm
+import br.ufpa.smartufpa.fragments.forms.FormBasicData
 import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
 import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
@@ -18,7 +17,7 @@ import br.ufpa.smartufpa.utils.osm.OsmXmlBuilder
 class old_CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
         CreateChangeSetListener, UploadChangeSetListener, CloseChangeSetListener {
 
-    private lateinit var elementBasicDataForm: ElementBasicDataForm
+    private lateinit var formBasicData: FormBasicData
     private lateinit var element : Element
     private val osmUploadHelper = OsmUploadHelper(this)
 
@@ -45,7 +44,7 @@ class old_CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDele
         initFormFragment()
 //
 //        btnCreateNext.setOnClickListener {
-//            element = elementBasicDataForm.setElementData(FormFlag.CREATE)!!
+//            element = formBasicData.setElementData(FormFlag.CREATE)!!
 //            element.lat = intent.getDoubleExtra(ARG_LATITUDE, 0.0)
 //            element.lon = intent.getDoubleExtra(ARG_LONGITUDE, 0.0)
 //            element.type = "node"
@@ -71,9 +70,9 @@ class old_CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDele
     }
 
     private fun initFormFragment() {
-        elementBasicDataForm = ElementBasicDataForm.newInstance(null)
+        formBasicData = FormBasicData.newInstance(null)
         val ft = supportFragmentManager.beginTransaction()
-//        ft.add(R.id.containerCreateForm, elementBasicDataForm, elementBasicDataForm.tag).commit()
+//        ft.add(R.id.containerCreateForm, formBasicData, formBasicData.tag).commit()
     }
 
     private fun openCommentDialog() {

@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.activities
+package br.ufpa.smartufpa.activities.api
 
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
@@ -7,18 +7,17 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 
 import br.ufpa.smartufpa.R
-import br.ufpa.smartufpa.activities.api.old_CreateElementActivity
 import br.ufpa.smartufpa.adapters.CreateElementTabsAdapter
 import br.ufpa.smartufpa.dialogs.CommentDialog
-import kotlinx.android.synthetic.main.activity_test_tabs.*
+import kotlinx.android.synthetic.main.activity_create_element.*
 
-class TestTabs : AppCompatActivity() {
+class CreateElementActivity : AppCompatActivity() {
 
     private var tabsAdapter: CreateElementTabsAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_tabs)
+        setContentView(R.layout.activity_create_element)
         val category = intent.getStringExtra(old_CreateElementActivity.ARG_CATEGORY)
         val categoryName = intent.getStringExtra(old_CreateElementActivity.ARG_CATEGORY_NAME)
         val latitude = intent.getDoubleExtra(old_CreateElementActivity.ARG_LATITUDE, 0.0)

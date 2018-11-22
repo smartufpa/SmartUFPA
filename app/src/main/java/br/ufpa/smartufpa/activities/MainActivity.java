@@ -39,8 +39,8 @@ import java.util.List;
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.about.AboutActivity;
 import br.ufpa.smartufpa.activities.ui.BottomSheetController;
+import br.ufpa.smartufpa.fragments.ElementDetailsFragment;
 import br.ufpa.smartufpa.fragments.MapFragment;
-import br.ufpa.smartufpa.fragments.PlaceDetailsFragment;
 import br.ufpa.smartufpa.fragments.SearchResultFragment;
 import br.ufpa.smartufpa.interfaces.PlaceDetailsDelegate;
 import br.ufpa.smartufpa.models.overpass.Element;
@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
         if (bottomSheetController.isVisible()) {
             // TODO
 //            final FragmentManager fragmentManager = getSupportFragmentManager();
-//            final PlaceDetailsFragment fragmentByTag = (PlaceDetailsFragment) fragmentManager.findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
+//            final ElementDetailsFragment fragmentByTag = (ElementDetailsFragment) fragmentManager.findFragmentByTag(ElementDetailsFragment.FRAGMENT_TAG);
 //            if (fragmentByTag == null) {
 //                bottomSheetController.hide();
 //            }
@@ -462,11 +462,11 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
     @Override
     public void showPlaceDetailsFragment(@NotNull Element element) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
-        PlaceDetailsFragment placeDetailsFragment = (PlaceDetailsFragment) fragmentManager
-                .findFragmentByTag(PlaceDetailsFragment.FRAGMENT_TAG);
+        ElementDetailsFragment elementDetailsFragment = (ElementDetailsFragment) fragmentManager
+                .findFragmentByTag(ElementDetailsFragment.FRAGMENT_TAG);
 
-        if (placeDetailsFragment == null)
-            placeDetailsFragment = PlaceDetailsFragment.newInstance(element);
+        if (elementDetailsFragment == null)
+            elementDetailsFragment = ElementDetailsFragment.newInstance(element);
 
         final String name = elementParser.getName(element);
         final String localName = elementParser.getLocalName(element);
@@ -477,8 +477,8 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
         initPlaceDetailsExtra(shortName);
 
         fragmentManager.beginTransaction()
-                .replace(R.id.containerBottomsheet, placeDetailsFragment, PlaceDetailsFragment.FRAGMENT_TAG)
-                .addToBackStack(PlaceDetailsFragment.ARG_ELEMENT)
+                .replace(R.id.containerBottomsheet, elementDetailsFragment, ElementDetailsFragment.FRAGMENT_TAG)
+                .addToBackStack(ElementDetailsFragment.ARG_ELEMENT)
                 .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK)
                 .commit();
         bottomSheetController.expand();
