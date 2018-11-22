@@ -81,10 +81,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.SelectCategoryActivity"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.SelectCategoryActivity" />
         <activity
             android:name=".activities.PermissionCheckActivity"
             android:theme="@style/AppCompat.FullScreen" />
@@ -113,7 +110,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RedirectActivity" />
-        <activity android:name=".activities.api.CreateElementActivity"></activity>
+        <activity android:name=".activities.api.old_CreateElementActivity" />
+        <activity
+            android:name=".activities.TestTabs"
+            android:parentActivityName=".activities.SelectCategoryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.ufpa.smartufpa.activities.SelectCategoryActivity" />
+        </activity>
     </application>
 
 </manifest>

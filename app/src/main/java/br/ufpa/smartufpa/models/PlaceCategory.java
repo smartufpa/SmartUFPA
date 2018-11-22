@@ -1,5 +1,6 @@
 package br.ufpa.smartufpa.models;
 
+import android.gesture.Gesture;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -17,7 +18,7 @@ public class PlaceCategory implements Parcelable {
 
 
     public enum Categories{
-        FOODPLACE, BUILDING
+        FOODPLACE, BUILDING, OTHER
     }
 
     public PlaceCategory(Categories category) {

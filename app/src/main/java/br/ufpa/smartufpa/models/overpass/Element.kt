@@ -47,14 +47,15 @@ class Element : Parcelable{
         this.version = 1
     }
 
-
-
     fun getName(): String? {
         this.tags.let {
             return it?.name
         }
     }
 
+    fun getMarkerIcon(): Int {
+        return this.tags?.markerIconRes!!
+    }
     fun setName(name: String){
         this.tags.let {
             it?.name = name

@@ -5,7 +5,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.dialogs.CommentDialog
-import br.ufpa.smartufpa.fragments.ElementBasicDataForm
+import br.ufpa.smartufpa.fragments.forms.ElementBasicDataForm
 import br.ufpa.smartufpa.fragments.PlaceDetailsFragment
 import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
@@ -17,7 +17,7 @@ import br.ufpa.smartufpa.utils.enums.FormFlag
 import br.ufpa.smartufpa.utils.osm.OsmUploadHelper
 import br.ufpa.smartufpa.utils.osm.OsmXmlBuilder
 import kotlinx.android.synthetic.main.activity_edit_element.*
-
+import kotlinx.android.synthetic.main.custom_header.*
 
 
 class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
@@ -57,26 +57,26 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
         var name : String? = elementParser.getName(element)
         if(name == null) {
             name = getString(R.string.place_holder_no_name)
-            txtEditTitle.setTextColor(ContextCompat.getColor(this,android.R.color.darker_gray))
+            txtHeaderTitle.setTextColor(ContextCompat.getColor(this,android.R.color.darker_gray))
         }
-        txtEditTitle.text = name
+        txtHeaderTitle.text = name
     }
 
     private fun setActivitySubtitle() {
         val localName: String? = elementParser.getLocalName(element)
         if (localName != null) {
-            txtEditSubtitle.text = localName
+            txtHeaderSubtitle.text = localName
         } else {
-            txtEditSubtitle.text = ""
+            txtHeaderSubtitle.text = ""
         }
     }
 
     private fun setActivityExtraInfo() {
         val shortName = elementParser.getShortName(element)
         if (shortName != null) {
-            txtEditExtraInfo.text = String.format("(%s)", shortName)
+            txtHeaderExtraInfo.text = String.format("(%s)", shortName)
         } else {
-            txtEditExtraInfo.text = ""
+            txtHeaderExtraInfo.text = ""
         }
 
     }

@@ -8,6 +8,7 @@ import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.utils.FragmentHelper
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import kotlinx.android.synthetic.main.custom_header.view.*
 
 class BottomSheetController(private val view: View, private val fragmentHelper: FragmentHelper) : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -45,7 +46,7 @@ class BottomSheetController(private val view: View, private val fragmentHelper: 
     }
 
     fun setTitle(title: String) {
-        with(view.txtEditTitle) {
+        with(view.txtHeaderTitle) {
             setText(title)
             visibility = View.VISIBLE
         }
@@ -53,14 +54,14 @@ class BottomSheetController(private val view: View, private val fragmentHelper: 
     }
 
     fun setSubTitle(subtitle: String) {
-        with(view.txtEditSubtitle) {
+        with(view.txtHeaderSubtitle) {
             setText(subtitle)
             visibility = View.VISIBLE
         }
     }
 
     fun setExtraInfo(extraInfo: String) {
-        with(view.txt_bsheet_extra_info) {
+        with(view.txtHeaderExtraInfo) {
             setText(extraInfo)
             visibility = View.VISIBLE
         }

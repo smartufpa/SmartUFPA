@@ -30,8 +30,8 @@ public class SelectCategoryAdapter extends RecyclerView.Adapter {
     private ArrayList<PlaceCategory> placeCategories;
     private SelectCategoryAdapter.OnItemClickListener onItemClickListener;
 
-    public SelectCategoryAdapter(Context parentContext) {
-        this.parentContext = parentContext;
+    public SelectCategoryAdapter(Context context) {
+        this.parentContext = context;
         placeCategories = new ArrayList<>();
 
         PlaceCategory.Categories[] categories = PlaceCategory.Categories.values();
@@ -46,7 +46,7 @@ public class SelectCategoryAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parentContext)
-                .inflate(R.layout.add_place_option_item,parent,false);
+                .inflate(R.layout.item_select_category,parent,false);
 
         return new SelectCategoryAdapter.AddPlaceOptionViewHolder(view);
     }

@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -109,13 +110,6 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
         @Override
         public void onClick(View v) {
             moveCameraToUserLocation();
-        }
-    };
-
-    private Button.OnClickListener busLocationListener = new Button.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(context, "Adicionar lógica da função de localizar o circular", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -328,35 +322,31 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     public void addMarkersToMap(List<Element> elements) {
         final FolderOverlay poiMarkers = new FolderOverlay();
-        final MapUtils mapUtils = new MapUtils(context);
-        final Drawable clickedMarkerDrawable = ContextCompat.getDrawable(context, R.drawable.ic_marker_details);
-        final Drawable defaultMarkerDrawable = ContextCompat.getDrawable(context, R.drawable.ic_marker);
         // Creates a marker for each place found
         for (final Element element : elements) {
-            final Marker.OnMarkerClickListener onMarkerClickListener = new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    // Will change the marker to its clicked icon
-                    marker.setIcon(clickedMarkerDrawable);
-                    mapView.postInvalidate();
-                    placeDetailsDelegate.showPlaceDetailsFragment(element);
-                    return true;
-                }
-            };
-            final Drawable drawable = ContextCompat.getDrawable(context, element.getTags().getMarkerIconRes());
-            Marker customMarker;
+            final Marker.OnMarkerClickListener onMarkerClickListener = createMarkerClickListener(element);
+            final Drawable markerIcon = ContextCompat.getDrawable(context, element.getMarkerIcon());
             final GeoPoint location = new GeoPoint(element.getLat(), element.getLon());
-            if (drawable != null) {
-                customMarker = mapUtils.createCustomMarker(mapView, drawable, location, onMarkerClickListener);
-            } else {
-                customMarker = mapUtils.createCustomMarker(mapView, defaultMarkerDrawable, location, onMarkerClickListener);
-            }
+            final Marker customMarker = mapUtils.createCustomMarker(mapView, markerIcon, location, onMarkerClickListener);
             poiMarkers.add(customMarker);
         }
         mapView.addOverlay(poiMarkers, OverlayTags.SEARCH);
         btnClearMap.setVisibility(View.VISIBLE);
+    }
 
-
+    @NonNull
+    private Marker.OnMarkerClickListener createMarkerClickListener(final Element element) {
+        final Drawable clickedMarkerDrawable = ContextCompat.getDrawable(context, R.drawable.ic_marker_details);
+        return new Marker.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                // Will change the marker to its clicked icon
+                marker.setIcon(clickedMarkerDrawable);
+                mapView.postInvalidate();
+                placeDetailsDelegate.showPlaceDetailsFragment(element);
+                return true;
+            }
+        };
     }
 
     /**
@@ -490,8 +480,8 @@ public class MapFragment extends Fragment implements LocationListener, OnSearchR
 
     private void goToSelectCategoryActivity(double latitude, double longitude) {
         Intent intent = new Intent(getActivity(), SelectCategoryActivity.class);
-        intent.putExtra(SelectCategoryActivity.KEY_LATITUDE, latitude);
-        intent.putExtra(SelectCategoryActivity.KEY_LONGITUDE, longitude);
+        intent.putExtra(SelectCategoryActivity.Companion.getKEY_LATITUDE(), latitude);
+        intent.putExtra(SelectCategoryActivity.Companion.getKEY_LONGITUDE(), longitude);
         startActivity(intent);
     }
 

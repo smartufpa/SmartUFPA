@@ -4,6 +4,7 @@
     <string name="title_activity_map">MapActivity</string>
     <string name="title_about">Sobre o aplicativo</string>
     <string name="title_settings">Configurações</string>
+    <string name="title_select_category">Categorias</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -210,12 +211,11 @@
     <string name="subtitle_operation_time">Funcionamento</string>
     <string name="subtitle_opening_day">De</string>
     <string name="subtitle_closing_day">Até</string>
+    <string name="subtitle_select_category">Escolha uma categoria para o local</string>
     <string name="title_edit">Editar: </string>
     <string name="btnEditBack">Voltar</string>
     <string name="btnEditNext">Continuar</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="labelShortName">Abreviação</string>
     <string name="labelLocalName">Nome Local (Apelido)</string>
     <string name="title_comment_dialog">Comentário de Edição</string>
@@ -223,6 +223,7 @@
     <string name="title_comment">Comentário</string>
     <string name="label_btn_add_comment">Enviar</string>
     <string name="msg_edit_sent">Sua requisição de edição está sendo enviada.</string>
+    <string name="action_settings">Settings</string>
 
 
 </resources>

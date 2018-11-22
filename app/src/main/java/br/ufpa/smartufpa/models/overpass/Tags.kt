@@ -72,7 +72,7 @@ class Tags() : Parcelable {
             return null
         }
 
-    var markerIconRes: Int? = null
+    var markerIconRes: Int = R.drawable.ic_marker
         get() {
             if(amenity != null){
                 when(amenity){
@@ -102,7 +102,7 @@ class Tags() : Parcelable {
                         return R.drawable.ic_marker_xerox
                 }
             }
-            return null
+            return R.drawable.ic_marker
         }
 
     fun getTags(): HashMap<String, String> {

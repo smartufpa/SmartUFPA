@@ -1,4 +1,4 @@
-package br.ufpa.smartufpa.fragments
+package br.ufpa.smartufpa.fragments.forms
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

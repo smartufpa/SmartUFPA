@@ -15,5 +15,6 @@
 
     <dimen name="img_width_height_normal_screen">160dp</dimen>
     <dimen name="img_width_height_big_screen">220dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 
 </resources>
