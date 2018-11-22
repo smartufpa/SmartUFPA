@@ -110,6 +110,13 @@ class Element : Parcelable{
         }
     }
 
+    fun setIndoor(indoor: Boolean) {
+        this.tags.let{
+            it?.indoor = if(indoor) "yes" else "no"
+        }
+    }
+
+
 
 
 
@@ -141,6 +148,7 @@ class Element : Parcelable{
     override fun describeContents(): Int {
         return 0
     }
+
 
     companion object CREATOR : Parcelable.Creator<Element> {
         override fun createFromParcel(parcel: Parcel): Element {

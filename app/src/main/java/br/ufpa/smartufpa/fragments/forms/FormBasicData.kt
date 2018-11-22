@@ -1,15 +1,20 @@
 package br.ufpa.smartufpa.fragments.forms
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.ufpa.smartufpa.R
+import br.ufpa.smartufpa.activities.api.CreateElementActivity
 import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.enums.FormFlag
 import br.ufpa.smartufpa.utils.osm.ElementParser
+import kotlinx.android.synthetic.main.fragment_form_basic_data.*
 import kotlinx.android.synthetic.main.fragment_form_basic_data.view.*
 import kotlinx.android.synthetic.main.fragment_form_extra_info.view.*
 
@@ -20,6 +25,8 @@ class FormBasicData : Fragment() {
     private var element: Element? = null
     private val elementParser: ElementParser = ElementParser
     private lateinit var form: View
+
+    private val teste : CreateElementActivity.Teste = CreateElementActivity.Teste
 
     companion object {
         val LOG_TAG = FormBasicData::class.simpleName
@@ -43,6 +50,20 @@ class FormBasicData : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         form = inflater.inflate(R.layout.fragment_form_basic_data, container, false)
+        form.inputName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                teste.nome = s.toString()
+            }
+        })
+
         if (element != null) {
             initFormName()
             initFormShortName()
@@ -72,10 +93,8 @@ class FormBasicData : Fragment() {
     private fun updateElementFromForm(element: Element) {
         with(element) {
             this.setName(getFormName())
-            this.setShortName(getFormShortName())
             this.setDescription(getFormDescription())
-            this.setLocalName(getFormLocalName())
-            this.setWebSite(getFormWebsite())
+            this.setIndoor(getFormIndoor())
         }
     }
 
@@ -120,8 +139,8 @@ class FormBasicData : Fragment() {
         }
     }
 
-    private fun getFormWebsite(): String {
-        return form.inputLocalName.text.toString()
+    private fun getFormIndoor(): Boolean{
+        return cbIndoor.isChecked
     }
 
     private fun getFormLocalName(): String {
@@ -129,7 +148,7 @@ class FormBasicData : Fragment() {
     }
 
     private fun getFormDescription(): String {
-        return form.inputDescription.text.toString()
+        return inputDescription.text.toString()
     }
 
     private fun getFormShortName(): String {
@@ -137,7 +156,7 @@ class FormBasicData : Fragment() {
     }
 
     private fun getFormName(): String {
-        return form.inputName.text.toString()
+        return inputName.text.toString()
     }
 
 

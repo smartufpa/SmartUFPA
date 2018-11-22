@@ -1,19 +1,33 @@
 package br.ufpa.smartufpa.activities.api
 
-import android.support.design.widget.TabLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-
 import android.os.Bundle
-
+import android.support.design.widget.Snackbar
+import android.support.design.widget.TabLayout
+import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.adapters.CreateElementTabsAdapter
 import br.ufpa.smartufpa.dialogs.CommentDialog
+import br.ufpa.smartufpa.fragments.forms.FormBasicData
+import br.ufpa.smartufpa.models.overpass.Element
 import kotlinx.android.synthetic.main.activity_create_element.*
+import kotlinx.android.synthetic.main.fragment_form_basic_data.*
+import kotlinx.android.synthetic.main.fragment_form_extra_info.*
 
-class CreateElementActivity : AppCompatActivity() {
+class CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate{
+
 
     private var tabsAdapter: CreateElementTabsAdapter? = null
+    private val element : Element = Element()
+
+    object Teste{
+        var nome : String? = null
+        var localNome : String? = null
+    }
+
+    private val teste : Teste = Teste
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +48,15 @@ class CreateElementActivity : AppCompatActivity() {
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
 
+
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
+
+            Log.d("asd", teste.nome)
+            Log.d("asd", teste.localNome)
+            // todo, processar o singleton para element
+            openCommentDialog()
         }
 
     }
@@ -44,6 +64,11 @@ class CreateElementActivity : AppCompatActivity() {
     private fun openCommentDialog() {
         val commentDialog = CommentDialog()
         commentDialog.show(supportFragmentManager, CommentDialog.DIALOG_TAG)
+    }
+
+    // Btn Enviar foi pressionado
+    override fun delegateComment(commentText: String) {
+//        startUploadFlow(commentText)
     }
 
 
