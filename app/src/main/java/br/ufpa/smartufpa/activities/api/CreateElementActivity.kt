@@ -27,19 +27,30 @@ class CreateElementActivity : AppCompatActivity(),  CommentDialog.CommentDelegat
     private val element : Element = Element()
     private val osmUploadHelper: OsmUploadHelper = OsmUploadHelper(this)
     private val formObject : FormObject = FormObject
-    private lateinit var category : String
+    private lateinit var category : ElementCategories
     private lateinit var categoryName : String
+
+    companion object {
+        @JvmStatic
+        val ARG_LATITUDE = "latitude"
+        @JvmStatic
+        val ARG_LONGITUDE = "longitude"
+        @JvmStatic
+        val ARG_CATEGORY = "elementCategory"
+        @JvmStatic
+        val ARG_CATEGORY_NAME = "category_name"
+
+        val TAG = CreateElementActivity::class.simpleName
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_element)
-        category = intent.getStringExtra(old_CreateElementActivity.ARG_CATEGORY)
-        categoryName = intent.getStringExtra(old_CreateElementActivity.ARG_CATEGORY_NAME)
+        category = intent.getSerializableExtra(ARG_CATEGORY) as ElementCategories
+        categoryName = intent.getStringExtra(ARG_CATEGORY_NAME)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = categoryName
+        initToolbar()
         tabsAdapter = CreateElementTabsAdapter(supportFragmentManager, category)
 
         // Set up the ViewPager with the sections adapter.
@@ -56,33 +67,40 @@ class CreateElementActivity : AppCompatActivity(),  CommentDialog.CommentDelegat
 
     }
 
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = categoryName
+    }
+
     private fun bindFormToElement(){
-        element.lat = intent.getDoubleExtra(old_CreateElementActivity.ARG_LATITUDE, 0.0)
-        element.lon = intent.getDoubleExtra(old_CreateElementActivity.ARG_LONGITUDE, 0.0)
+        element.lat = intent.getDoubleExtra(ARG_LATITUDE, 0.0)
+        element.lon = intent.getDoubleExtra(ARG_LONGITUDE, 0.0)
         var amenity : String? = null
         when(category){
-            ElementCategories.FOODPLACE.toString() -> {
+            ElementCategories.FOODPLACE -> {
                 val foodCategory = formObject.foodCategory
                 if(foodCategory != null){
                      amenity = if(foodCategory.toLowerCase() == "restaurante") RESTAURANT else FAST_FOOD
                  }
             }
-            ElementCategories.AUDITORIUM.toString() -> {
+            ElementCategories.AUDITORIUM -> {
                 amenity = EXHIBITION_CENTRE
             }
 
-            ElementCategories.COPYSHOP.toString() -> {
+            ElementCategories.COPYSHOP -> {
                 amenity = COPYSHOP
             }
 
-            ElementCategories.LIBRARY.toString() -> {
+            ElementCategories.LIBRARY -> {
                 amenity = LIBRARY
             }
 
-            ElementCategories.TOILETS.toString() -> {
+            ElementCategories.TOILETS -> {
                 amenity = TOILETS
             }
 
+            ElementCategories.DRINKING_WATER -> amenity = DRINKING_WATER
         }
 
         if(amenity != null) element.setAmenity(amenity)

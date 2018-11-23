@@ -273,6 +273,9 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
             case R.id.nav_library:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES))
                     return overpassQueryHelper.getOverpassQuery(ElementCategories.LIBRARY);
+            case R.id.nav_drinking_water:
+                if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_DRINKING_WATER))
+                    return overpassQueryHelper.getOverpassQuery(ElementCategories.DRINKING_WATER);
         }
         return null;
     }

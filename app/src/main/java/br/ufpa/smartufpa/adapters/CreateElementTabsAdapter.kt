@@ -3,13 +3,12 @@ package br.ufpa.smartufpa.adapters
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import br.ufpa.smartufpa.fragments.forms.FormBasicData
-import br.ufpa.smartufpa.fragments.forms.FormExtraInfo
-import br.ufpa.smartufpa.fragments.forms.FormFoodPlace
+import br.ufpa.smartufpa.fragments.forms.*
 import br.ufpa.smartufpa.utils.enums.ElementCategories
+import br.ufpa.smartufpa.utils.enums.ElementCategories.*
 
 class CreateElementTabsAdapter(fm: FragmentManager,
-                                 private val category: String?) : FragmentPagerAdapter(fm) {
+                               private val category: ElementCategories) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment? {
         when (position) {
@@ -17,34 +16,18 @@ class CreateElementTabsAdapter(fm: FragmentManager,
             1 -> return getFragmentByCategory()
             2 -> return FormExtraInfo.newInstance()
         }
-        return null
+        return  FormBlank.newInstance()
     }
 
-    private fun getFragmentByCategory(): Fragment? {
-        when (category) {
-            ElementCategories.FOODPLACE.toString() -> {
-                return FormFoodPlace.newInstance()
-            }
-
-            ElementCategories.AUDITORIUM.toString() -> {
-//                return FormBuilding.newInstance()
-            }
-
-            ElementCategories.COPYSHOP.toString() -> {
-
-            }
-
-            ElementCategories.LIBRARY.toString() -> {
-
-            }
-
-            ElementCategories.TOILETS.toString() -> {
-
-            }
-
-
+    private fun getFragmentByCategory(): Fragment {
+        return when (category) {
+            FOODPLACE -> FormFoodPlace.newInstance()
+            AUDITORIUM -> FormAuditorium.newInstance()
+            COPYSHOP -> FormCopyShop.newInstance()
+            LIBRARY -> FormLibrary.newInstance()
+            TOILETS -> FormToilets.newInstance()
+            DRINKING_WATER -> FormDrinkingFountain.newInstance()
         }
-        return null
     }
 
     override fun getCount(): Int {

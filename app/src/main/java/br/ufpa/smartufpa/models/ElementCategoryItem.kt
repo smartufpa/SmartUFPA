@@ -9,13 +9,13 @@ import java.io.Serializable
  * Created by kaeuchoa on 13/12/2017.
  */
 
-class ElementCategoryItem(category: ElementCategories) : Serializable {
+class ElementCategoryItem(val elementCategory: ElementCategories) : Serializable {
 
     var name: String? = null
     var drawable: Int = 0
 
     init {
-        when (category) {
+        when (elementCategory) {
             FOODPLACE -> {
                 this.drawable = R.drawable.ic_marker_food_place
                 this.name = "Refeições"
@@ -36,7 +36,7 @@ class ElementCategoryItem(category: ElementCategories) : Serializable {
                 this.drawable = R.drawable.ic_marker_library
                 this.name = "Biblioteca"
             }
-            DRINKING_FOUNTAIN -> {
+            DRINKING_WATER -> {
                 this.drawable = R.drawable.ic_mtrl_chip_close_circle
                 this.name = "Bebedouro"
             }

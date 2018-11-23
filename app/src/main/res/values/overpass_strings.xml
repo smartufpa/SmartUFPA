@@ -38,6 +38,15 @@
         out body center;
     </string>
 
+
+    <string name="query_drinking_water" translatable="false">
+        [out:json][timeout:30];
+        (way[\"amenity\"=\"drinking_water\"](%1$f,%2$f,%3$f,%4$f);
+        way[\"amenity\"=\"drinking_water\"](%1$f,%2$f,%3$f,%4$f);
+        node[\"amenity\"=\"drinking_water\"](%1$f,%2$f,%3$f,%4$f););
+        out body center;
+    </string>
+
     <string name="query_libraries" translatable="false">
         [out:json][timeout:30];
         (way[\"amenity\"=\"library\"](%1$f,%2$f,%3$f,%4$f);

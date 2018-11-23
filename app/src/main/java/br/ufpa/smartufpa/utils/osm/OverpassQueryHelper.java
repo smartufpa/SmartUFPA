@@ -74,6 +74,9 @@ public class OverpassQueryHelper {
             case AUDITORIUM:
                 queryString = this.context.getString(R.string.query_auditoriums);
                 break;
+            case DRINKING_WATER:
+                queryString = this.context.getString(R.string.query_drinking_water);
+                break;
         }
         return String.format(Locale.US, queryString, southCoordinate, westCoordinate, northCoordinate, eastCoordinate);
     }

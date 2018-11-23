@@ -13,6 +13,7 @@ public final class Constants {
     public class OverpassTags {
         public static final String COPYSHOP = "copyshop";
         public static final String TOILETS = "toilets";
+        public static final String DRINKING_WATER = "drinking_water";
         public static final String EXHIBITION_CENTRE = "exhibition_centre";
         public static final String LIBRARY = "library";
         public static final String RESTAURANT = "restaurant";

@@ -238,6 +238,7 @@
     <string name="label_tab_base">Básico</string>
     <string name="label_tab_details">Detalhes</string>
     <string name="label_tab_extras">Extra</string>
+    <string name="nav_drinking_water">Bebedouros</string>
 
 
 </resources>

@@ -3,8 +3,9 @@ package br.ufpa.smartufpa.models.overpass
 import android.os.Parcel
 import android.os.Parcelable
 import br.ufpa.smartufpa.R
-import com.google.gson.annotations.SerializedName
 import br.ufpa.smartufpa.utils.Constants.ElementTags.*
+import br.ufpa.smartufpa.utils.Constants.OverpassTags.*
+import com.google.gson.annotations.SerializedName
 
 class Tags() : Parcelable {
 
@@ -39,56 +40,19 @@ class Tags() : Parcelable {
     @SerializedName(TAG_INDOOR)
     var indoor: String? = null
 
-    var iconRes: Int? = null
-        get() {
-            if(amenity != null){
-                when(amenity){
-                    "food_court", "restaurant" -> {
-                        return R.drawable.ic_food
-                    }
-                    "library" -> {
-                        return R.drawable.ic_library
-                    }
-                    "exhibition_centre" ->{
-                        return R.drawable.ic_auditorium
-                    }
-
-                    "toilets" -> {
-                        return R.drawable.ic_restroom
-                    }
-                }
-            }else{
-                if (toilets != null) {
-                    if (toilets == "yes"){
-                        return R.drawable.ic_restroom
-                    }
-                }
-
-                if(shop != null){
-                    if(shop == "copyshop")
-                        return R.drawable.ic_xerox
-                }
-            }
-            return null
-        }
-
     var markerIconRes: Int = R.drawable.ic_marker
         get() {
             if(amenity != null){
                 when(amenity){
-                    "food_court", "restaurant" -> {
-                        return R.drawable.ic_marker_food_place
-                    }
-                    "library" -> {
-                        return R.drawable.ic_marker_library
-                    }
-                    "exhibition_centre" ->{
-                        return R.drawable.ic_marker_auditorium
-                    }
+                   FOOD_COURT, RESTAURANT, FAST_FOOD -> R.drawable.ic_marker_food_place
 
-                    "toilets" -> {
-                        return R.drawable.ic_marker_restroom
-                    }
+                    LIBRARY -> R.drawable.ic_marker_library
+
+                    EXHIBITION_CENTRE -> R.drawable.ic_marker_auditorium
+
+                    TOILETS ->  R.drawable.ic_marker_restroom
+
+                    DRINKING_WATER -> R.drawable.ic_marker_restroom
                 }
             }else{
                 if (toilets != null) {

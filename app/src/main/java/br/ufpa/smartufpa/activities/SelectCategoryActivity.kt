@@ -9,6 +9,7 @@ import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.activities.api.CreateElementActivity
 import br.ufpa.smartufpa.activities.api.old_CreateElementActivity
 import br.ufpa.smartufpa.adapters.ElementCategoryAdapter
+import br.ufpa.smartufpa.models.ElementCategoryItem
 import kotlinx.android.synthetic.main.activity_select_category.*
 import kotlinx.android.synthetic.main.custom_header.*
 
@@ -49,23 +50,27 @@ class SelectCategoryActivity : AppCompatActivity() {
     }
 
     private fun createAdapter(): ElementCategoryAdapter {
-        val selectCategoryAdapter = ElementCategoryAdapter(this)
+        val categoryAdapter = ElementCategoryAdapter(this)
 
-        selectCategoryAdapter.setOnItemClickListener { _, position ->
-            val placeCategories = selectCategoryAdapter.categoriesList
-            val category = placeCategories[position]
-
-            val intent = Intent(this, CreateElementActivity::class.java)
-            with(intent) {
-                putExtra(old_CreateElementActivity.ARG_LATITUDE, latitude)
-                putExtra(old_CreateElementActivity.ARG_LONGITUDE, longitude)
-                putExtra(old_CreateElementActivity.ARG_CATEGORY, category.toString())
-                putExtra(old_CreateElementActivity.ARG_CATEGORY_NAME, category.name)
-            }
-            startActivity(intent)
+        categoryAdapter.setOnItemClickListener { _, position ->
+            val elementCategories = categoryAdapter.categoriesList
+            val category = elementCategories[position]
+            goToCreateElementActivity(category)
             finish()
         }
-        return selectCategoryAdapter
+        return categoryAdapter
+    }
+
+    private fun goToCreateElementActivity(category: ElementCategoryItem) {
+
+        val intent = Intent(this, CreateElementActivity::class.java)
+        with(intent) {
+            putExtra(CreateElementActivity.ARG_LATITUDE, latitude)
+            putExtra(CreateElementActivity.ARG_LONGITUDE, longitude)
+            putExtra(CreateElementActivity.ARG_CATEGORY, category.elementCategory)
+            putExtra(CreateElementActivity.ARG_CATEGORY_NAME, category.name)
+        }
+        startActivity(intent)
     }
 
     private fun getIntentExtras() {

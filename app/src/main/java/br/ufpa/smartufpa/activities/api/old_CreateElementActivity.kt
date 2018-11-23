@@ -21,18 +21,7 @@ class old_CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDele
     private lateinit var element : Element
     private val osmUploadHelper = OsmUploadHelper(this)
 
-    companion object {
-        @JvmStatic
-        val ARG_LATITUDE = "latitude"
-        @JvmStatic
-        val ARG_LONGITUDE = "longitude"
-        @JvmStatic
-        val ARG_CATEGORY = "category"
-        @JvmStatic
-        val ARG_CATEGORY_NAME = "category_name"
 
-        val TAG = old_CreateElementActivity::class.simpleName
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

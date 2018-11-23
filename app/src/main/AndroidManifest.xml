@@ -113,7 +113,8 @@
         <activity android:name=".activities.api.old_CreateElementActivity" />
         <activity
             android:name=".activities.api.CreateElementActivity"
-            android:parentActivityName=".activities.SelectCategoryActivity">
+            android:parentActivityName=".activities.SelectCategoryActivity"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.ufpa.smartufpa.activities.SelectCategoryActivity" />

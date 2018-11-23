@@ -15,6 +15,12 @@
                 />
 
             <item
+                android:id="@+id/nav_drinking_water"
+                android:icon="@drawable/ic_xerox"
+                android:title="@string/nav_drinking_water"
+                />
+
+            <item
                 android:id="@+id/nav_library"
                 android:icon="@drawable/ic_library"
                 android:title="@string/nav_libraries"/>
