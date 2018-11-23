@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import br.ufpa.smartufpa.R
+import br.ufpa.smartufpa.interfaces.OsmUploader
 import kotlinx.android.synthetic.main.dialog_comment.view.*
 
 class CommentDialog : DialogFragment(){
@@ -16,18 +17,14 @@ class CommentDialog : DialogFragment(){
         val DIALOG_TAG : String? = CommentDialog::class.simpleName
     }
 
-    interface CommentDelegate{
-        fun delegateComment(commentText : String)
-    }
-
-    lateinit var commentDelegate : CommentDelegate
+    lateinit var activityCallback : OsmUploader
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try {
-            commentDelegate = activity as CommentDelegate
+            activityCallback = activity as OsmUploader
         } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString() + " must implement CommentDelegate")
+            throw ClassCastException(activity.toString() + " must implement OsmUploader")
         }
 
     }
@@ -38,7 +35,7 @@ class CommentDialog : DialogFragment(){
         builder.setView(view)
                 .setPositiveButton(R.string.label_btn_add_comment) { _, _ ->
                     val commentText = view.edtCommentText.text.toString()
-                    commentDelegate.delegateComment(commentText)
+                    activityCallback.onCommentResponse(commentText)
                 }
                 .setNegativeButton(R.string.label_btn_cancel){ _, _ ->
                     dismiss()

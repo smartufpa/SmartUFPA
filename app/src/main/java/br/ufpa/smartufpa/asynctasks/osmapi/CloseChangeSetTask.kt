@@ -3,8 +3,7 @@ package br.ufpa.smartufpa.asynctasks.osmapi
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
-import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
-import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
+import br.ufpa.smartufpa.interfaces.OsmUploader
 import br.ufpa.smartufpa.utils.Constants
 import br.ufpa.smartufpa.utils.OAuthHelper
 import com.github.scribejava.core.model.Verb
@@ -14,7 +13,7 @@ class CloseChangeSetTask(context: Context) : AsyncTask<String,Unit, String>() {
     private val urlCloseChangeSet = Constants.OsmApiUrl.CLOSE_CHANGESET
     private val oAuthHelper = OAuthHelper(context)
 
-    private val callback: CloseChangeSetListener = context as CloseChangeSetListener
+    private val callback: OsmUploader = context as OsmUploader
 
     companion object {
         val LOG_TAG = CloseChangeSetTask::class.simpleName

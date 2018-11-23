@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.activities.api.CreateElementActivity
-import br.ufpa.smartufpa.activities.api.old_CreateElementActivity
 import br.ufpa.smartufpa.adapters.ElementCategoryAdapter
 import br.ufpa.smartufpa.models.ElementCategoryItem
 import kotlinx.android.synthetic.main.activity_select_category.*

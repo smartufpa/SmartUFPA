@@ -6,9 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.adapters.CreateElementTabsAdapter
 import br.ufpa.smartufpa.dialogs.CommentDialog
-import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
-import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
-import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
+import br.ufpa.smartufpa.interfaces.OsmUploader
 import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.Constants.OverpassTags.*
 import br.ufpa.smartufpa.utils.FormObject
@@ -19,8 +17,7 @@ import br.ufpa.smartufpa.utils.osm.OsmUploadHelper
 import br.ufpa.smartufpa.utils.osm.OsmXmlBuilder
 import kotlinx.android.synthetic.main.activity_create_element.*
 
-class CreateElementActivity : AppCompatActivity(),  CommentDialog.CommentDelegate,
-        CreateChangeSetListener, UploadChangeSetListener, CloseChangeSetListener {
+class CreateElementActivity : AppCompatActivity(), OsmUploader {
 
 
     private var tabsAdapter: CreateElementTabsAdapter? = null
@@ -119,17 +116,15 @@ class CreateElementActivity : AppCompatActivity(),  CommentDialog.CommentDelegat
 
     }
 
-    private fun openCommentDialog() {
+    override fun openCommentDialog() {
         val commentDialog = CommentDialog()
         commentDialog.show(supportFragmentManager, CommentDialog.DIALOG_TAG)
     }
 
     // Btn Enviar foi pressionado
-    override fun delegateComment(commentText: String) {
+    override fun onCommentResponse(commentText: String) {
         startUploadFlow(commentText)
     }
-
-
 
     private fun startUploadFlow(commentText: String) {
         UIHelper.showToastShort(this,"Upload Iniciado")
@@ -142,7 +137,7 @@ class CreateElementActivity : AppCompatActivity(),  CommentDialog.CommentDelegat
         osmUploadHelper.makeUploadChangeSetRequest(payload,changesetId)
     }
 
-    override fun onUploadChangesetResponse(changesetId: String) {
+    override fun onUploadChangeSetResponse(changesetId: String) {
         osmUploadHelper.makeCloseChangeSetRequest(changesetId)
     }
 

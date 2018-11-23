@@ -3,7 +3,7 @@ package br.ufpa.smartufpa.asynctasks.osmapi
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
-import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
+import br.ufpa.smartufpa.interfaces.OsmUploader
 import br.ufpa.smartufpa.utils.Constants
 import br.ufpa.smartufpa.utils.OAuthHelper
 import com.github.scribejava.core.model.Verb
@@ -13,7 +13,7 @@ class UploadChangeSetTask(context: Context) : AsyncTask<String,Unit, String>() {
     private val urlUploadChangeSet = Constants.OsmApiUrl.UPLOAD_CHANGESET
     private val oAuthHelper = OAuthHelper(context)
 
-    private val callback: UploadChangeSetListener = context as UploadChangeSetListener
+    private val callback: OsmUploader = context as OsmUploader
 
     companion object {
         val LOG_TAG = UploadChangeSetTask::class.simpleName
@@ -41,8 +41,8 @@ class UploadChangeSetTask(context: Context) : AsyncTask<String,Unit, String>() {
         super.onPostExecute(changesetId)
         Log.d(LOG_TAG, "Finished Request")
         if(changesetId != null)
-            callback.onUploadChangesetResponse(changesetId)
+            callback.onUploadChangeSetResponse(changesetId)
         else
-            callback.onUploadChangesetResponse("-1")
+            callback.onUploadChangeSetResponse("-1")
     }
 }
