@@ -2,13 +2,12 @@ package br.ufpa.smartufpa.models.overpass
 
 import android.os.Parcel
 import android.os.Parcelable
-import br.ufpa.smartufpa.R
 import com.google.gson.annotations.SerializedName
 
 class Element : Parcelable{
 
     @SerializedName("type")
-    var type: String? = null
+    var type: String = "node"
 
     @SerializedName("id")
     var id: Long = 0
@@ -56,7 +55,7 @@ class Element : Parcelable{
     fun getMarkerIcon(): Int {
         return this.tags?.markerIconRes!!
     }
-    fun setName(name: String){
+    fun setName(name: String?){
         this.tags.let {
             it?.name = name
         }
@@ -68,7 +67,7 @@ class Element : Parcelable{
         }
     }
 
-    fun setShortName(shortName: String){
+    fun setShortName(shortName: String?){
         this.tags.let {
             it?.shortName = shortName
         }
@@ -80,7 +79,7 @@ class Element : Parcelable{
         }
     }
 
-    fun setLocalName(localName: String) {
+    fun setLocalName(localName: String?) {
         this.tags.let {
             it?.locName = localName
         }
@@ -92,7 +91,7 @@ class Element : Parcelable{
         }
     }
 
-    fun setWebSite(webSite: String) {
+    fun setWebSite(webSite: String?) {
         this.tags.let {
             it?.website = webSite
         }
@@ -104,7 +103,7 @@ class Element : Parcelable{
             return it?.description
         }
     }
-    fun setDescription(description: String) {
+    fun setDescription(description: String?) {
         this.tags.let {
             it?.description = description
         }
@@ -116,9 +115,11 @@ class Element : Parcelable{
         }
     }
 
-
-
-
+    fun setAmenity(amenity: String){
+        this.tags?.let{
+            it.amenity = amenity
+        }
+    }
 
 
 

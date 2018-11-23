@@ -1,6 +1,5 @@
 package br.ufpa.smartufpa.fragments.forms
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -10,11 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.ufpa.smartufpa.R
-import br.ufpa.smartufpa.activities.api.CreateElementActivity
 import br.ufpa.smartufpa.models.overpass.Element
+import br.ufpa.smartufpa.utils.FormObject
 import br.ufpa.smartufpa.utils.enums.FormFlag
 import br.ufpa.smartufpa.utils.osm.ElementParser
-import kotlinx.android.synthetic.main.fragment_form_basic_data.*
 import kotlinx.android.synthetic.main.fragment_form_basic_data.view.*
 import kotlinx.android.synthetic.main.fragment_form_extra_info.view.*
 
@@ -23,10 +21,9 @@ private const val ARG_ELEMENT = "element"
 class FormBasicData : Fragment() {
 
     private var element: Element? = null
-    private val elementParser: ElementParser = ElementParser
     private lateinit var form: View
 
-    private val teste : CreateElementActivity.Teste = CreateElementActivity.Teste
+    private val formObject : FormObject = FormObject
 
     companion object {
         val LOG_TAG = FormBasicData::class.simpleName
@@ -50,6 +47,19 @@ class FormBasicData : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         form = inflater.inflate(R.layout.fragment_form_basic_data, container, false)
+        bindInputName()
+        bindInputDescription()
+        bindInputIndoor()
+
+//        if (element != null) {
+//            initFormName()
+//            initFormDescription()
+//        }
+
+        return form
+    }
+
+    private fun bindInputName() {
         form.inputName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
@@ -59,105 +69,70 @@ class FormBasicData : Fragment() {
 
             }
 
-            override fun afterTextChanged(s: Editable) {
-                teste.nome = s.toString()
+            override fun afterTextChanged(editable: Editable) {
+                formObject.name = editable.toString()
             }
         })
-
-        if (element != null) {
-            initFormName()
-            initFormShortName()
-            initFormLocalName()
-            initFormDescription()
-            initFormWebsite()
-        }
-
-        return form
     }
 
-    fun setElementData(formFlag: FormFlag) : Element? {
-        when (formFlag) {
-            FormFlag.CREATE -> {
-                val newElement = Element()
-                updateElementFromForm(newElement)
-                return newElement
+    private fun bindInputDescription() {
+        form.inputDescription.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                formObject.description = editable?.toString()
             }
 
-            FormFlag.EDIT -> {
-                updateElementFromForm(element!!)
-            }
-        }
-        return element
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        })
     }
 
-    private fun updateElementFromForm(element: Element) {
-        with(element) {
-            this.setName(getFormName())
-            this.setDescription(getFormDescription())
-            this.setIndoor(getFormIndoor())
+    private fun bindInputIndoor(){
+        form.cbIndoor.setOnCheckedChangeListener { _, isChecked ->
+            formObject.indoor = isChecked
         }
     }
 
-    private fun initFormWebsite() {
-        try {
-//            form.inputWebsite.setText(element!!.getWebsite())
-        } catch (e: KotlinNullPointerException) {
-            Log.e(LOG_TAG, "Element Website is null", e)
-        }
+//    fun setElementData(formFlag: FormFlag) : Element? {
+//        when (formFlag) {
+//            FormFlag.CREATE -> {
+//                val newElement = Element()
+//                updateElementFromForm(newElement)
+//                return newElement
+//            }
+//
+//            FormFlag.EDIT -> {
+//                updateElementFromForm(element!!)
+//            }
+//        }
+//        return element
+//    }
+//
+//    private fun updateElementFromForm(element: Element) {
+//        with(element) {
+//            this.setName(formObject.name)
+//            this.setDescription(formObject.description)
+//            this.setIndoor(formObject.indoor)
+//        }
+//    }
+//
+//    private fun initFormDescription() {
+//        try {
+//            form.inputDescription.setText(element!!.getDescription())
+//        } catch (e: KotlinNullPointerException) {
+//            Log.e(LOG_TAG, "Element Description is null", e)
+//        }
+//    }
+//
+//    private fun initFormName() {
+//        try {
+//            form.inputName.setText(element!!.getName())
+//        } catch (e: KotlinNullPointerException) {
+//            Log.e(LOG_TAG, "Element Name is null", e)
+//        }
+//    }
 
-    }
 
-    private fun initFormDescription() {
-        try {
-            form.inputDescription.setText(element!!.getDescription())
-        } catch (e: KotlinNullPointerException) {
-            Log.e(LOG_TAG, "Element Description is null", e)
-        }
-    }
-
-    private fun initFormLocalName() {
-        try {
-//            form.inputLocalName.setText(element!!.getLocalName())
-        } catch (e: KotlinNullPointerException) {
-            Log.e(LOG_TAG, "Element LocalName is null", e)
-        }
-    }
-
-    private fun initFormName() {
-        try {
-            form.inputName.setText(element!!.getName())
-        } catch (e: KotlinNullPointerException) {
-            Log.e(LOG_TAG, "Element Name is null", e)
-        }
-    }
-
-    private fun initFormShortName() {
-        try {
-//            form.inputShortName.setText(element!!.getShortName())
-        } catch (e: KotlinNullPointerException) {
-            Log.e(LOG_TAG, "Element ShortName is null", e)
-        }
-    }
-
-    private fun getFormIndoor(): Boolean{
-        return cbIndoor.isChecked
-    }
-
-    private fun getFormLocalName(): String {
-        return form.inputLocalName.text.toString()
-    }
-
-    private fun getFormDescription(): String {
-        return inputDescription.text.toString()
-    }
-
-    private fun getFormShortName(): String {
-        return form.inputShortName.text.toString()
-    }
-
-    private fun getFormName(): String {
-        return inputName.text.toString()
-    }
 
 
 }

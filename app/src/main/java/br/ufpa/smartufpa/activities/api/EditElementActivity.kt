@@ -44,7 +44,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
         initFormFragment()
 
         btnEditNext.setOnClickListener {
-            formBasicData.setElementData(FormFlag.EDIT)
+//            formBasicData.setElementData(FormFlag.EDIT)
             openCommentDialog()
         }
 

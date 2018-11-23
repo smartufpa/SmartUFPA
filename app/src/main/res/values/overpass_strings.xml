@@ -16,7 +16,9 @@
         [out:json][timeout:30];
         (way[\"amenity\"=\"restaurant\"](%1$f,%2$f,%3$f,%4$f);
         way[\"amenity\"=\"food_court\"](%1$f,%2$f,%3$f,%4$f);
-        node[\"amenity\"=\"restaurant\"](%1$f,%2$f,%3$f,%4$f););
+        node[\"amenity\"=\"restaurant\"](%1$f,%2$f,%3$f,%4$f);
+        node[\"amenity\"=\"food_court\"](%1$f,%2$f,%3$f,%4$f);
+        node[\"amenity\"=\"fast_food\"](%1$f,%2$f,%3$f,%4$f););
         out body center;
     </string>
 

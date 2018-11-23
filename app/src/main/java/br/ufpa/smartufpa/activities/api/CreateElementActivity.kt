@@ -1,41 +1,40 @@
 package br.ufpa.smartufpa.activities.api
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.adapters.CreateElementTabsAdapter
 import br.ufpa.smartufpa.dialogs.CommentDialog
-import br.ufpa.smartufpa.fragments.forms.FormBasicData
+import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
+import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
+import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
+import br.ufpa.smartufpa.models.PlaceCategory
 import br.ufpa.smartufpa.models.overpass.Element
+import br.ufpa.smartufpa.utils.FormObject
+import br.ufpa.smartufpa.utils.UIHelper
+import br.ufpa.smartufpa.utils.enums.FormFlag
+import br.ufpa.smartufpa.utils.osm.OsmUploadHelper
+import br.ufpa.smartufpa.utils.osm.OsmXmlBuilder
 import kotlinx.android.synthetic.main.activity_create_element.*
-import kotlinx.android.synthetic.main.fragment_form_basic_data.*
-import kotlinx.android.synthetic.main.fragment_form_extra_info.*
 
-class CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate{
+class CreateElementActivity : AppCompatActivity(),  CommentDialog.CommentDelegate,
+        CreateChangeSetListener, UploadChangeSetListener, CloseChangeSetListener {
 
 
     private var tabsAdapter: CreateElementTabsAdapter? = null
     private val element : Element = Element()
-
-    object Teste{
-        var nome : String? = null
-        var localNome : String? = null
-    }
-
-    private val teste : Teste = Teste
-
+    private val osmUploadHelper: OsmUploadHelper = OsmUploadHelper(this)
+    private val formObject : FormObject = FormObject
+    private lateinit var category : String
+    private lateinit var categoryName : String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_element)
-        val category = intent.getStringExtra(old_CreateElementActivity.ARG_CATEGORY)
-        val categoryName = intent.getStringExtra(old_CreateElementActivity.ARG_CATEGORY_NAME)
-        val latitude = intent.getDoubleExtra(old_CreateElementActivity.ARG_LATITUDE, 0.0)
-        val longitude = intent.getDoubleExtra(old_CreateElementActivity.ARG_LONGITUDE, 0.0)
+        category = intent.getStringExtra(old_CreateElementActivity.ARG_CATEGORY)
+        categoryName = intent.getStringExtra(old_CreateElementActivity.ARG_CATEGORY_NAME)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -49,15 +48,39 @@ class CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
 
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-
-            Log.d("asd", teste.nome)
-            Log.d("asd", teste.localNome)
-            // todo, processar o singleton para element
+        fabSend.setOnClickListener {
+            bindFormToElement()
             openCommentDialog()
         }
+
+    }
+
+    private fun bindFormToElement(){
+        element.lat = intent.getDoubleExtra(old_CreateElementActivity.ARG_LATITUDE, 0.0)
+        element.lon = intent.getDoubleExtra(old_CreateElementActivity.ARG_LONGITUDE, 0.0)
+        var amenity : String? = null
+        when(category){
+            PlaceCategory.Categories.FOODPLACE.toString() -> {
+                val foodCategory = formObject.foodCategory
+                if(foodCategory != null){
+                     amenity = if(foodCategory.toLowerCase() == "restaurante") "restaurant" else "fast_food"
+                 }
+            }
+        }
+
+        if(amenity != null) element.setAmenity(amenity)
+
+        // Basic Data
+        if(formObject.name != null) element.setName(formObject.name)
+        if(formObject.description != null) element.setDescription(formObject.description)
+        element.setIndoor(formObject.indoor)
+
+        // FoodPlace
+
+        // ExtraInfo
+        if(formObject.localName != null) element.setLocalName(formObject.localName)
+        if(formObject.shortName != null) element.setShortName(formObject.shortName)
+        if(formObject.website != null) element.setWebSite(formObject.website)
 
     }
 
@@ -68,7 +91,29 @@ class CreateElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate
 
     // Btn Enviar foi pressionado
     override fun delegateComment(commentText: String) {
-//        startUploadFlow(commentText)
+        startUploadFlow(commentText)
+    }
+
+
+
+    private fun startUploadFlow(commentText: String) {
+        UIHelper.showToastShort(this,"Upload Iniciado")
+        val payload = OsmXmlBuilder.createChangeSetXml(commentText)
+        osmUploadHelper.makeCreateChangeSetRequest(payload)
+    }
+
+    override fun onCreateChangeSetResponse(changesetId: String) {
+        val payload = OsmXmlBuilder.uploadChangeSetXml(element, changesetId, element.version.toString(), FormFlag.CREATE)
+        osmUploadHelper.makeUploadChangeSetRequest(payload,changesetId)
+    }
+
+    override fun onUploadChangesetResponse(changesetId: String) {
+        osmUploadHelper.makeCloseChangeSetRequest(changesetId)
+    }
+
+    override fun onCloseChangeSetResponse() {
+        UIHelper.showToastShort(this,"Upload Concluído")
+        finish()
     }
 
 

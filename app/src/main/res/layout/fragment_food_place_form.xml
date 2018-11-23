@@ -8,7 +8,7 @@
 
 
     <RatingBar
-        android:id="@+id/ratingBar"
+        android:id="@+id/rbPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -42,9 +42,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="@string/label_price_cheap"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+        app:layout_constraintBottom_toBottomOf="@+id/rbPrice"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+        app:layout_constraintTop_toTopOf="@+id/rbPrice" />
 
     <TextView
         android:id="@+id/txtExpensive"
@@ -53,9 +53,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/label_price_expensive"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+        app:layout_constraintBottom_toBottomOf="@+id/rbPrice"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+        app:layout_constraintTop_toTopOf="@+id/rbPrice" />
 
     <TextView
         android:id="@+id/txtQuality"
@@ -67,7 +67,7 @@
         android:text="@string/label_food_quality"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Chip"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+        app:layout_constraintTop_toBottomOf="@+id/rbPrice" />
 
     <RatingBar
         android:id="@+id/rbQuality"
