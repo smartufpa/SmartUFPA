@@ -9,10 +9,11 @@ import br.ufpa.smartufpa.dialogs.CommentDialog
 import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
 import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
-import br.ufpa.smartufpa.models.PlaceCategory
 import br.ufpa.smartufpa.models.overpass.Element
+import br.ufpa.smartufpa.utils.Constants.OverpassTags.*
 import br.ufpa.smartufpa.utils.FormObject
 import br.ufpa.smartufpa.utils.UIHelper
+import br.ufpa.smartufpa.utils.enums.ElementCategories
 import br.ufpa.smartufpa.utils.enums.FormFlag
 import br.ufpa.smartufpa.utils.osm.OsmUploadHelper
 import br.ufpa.smartufpa.utils.osm.OsmXmlBuilder
@@ -60,12 +61,28 @@ class CreateElementActivity : AppCompatActivity(),  CommentDialog.CommentDelegat
         element.lon = intent.getDoubleExtra(old_CreateElementActivity.ARG_LONGITUDE, 0.0)
         var amenity : String? = null
         when(category){
-            PlaceCategory.Categories.FOODPLACE.toString() -> {
+            ElementCategories.FOODPLACE.toString() -> {
                 val foodCategory = formObject.foodCategory
                 if(foodCategory != null){
-                     amenity = if(foodCategory.toLowerCase() == "restaurante") "restaurant" else "fast_food"
+                     amenity = if(foodCategory.toLowerCase() == "restaurante") RESTAURANT else FAST_FOOD
                  }
             }
+            ElementCategories.AUDITORIUM.toString() -> {
+                amenity = EXHIBITION_CENTRE
+            }
+
+            ElementCategories.COPYSHOP.toString() -> {
+                amenity = COPYSHOP
+            }
+
+            ElementCategories.LIBRARY.toString() -> {
+                amenity = LIBRARY
+            }
+
+            ElementCategories.TOILETS.toString() -> {
+                amenity = TOILETS
+            }
+
         }
 
         if(amenity != null) element.setAmenity(amenity)

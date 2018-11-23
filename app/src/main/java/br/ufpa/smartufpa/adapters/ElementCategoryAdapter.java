@@ -14,30 +14,29 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import br.ufpa.smartufpa.R;
-import br.ufpa.smartufpa.models.PlaceCategory;
+import br.ufpa.smartufpa.models.ElementCategoryItem;
+import br.ufpa.smartufpa.utils.enums.ElementCategories;
 
 
 /**
  * Created by kaeuchoa on 29/11/2017.
  */
 
-public class SelectCategoryAdapter extends RecyclerView.Adapter {
+public class ElementCategoryAdapter extends RecyclerView.Adapter {
 
     private Context parentContext;
 
-    public static final String TAG = SelectCategoryAdapter.class.getSimpleName();
+    public static final String TAG = ElementCategoryAdapter.class.getSimpleName();
 
-    private ArrayList<PlaceCategory> placeCategories;
-    private SelectCategoryAdapter.OnItemClickListener onItemClickListener;
+    private ArrayList<ElementCategoryItem> categoriesList;
+    private ElementCategoryAdapter.OnItemClickListener onItemClickListener;
 
-    public SelectCategoryAdapter(Context context) {
+    public ElementCategoryAdapter(Context context) {
         this.parentContext = context;
-        placeCategories = new ArrayList<>();
+        categoriesList = new ArrayList<>();
 
-        PlaceCategory.Categories[] categories = PlaceCategory.Categories.values();
-
-        for (PlaceCategory.Categories category : categories) {
-            placeCategories.add(new PlaceCategory(category));
+        for (ElementCategories category :  ElementCategories.values()) {
+            categoriesList.add(new ElementCategoryItem(category));
         }
     }
 
@@ -48,16 +47,16 @@ public class SelectCategoryAdapter extends RecyclerView.Adapter {
         View view = LayoutInflater.from(parentContext)
                 .inflate(R.layout.item_select_category,parent,false);
 
-        return new SelectCategoryAdapter.AddPlaceOptionViewHolder(view);
+        return new ElementCategoryAdapter.AddPlaceOptionViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         AddPlaceOptionViewHolder viewHolder = (AddPlaceOptionViewHolder) holder;
-        final PlaceCategory category = placeCategories.get(position);
+        final ElementCategoryItem category = categoriesList.get(position);
         final String optionName = category.getName();
-        final Drawable iconDrawable = ContextCompat.getDrawable(parentContext,category.getIconID());
+        final Drawable iconDrawable = ContextCompat.getDrawable(parentContext,category.getDrawable());
         // Sets the title and icon for the card
         viewHolder.txtAddPlaceCategory.setText(optionName);
         viewHolder.imgAddPlaceCategory.setImageDrawable(iconDrawable);
@@ -67,7 +66,7 @@ public class SelectCategoryAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return placeCategories.size();
+        return categoriesList.size();
     }
 
     /**
@@ -77,13 +76,13 @@ public class SelectCategoryAdapter extends RecyclerView.Adapter {
         void onItemClick(View view, int position);
     }
 
-    public void setOnItemClickListener(SelectCategoryAdapter.OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(ElementCategoryAdapter.OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
     }
 
 
-    public ArrayList<PlaceCategory> getPlaceCategories() {
-        return placeCategories;
+    public ArrayList<ElementCategoryItem> getCategoriesList() {
+        return categoriesList;
     }
 
 

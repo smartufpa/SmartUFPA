@@ -4,17 +4,13 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.models.overpass.Element
 import br.ufpa.smartufpa.utils.FormObject
-import br.ufpa.smartufpa.utils.enums.FormFlag
-import br.ufpa.smartufpa.utils.osm.ElementParser
 import kotlinx.android.synthetic.main.fragment_form_basic_data.view.*
-import kotlinx.android.synthetic.main.fragment_form_extra_info.view.*
 
 private const val ARG_ELEMENT = "element"
 

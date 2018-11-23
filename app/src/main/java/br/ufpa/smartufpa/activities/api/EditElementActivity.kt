@@ -5,13 +5,12 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.dialogs.CommentDialog
-import br.ufpa.smartufpa.fragments.forms.FormBasicData
 import br.ufpa.smartufpa.fragments.ElementDetailsFragment
+import br.ufpa.smartufpa.fragments.forms.FormBasicData
 import br.ufpa.smartufpa.interfaces.CloseChangeSetListener
 import br.ufpa.smartufpa.interfaces.CreateChangeSetListener
 import br.ufpa.smartufpa.interfaces.UploadChangeSetListener
 import br.ufpa.smartufpa.models.overpass.Element
-import br.ufpa.smartufpa.utils.osm.ElementParser
 import br.ufpa.smartufpa.utils.UIHelper
 import br.ufpa.smartufpa.utils.enums.FormFlag
 import br.ufpa.smartufpa.utils.osm.OsmUploadHelper
@@ -24,7 +23,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
         CreateChangeSetListener, UploadChangeSetListener, CloseChangeSetListener{
 
 
-    private val elementParser : ElementParser = ElementParser
+
     private lateinit var formBasicData : FormBasicData
     private lateinit var element : Element
     private val osmUploadHelper = OsmUploadHelper(this)
@@ -54,7 +53,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
     }
 
     private fun setActivityTitle() {
-        var name : String? = elementParser.getName(element)
+        var name : String? = element.getName()
         if(name == null) {
             name = getString(R.string.place_holder_no_name)
             txtHeaderTitle.setTextColor(ContextCompat.getColor(this,android.R.color.darker_gray))
@@ -63,7 +62,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
     }
 
     private fun setActivitySubtitle() {
-        val localName: String? = elementParser.getLocalName(element)
+        val localName: String? = element.getLocalName()
         if (localName != null) {
             txtHeaderSubtitle.text = localName
         } else {
@@ -72,7 +71,7 @@ class EditElementActivity : AppCompatActivity(), CommentDialog.CommentDelegate,
     }
 
     private fun setActivityExtraInfo() {
-        val shortName = elementParser.getShortName(element)
+        val shortName = element.getShortName()
         if (shortName != null) {
             txtHeaderExtraInfo.text = String.format("(%s)", shortName)
         } else {

@@ -47,17 +47,16 @@ import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.models.overpass.OverpassModel;
 import br.ufpa.smartufpa.models.retrofit.OverpassApi;
 import br.ufpa.smartufpa.utils.Constants;
-import br.ufpa.smartufpa.utils.osm.ElementParser;
 import br.ufpa.smartufpa.utils.FragmentHelper;
-import br.ufpa.smartufpa.utils.osm.OverpassQueryHelper;
 import br.ufpa.smartufpa.utils.SystemServicesManager;
 import br.ufpa.smartufpa.utils.UIHelper;
 import br.ufpa.smartufpa.utils.apptutorial.AppTutorial;
 import br.ufpa.smartufpa.utils.apptutorial.ShowcaseHolder;
 import br.ufpa.smartufpa.utils.apptutorial.ToolbarActionItemTarget;
 import br.ufpa.smartufpa.utils.apptutorial.ViewTargets;
+import br.ufpa.smartufpa.utils.enums.ElementCategories;
 import br.ufpa.smartufpa.utils.enums.OverlayTags;
-import br.ufpa.smartufpa.utils.enums.OverpassFilters;
+import br.ufpa.smartufpa.utils.osm.OverpassQueryHelper;
 import br.ufpa.smartufpa.utils.retrofit.RetrofitHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
 
     private OverpassQueryHelper overpassQueryHelper;
     private FragmentHelper fragmentHelper;
-    private final ElementParser elementParser = ElementParser.INSTANCE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,19 +260,19 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
         switch (id) {
             case R.id.nav_copy_service:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_XEROX))
-                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.XEROX);
+                    return overpassQueryHelper.getOverpassQuery(ElementCategories.COPYSHOP);
             case R.id.nav_food:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_FOOD))
-                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.FOOD);
+                    return overpassQueryHelper.getOverpassQuery(ElementCategories.FOODPLACE);
             case R.id.nav_restroom:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_RESTROOM))
-                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.RESTROOM);
+                    return overpassQueryHelper.getOverpassQuery(ElementCategories.TOILETS);
             case R.id.nav_auditorium:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_AUDITORIUMS))
-                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.AUDITORIUMS);
+                    return overpassQueryHelper.getOverpassQuery(ElementCategories.AUDITORIUM);
             case R.id.nav_library:
                 if (!mapFragment.isLayerEnabled(OverlayTags.FILTER_LIBRARIES))
-                    return overpassQueryHelper.getOverpassQuery(OverpassFilters.LIBRARIES);
+                    return overpassQueryHelper.getOverpassQuery(ElementCategories.LIBRARY);
         }
         return null;
     }
@@ -468,9 +466,9 @@ public class MainActivity extends AppCompatActivity implements Callback<Overpass
         if (elementDetailsFragment == null)
             elementDetailsFragment = ElementDetailsFragment.newInstance(element);
 
-        final String name = elementParser.getName(element);
-        final String localName = elementParser.getLocalName(element);
-        final String shortName = elementParser.getShortName(element);
+        final String name = element.getName();
+        final String localName = element.getLocalName();
+        final String shortName = element.getShortName();
 
         initPlaceDetailsTitle(name);
         initPlaceDetailsSubtitle(localName);

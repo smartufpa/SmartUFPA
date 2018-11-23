@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import br.ufpa.smartufpa.fragments.forms.FormBasicData
 import br.ufpa.smartufpa.fragments.forms.FormExtraInfo
 import br.ufpa.smartufpa.fragments.forms.FormFoodPlace
-import br.ufpa.smartufpa.models.PlaceCategory
+import br.ufpa.smartufpa.utils.enums.ElementCategories
 
 class CreateElementTabsAdapter(fm: FragmentManager,
                                  private val category: String?) : FragmentPagerAdapter(fm) {
@@ -22,13 +22,27 @@ class CreateElementTabsAdapter(fm: FragmentManager,
 
     private fun getFragmentByCategory(): Fragment? {
         when (category) {
-            PlaceCategory.Categories.FOODPLACE.toString() -> {
+            ElementCategories.FOODPLACE.toString() -> {
                 return FormFoodPlace.newInstance()
             }
 
-            PlaceCategory.Categories.BUILDING.toString() -> {
+            ElementCategories.AUDITORIUM.toString() -> {
 //                return FormBuilding.newInstance()
             }
+
+            ElementCategories.COPYSHOP.toString() -> {
+
+            }
+
+            ElementCategories.LIBRARY.toString() -> {
+
+            }
+
+            ElementCategories.TOILETS.toString() -> {
+
+            }
+
+
         }
         return null
     }

@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.interfaces.PlaceDetailsDelegate;
 import br.ufpa.smartufpa.models.overpass.Element;
-import br.ufpa.smartufpa.utils.osm.ElementParser;
-
-import java.util.List;
 
 /**
  * ArrayAdapter used for listing the results on searches with multiple POIs
@@ -26,7 +25,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
 
     private List<Element> elements;
     private Context parentContext;
-    private ElementParser elementParser;
     private Resources resources;
     private PlaceDetailsDelegate placeDetailsDelegate;
 
@@ -35,7 +33,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
         this.parentContext = parentContext;
         this.placeDetailsDelegate = (PlaceDetailsDelegate) parentContext;
         this.resources = resources;
-        this.elementParser = ElementParser.INSTANCE;
     }
 
 
@@ -51,8 +48,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         SearchResultViewHolder viewHolder = (SearchResultViewHolder) holder;
         final Element element = elements.get(position);
-        final String name = elementParser.getName(element);
-        final String localName = elementParser.getLocalName(element);
+        final String name = element.getName();
+        final String localName = element.getLocalName();
         initPlaceName(viewHolder, name);
         initLocalName(viewHolder, localName);
         initInfoBtn(viewHolder, element);

@@ -11,7 +11,7 @@ import java.util.Locale;
 import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.utils.ConfigHelper;
 import br.ufpa.smartufpa.utils.Constants;
-import br.ufpa.smartufpa.utils.enums.OverpassFilters;
+import br.ufpa.smartufpa.utils.enums.ElementCategories;
 
 /**
  * Created by kaeuc on 19/02/2018.
@@ -56,22 +56,22 @@ public class OverpassQueryHelper {
         return instance;
     }
 
-    public String getOverpassQuery(OverpassFilters filter) {
+    public String getOverpassQuery(ElementCategories filter) {
         String queryString = null;
         switch (filter) {
-            case XEROX:
+            case COPYSHOP:
                 queryString = this.context.getString(R.string.query_xerox);
                 break;
-            case FOOD:
+            case FOODPLACE:
                 queryString = this.context.getString(R.string.query_food);
                 break;
-            case RESTROOM:
+            case TOILETS:
                 queryString = this.context.getString(R.string.query_restroom);
                 break;
-            case LIBRARIES:
+            case LIBRARY:
                 queryString = this.context.getString(R.string.query_libraries);
                 break;
-            case AUDITORIUMS:
+            case AUDITORIUM:
                 queryString = this.context.getString(R.string.query_auditoriums);
                 break;
         }

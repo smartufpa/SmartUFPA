@@ -16,7 +16,6 @@ import br.ufpa.smartufpa.R;
 import br.ufpa.smartufpa.activities.api.EditElementActivity;
 import br.ufpa.smartufpa.models.overpass.Element;
 import br.ufpa.smartufpa.utils.Constants;
-import br.ufpa.smartufpa.utils.osm.ElementParser;
 
 /**
  * Fragment to show details about an specific place selected by the user.
@@ -39,8 +38,6 @@ public class ElementDetailsFragment extends Fragment {
     private TextView txtDescription;
     private Button btnEdit;
 
-    private ElementParser elementParser;
-
     private int colorBlack;
 
     private Element element;
@@ -59,7 +56,7 @@ public class ElementDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        elementParser = ElementParser.INSTANCE;
+
         if (getArguments() != null) {
             element = getArguments().getParcelable(ARG_ELEMENT);
         }
@@ -76,9 +73,9 @@ public class ElementDetailsFragment extends Fragment {
         bindViews(view);
 
 
-        final String website = elementParser.getWebsite(element);
-        final HashMap<String, String> operationHours = elementParser.getOpeningHours(element);
-        final String description = elementParser.getDescription(element);
+        final String website = element.getWebsite();
+        final HashMap<String, String> operationHours = element.getOpeningHours();
+        final String description = element.getDescription();
 
         setupWebsiteText(website);
         setupOperationHoursText(operationHours, txtOperationHours);

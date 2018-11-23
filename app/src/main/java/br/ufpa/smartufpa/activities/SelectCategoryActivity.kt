@@ -8,7 +8,7 @@ import android.view.View
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.activities.api.CreateElementActivity
 import br.ufpa.smartufpa.activities.api.old_CreateElementActivity
-import br.ufpa.smartufpa.adapters.SelectCategoryAdapter
+import br.ufpa.smartufpa.adapters.ElementCategoryAdapter
 import kotlinx.android.synthetic.main.activity_select_category.*
 import kotlinx.android.synthetic.main.custom_header.*
 
@@ -43,23 +43,23 @@ class SelectCategoryActivity : AppCompatActivity() {
         txtHeaderExtraInfo.visibility = View.GONE
     }
 
-    private fun configRecyclerView(selectCategoryAdapter: SelectCategoryAdapter, layoutManager: LinearLayoutManager) {
-        rvSelectCategories.adapter = selectCategoryAdapter
+    private fun configRecyclerView(elementCategoryAdapter: ElementCategoryAdapter, layoutManager: LinearLayoutManager) {
+        rvSelectCategories.adapter = elementCategoryAdapter
         rvSelectCategories.layoutManager = layoutManager
     }
 
-    private fun createAdapter(): SelectCategoryAdapter {
-        val selectCategoryAdapter = SelectCategoryAdapter(this)
+    private fun createAdapter(): ElementCategoryAdapter {
+        val selectCategoryAdapter = ElementCategoryAdapter(this)
 
         selectCategoryAdapter.setOnItemClickListener { _, position ->
-            val placeCategories = selectCategoryAdapter.placeCategories
+            val placeCategories = selectCategoryAdapter.categoriesList
             val category = placeCategories[position]
 
             val intent = Intent(this, CreateElementActivity::class.java)
             with(intent) {
                 putExtra(old_CreateElementActivity.ARG_LATITUDE, latitude)
                 putExtra(old_CreateElementActivity.ARG_LONGITUDE, longitude)
-                putExtra(old_CreateElementActivity.ARG_CATEGORY, category.category.toString())
+                putExtra(old_CreateElementActivity.ARG_CATEGORY, category.toString())
                 putExtra(old_CreateElementActivity.ARG_CATEGORY_NAME, category.name)
             }
             startActivity(intent)

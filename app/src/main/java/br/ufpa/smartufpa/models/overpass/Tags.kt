@@ -77,7 +77,7 @@ class Tags() : Parcelable {
             if(amenity != null){
                 when(amenity){
                     "food_court", "restaurant" -> {
-                        return R.drawable.ic_marker_restaurant
+                        return R.drawable.ic_marker_food_place
                     }
                     "library" -> {
                         return R.drawable.ic_marker_library
@@ -99,7 +99,7 @@ class Tags() : Parcelable {
 
                 if(shop != null){
                     if(shop == "copyshop")
-                        return R.drawable.ic_marker_xerox
+                        return R.drawable.ic_marker_copyshop
                 }
             }
             return R.drawable.ic_marker

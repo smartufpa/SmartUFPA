@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -43,14 +42,14 @@ public class MapUtils {
         if (markerType.equals(MarkerTypes.XEROX)) {
 
             markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
-                    .getDrawable(context, R.drawable.ic_marker_xerox));
+                    .getDrawable(context, R.drawable.ic_marker_copyshop));
             markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(context, R.drawable.ic_marker_details));
 
         }else if (markerType.equals(MarkerTypes.FOOD)){
 
             markerIcons.put(MarkerStatus.NOT_CLICKED, ContextCompat
-                    .getDrawable(context, R.drawable.ic_marker_restaurant));
+                    .getDrawable(context, R.drawable.ic_marker_food_place));
             markerIcons.put(MarkerStatus.CLICKED, ContextCompat
                     .getDrawable(context, R.drawable.ic_marker_details));
 

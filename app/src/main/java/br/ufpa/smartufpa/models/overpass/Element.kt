@@ -2,9 +2,20 @@ package br.ufpa.smartufpa.models.overpass
 
 import android.os.Parcel
 import android.os.Parcelable
+import br.ufpa.smartufpa.utils.Constants
 import com.google.gson.annotations.SerializedName
 
-class Element : Parcelable{
+class Element : Parcelable {
+
+    private val daysofWeek_ptBr: HashMap<String, String> =
+            hashMapOf("Mo" to "Seg",
+                    "Tu" to "Ter",
+                    "We" to "Qua",
+                    "Th" to "Qui",
+                    "Fr" to "Sex",
+                    "Sa" to "Sáb",
+                    "Su" to "Dom"
+            )
 
     @SerializedName("type")
     var type: String = "node"
@@ -17,20 +28,20 @@ class Element : Parcelable{
 
     @SerializedName("lat")
     var lat: Double? = null
-    get(){
-        if(field == null)
-            return center?.lat
-        return field
-    }
+        get() {
+            if (field == null)
+                return center?.lat
+            return field
+        }
 
     @SerializedName("lon")
     var lon: Double? = null
-    get(){
-        if(field == null)
-            return center?.lon
+        get() {
+            if (field == null)
+                return center?.lon
 
-        return field
-    }
+            return field
+        }
 
     @SerializedName("tags")
     var tags: Tags? = null
@@ -39,9 +50,9 @@ class Element : Parcelable{
     var center: Center? = null
 
     @SerializedName("nodes")
-    var nodes : List<String>? = null
+    var nodes: List<String>? = null
 
-    constructor(){
+    constructor() {
         this.tags = Tags()
         this.version = 1
     }
@@ -55,7 +66,8 @@ class Element : Parcelable{
     fun getMarkerIcon(): Int {
         return this.tags?.markerIconRes!!
     }
-    fun setName(name: String?){
+
+    fun setName(name: String?) {
         this.tags.let {
             it?.name = name
         }
@@ -67,7 +79,7 @@ class Element : Parcelable{
         }
     }
 
-    fun setShortName(shortName: String?){
+    fun setShortName(shortName: String?) {
         this.tags.let {
             it?.shortName = shortName
         }
@@ -103,6 +115,7 @@ class Element : Parcelable{
             return it?.description
         }
     }
+
     fun setDescription(description: String?) {
         this.tags.let {
             it?.description = description
@@ -110,17 +123,46 @@ class Element : Parcelable{
     }
 
     fun setIndoor(indoor: Boolean) {
-        this.tags.let{
-            it?.indoor = if(indoor) "yes" else "no"
+        this.tags.let {
+            it?.indoor = if (indoor) "yes" else "no"
         }
     }
 
-    fun setAmenity(amenity: String){
-        this.tags?.let{
+    fun setAmenity(amenity: String) {
+        this.tags?.let {
             it.amenity = amenity
         }
     }
 
+    fun getOpeningHours() : HashMap<String, String?>? {
+        this.tags.let {
+            if (it?.openingHours != null)
+                return parseOpeningHours(it.openingHours)
+            return null
+        }
+    }
+
+    private fun parseOpeningHours(openingHours: String?): HashMap<String, String?> {
+        val split = openingHours?.split(" ")
+        val daysOfWeek = split?.get(0)?.split("-")
+        val hours = split?.get(1)?.split("-")
+
+        val openingDay = daysofWeek_ptBr.get(daysOfWeek!![0])
+        val closingDay = daysofWeek_ptBr.get(daysOfWeek[1])
+
+        val hashMap: HashMap<String, String?> = hashMapOf(
+                Constants.OpeningHours.OPENING_DAY to openingDay,
+                Constants.OpeningHours.CLOSING_DAY to closingDay,
+                Constants.OpeningHours.OPENING_HOUR to hours!![0],
+                Constants.OpeningHours.CLOSING_HOUR to hours[1]
+        )
+
+        return hashMap
+    }
+
+    private fun getDayOfWeekInPtBr(dayInEn: String): String {
+        return daysofWeek_ptBr[dayInEn]!!
+    }
 
 
     /* Parcelable implementation */
