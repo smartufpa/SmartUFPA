@@ -3,6 +3,7 @@ package br.ufpa.smartufpa.activities.ui
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetBehavior.*
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.view.View
 import br.ufpa.smartufpa.R
 import br.ufpa.smartufpa.utils.FragmentHelper
@@ -18,31 +19,15 @@ class BottomSheetController(private val view: View, private val fragmentHelper: 
         bottomSheetBehavior.setBottomSheetCallback(this)
         view.fab_close_bsheet.setOnClickListener {
             hide()
+            fragmentHelper.clearBackStack()
         }
         hide()
-    }
-
-    fun showFragment(fragment: Fragment, fragmentTag: String) {
-        fragmentHelper.loadWithReplace(R.id.containerBottomsheet, fragment, fragmentTag)
-        expand()
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-        when (newState) {
-            STATE_HIDDEN -> {
-                clearBottomSheetFragment()
-            }
-            STATE_DRAGGING -> {
-                view.fab_close_bsheet.visibility = View.GONE
-            }
-            else -> {
-                view.fab_close_bsheet.visibility = View.VISIBLE
-            }
-
-        }
     }
 
     fun setTitle(title: String) {
@@ -69,7 +54,7 @@ class BottomSheetController(private val view: View, private val fragmentHelper: 
     }
 
     private fun clearBottomSheetFragment() {
-        view.fab_close_bsheet.visibility = View.GONE
+
     }
 
     fun isVisible(): Boolean {

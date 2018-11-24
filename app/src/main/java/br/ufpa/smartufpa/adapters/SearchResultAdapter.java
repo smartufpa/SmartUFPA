@@ -53,6 +53,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
         initPlaceName(viewHolder, name);
         initLocalName(viewHolder, localName);
         initInfoBtn(viewHolder, element);
+        viewHolder.ivMarker.setImageDrawable(resources.getDrawable(element.getTags().getMarkerIconRes()));
     }
 
     private void initInfoBtn(SearchResultViewHolder viewHolder, final Element element) {
@@ -65,23 +66,24 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     }
 
     private void initPlaceName(SearchResultViewHolder viewHolder, String name) {
-        viewHolder.txtPlaceName.setTextColor(resources.getColor(android.R.color.black));
-        if (name != null)
+        if (name != null) {
             viewHolder.txtPlaceName.setText(name);
-        else
+            viewHolder.txtPlaceName.setTextColor(resources.getColor(android.R.color.black));
+        } else {
+            viewHolder.txtPlaceName.setText(resources.getString(R.string.place_holder_no_name));
             viewHolder.txtPlaceName.setTextColor(resources.getColor(android.R.color.darker_gray));
+        }
     }
 
     private void initLocalName(SearchResultViewHolder viewHolder, String localName) {
-        if (localName != null){
+        if (localName != null) {
             viewHolder.txtLocName.setVisibility(View.VISIBLE);
             viewHolder.txtLocName.setText(localName);
-        }
-        else
+        } else
             viewHolder.txtLocName.setVisibility(View.GONE);
     }
 
-    public void updateData(List<Element> elements){
+    public void updateData(List<Element> elements) {
         this.elements.clear();
         this.elements.addAll(elements);
         notifyDataSetChanged();
@@ -97,6 +99,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
 
         private TextView txtPlaceName, txtLocName;
         private ImageView ivInfo;
+        private ImageView ivMarker;
 
 
         private SearchResultViewHolder(View itemView) {
@@ -104,6 +107,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
             txtPlaceName = itemView.findViewById(R.id.list_txt_place_name);
             txtLocName = itemView.findViewById(R.id.list_txt_place_loc_name);
             ivInfo = itemView.findViewById(R.id.ivInfo);
+            ivMarker = itemView.findViewById(R.id.ivMarker);
 
         }
 

@@ -88,5 +88,9 @@ public class SearchResultFragment extends Fragment {
         adapter.updateData(elements);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
+    }
 }

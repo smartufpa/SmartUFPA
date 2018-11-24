@@ -41,10 +41,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_vertical_margin"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
-        app:layout_anchor="@+id/bottom_sheet_container"
-        app:layout_anchorGravity="top|end"
         android:visibility="gone"
-        />
+        android:elevation="4dp"
+        app:layout_anchor="@+id/bottom_sheet_container"
+        app:layout_anchorGravity="top|end" />
 
     <include layout="@layout/bottom_sheet"/>
 </android.support.design.widget.CoordinatorLayout>

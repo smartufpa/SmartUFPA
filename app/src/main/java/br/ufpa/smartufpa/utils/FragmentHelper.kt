@@ -25,5 +25,9 @@ class FragmentHelper(private val fragmentManager: FragmentManager){
 
     }
 
+    fun clearBackStack(){
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
     fun findFragmentByTag(fragmentTag : String) = fragmentManager.findFragmentByTag(fragmentTag);
 }

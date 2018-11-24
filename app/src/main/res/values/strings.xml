@@ -239,6 +239,9 @@
     <string name="label_tab_details">Detalhes</string>
     <string name="label_tab_extras">Extra</string>
     <string name="nav_drinking_water">Bebedouros</string>
+    <string name="label_btn_edit">Editar</string>
+    <string name="label_btn_route">Como chegar?</string>
+    <string name="label_btn_more">Ver Mais</string>
 
 
 </resources>

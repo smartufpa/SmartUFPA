@@ -44,15 +44,15 @@ class Tags() : Parcelable {
         get() {
             if(amenity != null){
                 when(amenity){
-                   FOOD_COURT, RESTAURANT, FAST_FOOD -> R.drawable.ic_marker_food_place
+                   FOOD_COURT, RESTAURANT, FAST_FOOD -> return R.drawable.ic_marker_food_place
 
-                    LIBRARY -> R.drawable.ic_marker_library
+                    LIBRARY -> return R.drawable.ic_marker_library
 
-                    EXHIBITION_CENTRE -> R.drawable.ic_marker_auditorium
+                    EXHIBITION_CENTRE -> return R.drawable.ic_marker_auditorium
 
-                    TOILETS ->  R.drawable.ic_marker_restroom
+                    TOILETS ->  return R.drawable.ic_marker_restroom
 
-                    DRINKING_WATER -> R.drawable.ic_marker_restroom
+                    DRINKING_WATER -> return R.drawable.ic_marker_restroom
                 }
             }else{
                 if (toilets != null) {
